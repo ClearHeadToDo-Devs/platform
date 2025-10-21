@@ -1,0 +1,226 @@
+name: Deploy Vocabulary Site
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'ontology/**'
+      - '.github/workflows/deploy-vocab.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'ontology/**'
+
+jobs:
+  validate:
+    name: Validate Ontology
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ontology
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Validate ontology syntax
+        run: uv run invoke validate
+
+      - name: Run SHACL validation tests
+        run: uv run invoke test
+
+      - name: Generate JSON schemas
+        run: uv run invoke generate-schemas
+
+      - name: Test schema examples
+        run: uv run invoke test-examples
+
+      - name: Upload validation artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-results
+          path: |
+            ontology/schemas/
+            ontology/test-results/
+
+  build-site:
+    name: Build Vocabulary Site
+    runs-on: ubuntu-latest
+    needs: validate
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install uv  
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install
+        working-directory: ./ontology
+
+      - name: Install dependencies
+        run: uv sync
+        working-directory: ./ontology
+
+      - name: Generate schemas and site
+        run: |
+          cd ontology
+          uv run invoke full-pipeline
+          uv run invoke build-site
+
+      - name: Create deployment structure
+        run: |
+          mkdir -p dist
+          
+          # Copy vocabulary files to proper locations
+          mkdir -p dist/actions
+          cp ontology/actions-vocabulary.ttl dist/actions/vocabulary.ttl
+          cp ontology/actions-shapes.ttl dist/actions/shapes.ttl
+          
+          # Copy generated schemas
+          mkdir -p dist/actions/schemas
+          cp ontology/schemas/*.json dist/actions/schemas/
+          
+          # Copy examples
+          mkdir -p dist/actions/examples
+          cp -r ontology/examples/* dist/actions/examples/
+          
+          # Copy documentation site
+          cp -r ontology/docs/vocab-site/* dist/
+          
+          # Copy well-known files
+          mkdir -p dist/.well-known
+          cp ontology/.well-known/* dist/.well-known/
+          
+          # Generate additional formats (RDF/XML, JSON-LD)
+          cd ontology
+          uv run invoke generate-additional-formats
+          cd ..
+          cp ontology/actions-vocabulary.rdf dist/actions/vocabulary.rdf || true
+          cp ontology/actions-vocabulary.jsonld dist/actions/vocabulary.jsonld || true
+
+      - name: Validate site structure
+        run: |
+          echo "🔍 Validating deployment structure..."
+          
+          # Check required files exist
+          test -f dist/actions/vocabulary.ttl || { echo "❌ Missing vocabulary.ttl"; exit 1; }
+          test -f dist/actions/shapes.ttl || { echo "❌ Missing shapes.ttl"; exit 1; }
+          test -f dist/actions/schemas/actions-combined.schema.json || { echo "❌ Missing combined schema"; exit 1; }
+          test -f dist/.well-known/vocab-catalog.json || { echo "❌ Missing vocab catalog"; exit 1; }
+          test -f dist/index.html || { echo "❌ Missing main index"; exit 1; }
+          
+          echo "✅ Site structure validated"
+          
+          # Show structure
+          echo "📁 Deployment structure:"
+          find dist -type f | sort
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vocabulary-site
+          path: dist/
+          retention-days: 30
+
+  deploy-github-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-site
+    if: github.ref == 'refs/heads/main'
+    
+    # Grant GITHUB_TOKEN permissions for Pages deployment
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vocabulary-site
+          path: ./dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Optional: Deploy to custom hosting
+  deploy-custom:
+    name: Deploy to Custom Host
+    runs-on: ubuntu-latest
+    needs: build-site
+    if: github.ref == 'refs/heads/main' && false  # Enable by changing to 'true'
+    
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vocabulary-site
+          path: ./dist
+
+      - name: Deploy via rsync
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # Deploy files
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+
+  notify:
+    name: Notify Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-github-pages]
+    if: always() && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-github-pages.result == 'success'
+        run: |
+          echo "🎉 Vocabulary site deployed successfully!"
+          echo "🌐 Available at: https://$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | sed 's/.*\///').github.io/"
+          
+      - name: Notify failure
+        if: needs.deploy-github-pages.result == 'failure'
+        run: |
+          echo "❌ Deployment failed!"
+          exit 1
