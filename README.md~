@@ -8,7 +8,7 @@ This is my attempt at an "open, FAIR, realist, standard-first" approach to build
     - as well as utilizing the Common Core Ontologies (CCO) to ensure that we are building on top of a solid foundation of well-established ontologies that have been built with interoperability in mind
         - in this way, our work is doing nothing but trying to make a domain-specific ontology as they advise, and because i was unable to find a CCO-enabled ontology that would fit this usecase. In an ideal world, some variation of this would exist already or this could serve as a common base, but for now, we are building out a platform to show this ontology has legs and can be used to do REAL work making REAL data and REAL tools
 
-## Current Status (January 2025)
+## Current Status (October 2025)
 
 **Active Development:** V3 ontology with BFO/CCO alignment is the production path
 
@@ -71,27 +71,18 @@ Type-Safe CLI
 #### Detailed Steps
 
 1. **Start with V3 Ontology + SHACL**: BFO/CCO-aligned ontology defines semantic concepts (ActionPlan, ActionProcess) and validation constraints (priority 1-4, temporal consistency, etc.)
-
 2. **Test with RDF Examples**: Example data validates against both ontology and SHACL shapes. These examples drive downstream generation, ensuring consistency.
-
 3. **Generate JTD Schemas**: Use ontology + SHACL to generate [JSON Type Definition](https://jsontypedef.com/) schemas optimized for code generation (precise integer types, proper enums).
-
 4. **Generate TypeScript Types**: Use [json-typedef-js](https://github.com/jsontypedef/json-typedef-js) to generate TypeScript interfaces from JTD.
-
 5. **EXTEND Ontology for Parser**: Create parser-specific ontology that extends V3 with file format concepts:
    - Symbol mappings (`priority → "!"`)
    - Grammar rules (`choice`, `pattern`)
    - Line/file structure
    - **Key insight:** These become semantic annotations on existing properties, not separate config files
-
 6. **Generate Grammar from Types**: Use [3p3r/type-sitter](https://github.com/3p3r/type-sitter) to generate tree-sitter `grammar.js` from TypeScript types. Grammar is generated, not hand-written!
-
 7. **Test Parse Trees**: Generated example files test parser. Expected parse tree outputs are hand-written since automated generation would propagate bugs.
-
 8. **EXTEND Ontology for CLI**: Parser ontology is extended again with CLI-specific concepts (commands, validation strategies, display formats).
-
 9. **Generate Rust Structs**: Use [Jakobeha/type-sitter](https://github.com/Jakobeha/type-sitter) to generate type-safe Rust structs from the parser's AST nodes.
-
 10. **CLI Implementation**: Hand-written business logic uses generated structs:
     - **Validation**: Convert to RDF, validate against SHACL shapes from step 1
     - **Export**: CRDT formats for collaboration
@@ -109,26 +100,22 @@ Type-Safe CLI
 - **Standards-Based**: BFO/CCO alignment ensures interoperability
 
 #### Loose Coupling via Semantic Web
-
 We follow semantic web principles for dependencies - tools are coupled through **data formats** and **validation rules**, not code dependencies.
 
 **Deployment Model:**
-- Ontologies/SHACL shapes published at public URLs (e.g., `https://vocab.clearhead.io/actions/v3`)
+- Ontologies/SHACL shapes published at public URLs (e.g., `https://clearhead.us/vocab/actions/v3`)
 - Downstream projects fetch from URLs or fall back to bundled copies
 - No assumption of monorepo structure
 
 **Dependency Chain:**
-
 1. **Ontology** (`ontology/`): Self-contained, publishes to web
    - Inputs: None
    - Outputs: OWL ontology + SHACL shapes at public URL
-
 2. **Parser** (`tree-sitter-actions/`): Extends base ontology
    - Inputs: Fetches V3 ontology from URL
    - Outputs: Parser-extended ontology + generated grammar + npm package
    - Extends: Adds file format concepts (symbols, syntax rules)
    - May add parser-specific SHACL constraints while respecting base shapes
-
 3. **CLI** (`clearhead-cli/`): Uses parser and extends ontology again
    - Inputs:
      - Parser npm package (for parsing)
