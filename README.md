@@ -28,6 +28,14 @@ In addition, each submodule may have its own next steps and issues tracked withi
 
 each `next.actions` file should be kept up-to-date with the current priorities and tasks for that specific repository.
 
+Please review the file format specification for guidance on how to write the file, and the cli guidance on how you can leverage tooling to make the file more managable for example, DONT generate UUIDs by hand, DO use the `normalize` subcommand to add them automatically for you!
+
+In particular, we want to prioritize high priority actions over low priority ones where possible and when there are not blockers to that work but it is often needed to make some technical work changes before we can implement large swaths of features.
+
+The goal is quality over quantity, so ample documentation, testing, and careful thought should go into each action before it is marked as done.
+
+In particular, the concept of orthogonality should be kept in mind, meaning that changes should be made at the appropriate level of the platform to avoid unnecessary coupling and complexity.
+
 ## The Chain
 The ClearHead platform can be seen as more or less abstract products that work together for a common goal:
 - [Specifications](./specifications): The source of truth for the platform, written in human-readable formats like markdown. This covers guidance on evertying from the file format, to file and naming conventions, to example files and data schemas
