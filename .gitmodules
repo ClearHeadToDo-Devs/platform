@@ -7,3 +7,9 @@
 [submodule "ontology"]
 	path = ontology
 	url = https://github.com/ClearHeadToDo-Devs/ontology
+[submodule "specifications"]
+	path = specifications
+	url = https://github.com/ClearHeadToDo-Devs/specifications.git
+[submodule "clearhead.nvim"]
+	path = clearhead.nvim
+	url = https://github.com/ClearHeadToDo-Devs/clearhead.nvim.git
