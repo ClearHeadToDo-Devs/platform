@@ -6,6 +6,12 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 2: Loosly couple the ontology and move forward
+Instead of relying on generation as before, we are instead using the ontology like any other piece where the cli will leverage it by translating the work into data and then running the validation shapes.
+
+We will NOT be generating code from the ontology directly, but rather using it as a source of truth for semantic validation and reasoning.
+
+In addition, we have been doing a deeper focus on aligning around the CLI and making the editor extensions a first-class citizen
 
 ## Decision 1: V3 Ontology with BFO/CCO Alignment
 
