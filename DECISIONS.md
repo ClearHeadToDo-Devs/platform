@@ -6,6 +6,58 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 4: Discipline Around the Linter
+After reviewing the existing implementation, i realized that we need to be really carefuly and disciplined about what the linter checks and what it cant check and how to works in the larger system.
+
+while the linter is wonderful for helping with immediate diagnostics, there is a fine line between helpful and annoying.
+
+In particular, we want it to be configurable and especially where we are providing diagnostics rather than error reporting we want to make that clear so here we have:
+- Errors: Literally invalid syntax that prevents parsing
+  - this is where the actual parser errors and tips around them go
+- Warnings: Valid trees, but there is something wrong with the document that will block lots of functionality
+  - best exampled is the UUID missing from an action. Technically valid, but will block syncing and other features
+- Info: Process improvements
+  - We cover the process in the process specification but its important to remember things like making sure an action has a completed date when its closed or that an open action has a due date before today that is a process issue rather than a syntax issue
+
+  The fact this matches the LSP diagnostic levels is intentional so that we can leverage the LSP features fully and so that we can have a consistent experience across editors.
+
+By contrast, the formatter tries to go with a more gofmt approach of just fixing everything it can including:
+- adding whitespace for children
+- putting properties in a specific order
+- normalizing line endings
+
+Again, the lsp leverages this to provide "on save" formatting that makes sure everything is in the right place but is mediated through the server rather than asking each editor to do its own thing.
+
+These tools make the processing and working with the DSL, even with the below CRDT changes possible as the tooling will ensure synced documents are of valid state
+## Decision 3: CRDT is New Source of Truth
+As i have grappled with several architectures i realize that the primary way that we move forward is by leveraging the CRDT data structures as the shared source of truth for the application state.
+
+This changes things significantly because the filetype is now a projected view FROM the CRDT and is not the primary source of truth anymore.
+
+However, the DSL remains a core view and i want to make sure the work is put in to make the act of updating the state of the automerge document from a text editor is as seamless as possible.
+
+We will do this by leveraging the LSP as the intermediary that has things like "on save" actions that will actually be able to do the heavy lifting of getting the CRDT document, comparing current state to the text editor state, and then applying the necessary changes to the CRDT document.
+
+This is going to leverage the linter and formatter so nothing is going to really change but the order is going to be done a bit differently.
+
+Now, we are still going to leverage events for our historical analysis but the database will also likely be more of something that is used to track what has been done rather than actually used to persist present state and work through the issues around that.
+
+This will still require the sqlite for local state on the recurrance level, and the CRDT document will be the source of truth for the action plan as a whole.
+
+With this, automerge repo, and the LSP server we will have the vision of having something that can be edited from a normal text editor as redily as it is handled in the webapp or mobile app.
+
+This also makes the cli more impactful as now our CRUD operations will be directly manipulating the CRDT document rather than trying to parse and reserialize the text file.
+
+but what DOESNT change is that the struct is the hub that moves data from one format to another. For example, both the events.db AND the reader DB will still go from the cmdb doc -> struct -> sqlite rather than trying to pull the data from the text file directly.
+
+In this way, we arent changing the overall architecture but rather changing the source of truth and how we interact with it.
+
+### Semantic Event Logging
+One of the other approaches that i was working on was a small event sourcing piece that created semantic events for the domain language that made it easier to make the current state.
+
+However, with the CRDT as the source of truth, this becomes less necessary as the CRDT document itself is the source of truth and we can always derive events from it if needed.
+
+By contrast, the events db is more for analytics, aggregating data on the same computer, while also being used to aggregate the data acrossed multiple devices via duckdb in any one of the nodes so that we are able to also ask questions about these actions acrossed multiple dimmensions
 ## Decision 2: Loosly couple the ontology and move forward
 Instead of relying on generation as before, we are instead using the ontology like any other piece where the cli will leverage it by translating the work into data and then running the validation shapes.
 
