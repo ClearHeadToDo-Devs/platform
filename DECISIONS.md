@@ -1,11 +1,13 @@
 # Architectural Decisions
 
-**Last Updated:** January 2025
+**Last Updated:** January 14 2025
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 5: Recurrence Instances.
+To avoid the problem of needing to check the instances for an action we are only going to track the most upcoming few instances of a recurring action maybe like 3 months but we can configure this but i dont want this to be something where we are constantly scanning the list whenever an action is changed to ensure that the structure is still there right for the rrule so if someone changes shit we just work through that rather than doing some stupid bullshit
 ## Decision 4: Discipline Around the Linter
 After reviewing the existing implementation, i realized that we need to be really carefuly and disciplined about what the linter checks and what it cant check and how to works in the larger system.
 
@@ -58,6 +60,8 @@ One of the other approaches that i was working on was a small event sourcing pie
 However, with the CRDT as the source of truth, this becomes less necessary as the CRDT document itself is the source of truth and we can always derive events from it if needed.
 
 By contrast, the events db is more for analytics, aggregating data on the same computer, while also being used to aggregate the data acrossed multiple devices via duckdb in any one of the nodes so that we are able to also ask questions about these actions acrossed multiple dimmensions
+
+what this DB DOES own however is the recurrence problem and tracking atleast the most upcoming recurring action instance so that when we edit the template file in the DSL we will keep it closed while still noting that in our events db we have the upcoming instance that is open and have closed/cancelled an instance
 ## Decision 2: Loosly couple the ontology and move forward
 Instead of relying on generation as before, we are instead using the ontology like any other piece where the cli will leverage it by translating the work into data and then running the validation shapes.
 
