@@ -6,6 +6,18 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 6: User-Level Storage Only
+After working through the architecture problems for a few weeks ive decided that the best path forward is to focus on keeping actions in the user-stored directories and to forget about doing the file-search for other projects that just so happen to have action plans in them.
+
+This is because the complexity of doing this is high including:
+- Recursively searching directories can be really bad for performance
+- It becomes strange to know when we want "everything" and when we want just the user-level stuff
+- Syncing and conflicts become a nightmare when you have multiple projects with different action plans
+- we dont want to lock projects into having to have action plans if they dont want them
+
+This, along with our core usecase of individual intentions keeps our vision clean, and more able to actually implement the core features that we want to implement to make the _individual_ experience great rather than trying to be everything to everyone.
+
+
 ## Decision 5: Recurrence Instances.
 To avoid the problem of needing to check the instances for an action we are only going to track the most upcoming few instances of a recurring action maybe like 3 months but we can configure this but i dont want this to be something where we are constantly scanning the list whenever an action is changed to ensure that the structure is still there right for the rrule so if someone changes shit we just work through that rather than doing some stupid bullshit
 ## Decision 4: Discipline Around the Linter
