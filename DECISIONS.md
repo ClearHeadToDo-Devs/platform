@@ -1,11 +1,19 @@
 # Architectural Decisions
 
-**Last Updated:** January 14 2025
+**Last Updated:** January 17 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 7: Relaxed Parser, Strict Linter
+In tree-sitter, it is less reliable and more brittle to do error reporting from the tree itself. 
+
+Instead, we want to have a relatively relaxed parser that can parse most things into a tree structure, and then have the linter be the place where we do the strict checking of the document to ensure that it is valid.
+
+this was brought to my attention when i realized that we were getting invalid trees from small issues like tags with no content and instead of making people figure out why the tree isnt valid i would rather say thats a valid tree but you have a linter error that says "tags must have content" or something like that.
+
+This goes along with modern tools like typescript where the parser is very relaxed and the typechecker is where the strictness comes in.
 ## Decision 6: User-Level Storage Only
 After working through the architecture problems for a few weeks ive decided that the best path forward is to focus on keeping actions in the user-stored directories and to forget about doing the file-search for other projects that just so happen to have action plans in them.
 
