@@ -1,11 +1,37 @@
 # Architectural Decisions
 
-**Last Updated:** January 17 2026
+**Last Updated:** January 18 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Expanding Reference Styles
+In order to make the reference styles more flexible we are going to expand the existing reference styles to include some new ones:
+
+- Short UUID: The first 8 characters of the UUID can be used as a short "good enough" reference for actions, good for when we want to be sure but ALSO keep the id short enough to be human friendly.
+- Alias: We want to add syntax to define shorthands for actions so that we can have things like "get project documentation done" to "documentation" this way, the alias will still be the same and easier to read _even if we change the name or description_
+- Defining sequential action plans: to make it easier to have multiple actions that are inherently sequential, we will support a syntax for designating a set of actions as being sequentially dependent on one another. this will make it easier to have things like "step 1", "step 2", "step 3" without needing to have complex dependencies defined.
+
+By default, we want to still assume that actions are independent unless otherwise specified but this will make it easier to have more complex workflows defined in the action plan DSL and where we want to simply use the order to denote dependencies rather than needing to have complex dependency graphs defined.
+## Action Plan Hierarchies
+Another hierarchy we have specced out in the file format but have yet to represent in the data is the idea that one action plan can have child action plans.
+
+we will need some sort of syntax to represent this so that we can have two subprojects with the name "cli" that are different things.
+
+this will make some things easier like having a project for "work" and a project for "personal" and being able to have actions that are scoped to those projects.
+
+This means we need a way to denote child projects within the file format as well as the data structures because as we have noted its important that we actually have a _lossless_ representation of the file format in the data structures so that we can roundtrip without losing information.
+## Tag Hierarchies
+One feature i want to support is the idea of tag subtypes. the idea being that some contexts are of a precise type of another context.
+
+These can be defined within a single config option in the core config file and will only be a list of values, with the ability to put certain tags under others. 
+
+This allows one to make one tag implicitly include other tags. for example:
+Grocery store is a subtype of driving
+so if I tag something as grocery store it will also be tagged as driving.
+
+neovim is a subset of terminal so if I tag something as neovim it will also be tagged as terminal which itself will be a subset of computer so tagging something as neovim will also tag it as computer
 ## Decision 8: Decreasing Formatter Responsibility
 After reflecting on the role of the formatter in the overall architecture, I have decided to reduce its responsibilities significantly.
 
