@@ -6,6 +6,18 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 8: Decreasing Formatter Responsibility
+After reflecting on the role of the formatter in the overall architecture, I have decided to reduce its responsibilities significantly.
+
+In particular, a core design philosphy is that we dont really care about whitespace in the action plan dsl.
+
+To this end, we are removing much of the responsibility of formatting, moving to topiary within the tree sitter parser, and making it so that the cli just runs topiary through the formatter rather than trying to do its own thing.
+
+this will primarily be used on "on save" actions in the LSP server to ensure that the document is in a normalized state but we wont be worrying about things like indentation levels or other whitespace issues.
+
+the "indent" queries in the treesitter parser will be used to ensure that children are indented properly but beyond that we wont be worrying about it.
+
+this makes it so that formatting is primarily handled by the parser, while the cli owns linting which happens AFTER parsing .
 ## Decision 7: Relaxed Parser, Strict Linter
 In tree-sitter, it is less reliable and more brittle to do error reporting from the tree itself. 
 
