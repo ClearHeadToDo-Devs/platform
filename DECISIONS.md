@@ -6,6 +6,44 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Oxigraph as Query Layer and Cache
+After doing allot of research on the various options for a query engine, I have decided to give [Oxigraph](https://github.com/oxigraph/oxigraph?tab=readme-ov-file) a try as the core query engine for the platform.
+
+This is for a few reasons:
+- As we can see from the [Ontology](./ontology/README.md) we have put in allot of work to make sure we have strong ontological underpinnings from the BFO/CCO alignment so having a strong RDF query engine is important to make sure we can leverage SPARQL queries to do reasoning over the data.
+- Oxigraph is written in Rust which makes it a great fit for our existing Rust codebase especially since it tries to be a fully compliant SPARQL 1.1 engine.
+- It has support for persistent storage which means we can use it as a cache layer for the data we have.
+
+Although, its important to note what this is NOT:
+
+The oxigraph will NOT be the persistence layer, this and syncing will still be handled by the automerge CRDT document with the intermediate representation still serving as the hub for moving data between the various formats.
+
+The DSL is still going to be the primary human interface we are NOT replacing the actions file format with RDF.
+
+What this DOES do however is supercharge our ability to do complex queries over the data and to do reasoning over the data in a way that is performant and scalable. 
+
+This is amazing for:
+- Linting: Through SHACL shapes and ontology reasoning we can do much more complex linting of the data
+- Reporting: we can now do complex queries over the data and even over time
+- Integration: with the ontology entities being first-class citizens rather than just being implicit in the data structures we can now more easily integrate with other systems that also use RDF and ontologies. 
+
+ ### Sync Implications
+
+By keeping all data (plans AND processes) in the CRDT, we mainain a single sync mechanism. 
+  Oxigraph is rebuilt locally from the CRDT/IR, so we don't need to solve RDF sync. This eliminates events.db as a separate store 
+  - ActionProcesses now live in the CRDT alongisde ActionPlans.
+  Flow:
+  - CRDT → IR → Oxigraph (query cache)
+  - CRDT → IR → DSL (human interface)
+
+  Sync happens at CRDT layer only
+
+### Changes
+
+We want to go over what breaking changes this will entail:
+- Removing the sql queries. we dont want to maintain multiple query engines so we will be removing the existing sql queries and replacing them with SPARQL queries and oxigraph as the query engine.
+- Alignment between Structs and Ontology Domain Objects. Now, this is where we are ALIGNING the structs more closely with the ontology domain objects so that we can have a lossless mapping between the two. This means that we will need to make sure that the structs are designed in a way that they can be easily converted to and from data that conforms to our ontology and this will be REPRESENTED in the structs themselves, which makes the introduction to oxigraph much more seamless.
+
 ## Expanding Reference Styles
 In order to make the reference styles more flexible we are going to expand the existing reference styles to include some new ones:
 
