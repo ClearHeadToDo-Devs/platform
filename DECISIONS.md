@@ -27,6 +27,13 @@ This is amazing for:
 - Reporting: we can now do complex queries over the data and even over time
 - Integration: with the ontology entities being first-class citizens rather than just being implicit in the data structures we can now more easily integrate with other systems that also use RDF and ontologies. 
 
+
+### Changes
+
+We want to go over what breaking changes this will entail:
+- Removing the sql queries. we dont want to maintain multiple query engines so we will be removing the existing sql queries and replacing them with SPARQL queries and oxigraph as the query engine.
+- Alignment between Structs and Ontology Domain Objects. Now, this is where we are ALIGNING the structs more closely with the ontology domain objects so that we can have a lossless mapping between the two. This means that we will need to make sure that the structs are designed in a way that they can be easily converted to and from data that conforms to our ontology and this will be REPRESENTED in the structs themselves, which makes the introduction to oxigraph much more seamless.
+
  ### Sync Implications
 
 By keeping all data (plans AND processes) in the CRDT, we mainain a single sync mechanism. 
@@ -37,12 +44,6 @@ By keeping all data (plans AND processes) in the CRDT, we mainain a single sync 
   - CRDT → IR → DSL (human interface)
 
   Sync happens at CRDT layer only
-
-### Changes
-
-We want to go over what breaking changes this will entail:
-- Removing the sql queries. we dont want to maintain multiple query engines so we will be removing the existing sql queries and replacing them with SPARQL queries and oxigraph as the query engine.
-- Alignment between Structs and Ontology Domain Objects. Now, this is where we are ALIGNING the structs more closely with the ontology domain objects so that we can have a lossless mapping between the two. This means that we will need to make sure that the structs are designed in a way that they can be easily converted to and from data that conforms to our ontology and this will be REPRESENTED in the structs themselves, which makes the introduction to oxigraph much more seamless.
 
 ## Expanding Reference Styles
 In order to make the reference styles more flexible we are going to expand the existing reference styles to include some new ones:
