@@ -21,20 +21,6 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 ### Tracking Decisions
 we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
 
-### Finding Next-Steps
-THE core functionality of the platform is the `actions` file format, as such, next steps will be kept within the conancal `next.actions` file in the root of the repository. Unless otherwise specified, these next steps are intended to be worked on as our project goals.
-
-In addition, each submodule may have its own next steps and issues tracked within their respective repositories. From a data standpoint, this exemplifies a key principle of the platform: decentralization. Each tool or component can evolve independently while still contributing to the overall ecosystem.
-
-each `next.actions` file should be kept up-to-date with the current priorities and tasks for that specific repository.
-
-Please review the file format specification for guidance on how to write the file, and the cli guidance on how you can leverage tooling to make the file more managable for example, DONT generate UUIDs by hand, DO use the `normalize` subcommand to add them automatically for you!
-
-In particular, we want to prioritize high priority actions over low priority ones where possible and when there are not blockers to that work but it is often needed to make some technical work changes before we can implement large swaths of features.
-
-The goal is quality over quantity, so ample documentation, testing, and careful thought should go into each action before it is marked as done.
-
-In particular, the concept of orthogonality should be kept in mind, meaning that changes should be made at the appropriate level of the platform to avoid unnecessary coupling and complexity.
 
 ## The Chain
 The ClearHead platform can be seen as more or less abstract products that work together for a common goal:
