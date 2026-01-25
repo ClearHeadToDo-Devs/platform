@@ -1,11 +1,25 @@
 # Architectural Decisions
 
-**Last Updated:** January 18 2026
+**Last Updated:** January 21 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Reworking the Ontology and CLI
+After allot of pondering, im very happy to say the v4 of the ontology is prepared and ready to go.
+
+I realized that CCO offers the mass majority of what we need for the entire thing to work and I really like the idea of our core entities:
+- Objectives (akin to projects in other frameworks)
+- Plans (the templates for what we call actions)
+- Planned Act (the execution of a plan, what we call action processes)
+  - Every plan has atleast one planned act, but recurring plans can have many planned acts
+
+we have everything we need to represent the domain, now to make it cleaner, we are going to make some changes to the CLI and the way we represent things in the data structures to better align with the ontology.
+
+In this way, we arent using the ontology generatively we are just going to make it so that the ontology is driving the design of the CLI
+
+The parser will still be the same as those are about the syntax that we use to represent the data 
 ## Oxigraph as Query Layer and Cache
 After doing allot of research on the various options for a query engine, I have decided to give [Oxigraph](https://github.com/oxigraph/oxigraph?tab=readme-ov-file) a try as the core query engine for the platform.
 
