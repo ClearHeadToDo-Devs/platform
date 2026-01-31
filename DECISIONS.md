@@ -1,6 +1,6 @@
 # Architectural Decisions
 
-**Last Updated:** January 21 2026
+**Last Updated:** January 30 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
@@ -116,6 +116,101 @@ This is because the complexity of doing this is high including:
 
 This, along with our core usecase of individual intentions keeps our vision clean, and more able to actually implement the core features that we want to implement to make the _individual_ experience great rather than trying to be everything to everyone.
 
+## Decision 9: CRDT Workspace Boundary Enforcement
+
+**Date:** January 2026  
+**Status:** ✅ Implemented
+
+### Context
+Decision 6 established that actions should be kept in user-stored directories, but the implementation allowed ANY `.actions` file to sync to the global CRDT, causing workspace pollution.
+
+### Problem
+Before this decision:
+- Editing `~/projects/app/todo.actions` would sync to `~/.local/state/clearhead/workspace.crdt`
+- Personal workspace CRDT polluted with transient project files
+- No isolation between personal tasks and project-level action tracking
+- Project collaborators inadvertently forced into clearhead structure
+
+### Decision
+Restrict CRDT synchronization to files within the managed workspace ONLY:
+- ✅ Files in `$XDG_DATA_HOME/clearhead/` (default: `~/.local/share/clearhead/`) get CRDT sync
+- ❌ Files outside this directory do NOT get CRDT sync
+- Validation uses canonicalized paths (symlinks rejected for simplicity)
+
+### Rationale
+1. **Prevents workspace pollution:** Project files shouldn't affect personal workspace CRDT
+2. **Respects project autonomy:** Projects use Git for version control, not CRDT
+3. **No forced structure:** Contributors not required to adopt clearhead architecture
+4. **Clear mental model:** Personal workspace (CRDT synced) vs project files (Git tracked)
+5. **Performance:** Reduces CRDT overhead for casual `.actions` files in random projects
+
+### Alternatives Considered
+1. **CRDT per directory:** Create `.clearhead/workspace.crdt` in every directory with `.actions` files
+   - ❌ Rejected: Creates hidden directories everywhere, pollutes project repositories
+   
+2. **Named workspaces via config:** User explicitly defines multiple workspaces
+   - ❌ Rejected: Added complexity, against "user-level storage only" philosophy
+   
+3. **Auto-prompt for workspace:** Ask user when editing non-workspace file
+   - ❌ Rejected: Interrupts workflow, forces decisions
+
+4. **Global CRDT for all files:** (Previous behavior)
+   - ❌ Rejected: Causes the pollution problem we're solving
+
+### Trade-offs
+**Pros:**
+- ✅ Clear workspace boundary (managed vs unmanaged files)
+- ✅ No workspace pollution from project files
+- ✅ Projects remain independent
+- ✅ Aligns with XDG Base Directory specification
+- ✅ Simple mental model
+
+**Cons:**
+- ⚠️ Users must explicitly place files in workspace for CRDT sync
+- ⚠️ No CRDT sync for project files (must use Git)
+- ⚠️ Symlinks into workspace rejected
+
+**Verdict:** Benefits outweigh limitations. Users wanting CRDT sync should organize files in managed workspace.
+
+### User Impact
+
+**For personal workspace files** (`~/.local/share/clearhead/`):
+- ✅ No changes - continues to work as before
+- ✅ CRDT sync, UUID injection, full LSP features
+- ✅ Existing data preserved
+
+**For project files** (`~/projects/`, `~/Documents/`, etc.):
+- ⚠️ CRDT sync no longer attempts (was causing pollution)
+- ✅ LSP features still work (parsing, linting, formatting)
+- ✅ No error messages (silent skip for better UX)
+- ✅ Users can manually manage UUIDs if needed
+- ✅ Projects use Git for version control
+
+**Migration:** No action required. Existing CRDT data preserved.
+
+### Examples
+
+**Files with CRDT sync (managed workspace):**
+```
+~/.local/share/clearhead/inbox.actions
+~/.local/share/clearhead/projects/work.actions
+~/.local/share/clearhead/archive/2025.actions
+```
+
+**Files without CRDT sync (outside workspace):**
+```
+~/projects/myapp/tasks.actions           # Uses Git
+~/Documents/notes.actions                # Casual notes
+~/Downloads/temp.actions                 # Temporary file
+```
+
+### LSP Behavior
+- **Workspace files:** Full LSP functionality (parse, lint, format, CRDT sync, UUID injection)
+- **Non-workspace files:** LSP features work (parse, lint, format) but no CRDT sync, no UUID injection, no error messages
+
+### Related Decisions
+- **Decision 6:** User-Level Storage Only (establishes the philosophy)
+- **Decision 3:** CRDT is New Source of Truth (establishes CRDT as primary)
 
 ## Decision 5: Recurrence Instances.
 To avoid the problem of needing to check the instances for an action we are only going to track the most upcoming few instances of a recurring action maybe like 3 months but we can configure this but i dont want this to be something where we are constantly scanning the list whenever an action is changed to ensure that the structure is still there right for the rrule so if someone changes shit we just work through that rather than doing some stupid bullshit
@@ -483,6 +578,7 @@ Then hand-write impl blocks in `src/models/`.
 | SHACL validation | ✅ Done | Semantic correctness |
 | Three-layer ontology | ✅ Decided | Clean architecture |
 | Parser → Rust structs | ✅ Decided | Proper flow |
+| CRDT workspace boundary | ✅ Done | Prevents workspace pollution |
 
 ---
 
