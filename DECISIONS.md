@@ -6,6 +6,12 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Splitting the CLI from Core
+The core functionality of the platform has been growing for awhile and with the latest additions to the LSP we are going to split the clearhead cli from the core platform functionality.
+
+This will enable the two to grow independently and is already yielding benefits around readability and proper boundary definition.
+
+Implementors are free to either integrate with the cli or to build their own tools on top of the core platform functionality as a core library, or even at a data level if the intergration needs to be really loose.
 ## Reworking the Ontology and CLI
 After allot of pondering, im very happy to say the v4 of the ontology is prepared and ready to go.
 
@@ -20,7 +26,25 @@ we have everything we need to represent the domain, now to make it cleaner, we a
 In this way, we arent using the ontology generatively we are just going to make it so that the ontology is driving the design of the CLI
 
 The parser will still be the same as those are about the syntax that we use to represent the data 
-## Oxigraph as Query Layer and Cache
+
+Core will cover:
+- Core structures that represent the domain objects
+- Conversions to and from the various formats
+  - DSL
+  - TTL
+  - Table
+  - JSON
+- CRDT syncing and merging
+- Formatting and Linting Logic
+- SPARQL querying
+
+Leaving the CLI to cover:
+- Command Line Parsing
+- Layered Configuration Management
+- File System Interactions
+- Network Calls
+- LSP Server implementation (this is the part with the runtime)
+## Oxigraph as Query Layer
 After doing allot of research on the various options for a query engine, I have decided to give [Oxigraph](https://github.com/oxigraph/oxigraph?tab=readme-ov-file) a try as the core query engine for the platform.
 
 This is for a few reasons:
