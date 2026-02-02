@@ -13,3 +13,6 @@
 [submodule "clearhead.nvim"]
 	path = clearhead.nvim
 	url = https://github.com/ClearHeadToDo-Devs/clearhead.nvim.git
+[submodule "clearhead-core"]
+	path = clearhead-core
+	url = https://github.com/ClearHeadToDo-Devs/clearhead-core.git
