@@ -6,6 +6,22 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Archiving Actions
+In order to support the archival of plans (actions) and their planned acts, we are going to implement a simple mechanism for archiving actions.
+
+The core mechanism is described in [the process specification](./specifications/process.md) but the key points are:
+- we have <objective>.archive.actions files that live alongside the main action plan files
+- when an action is archived, it is moved from the main action plan file to the archive
+- archived actions are read-only and cannot be modified
+- archived actions can be unarchived back to the main action plan file
+- the CLI will support commands for archiving and unarchiving actions
+- the LSP server will support commands for archiving and unarchiving actions automatically as a part of the generation workflow
+
+this is separate from the logging mechanism which simply logs what happened, instead, we are focused here on what the final state of the action and its planned acts are for the sake of continued analysis
+
+open questions are whether or not we should allow the export of data to other formats or even supporting a retention period mechanism where stuff gets automatically removed from the archive after a certain period of time to ensure the archive doesnt grow indefinitely but these are things we can explore later
+
+For now, this is another piece of functionality that will be something a user can turn on or off depending on preference but i think this will be important for making it so people dont need to manage the movement of closed actions manually
 ## Splitting the CLI from Core
 The core functionality of the platform has been growing for awhile and with the latest additions to the LSP we are going to split the clearhead cli from the core platform functionality.
 
