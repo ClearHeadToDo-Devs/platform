@@ -1,11 +1,70 @@
 # Architectural Decisions
 
-**Last Updated:** January 30 2026
+**Last Updated:** February 2nd 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+##  Semantic Patch + Projection Gating for Multi-Device Sync
+
+**Date:** February 2026  
+**Status:** ✅ Decided
+
+### Context
+ClearHead is local-first and editor-centric. Multi-device sync introduces a failure mode where remote updates can cause confusing or "funky" merges if we treat the DSL file as the merge surface or if we rewrite projections while a user is actively editing.
+
+The sync architecture already establishes the CRDT as the source of truth and the DSL as a projection. This decision clarifies *how* we bridge editor saves, CRDT updates, and multi-device synchronization without relying on text merge semantics.
+
+### Decision
+1. **Semantic changes are represented as patches over stable domain identifiers.**
+   - The fundamental unit of change is a domain-level patch (e.g., "set priority", "rename", "add context tag"), addressed by stable UUIDs.
+   - These patches are applied to the CRDT, not to DSL text.
+
+2. **Sync merges occur at the CRDT layer; DSL merges are avoided.**
+   - Devices synchronize CRDT state (plans + processes) using CRDT merge semantics.
+   - The DSL remains a deterministic, regenerable projection.
+
+3. **Projection writes are gated by user intent ("safe moments").**
+   - Remote CRDT updates may be received at any time.
+   - Rewriting projected DSL files is treated as an intentional operation (e.g., on-save, manual apply, or when the editor is known to be clean), to avoid altering a user's active editing context.
+
+4. **Observability records semantic history; it is not a sync mechanism.**
+   - Telemetry captures the semantic meaning of changes (patch summaries, sync sessions, conflict classifications) to explain behavior.
+   - Cross-device state sharing remains solely a CRDT concern.
+
+### Rationale
+- **Editor respect:** Avoids rewriting files "under the user's feet".
+- **Merge stability:** UUID-addressed patches reduce dependence on fragile text diffs and ordering.
+- **Local-first consistency:** Each device can remain fully functional offline; sync is incremental.
+- **Debuggability:** Observability bridges the gap between CRDT operational history and human-meaningful change history.
+
+### Alternatives Considered
+1. **Sync the DSL files directly (file-level replication):**
+   - Rejected: turns sync into text-merge conflict management and defeats projection architecture.
+
+2. **Always project on every CRDT change (continuous projection):**
+   - Rejected: causes unsolicited file rewrites and increases editor friction.
+
+3. **Use observability events as the replication mechanism (semantic event sourcing):**
+   - Rejected: duplicates CRDT coordination with another ordering/deduplication system.
+
+### Trade-offs
+**Pros:**
+- Stable merges (domain patches over UUIDs)
+- Predictable editor experience (projection gating)
+- Easier sync debugging (semantic telemetry)
+- Keeps sync concerns in CRDT layer
+
+**Cons:**
+- Requires defining a patch vocabulary (domain operations)
+- Requires tracking a "base" view for clean patch derivation from saved text
+- Some remote updates will not be visible until the next intentional apply
+
+### Specification Implications (High Level)
+- Sync spec should explicitly describe *semantic patching* and *projection gating* as core strategies for multi-device stability.
+- Observability spec should include events that explain patch derivation/application and sync sessions, while remaining non-authoritative.
+
 ## Archiving Actions
 In order to support the archival of plans (actions) and their planned acts, we are going to implement a simple mechanism for archiving actions.
 
@@ -251,6 +310,7 @@ Restrict CRDT synchronization to files within the managed workspace ONLY:
 ### Related Decisions
 - **Decision 6:** User-Level Storage Only (establishes the philosophy)
 - **Decision 3:** CRDT is New Source of Truth (establishes CRDT as primary)
+
 
 ## Decision 5: Recurrence Instances.
 To avoid the problem of needing to check the instances for an action we are only going to track the most upcoming few instances of a recurring action maybe like 3 months but we can configure this but i dont want this to be something where we are constantly scanning the list whenever an action is changed to ensure that the structure is still there right for the rrule so if someone changes shit we just work through that rather than doing some stupid bullshit
