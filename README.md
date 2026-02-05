@@ -32,6 +32,8 @@ The ClearHead platform can be seen as more or less abstract products that work t
   - tools like the CLI use it to do semantic reasoning and validation on the data ingested 
 - [Action File Parser](./tree-sitter-actions/) a parser for the action file format, built using tree-sitter
   - used by the CLI and other tools to parse and validate action files
+- [Core Library](./clearhead-core/) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools
+  - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
 - [CLI](./clearhead-cli/) the CLI and server implementation of many of the specifications outlined
   - handles much of the file ingestion, formatting, and linting required to translate strings in files into data that can be queried
   - uses the ontology to do semantic reasoning and validation on the data ingested

@@ -3,7 +3,7 @@ This is a higher order repo with several other repositories as git submodules
 
 for a large intro please see [the README](./README.md) 
 
-If you are just rearing to go, then the [next actions](./next.actions) file is a good place to start and unless otherwise specified, contains your actions to complete
+If you are just rearing to go, then go ahead and assume that we have the cli installed and working so you can check next actions with `
 
 Otherwise the other context stands, we are here for quality not quantity, so take your time, read the docs and specifications, dont be afraid to ask questions, make suggestions, and even make mistakes.
 
