@@ -9,7 +9,6 @@ This document records key architectural decisions made for the Clearhead Platfor
 ##  Semantic Patch + Projection Gating for Multi-Device Sync
 
 **Date:** February 2026  
-**Status:** ✅ Decided
 
 ### Context
 ClearHead is local-first and editor-centric. Multi-device sync introduces a failure mode where remote updates can cause confusing or "funky" merges if we treat the DSL file as the merge surface or if we rewrite projections while a user is actively editing.
