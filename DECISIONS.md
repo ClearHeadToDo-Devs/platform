@@ -6,6 +6,48 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## WorkspaceStore Trait
+
+**Date:** February 2026
+
+### Context
+The LSP/sync server decoupling decision (below) raises a question: where does workspace management live? Currently, loading/saving domain objects (plans, charters) and discovering workspace contents is spread across both clearhead-core (crdt.rs has `Workspace`, `CrdtStorage`, `ActionRepository` with `std::fs` calls) and clearhead-cli (workspace.rs for file/charter discovery, its own crdt.rs for XDG resolution and schema migration).
+
+Both the CLI and the future sync server need these operations. A database or mobile app would need them too — but shouldn't be forced into filesystem assumptions.
+
+### Decision
+Define a `WorkspaceStore` trait in clearhead-core that abstracts "load/save domain objects by key." The trait covers:
+- Listing objectives in the workspace
+- Loading/saving `DomainModel` for an objective
+- Loading/saving `Charter` for an objective
+- Discovering all charters in the workspace
+
+Storage backends implement this trait:
+- **Filesystem** (`.actions` + `.md` files) — behind an optional feature flag in core
+- **Database** (SQLite, etc.) — consumers implement as needed
+- **In-memory** — always available, ships with core for testing
+
+The CRDT sync layer sits *above* this trait. A sync server uses a `WorkspaceStore` to project CRDT state outward, but the store has no knowledge of CRDTs or synchronization. When the LSP is connected, it controls projection timing (gating). When no editor is running, the sync server projects through the store directly.
+
+### Rationale
+- **Multiple consumers:** CLI, LSP, sync server all need workspace operations
+- **Multiple backends:** Filesystem is one option, not the only one
+- **Testability:** `InMemoryStore` eliminates temp directory gymnastics in tests
+- **Clean CRDT boundary:** Store doesn't know about sync, CRDT doesn't know about storage format
+
+### Alternatives Considered
+1. **Pure path mapping in core:** Core returns paths, consumers do I/O
+   - Rejected: Dishonest about the abstraction — it's not "give me paths," it's "load/save domain objects"
+2. **Separate `clearhead-workspace` crate:** Shared crate for filesystem operations
+   - Rejected: Extra crate when a feature flag in core achieves the same thing
+3. **Keep workspace logic in CLI only:** Sync server imports CLI as library
+   - Rejected: CLI has interactive/display concerns that don't belong in a sync daemon
+
+### Implementation
+- `clearhead-core/src/store.rs` — trait definition, `ObjectiveRef`, `DiscoveredCharter`, `InMemoryStore`
+- Phase 2 (future): `FsWorkspaceStore` behind `fs` feature flag
+- Phase 3 (future): CLI refactored to use trait instead of direct filesystem calls
+
 ## Decoupling LSP from CRDT Sync
 Ive been building up the work and i realize now that having the LSP server directly manipulate the CRDT document is causing some issues around the fact that we want to be able to have the LSP server be a more general tool for working with the DSL files rather than being tightly coupled to the CRDT syncing and merging.
 
