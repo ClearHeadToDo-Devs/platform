@@ -6,6 +6,14 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decoupling LSP from CRDT Sync
+Ive been building up the work and i realize now that having the LSP server directly manipulate the CRDT document is causing some issues around the fact that we want to be able to have the LSP server be a more general tool for working with the DSL files rather than being tightly coupled to the CRDT syncing and merging.
+
+Instead, the future sync server that will be handling automerge will also be the primary tool responsible for manipulating the CRDT documents based on requests for changes it recieves
+
+Instead, the LSP will just check a UNIX domain socket to see if the sync server is running, if so, it pushes changes to the sync server after its modifiications, and recieves edits over that same socket.
+
+If not, if moves on as it normally would, just modifying the file and letting the formatter and linter do their thing without worrying about the CRDT document at all. this way those who dont want to leverage the CRDT syncing can still use the LSP server for the other features without needing to worry about the syncing piece at all.
 ##  Semantic Patch + Projection Gating for Multi-Device Sync
 
 **Date:** February 2026  
