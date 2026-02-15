@@ -21,26 +21,33 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 ### Tracking Decisions
 we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
 
+### User-Facing Documentation
+we leverage [mdbook](https://rust-lang.github.io/mdBook/index.html) to maintain a user-facing overview of this work such that we can start working through individual structures in each repository
 
-## The Chain
-The ClearHead platform can be seen as more or less abstract products that work together for a common goal:
-- [Specifications](./specifications): The source of truth for the platform, written in human-readable formats like markdown. This covers guidance on evertying from the file format, to file and naming conventions, to example files and data schemas
+you can see the contents at [the summary](src/summary.md) and the [index](src/index.md)
+
+you can also just view the output HTML at [the book](book/index.html)
+
+## Index of Repositories
+
+Please review product-specific documentation for more details on each repository
+
+- [Specifications](./specifications/README.md): The source of truth for the platform, written in human-readable formats like markdown. This covers guidance on evertying from the file format, to file and naming conventions, to example files and data schemas
   - all downstream dependencies rely on this repository, but usually not directly, we vendor examples so that downstream repositories can be more self-contained, and where possible the products may simply conform to the specifications without needing to reference them directly
-- [Ontology](./ontology): The ontologies that provide the semantic backbone for the platform, ensuring that data is structured and interpreted consistently across different tools and repositories
+- [Ontology](./ontology/README.md): The ontologies that provide the semantic backbone for the platform, ensuring that data is structured and interpreted consistently across different tools and repositories
   - Aligned with the CCO ontology, which itself is a BFO-aligned ontology format.
   - Creates the semantic backbone that enables interoperability and data integration across the platform
   - tools like the CLI use it to do semantic reasoning and validation on the data ingested 
-- [Action File Parser](./tree-sitter-actions/) a parser for the action file format, built using tree-sitter
+- [Action File Parser](./tree-sitter-actions/README.md) a parser for the action file format, built using tree-sitter
   - used by the CLI and other tools to parse and validate action files
-- [Core Library](./clearhead-core/) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools
+- [Core Library](./clearhead-core/README.md) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools
   - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
-- [CLI](./clearhead-cli/) the CLI and server implementation of many of the specifications outlined
+- [CLI](./clearhead-cli/README.md) the CLI and server implementation of many of the specifications outlined
   - handles much of the file ingestion, formatting, and linting required to translate strings in files into data that can be queried
   - uses the ontology to do semantic reasoning and validation on the data ingested
   - parses everything with the above tree-sitter parser
   - also serves as an LSP server so that linting and validation can be done in editors
-- [Neovim App](./clearhead-nvim/) a neovim plugin that uses the CLI as a backend to provide in-editor support for the action file format
+- [Neovim App](./clearhead-nvim/README.md) a neovim plugin that uses the CLI as a backend to provide in-editor support for the action file format
   - provides syntax highlighting, linting, and validation for action files within neovim
   - leverages the CLI's LSP server capabilities to offer real-time feedback and assistance while editing action files
   - also leverages the tree-sitter parser for accurate syntax parsing, folding, and highlighting
-
