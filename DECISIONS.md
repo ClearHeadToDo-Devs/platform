@@ -6,6 +6,19 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 19: CRDT Sync as Feature not Root
+
+After reflecting, we are going to add an update to decision 2.
+
+In the older format, we were using the CRDT as the main root because i wanted this to be the core way we had several devices speak. However, I really want to support the use case of someone just editing the files by hand and using the CLI locally before the structure of the CRDT is fully added.
+
+This does a few things:
+
+- Simplifies the CLI and LSP server implementation so they are unconcerned with the CRDT layer.
+- The CRDT will operate on the on-disk files as a secondary source of truth when enabled, but the files should be able to live on their own
+- the CRDT server will need to be able to read the workspace files but that seems fine overall and it makes things easier to structure our work
+
+So we are going to take some work of simplifying the CLI and LSP to make that experience really tight, with plans for the sync server to be something that we do in JS later 
 ## Decision 18: RDF Store
 
 In line with the work outlined below on the CRDT layer, we will also be decoupling the RDF store from the core hotpath.
@@ -326,6 +339,11 @@ However, with the CRDT as the source of truth, this becomes less necessary as th
 By contrast, the events db is more for analytics, aggregating data on the same computer, while also being used to aggregate the data acrossed multiple devices via duckdb in any one of the nodes so that we are able to also ask questions about these actions acrossed multiple dimmensions
 
 what this DB DOES own however is the recurrence problem and tracking atleast the most upcoming recurring action instance so that when we edit the template file in the DSL we will keep it closed while still noting that in our events db we have the upcoming instance that is open and have closed/cancelled an instance
+
+## ... When the sync server is running
+to simplify the architecture, this is true for the sync server, which will only watch the structure of the work, and update the files as needed, but for users that dont want to use the sync server, they should be able to edit the structure such that they can work through the introductions
+
+so while CRDT WILL own the sync story, it will not own the local edit story, or more precisely, will not be NECESSARY for functioning of the core workspace model so that users can still edit the files
 ## Decision 1: Loosly couple the ontology and move forward
 Instead of relying on generation as before, we are instead using the ontology like any other piece where the cli will leverage it by translating the work into data and then running the validation shapes.
 
