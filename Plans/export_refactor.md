@@ -1,3 +1,6 @@
+--- 
+status: completed
+---
 # Graph Modularization + Export Redesign
 
 ## Context
