@@ -6,6 +6,29 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 20: Provisional project local scope
+
+After much considerations, im undoing decision 5, the user-level storage only decision, and instead going with a provisional project local scope.
+
+now, the problems were still there i dont think i plan to do a recursive search of the filesystem, but instead, we can have a simple mechanism for designating a project local scope where we look for a `.clearhead` or `next.actions` file in the project root directory (we will have to do a check if we are in a project directory)
+
+we will also have a config option to designate whether people want to have the cli and other pieces be dynamic or if we want to look at a single workspace every time
+
+### What changed?
+
+Decision 19 opened the design space allot more to allow for project-scoped work now that we are going to be able to designate everything through git.
+
+allot of work has gone into making this process git-friendly so we want to make sure that we can leverage that where necessary
+
+besides, it could be argued that people would want their plans related to a project to be deeply coupled to the project itself and not just floating around in a user-level workspace, so this allows for that use case while still allowing for the individual use case as well
+
+Another thing people will be able to do is designate a config option for adding additional workspaces in the CLI so that if people DO want to navigate and add everything to a single query, they can but we will default to one workspace at a time
+
+#### Considerations
+
+Now, this also means we are going to have different RDF graphs for each workspace without extra work and maybe we consider a format where we can look at different graphs but that isnt the end of the world honestly and again it might be helpful for people to have many smaller graphs with the ability to aggregate them later with a strong query engine rather than forcing people to put everything in one place
+
+still, this allows git to be a first-class citizen and opens the possibility of managing a project entirely within the repo which i honestly think is table stakes for what we are building here since this is meant to be something developer friendly is tremendously important that we meet people where they are rather than building for a customer im not sure exists
 ## Decision 19: CRDT Sync as Feature not Root
 
 After reflecting, we are going to add an update to decision 2.
@@ -66,7 +89,7 @@ The CRDT sync layer sits *above* this trait. A sync server uses a `WorkspaceStor
 - Phase 2 (future): `FsWorkspaceStore` behind `fs` feature flag
 - Phase 3 (future): CLI refactored to use trait instead of direct filesystem calls
 
-## Decoupling LSP from CRDT Sync
+## Decision 16: Decoupling LSP from CRDT Sync
 Ive been building up the work and i realize now that having the LSP server directly manipulate the CRDT document is causing some issues around the fact that we want to be able to have the LSP server be a more general tool for working with the DSL files rather than being tightly coupled to the CRDT syncing and merging.
 
 Instead, the future sync server that will be handling automerge will also be the primary tool responsible for manipulating the CRDT documents based on requests for changes it recieves
@@ -74,7 +97,7 @@ Instead, the future sync server that will be handling automerge will also be the
 Instead, the LSP will just check a UNIX domain socket to see if the sync server is running, if so, it pushes changes to the sync server after its modifiications, and recieves edits over that same socket.
 
 If not, if moves on as it normally would, just modifying the file and letting the formatter and linter do their thing without worrying about the CRDT document at all. this way those who dont want to leverage the CRDT syncing can still use the LSP server for the other features without needing to worry about the syncing piece at all.
-##  Decision 16: Semantic Patch + Projection Gating for Multi-Device Sync
+##  Decision 15: Semantic Patch + Projection Gating for Multi-Device Sync
 
 **Date:** February 2026  
 
@@ -132,7 +155,7 @@ The sync architecture already establishes the CRDT as the source of truth and th
 - Sync spec should explicitly describe *semantic patching* and *projection gating* as core strategies for multi-device stability.
 - Observability spec should include events that explain patch derivation/application and sync sessions, while remaining non-authoritative.
 
-## Decision 15: Archiving Actions
+## Decision 14: Archiving Actions
 In order to support the archival of plans (actions) and their planned acts, we are going to implement a simple mechanism for archiving actions.
 
 The core mechanism is described in [the process specification](./specifications/process.md) but the key points are:
@@ -148,13 +171,13 @@ this is separate from the logging mechanism which simply logs what happened, ins
 open questions are whether or not we should allow the export of data to other formats or even supporting a retention period mechanism where stuff gets automatically removed from the archive after a certain period of time to ensure the archive doesnt grow indefinitely but these are things we can explore later
 
 For now, this is another piece of functionality that will be something a user can turn on or off depending on preference but i think this will be important for making it so people dont need to manage the movement of closed actions manually
-## Decision 14: Splitting the CLI from Core
+## Decision 13: Splitting the CLI from Core
 The core functionality of the platform has been growing for awhile and with the latest additions to the LSP we are going to split the clearhead cli from the core platform functionality.
 
 This will enable the two to grow independently and is already yielding benefits around readability and proper boundary definition.
 
 Implementors are free to either integrate with the cli or to build their own tools on top of the core platform functionality as a core library, or even at a data level if the intergration needs to be really loose.
-## Decision 13: Reworking the Ontology and CLI
+## Decision 12: Reworking the Ontology and CLI
 After allot of pondering, im very happy to say the v4 of the ontology is prepared and ready to go.
 
 I realized that CCO offers the mass majority of what we need for the entire thing to work and I really like the idea of our core entities:
@@ -186,7 +209,7 @@ Leaving the CLI to cover:
 - File System Interactions
 - Network Calls
 - LSP Server implementation (this is the part with the runtime)
-## Decision 12: Oxigraph as Query Layer
+## Decision 11: Oxigraph as Query Layer
 After doing allot of research on the various options for a query engine, I have decided to give [Oxigraph](https://github.com/oxigraph/oxigraph?tab=readme-ov-file) a try as the core query engine for the platform.
 
 This is for a few reasons:
@@ -225,7 +248,7 @@ By keeping all data (plans AND processes) in the CRDT, we mainain a single sync 
 
   Sync happens at CRDT layer only
 
-## Decision 11: Expanding Reference Styles
+## Decision 10: Expanding Reference Styles
 In order to make the reference styles more flexible we are going to expand the existing reference styles to include some new ones:
 
 - Short UUID: The first 8 characters of the UUID can be used as a short "good enough" reference for actions, good for when we want to be sure but ALSO keep the id short enough to be human friendly.
@@ -233,7 +256,7 @@ In order to make the reference styles more flexible we are going to expand the e
 - Defining sequential action plans: to make it easier to have multiple actions that are inherently sequential, we will support a syntax for designating a set of actions as being sequentially dependent on one another. this will make it easier to have things like "step 1", "step 2", "step 3" without needing to have complex dependencies defined.
 
 By default, we want to still assume that actions are independent unless otherwise specified but this will make it easier to have more complex workflows defined in the action plan DSL and where we want to simply use the order to denote dependencies rather than needing to have complex dependency graphs defined.
-## Decision 10: Action Plan Hierarchies
+## Decision 9: Action Plan Hierarchies
 Another hierarchy we have specced out in the file format but have yet to represent in the data is the idea that one action plan can have child action plans.
 
 we will need some sort of syntax to represent this so that we can have two subprojects with the name "cli" that are different things.
@@ -241,7 +264,7 @@ we will need some sort of syntax to represent this so that we can have two subpr
 this will make some things easier like having a project for "work" and a project for "personal" and being able to have actions that are scoped to those projects.
 
 This means we need a way to denote child projects within the file format as well as the data structures because as we have noted its important that we actually have a _lossless_ representation of the file format in the data structures so that we can roundtrip without losing information.
-## Decision 9: Tag Hierarchies
+## Decision 8 Tag Hierarchies
 One feature i want to support is the idea of tag subtypes. the idea being that some contexts are of a precise type of another context.
 
 These can be defined within a single config option in the core config file and will only be a list of values, with the ability to put certain tags under others. 
@@ -251,7 +274,7 @@ Grocery store is a subtype of driving
 so if I tag something as grocery store it will also be tagged as driving.
 
 neovim is a subset of terminal so if I tag something as neovim it will also be tagged as terminal which itself will be a subset of computer so tagging something as neovim will also tag it as computer
-## Decision 8: Decreasing Formatter Responsibility
+## Decision 7: Decreasing Formatter Responsibility
 After reflecting on the role of the formatter in the overall architecture, I have decided to reduce its responsibilities significantly.
 
 In particular, a core design philosphy is that we dont really care about whitespace in the action plan dsl.
@@ -263,7 +286,7 @@ this will primarily be used on "on save" actions in the LSP server to ensure tha
 the "indent" queries in the treesitter parser will be used to ensure that children are indented properly but beyond that we wont be worrying about it.
 
 this makes it so that formatting is primarily handled by the parser, while the cli owns linting which happens AFTER parsing .
-## Decision 7: Relaxed Parser, Strict Linter
+## Decision 6: Relaxed Parser, Strict Linter
 In tree-sitter, it is less reliable and more brittle to do error reporting from the tree itself. 
 
 Instead, we want to have a relatively relaxed parser that can parse most things into a tree structure, and then have the linter be the place where we do the strict checking of the document to ensure that it is valid.
@@ -271,7 +294,7 @@ Instead, we want to have a relatively relaxed parser that can parse most things 
 this was brought to my attention when i realized that we were getting invalid trees from small issues like tags with no content and instead of making people figure out why the tree isnt valid i would rather say thats a valid tree but you have a linter error that says "tags must have content" or something like that.
 
 This goes along with modern tools like typescript where the parser is very relaxed and the typechecker is where the strictness comes in.
-## Decision 5: User-Level Storage Only
+## Decision 5: User-Level Storage Only (Superceded by 20)
 After working through the architecture problems for a few weeks ive decided that the best path forward is to focus on keeping actions in the user-stored directories and to forget about doing the file-search for other projects that just so happen to have action plans in them.
 
 This is because the complexity of doing this is high including:
@@ -308,7 +331,7 @@ By contrast, the formatter tries to go with a more gofmt approach of just fixing
 Again, the lsp leverages this to provide "on save" formatting that makes sure everything is in the right place but is mediated through the server rather than asking each editor to do its own thing.
 
 These tools make the processing and working with the DSL, even with the below CRDT changes possible as the tooling will ensure synced documents are of valid state
-## Decision 2: CRDT is New Source of Truth
+## Decision 2: CRDT is New Source of Truth (superceeded by 19)
 As i have grappled with several architectures i realize that the primary way that we move forward is by leveraging the CRDT data structures as the shared source of truth for the application state.
 
 This changes things significantly because the filetype is now a projected view FROM the CRDT and is not the primary source of truth anymore.
