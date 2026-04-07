@@ -1,0 +1,7 @@
+[x] make it easier to query individual objective actions  %2026-02-08T12:02 ^2026-02-06T14:18 #019c3508-a3cd-7471-92f4-d22aef3bf2ed
+[x] consider decoupling the lsp from the main cli?  $ for our work, this whole thing of downloading a different LSP might actually be really nice to get it all working $ %2026-02-22T14:33 ^2026-02-11T16:35 #019c4f45-d737-7dd1-89a1-9998acf339df
+[x] Implement core reference resolver (alias/uuid)  =core_ref_resolver %2026-03-20T11:32 ^2026-03-20T11:25 #019d0c7e-9c88-7112-8e4b-87c92038a57b
+[_] standup sync server in clojurescript  ~ ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38b4bdc4b3e4
+        >[_] get the project starts  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38ce2d1cd999
+        >[_] pull in automerge repo  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38dc4493c18a
+[x] Update reference syntax spec with prefixes  =spec_ref_prefixes %2026-03-20T11:28 ^2026-03-20T11:25 #019d0c7e-a675-78e3-adca-799f6d3eed3f

@@ -1,0 +1,3 @@
+[ ] Integrate core reference resolver in LSP  =lsp_ref_integration ^2026-03-20T18:19 #019d0dfa-0995-75b3-a22f-74175e0511bf
+[ ] split the cli from the LSP binary  $ we want to allow people to incrementally adopt and only use the tools they want without downloading heavy deps like the LSP $ ^2026-03-16T22:20 #019cfa3d-30d5-7611-9a7d-4148b3e97b84
+[ ] Research what is happening with the duplicate id for an action after moving  $ im hitting this strange behavior where after moving one of the plans to another charter now it says there is a duplicate id from the diagnostics which tells me we are making another plan instead of moving the existing one... $ !2 ^2026-03-23T07:48 #019d1b2b-2ea5-78e2-b432-8c6eb4b448bf
