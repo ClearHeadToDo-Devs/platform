@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# quick little script to get the repo up and running on first clone
+# assumed to be run at the root of the repo
+
+# initialize submodules
+git submodule update --init --recursive
