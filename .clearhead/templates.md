@@ -80,6 +80,8 @@ specifically, rather than using the uuid v7 from the actions files like we are d
 
 meanwhile, new, on-demand acts will still use uuid v7 but will have a null vevent uid which is how we can differentiate between the two in the data layer. this also means that we can easily update the structure of the generated acts by just looking up the vevent uid and then updating all acts with that vevent uid as well.
 
+Boundary note: keep this as an integration mapping detail, not a core ontology commitment. In core semantics, prefer neutral fields like `externalScheduleId` and `externalOccurrenceKey`, then map those to VEVENT UID/instance identity at the ICS adapter layer.
+
 ## Scope
 
 **In scope:**

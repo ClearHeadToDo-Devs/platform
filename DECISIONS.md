@@ -6,6 +6,34 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 22: Keep ontology source-agnostic; map ICS through neutral external identity fields
+
+As we move plans/schedules into `.ics` and keep `.actions` focused on planned acts, we need schedule linkage for deterministic generation without hard-coding calendar semantics into the core ontology.
+
+### Decision
+
+1. The core ontology/domain model remains source-agnostic.
+2. Calendar-specific semantics stay in an integration profile (ICS mapping contract).
+3. Generated planned acts carry optional neutral linkage fields:
+   - `externalScheduleId` (series identity)
+   - `externalOccurrenceKey` (instance identity)
+4. ICS profile maps:
+   - `externalScheduleId <- VEVENT.UID`
+   - `externalOccurrenceKey <- RECURRENCE-ID` or canonicalized occurrence datetime
+5. Deterministic generation uses these keys for idempotent expansion (recommended UUIDv5 derivation).
+
+### Rationale
+
+- Keeps the ontology portable beyond calendar-backed implementations.
+- Preserves deterministic regeneration and traceability.
+- Avoids coupling core semantics to RFC 5545 object terminology.
+
+### Consequences
+
+- Specifications must distinguish core ontology language from ICS integration language.
+- Existing VEVENT-specific naming proposals in ontology planning should be generalized.
+- Implementations can still expose VEVENT fields in adapter layers while using neutral core fields.
+
 ## Decision 21: `ics` as the plan format
 
 ive been working through the idea of decoupling the various aspects of planning and i realized that we should try to pawn off the when to the tool that does this the best, the calendar and to make the role of the actions format more distinction without needing to encapsute a bunch of rrule logic
