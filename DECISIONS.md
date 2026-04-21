@@ -6,6 +6,24 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 21: `ics` as the plan format
+
+ive been working through the idea of decoupling the various aspects of planning and i realized that we should try to pawn off the when to the tool that does this the best, the calendar and to make the role of the actions format more distinction without needing to encapsute a bunch of rrule logic
+
+this means plans will now be represented as `ics` files which can easily be created within any standard calendar application and which other applications can easily read and edit as well.
+
+this means that the actions format will be losing support for rrule syntax as they will now take the place of the planned act domain object and will be the thing that gets automatically generated when reading these ics files.
+
+this makes both systems simpler while also being more able to differentiate the role of each piece and also makes it so that we can leverage existing tools for working with calendar data rather than needing to build our own syntax for it.
+
+planned acts will still utilize the uuid v5 but will now use the calendar id as the namespace rather than the way we had it before where the ttl had the link which makes this much easier to control
+
+this means that the ttl will now be used for nothing but the central archive which is where it excels as a data format
+
+### Template support
+while normally we will support the calendar event itself becoming an action, in order to make this easier we will also support the idea of having template files in the `templates` directory of the workspace that can be leveraged to create complex process chains in a recurring manner based on the calendar events 
+
+In addition, the templates can then be used for other usecases like starting a charter off with a known set of planned acts and customizing them from there to make things easier to understand
 ## Decision 20: Provisional project local scope
 
 After much considerations, im undoing decision 5, the user-level storage only decision, and instead going with a provisional project local scope.

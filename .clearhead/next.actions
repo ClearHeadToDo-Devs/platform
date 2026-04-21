@@ -1,5 +1,2 @@
 [-] Wire export calendar to reference resolver  =cli_export_ref ^2026-03-20T11:25 #019d0c7e-a67a-7cd2-9254-cad8b9f8078a
-[ ] add update plan command  $ name, priority, state/phase — the three things grooming needs to change. without this, restructuring the backlog requires dropping to raw file edits, bypassing the domain model entirely $ +cli  ^2026-03-24T10:58 #019d20ff-c9e7-7402-b3b3-bed266b60ca5
-[ ] add delete plan command  $ remove a plan from the workspace by id or reference. currently no way to delete from CLI — grooming duplicates or retired plans requires file editing $ +cli  ^2026-03-24T10:58 #019d20ff-d6c5-74c1-960f-b47cf07769fc
-[ ] add move plan command  $ reparent a plan to a different charter or make it a sub-plan of another. needed for restructuring as the workspace grows — currently requires editing the raw file and knowing the file layout $ +cli  ^2026-03-24T10:58 #019d20ff-e4b9-7eb1-a0f1-3aad340c95de
 [x] add mcp server for neovim to claude code  %2026-04-12T21:35 ^2026-03-22T14:38 #019d177b-f14e-76c0-8adc-f38a13bf703b
