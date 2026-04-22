@@ -5,3 +5,5 @@
         >[_] get the project starts  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38ce2d1cd999
         >[_] pull in automerge repo  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38dc4493c18a
 [x] Update reference syntax spec with prefixes  =spec_ref_prefixes %2026-03-20T11:28 ^2026-03-20T11:25 #019d0c7e-a675-78e3-adca-799f6d3eed3f
+[x] Wire export calendar to reference resolver  =cli_export_ref %2026-04-22T08:16 ^2026-03-20T11:25 #019d0c7e-a67a-7cd2-9254-cad8b9f8078a
+[x] add mcp server for neovim to agentic harnesses  %2026-04-22T08:16 ^2026-03-22T14:38 #019d177b-f14e-76c0-8adc-f38a13bf703b
