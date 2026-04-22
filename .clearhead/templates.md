@@ -33,16 +33,18 @@ A template is a plain `.actions` fragment — a set of acts, possibly hierarchic
 
 ### Recurring instantiation via `.ics`
 
-Schedules are defined as `.ics` files. A VEVENT can reference a template by name via a custom property:
+Schedules are defined as `.ics` files. A VEVENT references a template by name via a convention in the DESCRIPTION field — the first line starts with `template: ` followed by the template name:
 
 ```
 BEGIN:VEVENT
 SUMMARY:Weekly Review
 RRULE:FREQ=WEEKLY;BYDAY=SU
 DTSTART:20260427T100000
-X-CLEARHEAD-TEMPLATE:weekly-review
+DESCRIPTION:template: weekly-review
 END:VEVENT
 ```
+
+This works with standard calendar apps (Google Calendar, Outlook, Apple Calendar) — users put `template: weekly-review` as the first line of the event notes. Any text after the first line becomes the plan description.
 
 `expand acts` reads the schedule, determines which instances are due within the configured horizon (default: 14 days), and generates acts into the relevant `.actions` file. If a template is referenced, the generated act gets the template's children pre-populated.
 

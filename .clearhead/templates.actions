@@ -16,7 +16,7 @@
 [ ] implement  +plan linking on generated acts  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-4099b5a64e31
         >[ ] generated acts carry  +plan  ^2026-04-20T16:11 <vevent-uid  #019dad29-c05d-7781-a92c-40a889a5cf72
         >[ ] update expand_acts to write linked instances into .actions files (not just TTL)  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40b108acbd93
-[ ] implement templates folder and apply template command  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40cd1b57501d
-        >[ ] define templates/ discovery convention (charter-local first, platform root fallback)  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40d71adfb88e
-        >[ ] implement apply template  ^2026-04-20T16:11 <name  #019dad29-c05d-7781-a92c-40ec4f3080a2
-        >[ ] wire X-CLEARHEAD-TEMPLATE in expand_acts to pre-populate children from template  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40f15478ac2a
+[x] implement templates folder and apply template command  $ templates.rs in core (resolve + instantiate); apply template CLI command; expand acts wires template children; template binding moved from X-CLEARHEAD-TEMPLATE to DESCRIPTION convention for calendar app compatibility $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40cd1b57501d
+        >[x] define templates/ discovery convention (charter-local first, platform root fallback)  $ resolve_template in clearhead-core/src/workspace/templates.rs $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40d71adfb88e
+        >[x] implement apply template command  $ Verb::Apply + ApplyTarget::Template in argparser; commands/template.rs handler; fresh UUIDv7s for on-demand use $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40ec4f3080a2
+        >[x] wire template binding in expand_acts to pre-populate children from template  $ uses DESCRIPTION convention instead of X-CLEARHEAD-TEMPLATE; deterministic child UUIDs via occurrence_act_id; falls back to flat act with warning if template missing $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40f15478ac2a
