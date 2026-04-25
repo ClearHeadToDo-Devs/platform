@@ -6,6 +6,14 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 23: Moving charters to a subfolder
+in order to make the process of making parsing trivial for implementors, i have decided the best structure to adopt is putting the actions, charters, and plans in a dedicated "charters" subfolder within the workspace
+
+this means our "inbox.actions" file will now be "charters/inbox.actions" and our "work.md" charter file will now be "charters/work.md"
+
+this also makes it easier to do things like "clearhead_cli read --charters" to read all the charters in the workspace without needing to worry about other files that might be in the workspace and it also makes it easier to do things like "clearhead_cli read --charters work.md" to read a specific charter file without needing to worry about other files in the workspace
+
+this refers to BOTH the structure of the project-local and user-scoped workspaces and will alter how we search for things
 ## Decision 22: Keep ontology source-agnostic; map ICS through neutral external identity fields
 
 As we move plans/schedules into `.ics` and keep `.actions` focused on planned acts, we need schedule linkage for deterministic generation without hard-coding calendar semantics into the core ontology.
