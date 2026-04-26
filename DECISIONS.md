@@ -6,6 +6,12 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 24: json sidecar
+while i was pondering the linkage between actions and ics files i realized the best way to handle this problem of linkage is the introduction of a json sidecare for each charter (optional) that can be used for various purposes of adding data that we dont want to bother the humans with we might even make these hidden files to make that even more explicit
+
+it will be something like `.<charter>.json` within the same folder of the core action file so that we can link the various actions to their various counterparts like in this case, the link to the vevent that the action is either derived from or for which there was something we wanted to track
+
+this will all be captured into the domain model as just normal properties and in the graph as links but for our day to day this will allow us to keep working without cluttering the workspace or the files with the data we dont want to bother with
 ## Decision 23: Moving charters to a subfolder
 in order to make the process of making parsing trivial for implementors, i have decided the best structure to adopt is putting the actions, charters, and plans in a dedicated "charters" subfolder within the workspace
 
