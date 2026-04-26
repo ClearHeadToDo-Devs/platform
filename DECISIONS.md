@@ -36,6 +36,7 @@ As we move plans/schedules into `.ics` and keep `.actions` focused on planned ac
 - Preserves deterministic regeneration and traceability.
 - Avoids coupling core semantics to RFC 5545 object terminology.
 
+
 ### Consequences
 
 - Specifications must distinguish core ontology language from ICS integration language.
@@ -60,6 +61,13 @@ this means that the ttl will now be used for nothing but the central archive whi
 while normally we will support the calendar event itself becoming an action, in order to make this easier we will also support the idea of having template files in the `templates` directory of the workspace that can be leveraged to create complex process chains in a recurring manner based on the calendar events 
 
 In addition, the templates can then be used for other usecases like starting a charter off with a known set of planned acts and customizing them from there to make things easier to understand
+
+### Small wrinkle: vdir, not just ics
+so from doing more research ive determined that the protocol for storing the ics files _on disk_ is this [vdir format](https://vdirsyncer.pimutils.org/en/stable/vdir.html)
+
+this is the stable way that we keep things syncable to external calendars so we are going to follow this standard so that calendar apps like khal can just be pointed at the plans folder of that given charter.
+
+then, when more sync is required we can then properly leverage calDAV to actually sync this to external calendars since vdir was designed to be easily translated to calDAV and other calendar protocols
 ## Decision 20: Provisional project local scope
 
 After much considerations, im undoing decision 5, the user-level storage only decision, and instead going with a provisional project local scope.
