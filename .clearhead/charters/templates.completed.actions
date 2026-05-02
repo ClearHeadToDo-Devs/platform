@@ -1,0 +1,4 @@
+[_] update domain model loading to treat .actions as PlannedActs  #019dad29-c05d-7781-a92c-40550ace5866
+    >[_] audit load_domain_model — currently creates Plans from .actions lines  #019dad29-c05d-7781-a92c-4060e4e5153c
+    >[_] Plans now sourced from .ics VEVENTs (non-recurring acts are implicit single-instance Plans)  #019dad29-c05d-7781-a92c-407025b0b35d
+[_] implement  +plan linking on generated acts  #019dad29-c05d-7781-a92c-4099b5a64e31

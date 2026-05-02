@@ -1,22 +1,18 @@
-[ ] remove RRULE syntax from actions DSL  ^2026-04-20T14:00 #019dacb1-cfdf-7841-844b-3afff25c7266
-        >[ ] update spec to reflect change  ^2026-04-20T14:00 #019dacb1-cfdf-7841-844b-3b09835cb9e4
-        >[ ] rip out code  ^2026-04-20T14:00 #019dacb1-cfdf-7841-844b-3b12aa58cc09
-                >>[ ] remove rrule expansion code  ^2026-04-20T14:00 #019dacb2-1656-71a0-afec-4ff455913897
-[ ] update core to respect ics files  ^2026-04-20T14:00 #019dacb1-cfdf-7841-844b-3b282635aa75
-        >[ ] update generate code to primarily use ics files  ^2026-04-20T14:00 #019dacb1-cfdf-7841-844b-3b3be54d671b
-        >[x] update spec to reflect change  %2026-04-20T18:54 ^2026-04-20T14:00 #019dad1d-e83e-7d50-8efe-3f7c31162f2b
-[ ] update interface to make things easier  ^2026-04-20T16:00 #019dad1f-99a6-7823-8c97-3f30948e8732
-        >[ ] plans should now generate or update ics files  ^2026-04-20T16:07 #019dad26-87ff-7721-9ea3-e72bed5dc53f
-        >[ ] maybe we do something where we can update it from the calendar as well???  ^2026-04-20T16:09 #019dad27-9e28-7a62-b430-2bd597f61ac1
-        >[ ] consider cloud integration options  ^2026-04-20T16:09 #019dad27-c0e9-7280-8323-7bbdd357d6e9
-[ ] update domain model loading to treat .actions as PlannedActs  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40550ace5866
-        >[ ] audit load_domain_model — currently creates Plans from .actions lines  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-4060e4e5153c
-        >[ ] Plans now sourced from .ics VEVENTs (non-recurring acts are implicit single-instance Plans)  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-407025b0b35d
-        >[ ] update graph insert logic to reflect new semantics  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-4089e77610bf
-[ ] implement  +plan linking on generated acts  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-4099b5a64e31
-        >[ ] generated acts carry  +plan  ^2026-04-20T16:11 <vevent-uid  #019dad29-c05d-7781-a92c-40a889a5cf72
-        >[ ] update expand_acts to write linked instances into .actions files (not just TTL)  ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40b108acbd93
-[x] implement templates folder and apply template command  $ templates.rs in core (resolve + instantiate); apply template CLI command; expand acts wires template children; template binding moved from X-CLEARHEAD-TEMPLATE to DESCRIPTION convention for calendar app compatibility $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40cd1b57501d
-        >[x] define templates/ discovery convention (charter-local first, platform root fallback)  $ resolve_template in clearhead-core/src/workspace/templates.rs $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40d71adfb88e
-        >[x] implement apply template command  $ Verb::Apply + ApplyTarget::Template in argparser; commands/template.rs handler; fresh UUIDv7s for on-demand use $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40ec4f3080a2
-        >[x] wire template binding in expand_acts to pre-populate children from template  $ uses DESCRIPTION convention instead of X-CLEARHEAD-TEMPLATE; deterministic child UUIDs via occurrence_act_id; falls back to flat act with warning if template missing $ %2026-04-21T00:00 ^2026-04-20T16:11 #019dad29-c05d-7781-a92c-40f15478ac2a
+[ ] remove RRULE syntax from actions DSL  #019dacb1-cfdf-7841-844b-3afff25c7266
+    >[ ] update spec to reflect change  #019dacb1-cfdf-7841-844b-3b09835cb9e4
+    >[ ] rip out code  #019dacb1-cfdf-7841-844b-3b12aa58cc09
+        >>[ ] remove rrule expansion code  #019dacb2-1656-71a0-afec-4ff455913897
+[ ] update core to respect ics files  #019dacb1-cfdf-7841-844b-3b282635aa75
+    >[ ] update generate code to primarily use ics files  #019dacb1-cfdf-7841-844b-3b3be54d671b
+    >[x] update spec to reflect change  %2026-04-20T18:54 #019dad1d-e83e-7d50-8efe-3f7c31162f2b
+[ ] update interface to make things easier  #019dad1f-99a6-7823-8c97-3f30948e8732
+    >[ ] plans should now generate or update ics files  #019dad26-87ff-7721-9ea3-e72bed5dc53f
+    >[ ] maybe we do something where we can update it from the calendar as well???  #019dad27-9e28-7a62-b430-2bd597f61ac1
+    >[ ] consider cloud integration options  #019dad27-c0e9-7280-8323-7bbdd357d6e9
+    >[ ] update graph insert logic to reflect new semantics  #019dad29-c05d-7781-a92c-4089e77610bf
+    >[ ] generated acts carry  +plan  <vevent-uid  #019dad29-c05d-7781-a92c-40a889a5cf72
+    >[ ] update expand_acts to write linked instances into .actions files (not just TTL)  #019dad29-c05d-7781-a92c-40b108acbd93
+[x] implement templates folder and apply template command  $ templates.rs in core (resolve + instantiate); apply template CLI command; expand acts wires template children; template binding moved from X-CLEARHEAD-TEMPLATE to DESCRIPTION convention for calendar app compatibility $ %2026-04-21T00:00 #019dad29-c05d-7781-a92c-40cd1b57501d
+    >[x] define templates/ discovery convention (charter-local first, platform root fallback)  $ resolve_template in clearhead-core/src/workspace/templates.rs $ %2026-04-21T00:00 #019dad29-c05d-7781-a92c-40d71adfb88e
+    >[x] implement apply template command  $ Verb::Apply + ApplyTarget::Template in argparser; commands/template.rs handler; fresh UUIDv7s for on-demand use $ %2026-04-21T00:00 #019dad29-c05d-7781-a92c-40ec4f3080a2
+    >[x] wire template binding in expand_acts to pre-populate children from template  $ uses DESCRIPTION convention instead of X-CLEARHEAD-TEMPLATE; deterministic child UUIDs via occurrence_act_id; falls back to flat act with warning if template missing $ %2026-04-21T00:00 #019dad29-c05d-7781-a92c-40f15478ac2a
