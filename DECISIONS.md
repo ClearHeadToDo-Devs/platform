@@ -6,7 +6,23 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 25: Replacing Planned Act with Action
+We have been struggling with this distinction for awhile and ontologically the problem is that planned acts MUST have a plan as they are instance of that plan. by contrast our actions may have a single due date, or no due date at all, meaning they have no plan associated with them.
+
+to handle this ontologicaly confusion we are going to replace planned act with the action which will serve as a SIBLING to the other objects under the ontology rather than being an occurant as planned act it.
+
+the distinction is that actions CAN have plans, but they dont HAVE to have plans, making them more indpenedent and more aligned with how we think about this low layer
+
+this continues to process of making the onotlogy an extension of CCO rather than using it wholesale but i feel that we have struggled with this distinction long enough that i dont want to break the commitments of the object and make it hard to integrate with the work
+### Details
+  - Plans exist only for recurrence — not for single dates.
+  - Single dates are adorned on Action directly, not expressed via a Plan object
+  - VEVENTs generated for single-date actions are a serialization artifact, not a domain entity — reading them back doesn't instantiate a Plan
+  - we are keeping the per charter distinction as we cant use categories within google calender to denote charters and we want to be able to have multiple charters in the same calendar if we want to, so this is a good way to keep that distinction without needing to rely on the calendar semantics for it
+  - cco:PlannedAct is retired as a standing type — Actions fulfill that role relationally when prescribed by a recurring Plan
+    - CCO has no natural class for committed-but-not-yet-executed tasks; Action fills a genuine domain gap rather than inheriting from Plan or PlannedAct
 ## Decision 24: json sidecar
+
 while i was pondering the linkage between actions and ics files i realized the best way to handle this problem of linkage is the introduction of a json sidecare for each charter (optional) that can be used for various purposes of adding data that we dont want to bother the humans with we might even make these hidden files to make that even more explicit
 
 it will be something like `.<charter>.json` within the same folder of the core action file so that we can link the various actions to their various counterparts like in this case, the link to the vevent that the action is either derived from or for which there was something we wanted to track
@@ -22,7 +38,7 @@ this also makes it easier to do things like "clearhead_cli read --charters" to r
 this refers to BOTH the structure of the project-local and user-scoped workspaces and will alter how we search for things
 ## Decision 22: Keep ontology source-agnostic; map ICS through neutral external identity fields
 
-As we move plans/schedules into `.ics` and keep `.actions` focused on planned acts, we need schedule linkage for deterministic generation without hard-coding calendar semantics into the core ontology.
+As we move plans/schedules into `.ics` and keep `.actions` focused on actions, we need schedule linkage for deterministic generation without hard-coding calendar semantics into the core ontology.
 
 ### Decision
 
