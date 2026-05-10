@@ -6,6 +6,15 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decisions 26: Plans as their own folder
+After a deeper study of how various vdir applications work i figured out that things will likely work better if all the calendars are in one single folder rather than having them as a sidecar to the charters themselves
+
+in addition, they need to be only a single level as many applications assume all calendars are within a single folder so we are going to need to handle the depth as well.
+
+to do this, we will extend the reference syntax to allow an alternative for the `/` delimiter which may be something like `-` so that we can have the syntax represented within the structure itself rather than needing to make an explicit sidecar since we want to just conform to convention
+
+### Breaking Changes
+This means we will be going back on the placement decision from earlier and we are going to start working that into the various layers so that we are doing what is necessary to get this all working
 ## Decision 25: Replacing Planned Act with Action
 We have been struggling with this distinction for awhile and ontologically the problem is that planned acts MUST have a plan as they are instance of that plan. by contrast our actions may have a single due date, or no due date at all, meaning they have no plan associated with them.
 
