@@ -4,3 +4,8 @@
         >[x] introduce Action class under Prescriptive ICE as sibling to Plan (not subtype)  %2026-05-09T00:00 #019de697-2fc9-7dc0-bf7e-fce7e02feb0d
         >[x] move hasPriority, hasAlias, requiresContext, isSequential, dependsOn to target Action class  %2026-05-09T00:00 #019de697-f8d0-7023-8429-be8ede75d9a7
         >[x] retire PlannedAct as primary class - update SHACL shapes and vocabulary TTL  %2026-05-09T00:00 #019de698-0260-7b22-bc68-e497c29bb57d
+[ ] thread Config type through the platform  $ tag_hierarchies live only in clearhead-cli; the graph layer and future workspace tooling need access to config to inject Context hierarchy into RDF and apply tag expansion at query time; requires Config type in core consumed by both CLI and nvim $ #019df000-0030-7000-0000-000000000001
+        >[ ] add Config type to clearhead-core (see core next.actions)  #019df000-0031-7000-0000-000000000001
+        >[ ] wire Context hierarchy into RDF graph on load (see core next.actions)  #019df000-0032-7000-0000-000000000001
+        >[ ] apply tag expansion in CLI context filters (see cli next.actions)  #019df000-0033-7000-0000-000000000001
+        >[ ] expose config tag_hierarchies to nvim plugin for context-aware queries  #019df000-0034-7000-0000-000000000001
