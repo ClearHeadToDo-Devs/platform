@@ -6,6 +6,60 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decisions 27: Upcoming Actions
+In order to make structure of time easier to see in the files we want to support the introduction of `<charter>.upcoming.actions` files that can be used to denote actions that are upcoming but not yet active.
+
+this is primarily intended for long-running, recurring actions that are going to be active in the future. Now, we already have limits for generation but we will be adding some more complexity here
+
+### Configuration
+we will add a new option to be able to configure how many _instances_ of a recurring action will live in the _primary_ action file with the assumption that ALL remaining actions generated will actually go to the upcoming actions file, this way we can have a clear distinction between what is active and what is upcoming without needing to rely on the dates themselves for that distinction.
+
+now its important to note that we have two config options now:
+- number of intances generated TOTAL
+- number of instances kept in the primary file
+
+the first number MUST be greater than the second, otherwise, we run into bugs around generation
+
+if the number of upcoming instances is not designated, then they will default to 1 instance in the primary file
+
+while the default TOTAL instances is 10
+
+#### per-schedule configuration
+individual events will be able to override this global configuration with a per-schedule configuration that can be used to designate how many instances of that schedule should be generated in the primary action file, this way we can have some schedules that are more active and have more instances generated in the primary file while other schedules that are less active or less important can have fewer instances generated in the primary file and more instances generated in the upcoming file
+
+this will be done in the same manner as templates with the `upcoming:` key in the config file follow by the integers we want to remain in the primary file
+
+now they can also update the total with the `total:` key so here we have something like this.
+
+#### handling upcoming actions
+users are able to still update these upcoming actions and be affected
+- if an action is completed/cancelled that is upcoming it will not be brought to the main file and will be archived like any other action
+
+#### workflow
+the main thing that i want to distinguish here is the workflow around the structure of the 3 stages:
+- expansion
+- archival
+- movement
+
+we first EXPAND the instances so that all upcoming instances and primary instances are there.
+
+Next, we finish either primary or upcoming actions and then ARCHIVE them like we are normally doing but archive should also now handle upcoming actions so that we can allow people to move stuff
+    specifically, this mean completed/cancelled actions in upcoming get swept to .completed.actions the same way primary ones do
+
+Finally, people can easily MOVE actions from the upcoming to the primary file based on if there are existing actions (open or closed) that are part of the recursion
+
+so the assumption is that if you want to remove actions you will archive them and then when youre ready you will run the move command or some such to get that working
+
+if people want to automate that they can but these commands are our primary method of editing
+
+so the worflow is:
+1. user creates schedule
+2. expand is run to generate the instances
+3. user completes some actions 
+4. actions are archived
+5. user runs move command to move upcoming actions to primary file
+
+do note, the move command can break and warn the use that expand must be run
 ## Decisions 26: Plans as their own folder
 After a deeper study of how various vdir applications work i figured out that things will likely work better if all the calendars are in one single folder rather than having them as a sidecar to the charters themselves
 
