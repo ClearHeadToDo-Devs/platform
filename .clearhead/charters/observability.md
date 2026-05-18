@@ -1,5 +1,6 @@
 ---
 alias: observability
+state: Closed
 ---
 # Observability and Debugging Tools
 
