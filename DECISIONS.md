@@ -1,11 +1,19 @@
 # Architectural Decisions
 
-**Last Updated:** February 14th 2026
+**Last Updated:** May 19th 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decisions 28: Separate Graphs for separate workspaces
+this repo itself has brought up the difficult question of how different workspaces relate to one another and i think i know how we want to do this.
+
+RDF has an existing concept of named graphs so we are going to leverage that to ensure the domain models remain portable while still having the ability to query acrossed workspaces if people do so choose. by doing this, we are going to allow as much sophistication as we want in terms of bringing graphs from different places (or even people?) together while still maintaining the ability to keep them separate when we want to. 
+
+from a filesystem perspective this allows us to pull multiple workspaces and have the ability to query across them or query a single workspace without worrying about how the structure are going to coalesce.
+
+but basically there will be a 1-1 relationship between workspaces and their graphs with the ability to move between the workspaces as needed and with the ability to actually do this work using sparql queries entirely
 ## Decisions 27: Upcoming Actions
 In order to make structure of time easier to see in the files we want to support the introduction of `<charter>.upcoming.actions` files that can be used to denote actions that are upcoming but not yet active.
 
