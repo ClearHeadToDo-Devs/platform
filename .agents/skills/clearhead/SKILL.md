@@ -53,7 +53,7 @@ man clearhead                     # full man page (once generated)
 **Action file format and workspace layout** (paths relative to platform repo root)
 ```
 specifications/action_file_format.md    ← DSL syntax, all fields, examples
-specifications/naming_conventions.md    ← workspace structure, charter hierarchy
+specifications/workspace.md             ← workspace structure, charter hierarchy, named graph isolation
 specifications/configuration.md         ← XDG paths, config.json format
 ```
 
