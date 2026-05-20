@@ -15,7 +15,7 @@ from a filesystem perspective this allows us to pull multiple workspaces and hav
 
 but basically there will be a 1-1 relationship between workspaces and their graphs with the ability to move between the workspaces as needed and with the ability to actually do this work using sparql queries entirely
 ## Decisions 27: Upcoming Actions
-In order to make structure of time easier to see in the files we want to support the introduction of `<charter>.upcoming.actions` files that can be used to denote actions that are upcoming but not yet active.
+In orde to make structure of time easier to see in the files we want to support the introduction of `<charter>.upcoming.actions` files that can be used to denote actions that are upcoming but not yet active.
 
 this is primarily intended for long-running, recurring actions that are going to be active in the future. Now, we already have limits for generation but we will be adding some more complexity here
 
