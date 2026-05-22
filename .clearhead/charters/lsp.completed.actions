@@ -1,0 +1,2 @@
+[x] Integrate core reference resolver in LSP  =lsp_ref_integration %2026-05-22T15:52 #019d0dfa-0995-75b3-a22f-74175e0511bf
+[x] split the cli from the LSP binary  $ we want to allow people to incrementally adopt and only use the tools they want without downloading heavy deps like the LSP $ %2026-05-22T15:52 #019cfa3d-30d5-7611-9a7d-4148b3e97b84
