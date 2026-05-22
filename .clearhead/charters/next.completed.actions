@@ -25,3 +25,6 @@
 [x] child two  %2026-05-22T13:47 #019e5171-1e01-79e1-9f18-b91ee87ecea4
 [_] parent to cancel  %2026-05-22T13:50 #019e5174-5ecc-71a0-9ddc-831b546150dd
 [_] child to cancel  %2026-05-22T13:50 #019e5174-69ab-7db1-a9c7-dee93006c155
+[_] cancel test parent  $ testing cascade cancel $ %2026-05-22T14:27 #019e5195-aac6-7c90-a3d5-f67fc19395d7
+[_] cancel child one  %2026-05-22T14:27 #019e5195-aacb-7130-a373-e949c26e7b21
+[_] cancel child two  %2026-05-22T14:27 #019e5195-aad7-71d2-af34-0d8dc68feb4c
