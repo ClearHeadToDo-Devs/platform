@@ -1,12 +1,12 @@
-[x] make it easier to query individual objective actions  %2026-02-08T12:02 ^2026-02-06T14:18 #019c3508-a3cd-7471-92f4-d22aef3bf2ed
-[x] consider decoupling the lsp from the main cli?  $ for our work, this whole thing of downloading a different LSP might actually be really nice to get it all working $ %2026-02-22T14:33 ^2026-02-11T16:35 #019c4f45-d737-7dd1-89a1-9998acf339df
-[x] Implement core reference resolver (alias/uuid)  =core_ref_resolver %2026-03-20T11:32 ^2026-03-20T11:25 #019d0c7e-9c88-7112-8e4b-87c92038a57b
-[_] standup sync server in clojurescript  ~ ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38b4bdc4b3e4
-        >[_] get the project starts  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38ce2d1cd999
-        >[_] pull in automerge repo  ^2026-02-03T19:34 #019c26b7-481d-7262-bc69-38dc4493c18a
-[x] Update reference syntax spec with prefixes  =spec_ref_prefixes %2026-03-20T11:28 ^2026-03-20T11:25 #019d0c7e-a675-78e3-adca-799f6d3eed3f
-[x] Wire export calendar to reference resolver  =cli_export_ref %2026-04-22T08:16 ^2026-03-20T11:25 #019d0c7e-a67a-7cd2-9254-cad8b9f8078a
-[x] add mcp server for neovim to agentic harnesses  %2026-04-22T08:16 ^2026-03-22T14:38 #019d177b-f14e-76c0-8adc-f38a13bf703b
+[x] make it easier to query individual objective actions  %2026-02-08T12:02 #019c3508-a3cd-7471-92f4-d22aef3bf2ed
+[x] consider decoupling the lsp from the main cli?  $ for our work, this whole thing of downloading a different LSP might actually be really nice to get it all working $ %2026-02-22T14:33 #019c4f45-d737-7dd1-89a1-9998acf339df
+[x] Implement core reference resolver (alias/uuid)  =core_ref_resolver %2026-03-20T11:32 #019d0c7e-9c88-7112-8e4b-87c92038a57b
+[_] standup sync server in clojurescript  ~ #019c26b7-481d-7262-bc69-38b4bdc4b3e4
+    >[_] get the project starts  #019c26b7-481d-7262-bc69-38ce2d1cd999
+    >[_] pull in automerge repo  #019c26b7-481d-7262-bc69-38dc4493c18a
+[x] Update reference syntax spec with prefixes  =spec_ref_prefixes %2026-03-20T11:28 #019d0c7e-a675-78e3-adca-799f6d3eed3f
+[x] Wire export calendar to reference resolver  =cli_export_ref %2026-04-22T08:16 #019d0c7e-a67a-7cd2-9254-cad8b9f8078a
+[x] add mcp server for neovim to agentic harnesses  %2026-04-22T08:16 #019d177b-f14e-76c0-8adc-f38a13bf703b
 [x] Migrate plan storage from single .ics files to vdir (one VEVENT per file in plans/ directories)  $ spec updated in naming_conventions.md and ics_schedule_spec.md. clearhead-core needs to read plans from <charter>/plans/ directories instead of <charter>.ics files. khal and vdirsyncer can then point directly at workspace plan directories. also need an import path that splits multi-event .ics exports into individual files $ %2026-05-09T22:52 #019dc86c-7352-71a2-8a60-2f37c6e0c431
 [x] wire auto-expand into add plan  $ expand_plans_into_acts now lives in core; add plan should call it by default with --skip-expansion to opt out $ %2026-05-09T22:52 #019dd080-0001-7000-0000-000000000001
 [x] replace PlannedAct with Action in ontology  %2026-05-09T00:00 #019de697-18a5-7d40-93a5-0e772336334a
@@ -18,3 +18,10 @@
     >[x] wire Context hierarchy into RDF graph on load (see core next.actions)  %2026-05-17T16:34 #019df000-0032-7000-0000-000000000001
     >[x] apply tag expansion in CLI context filters (see cli next.actions)  %2026-05-17T16:34 #019df000-0033-7000-0000-000000000001
     >[x] expose config tag_hierarchies to nvim plugin for context-aware queries  %2026-05-17T16:34 #019df000-0034-7000-0000-000000000001
+[x] test crud dogfood action  %2026-05-22T13:35 #019e5166-038d-7930-afdf-d18ba67734f5
+[_] test cancel path  #019e5166-224d-7382-953d-46fe6d85c063
+[x] parent task  $ testing cascade complete $ %2026-05-22T13:47 #019e5171-1005-71b0-84a0-333baa48176d
+[x] child one  %2026-05-22T13:47 #019e5171-1df7-7262-bd3a-4d86bbdbec0a
+[x] child two  %2026-05-22T13:47 #019e5171-1e01-79e1-9f18-b91ee87ecea4
+[_] parent to cancel  %2026-05-22T13:50 #019e5174-5ecc-71a0-9ddc-831b546150dd
+[_] child to cancel  %2026-05-22T13:50 #019e5174-69ab-7db1-a9c7-dee93006c155
