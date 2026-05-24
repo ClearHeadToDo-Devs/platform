@@ -6,6 +6,32 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 29: TTY-Aware Output and CLI Composability
+
+The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingly. No flag is needed for the common cases — context decides.
+
+| Context | Output |
+|---------|--------|
+| Terminal (TTY) | Human-readable table/tree |
+| Pipe or redirect | Native file format |
+| `--jsonld` | JSON-LD (always, regardless of context) |
+| `--ids` | One UUID per line (always, regardless of context) |
+
+**Native format** means the format the entity actually lives in on disk:
+- Actions → `.actions` DSL
+- Charters → Markdown + YAML frontmatter
+- Plans → vdir/iCal
+
+This makes `>` redirection trivially correct — piping to a file produces a valid, parseable workspace file. It also enables clearhead-to-clearhead pipelines where mutations accept native format on stdin.
+
+**JSON-LD** is the only structured escape hatch for external tools. There is no separate `--json` flag — JSON-LD is valid JSON, and tools like `jq` work against it directly. Maintaining two JSON formats would create drift; `--jsonld` is the single authoritative structured representation.
+
+**IDs** (`--ids`) output one UUID per line for xargs-style reference piping:
+```
+clearhead read actions --charter lsp --ids | xargs -I{} clearhead update action {} --state in-progress
+```
+
+Explicit flag overrides always take priority over TTY detection.
 ## Decisions 28: Separate Graphs for separate workspaces
 this repo itself has brought up the difficult question of how different workspaces relate to one another and i think i know how we want to do this.
 
