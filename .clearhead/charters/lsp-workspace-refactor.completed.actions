@@ -1,0 +1,5 @@
+[x] read workspaceFolders from InitializeParams in the LSP backend %2026-05-25T12:36#019e6077-073d-7371-9829-28ac762c8dfd
+[x] fall back to additional_workspaces from config when workspaceFolders is absent %2026-05-25T12:36#019e6077-0741-7150-ad95-be1d6c5e185a
+[x] load all workspace roots into Backend at init and keep them keyed by root URI %2026-05-25T12:36#019e6077-0744-7192-a92d-edc575a036a4
+[x] add workspace_for_uri routing on Backend — replaces per-command ctx.workspace_for_file at the LSP layer %2026-05-25T12:36#019e6077-0748-7ae2-ac4b-2ef6ce91e5db
+[x] update Neovim plugin to send workspaceFolders derived from config at lsp.start — becomes a free-rider %2026-05-25T12:48#019e6077-074c-7e52-beac-a8c4b5816864
