@@ -1,3 +1,36 @@
+<urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-23T16:44:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "im hitting this strange behavior where after moving one of the plans to another charter now it says there is a duplicate id from the diagnostics which tells me we are making another plan instead of moving the existing one..." ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Research what is happening with the duplicate id for an action after moving" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d1b2b-2ea5-78e2-b432-8c6eb4b448bf" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "we want to allow people to incrementally adopt and only use the tools they want without downloading heavy deps like the LSP" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "split the cli from the LSP binary" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cfa3d-30d5-7611-9a7d-4148b3e97b84" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp_ref_integration" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Integrate core reference resolver in LSP" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d0dfa-0995-75b3-a22f-74175e0511bf" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> , <urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> , <urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> .
+<urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> <https://clearhead.us/vocab/actions/v4#hasScheduledDateTime> "2026-05-26T10:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://clearhead.us/vocab/actions/v4#hasExternalScheduleId> "019e5205-fb4b-7742-ab45-32fc90e87e0e" ;
+	<https://clearhead.us/vocab/actions/v4#hasRecurrenceRule> "FREQ=WEEKLY" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "test-move-plan" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "51739021-7c8d-590c-87bc-0d89a4c74298" ;
+	a <https://www.commoncoreontologies.org/ont00000974> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "482b621a-75ba-5bdd-b74b-881ceeea82e5" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "lsp" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
 <urn:uuid:019dad29-c05d-7781-a92c-40b108acbd93> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
 	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
@@ -270,3 +303,35 @@
 	<http://www.w3.org/2000/01/rdf-schema#comment> "current try_emit/TelemetryEvent is outward-facing product analytics. if events were written as RDF triples into the oxigraph store, query sparql would serve debugging, analytics, and introspection from one interface. worth exploring after the query command exists so we can see what it would look like" ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
 	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:34:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "lsp-workspace-refactor" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6076-cdc1-79d1-8030-63fc30717e50" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp-workspace-refactor" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> .
+<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> , <urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> , <urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> , <urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> , <urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> .
+<urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-073d-7371-9829-28ac762c8dfd" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "read workspaceFolders from InitializeParams in the LSP backend" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0741-7150-ad95-be1d6c5e185a" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "fall back to additional_workspaces from config when workspaceFolders is absent" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0744-7192-a92d-edc575a036a4" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "load all workspace roots into Backend at init and keep them keyed by root URI" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0748-7ae2-ac4b-2ef6ce91e5db" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add workspace_for_uri routing on Backend — replaces per-command ctx.workspace_for_file at the LSP layer" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-074c-7e52-beac-a8c4b5816864" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update Neovim plugin to send workspaceFolders derived from config at lsp.start — becomes a free-rider" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:48:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
