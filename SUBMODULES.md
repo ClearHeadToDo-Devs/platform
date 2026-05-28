@@ -116,17 +116,23 @@ Output explanation:
 
 **Solution:** Always `git checkout main` (or `master`) before making changes in a submodule.
 
-### Pitfall 2: Forgetting to Push Submodule Changes
+### Pitfall 2: Pushing the Parent Before the Submodule
 
-**Problem:** You commit changes in a submodule and update the parent repo, but forget to push the submodule itself. Others can't pull your changes.
+**Problem:** You commit changes in a submodule, commit the updated pointer in the parent, then push the parent — but never push the submodule. The parent now records a commit SHA that doesn't exist on any remote. A fresh clone will silently check out the wrong commit with no error, leaving the repo in a broken state that's hard to diagnose.
 
-**Solution:** Always push the submodule first, then the parent:
+**Solution:** Set this git config globally so the push is rejected if any referenced submodule commit hasn't been pushed yet:
+
+```bash
+git config --global push.recurseSubmodules check
+```
+
+Then push submodules first:
 
 ```bash
 cd clearhead-cli
-git push  # push submodule changes
+git push  # push submodule first
 cd ..
-git push  # push parent repo
+git push  # now the parent push will succeed
 ```
 
 ### Pitfall 3: Accidentally Committing Unintended Submodule Changes
