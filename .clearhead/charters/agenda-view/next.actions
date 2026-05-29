@@ -1,0 +1,5 @@
+[ ] Define daily and weekly agenda SPARQL queries in clearhead-core =agenda-core-queries!1+core #019e6da3-e28e-7562-98ad-c177772a965f
+[ ] Add clearhead query agenda CLI subcommands daily and weekly =agenda-cli!1+cli  <agenda-core-queries #019e6da3-e28e-7562-98ad-c19a345b2769
+[ ] Decide query source architecture LSP command vs plugin calls CLI directly =agenda-lsp-decision!1+lsp #019e6da3-e28e-7562-98ad-c1b5f6e8032f
+[ ] Implement ClearheadAgenda virtual buffer in nvim plugin read-only first =agenda-nvim-buffer!2+nvim  <agenda-cli #019e6da3-e28e-7562-98ad-c1d5ed310401
+[ ] Add change routing so cycle_state in agenda buffer routes to source file via UUID =agenda-change-routing!2+nvim  <agenda-nvim-buffer #019e6da3-e28e-7562-98ad-c1fd3107ff8c
