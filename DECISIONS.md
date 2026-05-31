@@ -6,6 +6,13 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 30: Workspaces as first-class entities in new application ontology
+after pondering the work for awhile we have be working through many workspace-specific problems that have made two needs clear:
+- there needs to be separate application level ontology that extends the existing ontology of the domain to include workspace specific properties
+- workspaces should be a first class entity within the system so they can be understood
+- like all the other entities we will have a sidecar json to capture the work that we dont want to capture in the prose we may introduce
+
+this makes the workspace itself more coherent and makes it so that we can define types around them rather than needing to have them be only in application code
 ## Decision 29: TTY-Aware Output and CLI Composability
 
 The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingly. No flag is needed for the common cases — context decides.

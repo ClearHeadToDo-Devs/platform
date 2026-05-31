@@ -1,4 +1,4 @@
-[ ] Create the clearhead-ws OWL vocabulary file in the ontology repo and publish it at clearhead.us/vocab/workspace/v1/ #019e7c9c-b367-7c40-ae81-591d9faf5c4f
+[x] Create the clearhead-ws OWL vocabulary file in the ontology repo and publish it at clearhead.us/vocab/workspace/v1/ #019e7c9c-b367-7c40-ae81-591d9faf5c4f
 [ ] Update load_domain_model in insert.rs to store workspace source location triples on load #019e7c9c-b367-7c40-ae81-591d9faf5c4e
 [ ] Update built-in SPARQL queries to select hasSourceFile and hasSourceLine from workspace vocabulary #019e7c9c-b367-7c40-ae81-591d9faf5c4d
 [ ] Update JSON-LD export to use workspace vocabulary -- workspace vocabulary replaces domain-only JSON-LD as the single structured output format #019e7c9c-b367-7c40-ae81-591d9faf5c4c
