@@ -20,3 +20,6 @@ The core design direction under this charter is:
 This work should give us a shared model for command design, editor integrations, dry runs, telemetry, and eventual undo/redo behavior.
 
 the goal of this work is to make a _declarative system of mutation and process and automates the underlying plumbing at the filesystem level_
+
+## Ontology Extension
+another subcharter is our work in some [ontology support](./workspace-vocabulary.md) to give a shared extension language
