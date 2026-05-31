@@ -20,21 +20,22 @@ A response type (`qflist`, `calendar`, `table`) declares the columns its
 consumer requires. The CLI knows the SELECT shell for each type. Users write
 WHERE fragments — filtering logic only — without knowing the projection.
 
-**Frontmatter makes query files self-describing.**
-Named query files (`.sparql`) may carry a `# ---` YAML header:
+**Directory placement defines query type and kind.**
+No frontmatter. Where a file lives is its contract:
 
-```sparql
-# ---
-# type: qflist
-# kind: where-fragment
-# description: High priority open actions
-# ---
-?act actions:hasPriority actions:High .
+```
+queries/
+  my-adhoc.sparql          # full query — freeform, no contract
+  qflist/
+    high-priority.sparql   # WHERE fragment for the qflist response type
+  calendar/
+    this-week.sparql       # WHERE fragment for the calendar response type
 ```
 
-`type` maps to a response type. `kind` is `full-query` (default, current
-behavior) or `where-fragment`. Files without frontmatter are treated as
-`kind: full-query` with no type — preserving backwards compatibility.
+Root-level files are full SPARQL queries (own their SELECT). Subdirectory files
+are WHERE fragments — the CLI wraps them in the response type's SELECT shell.
+A leading `# comment` line serves as description in `query list` output.
+No YAML parser, no metadata format to maintain.
 
 **WHERE injection is scoped inside `GRAPH ?g {}`.**
 The fixed SELECT shell for each response type already contains the `GRAPH ?g {}`

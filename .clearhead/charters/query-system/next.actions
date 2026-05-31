@@ -1,7 +1,6 @@
-[ ] Define and document SPARQL frontmatter spec -- type, kind, description keys; comment-based YAML delimited by # --- #f456c320-3d57-4743-9901-4e44b7f83bae
-[ ] Implement frontmatter parser in scan_query_dir -- read # --- header from .sparql files, populate type and kind fields on NamedQuery #0b4218df-8209-4dc0-b79e-f8dcf21984a3
+[ ] Extend scan_query_dir to recurse one level -- subdirectories become response type names, files inside are WHERE fragments #f456c320-3d57-4743-9901-4e44b7f83bae
 [ ] Add typed subcommand dispatch -- clearhead query <type> routes to response type handler; bare query remains freeform #1654b4ef-935b-456e-abfe-3048583fffcb
-[ ] Implement WHERE injection for typed subcommands -- inject extra --where fragment inside GRAPH ?g {} block of the response type SELECT shell #2563b35f-959b-4845-b8d6-08a88008d539
-[ ] Add clearhead query qflist [--where] as first typed response type -- SELECT shell lives in CLI, default WHERE matches current qflist.sparql #2bbbcb16-7e14-46c7-90cd-4a2a81829200
-[ ] Migrate built-in qflist.sparql to frontmatter -- add type: qflist, kind: full-query header; validate nothing breaks #af452074-5897-419e-a51e-846505fcfa4f
-[ ] Update query list to show type and kind columns from frontmatter #2ded4d97-bac0-4bde-bc7f-106dbab4988d
+[ ] Implement WHERE injection for typed subcommands -- inject fragment inside GRAPH ?g {} block of the response type SELECT shell #2563b35f-959b-4845-b8d6-08a88008d539
+[ ] Add clearhead query qflist [--where] as first typed response type -- SELECT shell lives in CLI, default WHERE is the current qflist.sparql body #2bbbcb16-7e14-46c7-90cd-4a2a81829200
+[ ] Move built-in qflist.sparql body to the SELECT shell -- root-level file becomes the default, users add fragments under queries/qflist/ #af452074-5897-419e-a51e-846505fcfa4f
+[ ] Update query list to show type column derived from directory placement #2ded4d97-bac0-4bde-bc7f-106dbab4988d
