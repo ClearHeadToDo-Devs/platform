@@ -1,5 +1,5 @@
 [ ] Extend scan_query_dir to recurse one level -- subdirectories become response type names, files inside are full SPARQL queries routed to that renderer #f456c320-3d57-4743-9901-4e44b7f83bae
-[ ] Add typed subcommand dispatch -- clearhead query <type> [name] routes to response type handler with output validation; bare query remains freeform #1654b4ef-935b-456e-abfe-3048583fffcb
-[ ] Implement output column validation per response type -- error clearly if required columns are missing, do not attempt to compose or fix #2563b35f-959b-4845-b8d6-08a88008d539
-[ ] Add clearhead query qflist [name] [--where] as first typed response type -- default runs built-in qflist.sparql; --where is inline/ephemeral only #2bbbcb16-7e14-46c7-90cd-4a2a81829200
+[ ] Add typed subcommand dispatch -- clearhead query <type> [name] routes to response type handler; bare query remains freeform; no --where on typed subcommands #1654b4ef-935b-456e-abfe-3048583fffcb
+[ ] Implement output column validation per response type -- error clearly if required columns are missing, do not compose or fix #2563b35f-959b-4845-b8d6-08a88008d539
+[ ] Add clearhead query qflist [name] as first typed response type -- default runs built-in qflist.sparql; user queries saved under queries/qflist/ #2bbbcb16-7e14-46c7-90cd-4a2a81829200
 [ ] Update query list to show response type column derived from directory placement #2ded4d97-bac0-4bde-bc7f-106dbab4988d

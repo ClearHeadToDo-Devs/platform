@@ -34,12 +34,13 @@ queries/
 ```
 
 **The intended workflow is: experiment then save.**
-`clearhead query "SELECT ..."` to try a query at the command line.
-When it works, save it to the appropriate subdirectory.
+`clearhead query "SELECT ..."` or `clearhead query --where "..."` to explore.
+When the query works, save it to the appropriate subdirectory.
 `clearhead query qflist high-priority` runs the saved query with qflist rendering.
-`clearhead query qflist --where "..."` is the only injection path — ephemeral,
-inline only, never saved to a file.
 
 **Bare `clearhead query` remains freeform.**
-`clearhead query "SELECT ..."` and `clearhead query --where "..."` unchanged.
-No type system is imposed on ad-hoc queries.
+`clearhead query "SELECT ..."` runs a full query, table output.
+`clearhead query --where "..."` wraps the clause in `SELECT * WHERE { GRAPH ?g { } }` —
+returns whatever variables you bind, no contract on names. Exploration sugar.
+No typed `--where` injection — if you need a filtered qflist, write the full
+query and save it. Typed subcommands have no `--where` flag.
