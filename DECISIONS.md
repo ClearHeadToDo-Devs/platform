@@ -37,27 +37,19 @@ to do this, we will add a new property to the action-level properties:
 |A state | B state | C state | result       |
 |--------|---------|---------|--------------|
 |Same    | Same    | same    | no op        |
-|--------|---------|---------|--------------|
 |changed | Same    | same    |Change C and B|
-|--------|---------|---------|--------------|
 |Same    | Same    |changed  |Change A and B|
-|--------|---------|---------|--------------|
 |changed | Same    |changed  |Conflict-merge|
-|--------|---------|---------|--------------|
 |removed | Same    | same    |Remove C and B|
-|--------|---------|---------|--------------|
 |Same    | Same    |removed  |Remove A and B|
-|--------|---------|---------|--------------|
 |removed | Same    | changed |Conflict-merge|
-|--------|---------|---------|--------------|
 |changed | Same    | removed |Conflict-merge|
-|--------|---------|---------|--------------|
 
-this simple table facilitate a 3 way sync without actually checking when the different things are changed and handles edge cases like the sync date not tracking.
+This simple table facilitate a 3 way sync without actually checking when the different things are changed and handles edge cases like the sync date not tracking.
 
-but more importantly, this allows the proper workflow we are trying to handle of actually respecting the decision of the user and supporting edits on EITHER side of the divide and allowing that to make it to the other side but ONLY if it was edited properly
+More importantly, this allows the proper workflow we are trying to handle of actually respecting the decision of the user and supporting edits on EITHER side of the divide and allowing that to make it to the other side but ONLY if it was edited properly
 
-another important point, the issue where B is changed or removed should be considered a BUG, and these actions are meant to have a full correct view and give guidance on this edge case but this should not happen normally and should be considered a bug when found (logs should reflect this)
+Another important point, the issue where B is changed or removed should be considered a BUG, and these actions are meant to have a full correct view and give guidance on this edge case but this should not happen normally and should be considered a bug when found (logs should reflect this)
 
 #### Merge
 
