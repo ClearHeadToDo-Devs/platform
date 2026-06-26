@@ -6,6 +6,65 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 31: CalDAV Integration
+After wrestling with this guy for awhile i have a better understanding of how we are going to finally integrate properly with ical and the caldav server
+
+to do this, we are simply going to expose a new flag in the standard config `plan_path` which will be the default place that all plans will be placed within
+
+since this is a default config this will also apply to all project workspace unless otherwise overwritten with a local config
+
+this allows for clients like radicale to actually see and edit these ics files without needing to worry about an integration layer between them and that way the calendar data is owned by the calendar server
+
+we just need to make sure that all calendar activities ONLY read ics data because we dont want to read in things like the radicale json for properties as that is tied to the implementation of the caldav server in particular.
+
+this allows two applications to sync (in this case, the calendar and clearhead) without either one knowing about the other.
+
+users will be able to edit the calendar events on the calendar app of their choosing, those changes go through the caldav server and our clearhead commands will help those changes propigate to the underlying actions when necessary
+
+the implication is that the caldav server owns the whole calendar process especially the display layer but that is okay, great even because it ensure that we are not eating the complexity of calendar integration while still enabling the pieces that matter for our work
+### Syncing State
+to get this done, we are going to do another subtle point of syncing between the two.
+
+to do this, we will add a new property to the action-level properties: 
+- `scheduled_at_sync` a copy of the scheduled at date in the action file
+- `due_at_sync` same, but for due_at
+
+- A the action date
+- B the sync-copy date
+- C the ics update date
+
+
+|A state | B state | C state | result       |
+|--------|---------|---------|--------------|
+|Same    | Same    | same    | no op        |
+|--------|---------|---------|--------------|
+|changed | Same    | same    |Change C and B|
+|--------|---------|---------|--------------|
+|Same    | Same    |changed  |Change A and B|
+|--------|---------|---------|--------------|
+|changed | Same    |changed  |Conflict-merge|
+|--------|---------|---------|--------------|
+|removed | Same    | same    |Remove C and B|
+|--------|---------|---------|--------------|
+|Same    | Same    |removed  |Remove A and B|
+|--------|---------|---------|--------------|
+|removed | Same    | changed |Conflict-merge|
+|--------|---------|---------|--------------|
+|changed | Same    | removed |Conflict-merge|
+|--------|---------|---------|--------------|
+
+this simple table facilitate a 3 way sync without actually checking when the different things are changed and handles edge cases like the sync date not tracking.
+
+but more importantly, this allows the proper workflow we are trying to handle of actually respecting the decision of the user and supporting edits on EITHER side of the divide and allowing that to make it to the other side but ONLY if it was edited properly
+
+another important point, the issue where B is changed or removed should be considered a BUG, and these actions are meant to have a full correct view and give guidance on this edge case but this should not happen normally and should be considered a bug when found (logs should reflect this)
+
+#### Merge
+
+we saw a few merge options there, now when we consider edge cases on the few cases where there is a conflict the tools should help by using some conflict semantics to let users choose what to do in these edge cases:
+- normal conflict: decide which source wins
+- one removed, one changed: decide if the removal or the change is proper and implement those changes
+
 ## Decision 30: Workspaces as first-class entities in new application ontology
 after pondering the work for awhile we have be working through many workspace-specific problems that have made two needs clear:
 - there needs to be separate application level ontology that extends the existing ontology of the domain to include workspace specific properties

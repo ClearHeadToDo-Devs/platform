@@ -1,8 +1,4 @@
-[ ] Add Plan Collection section to charters.md covering alias, displayname derivation, tag, and color =caldav_charter_plan_collection_spec!1+docs #019ec303-b3c8-7533-a8f1-203320fe463a
-[ ] Add optional color frontmatter field to charters.md =caldav_charter_color_spec!1+docs #019ec303-b3c8-7533-a8f1-2034c60d9707
-[ ] Write caldav-adapter script that derives displayname from charter title and writes .Radicale.props per collection =caldav_adapter_script!1+scripting #019ec2f8-7d94-7707-9623-1e64a35efeba
-[ ] Configure Radicale to use clearhead user workspace as its storage root =caldav_radicale_config!1+infra #019ec2f8-7d94-7707-9623-1e65e11c1511
-[ ] Enable and verify Radicale systemd service =caldav_radicale_service!2+infra #019ec2f8-7d94-7707-9623-1e66e27d041c
-[ ] Set up systemd path unit to re-run adapter when new plan collections are added =caldav_path_unit!2+infra #019ec2f8-7d94-7707-9623-1e678aec0372
-[ ] Test CalDAV connection from desktop and phone calendar clients =caldav_client_test!3+testing #019ec2f8-7d94-7707-9623-1e6858a1f5c0
-[ ] Document the integration boundary in workspace spec =caldav_spec_note!3+docs #019ec2f8-7d94-7707-9623-1e6940e91005
+[ ] complete integration ~#019f027c-4524-78d0-ac22-90ac96b7064d
+    >[ ] add plans path to config to spec +specifications #019f027b-fa30-7701-8920-7592cb9fb943
+    >[ ] update idempotency promise so that we only remove ABSENT ics files, those that already exist should be left alone $ this allows a true bidirectional integration by simply allowing the server to own those files once they are generated and only updating them when we have something to update like the actions themselves $+specifications #019f0284-4096-7943-b065-0ddae837ca4d
+    >[ ] update library to utilize path config for export, import, and archive $ and we ONLY want to read ics files, we dont want to pull the json from those folders so that we dont accidentally eat the caldav information $+cli,library #019f027d-cafc-7a51-839c-04bdcc615afd
