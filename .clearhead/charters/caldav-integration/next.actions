@@ -1,0 +1,8 @@
+[ ] Add Plan Collection section to charters.md covering alias, displayname derivation, tag, and color =caldav_charter_plan_collection_spec!1+docs #019ec303-b3c8-7533-a8f1-203320fe463a
+[ ] Add optional color frontmatter field to charters.md =caldav_charter_color_spec!1+docs #019ec303-b3c8-7533-a8f1-2034c60d9707
+[ ] Write caldav-adapter script that derives displayname from charter title and writes .Radicale.props per collection =caldav_adapter_script!1+scripting #019ec2f8-7d94-7707-9623-1e64a35efeba
+[ ] Configure Radicale to use clearhead user workspace as its storage root =caldav_radicale_config!1+infra #019ec2f8-7d94-7707-9623-1e65e11c1511
+[ ] Enable and verify Radicale systemd service =caldav_radicale_service!2+infra #019ec2f8-7d94-7707-9623-1e66e27d041c
+[ ] Set up systemd path unit to re-run adapter when new plan collections are added =caldav_path_unit!2+infra #019ec2f8-7d94-7707-9623-1e678aec0372
+[ ] Test CalDAV connection from desktop and phone calendar clients =caldav_client_test!3+testing #019ec2f8-7d94-7707-9623-1e6858a1f5c0
+[ ] Document the integration boundary in workspace spec =caldav_spec_note!3+docs #019ec2f8-7d94-7707-9623-1e6940e91005
