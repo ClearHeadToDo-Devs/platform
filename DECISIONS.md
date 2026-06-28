@@ -1,6 +1,6 @@
 # Architectural Decisions
 
-**Last Updated:** May 19th 2026
+**Last Updated:** June 26th 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
