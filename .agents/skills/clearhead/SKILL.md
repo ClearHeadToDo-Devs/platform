@@ -2,109 +2,37 @@
 name: clearhead
 description: Clearhead workspace navigation and task management. Use when working with `.actions` files, `.clearhead/` directories, `next.actions` files, charter or objective files, the `clearhead` CLI, or when asked about project status, next steps, todos, or any work items. Clearhead is a plaintext-first project management system built around actions (.actions DSL), charters (.md), plans (.ics vdir), and objectives (.md).
 ---
+# ClearHead Skill
 
-# Clearhead Skill
+One of the exciting part of the clearhead platform is we are trying to make things easy to capture and update whether that be through cli commands, lsp, or even raw-edits to the files.
 
-## Orient First
+However, some formats are better than others so the order of preference is:
+1. CLI commands
+2. LSP Hooks
+3. Hand edits to files.
 
-Before touching anything, run these four commands:
+that is to say, while we prefer things higher on the list, lower items are valid too
 
-```bash
-find . -maxdepth 4 -name ".clearhead" -type d   # locate all workspace roots
-cat .clearhead/charters/next.actions             # read the root charter open actions
-ls .clearhead/charters/                          # discover all charters
-which clearhead                                  # check CLI availability
-```
+## CLI commands
 
-`next.actions` at the root of `charters/` is always the entry point for a workspace.
+you can assume that the `clearhead` cli command is available and that you are in the proper directory for the work.
 
-## Conceptual Model
+run an initial check with `clearhead read charters` to see the full list of charters and `clearhead read actions` for further structure individual actions
 
-| Object | File type | Location | Purpose |
-|---|---|---|---|
-| **Objective** | `.md` | `objectives/` | The *why* — desired outcomes |
-| **Charter** | `.md` or dir | `charters/` | Domain of concern, groups actions |
-| **Action** | `.actions` | `charters/` | Atomic executable work item |
-| **Plan** | `.ics` (vdir) | `plans/` | Recurring schedule — generates actions |
+`clearhead --help` gives the full list of commands
+## LSP 
 
-Plans are **schedule-only**. They live in `.ics` files and produce actions via `clearhead expand`. Never put scheduling or recurrence logic in `.actions` files.
+We also have an LSP server and while this is primarily intended for humans, you can also use this through the neovim MCP server which will automatically do the required plumbing when you edit the various item types and having their downstream implications known
 
-## Workspace Scope
+## Hand-Edits
 
-```
-Project:  <nearest ancestor>/.clearhead/      ← walks up to filesystem root
-Global:   ~/.local/share/clearhead/           ← XDG_DATA_HOME
-Config:   ~/.config/clearhead/config.json
-```
+Finally we dont disallow you from editing the files by hand, that is a core benefit, however, care should be taken that this way involves significantly more fiddling because it means you are also responsible for maintaining the data model through things like giving the sidecar the proper data and adding things like the uuid which the cli and lsp do automatically for you so more like work smarter not harder
 
-Project scope takes priority. Both scopes have the same internal layout.
+### Risks of Hand Edits
+We have a strong process around what should happen when actions are created, updated, or closed and that work is built into the other tools for you automatically so when you hand edit you leave the option open for the data model to drift.
 
-## Finding the Right Docs
+in an ideal world, we would have an easy way to sync new information and we largely do, still, it is easier for everyone if we are able to input data properly up-front rather than needing to fix it later
 
-Each tool documents itself in its native format — go to the source:
+## Specifications
 
-**CLI usage and commands**
-```bash
-clearhead --help                  # top-level overview
-clearhead <verb> --help           # e.g. clearhead add --help
-man clearhead                     # full man page (once generated)
-```
-
-**Action file format and workspace layout** (paths relative to platform repo root)
-```
-specifications/action_file_format.md    ← DSL syntax, all fields, examples
-specifications/workspace.md             ← workspace structure, charter hierarchy, named graph isolation
-specifications/configuration.md         ← XDG paths, config.json format
-```
-
-**Library API (clearhead-core)**
-```bash
-cd clearhead-core && cargo doc --open   # rustdoc for all public types
-```
-
-**Building the CLI from source** (when not installed)
-```bash
-cd clearhead-cli && cargo build
-./target/debug/clearhead --help
-```
-
-**Neovim plugin**
-```vim
-:help clearhead                         " vimdoc (once written)
-```
-
-## Using the CLI
-
-Prefer the CLI for all mutations — it handles UUIDs, file placement, and format normalization.
-
-```bash
-clearhead read actions                          # all open actions
-clearhead read actions --charter <name>         # scoped to one charter
-clearhead read charters                         # all charters, hierarchical
-clearhead add action "<name>" --charter <name>  # add action (CLI assigns UUID)
-clearhead update action <ref> --state in-progress
-clearhead complete action <ref>                 # handles .completed.actions move
-clearhead cancel action <ref>
-clearhead normalize actions <file>              # batch-assign missing UUIDs
-clearhead lint actions <file>                   # validate after hand-editing
-clearhead debug                                 # show resolved config and paths
-```
-
-When the CLI is unavailable, read `specifications/action_file_format.md` before editing `.actions` files by hand.
-
-## Generating a UUID (when editing by hand)
-
-```bash
-python3 -c "import uuid; print(uuid.uuid7())"  # UUIDv7 preferred
-uuidgen                                         # UUIDv4 acceptable fallback
-```
-
-Every new action needs a `#uuid`. Without one, cross-references and CRDT sync break.
-
-## What NOT to Do
-
-- ❌ **No RRULE in `.actions` files** — recurrence belongs in `.ics` plans only
-- ❌ **Don't manually move items to `.completed.actions`** — use `clearhead complete action`; the file move is a side effect of a state transition
-- ❌ **Don't hand-edit `archive.ttl`** — written only by `clearhead archive`
-- ❌ **Don't skip `#uuid` on new actions** — required for cross-references and sync
-- ❌ **Don't use `parent:` frontmatter in charter files** when directory placement already expresses hierarchy
+For questions on the workspace, file formats, and even data model please always review [the specs](./../../../specifications)
