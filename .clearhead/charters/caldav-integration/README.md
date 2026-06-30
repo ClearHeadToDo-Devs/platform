@@ -51,9 +51,8 @@ These are **sidecar** fields (`.<charter>.json`, `ActMeta`), not DSL — they
 sit next to `source_vevent`, the other half of the CalDAV linkage. The merge
 base is machine-owned bookkeeping: a user editing it would corrupt the sync,
 so it never enters the human-edited `.actions` file. They default to absent
-(`None`), which reads as "never synced" — the engine stamps them in the same
-write that creates the `.ics`, so "B is unset" and "no `.ics` exists" stay in
-lockstep.
+(`None`), which reads as "never synced" — until the first reconcile establishes
+a merge base, "B is unset" and "no `.ics` exists" travel together.
 
 That gives three observable values per date:
 
@@ -80,9 +79,26 @@ payload and only restamp the stale merge base to the agreed value. So
 `changed/changed` is a conflict precisely when **A ≠ C** (the same rule a 3-way
 text merge follows).
 
-When reconcile lands a result, the action (A) and its sync-copy (B) must move
-**together** — that is exactly the A+B commit the write-durability seam exists
-for. If only one landed, B would lie about the merge base on the next run.
+When reconcile lands a result, A, B, and C must end up agreeing — but they do
+not all live on one filesystem. The `.ics` (C) sits under `plan_path`, which can
+point at another mount or another machine entirely (that decoupling is the whole
+point). So a single atomic write across the payload and the merge base is *not*
+something we can promise. We get durability a different way:
+
+- **Calendar wins (`write A and B`):** `.actions` and the sidecar both live in
+  the charter root — same filesystem — so these two genuinely ride one atomic
+  batch. `.ics` is untouched.
+- **Action wins (`write C and B`):** we write the `.ics` **first**, then stamp B.
+  The order is load-bearing. If we crash in between, the next run sees A and C
+  agreeing while B lags — a `changed/changed & A == C` case, which reconcile
+  resolves as a clean **convergence** that simply restamps B. The work
+  self-heals. (Stamp B first and a crash would instead look like the calendar
+  moved, silently reverting the action's edit — so never that order.)
+
+This is why `Converged` exists: it is not only "two identical edits aren't a
+conflict", it is the recovery mechanism for an interrupted push. We lean on an
+**idempotent, convergent** reconcile rather than distributed atomicity — we do
+not own the calendar's filesystem, so we do not pretend to commit across it.
 
 **B drifting is a bug, not an edit.** B is *our* copy; it should only ever move
 when reconcile moves it. If a run finds B changed or removed on its own,
