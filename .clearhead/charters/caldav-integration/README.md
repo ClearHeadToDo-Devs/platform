@@ -19,9 +19,12 @@ other exists:
 
 - The **server owns the calendar**: display, editing UI, the CalDAV protocol,
   and the `.ics` files once they exist. We do not eat that complexity.
-- **ClearHead owns the actions**: it writes a plan's `.ics` when the underlying
-  action changes, and reads `.ics` back to propagate calendar-side edits into
-  actions.
+- **ClearHead owns the actions**: each *standalone* scheduled action is mirrored
+  to one `.ics` VEVENT (keyed by the action's id). ClearHead writes that mirror
+  when the action changes and reads it back to propagate calendar-side edits.
+  Plan-generated occurrences are **not** individually mirrored — they are already
+  represented by their recurring plan's master event, so mirroring them too would
+  double-show them in the calendar.
 
 The coordination mechanism is **the shared data, not a shared protocol**. We do
 not model the server's internals or its failure modes — that way lies an
