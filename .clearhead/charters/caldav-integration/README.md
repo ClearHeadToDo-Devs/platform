@@ -83,6 +83,29 @@ tools surface the conflict and let the user decide — never silently choose:
 - **both changed:** which source wins.
 - **one removed, one changed:** whether the removal or the edit is the intent.
 
+## Wiring (how `plan_path` threads in)
+
+This splits cleanly into two slices so the plumbing never arrives before the
+fluid that flows through it:
+
+- **Slice 1 — the config key.** Add `plan_path` to `config.schema.json`,
+  `configuration.md`, the core `WorkspaceConfig` struct, and the CLI's config
+  loading. The field exists, loads, and round-trips. *Nothing reads it yet* —
+  and that is honest, because the action that reads it is the next slice.
+- **Slice 2 — make reads honor it.** `plan_path` overrides exactly one thing:
+  `plans_root` (where `.ics` files live). `charter_root` is untouched, and
+  `save_domain_model` is untouched today (it writes `.actions`, never `.ics`).
+  So this is a *read-path* change with a small surface:
+  - `resolve_workspace_layout(root, plan_override: Option<&Path>)` owns the
+    override-or-default branch. It is the resolver, not a leaf — everything
+    below it keeps taking a bare `&Path` and trusting it.
+  - `collect_plan_files(plans_root, project_root_charter)` drops its internal
+    re-resolve and becomes a true leaf that reads the directory it is handed.
+  - The `Option<&Path>` threads through `load_domain_model` / `load_workspace`,
+    contained at a single `ctx.load_*()` helper in the CLI that resolves
+    `plan_path` from config once (the ~20 `load_domain_model(&ctx.data_dir)`
+    call sites become `ctx.load_*()`).
+
 ## Scope boundary
 
 This charter does not build a calendar UI, speak CalDAV, or manage recurrence
