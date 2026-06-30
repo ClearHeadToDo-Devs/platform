@@ -68,11 +68,17 @@ Comparing each against B tells us who moved, with no timestamps:
 | same    | — | same    | no-op           |
 | changed | — | same    | write C and B   |
 | same    | — | changed | write A and B   |
-| changed | — | changed | conflict-merge  |
+| changed | — | changed | conflict — *unless A == C* (see below) |
 | removed | — | same    | remove C and B  |
 | same    | — | removed | remove A and B  |
 | removed | — | changed | conflict-merge  |
 | changed | — | removed | conflict-merge  |
+
+When both sides moved to the **same** value, that is a clean convergence, not a
+conflict — the two edits agree, so there is nothing to merge. We write no
+payload and only restamp the stale merge base to the agreed value. So
+`changed/changed` is a conflict precisely when **A ≠ C** (the same rule a 3-way
+text merge follows).
 
 When reconcile lands a result, the action (A) and its sync-copy (B) must move
 **together** — that is exactly the A+B commit the write-durability seam exists

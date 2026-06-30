@@ -39,11 +39,16 @@ to do this, we will add a new property to the action-level properties:
 |Same    | Same    | same    | no op        |
 |changed | Same    | same    |Change C and B|
 |Same    | Same    |changed  |Change A and B|
-|changed | Same    |changed  |Conflict-merge|
+|changed | Same    |changed  |Conflict-merge*|
 |removed | Same    | same    |Remove C and B|
 |Same    | Same    |removed  |Remove A and B|
 |removed | Same    | changed |Conflict-merge|
 |changed | Same    | removed |Conflict-merge|
+
+\* Unless A and C moved to the *same* value: two identical edits are a clean
+convergence, not a conflict (exactly as a 3-way text merge treats them). That
+case writes no payload — it only restamps the stale B to the agreed value. So
+`changed/changed` is a conflict precisely when **A ≠ C**.
 
 This simple table facilitate a 3 way sync without actually checking when the different things are changed and handles edge cases like the sync date not tracking.
 
