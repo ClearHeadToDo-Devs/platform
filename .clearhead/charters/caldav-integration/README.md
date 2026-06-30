@@ -94,17 +94,34 @@ fluid that flows through it:
   and that is honest, because the action that reads it is the next slice.
 - **Slice 2 — make reads honor it.** `plan_path` overrides exactly one thing:
   `plans_root` (where `.ics` files live). `charter_root` is untouched, and
-  `save_domain_model` is untouched today (it writes `.actions`, never `.ics`).
-  So this is a *read-path* change with a small surface:
-  - `resolve_workspace_layout(root, plan_override: Option<&Path>)` owns the
-    override-or-default branch. It is the resolver, not a leaf — everything
-    below it keeps taking a bare `&Path` and trusting it.
-  - `collect_plan_files(plans_root, project_root_charter)` drops its internal
-    re-resolve and becomes a true leaf that reads the directory it is handed.
-  - The `Option<&Path>` threads through `load_domain_model` / `load_workspace`,
-    contained at a single `ctx.load_*()` helper in the CLI that resolves
-    `plan_path` from config once (the ~20 `load_domain_model(&ctx.data_dir)`
-    call sites become `ctx.load_*()`).
+  `save_domain_model` is untouched (it writes `.actions`, never `.ics`).
+  So this is a *read/write-of-`.ics`* change with a deliberately small surface.
+
+  The override is applied **where config is actually known**, not smeared
+  through the layout resolver. The caller graph forced this: config enters core
+  at exactly one place (`load_workspaces`), the `.ics` read is a single funnel
+  (`load_domain_model` → `Workspace::load` → `load_workspace` →
+  `collect_plan_files`), and `resolve_workspace_layout` has ten callers of which
+  only two touch plans. Threading the override into the resolver would make
+  seven config-blind callers pass `None` and centralize nothing. So instead:
+  - `resolve_workspace_layout` is **left untouched** — it remains the pure
+    default resolver.
+  - `collect_plan_files_in(plans_root, project_root_charter)` is the new
+    `pub(crate)` leaf that reads the directory it is handed. `collect_plan_files`
+    and a public `collect_plan_files_with_plans(root, plan_override)` delegate to
+    it; the funnel applies `plan_override.unwrap_or(layout.plans_root)` once.
+  - The override rides a narrow `_with_plans` family —
+    `load_domain_model_with_plans` / `Workspace::load_with_plans` /
+    `load_workspace_with_plans` / `collect_plan_files_with_plans`. The plain
+    functions delegate with `None`, so archive, manifest, graph, the save tests
+    and the LSP keep their signatures and their default behavior — no boilerplate.
+  - `load_workspaces` applies `config.plan_path` to the **primary** workspace
+    only (additional workspaces own their own config).
+  - The CLI contains it all in `CommandContext`: `plan_override()` resolves
+    `plan_path` once (shell-expanded, like `additional_workspaces`), and
+    `load_model()` / `load_charters()` / `collect_plan_files()` / `plans_root()`
+    route through it. Command call sites that loaded the primary via
+    `&ctx.data_dir` now call those helpers and stay oblivious to where plans live.
 
 ## Scope boundary
 
