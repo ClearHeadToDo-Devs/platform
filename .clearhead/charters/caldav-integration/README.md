@@ -41,11 +41,19 @@ disk. Two consequences:
 ## Syncing state (the three-way table)
 
 Edits can originate on either side, and we want to honor both without knowing
-*when* anything changed. We get that with a stored merge base. Two new
-action-level properties hold a copy of the action's dates at last sync:
+*when* anything changed. We get that with a stored merge base. Two copies of
+the action's dates at last sync hold it:
 
 - `scheduled_at_sync` — copy of `scheduled_at`
-- `due_at_sync` — copy of `due_at`
+- `due_date_sync` — copy of `due_date`
+
+These are **sidecar** fields (`.<charter>.json`, `ActMeta`), not DSL — they
+sit next to `source_vevent`, the other half of the CalDAV linkage. The merge
+base is machine-owned bookkeeping: a user editing it would corrupt the sync,
+so it never enters the human-edited `.actions` file. They default to absent
+(`None`), which reads as "never synced" — the engine stamps them in the same
+write that creates the `.ics`, so "B is unset" and "no `.ics` exists" stay in
+lockstep.
 
 That gives three observable values per date:
 
