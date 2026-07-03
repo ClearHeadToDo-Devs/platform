@@ -1,6 +1,6 @@
 ---
 alias: caldav-integration
-state: Active
+state: Closed
 description: Two applications (ClearHead and a CalDAV server) sharing one plan directory and syncing through the files themselves — no integration layer, coordination through data
 ---
 

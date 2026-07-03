@@ -1,5 +1,5 @@
-[ ] Write an architecture note that defines selectors, resolved targets, semantic change sets, projections, and undo boundaries =platform_model_architecture!1+architecture #048752df-42e5-4b2c-87a4-51937040cbdc
-[ ] Audit current charter and action mutation commands against the proposed platform model =platform_model_audit!1+architecture #c6fdf522-b7a4-49e8-8f6c-6e8b0c83b319
+[ ] Write an architecture note that defines selectors, resolved targets, semantic change sets, projections, and undo boundaries =platform_model_architecture!2+architecture #048752df-42e5-4b2c-87a4-51937040cbdc
+[ ] Audit current charter and action mutation commands against the proposed platform model =platform_model_audit!2+architecture #c6fdf522-b7a4-49e8-8f6c-6e8b0c83b319
 [ ] Specify how selector resolution should capture stable IDs for dry-run, replay, and undo =platform_model_selector_resolution!2+architecture #c1d13443-995d-4b5f-b690-a27b2f7df26c
 [ ] Prototype shared charter mutation plumbing around a typed change struct and materialization policy =platform_model_charter_prototype!2+core #6920f861-160b-41b7-864e-2ca796b557a2
 [ ] Define the observability vocabulary for charter lifecycle events and semantic mutation tracing =platform_model_observability!2+observability #a3bbb6bf-f60e-450e-b41a-8f00f92988f6
