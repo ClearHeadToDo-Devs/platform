@@ -1,9 +1,31 @@
 # Architectural Decisions
 
-**Last Updated:** June 26th 2026
+**Last Updated:** July 3rd 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
+
+---
+## Decision 32: Single Semantic Output Contract
+
+Refines Decision 29 (TTY-aware output). `read actions` and its siblings emit exactly **one** JSON shape: the JSON-LD document (`@context` + `@graph`). The `json` flag value is kept as an alias for `json-ld` purely for `jq` muscle-memory — it resolves to the same one format.
+
+The question that prompted this: should we also expose a "raw" flat JSON array? The answer is no, and the reasoning generalises past this one command.
+
+### Why one contract
+
+A JSON-LD document is already valid JSON, so `jq` and every JSON parser handle it today — the "JSON vs JSON-LD" framing is a false choice. What "raw JSON" would actually mean here is `serde_json` over the in-memory `ActionList` struct, and that has three problems:
+
+- **A second serializer drifts.** Two output paths means every new Action field has to be reflected in both, and they diverge the first time someone forgets. This is exactly the parallel-implementation anti-pattern the core-seam charter exists to kill.
+- **It discards the thesis.** Local-first *plus* RDF/ontology semantics is the platform's differentiator. Stripping `@context` throws away the tie to SPARQL/SHACL and the ontology repo for a convenience.
+
+### Alternate shapes are views, not copies
+
+The legitimate need behind "raw JSON":  the `@context` block is verbose and `.["@graph"][]` is clunkier than `.[]`. When that friction actually shows up, the answer is a **config view on the one pipeline** — e.g. a `--flatten` / `--no-context` flag that drops the envelope and emits the bare `@graph` node array. Same serializer, same vocab names, less envelope. This is deferred (YAGNI) 
+
+### Trade-off
+
+Consumers pay a slightly heavier default payload and a longer `jq` path in exchange for a stable, semantic, single-sourced contract.
 
 ---
 ## Decision 31: CalDAV Integration
@@ -86,8 +108,6 @@ The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingl
 - Plans → vdir/iCal
 
 This makes `>` redirection trivially correct — piping to a file produces a valid, parseable workspace file. It also enables clearhead-to-clearhead pipelines where mutations accept native format on stdin.
-
-**JSON-LD** is the only structured escape hatch for external tools. There is no separate `--json` flag — JSON-LD is valid JSON, and tools like `jq` work against it directly. Maintaining two JSON formats would create drift; `--jsonld` is the single authoritative structured representation.
 
 **IDs** (`--ids`) output one UUID per line for xargs-style reference piping:
 ```
