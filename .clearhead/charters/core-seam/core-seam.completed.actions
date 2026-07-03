@@ -1,0 +1,1 @@
+[x] delegate save_file to core write_actions $ commands/mod.rs save_file duplicates core action_files::write_actions body-for-body (same format call) minus the atomic rename; replace its body with write_actions plus the sidecar stamp $+cli  %2026-07-03T09:02#019f268f-eb33-7c70-b9e2-d79f46223f3d
