@@ -25,9 +25,11 @@ check their promotion triggers instead.
    one resolver. The naive-write sweep is now unblocked by the closed caldav
    charter; the close_subtree move is gated on action-lifecycle's Action struct
    extension.
-2. **[[trust]]** (`!1`×2) — round-trip property tests (pairs with the two `!1`
-   formatter bugs in clearhead-cli's charter file — same bug class) and
-   git-backed undo (snapshot hook gated on core-seam's save_file delegation).
+2. **[[trust]]** (`!1`×2) — round-trip fidelity (rescoped 2026-07-03 per
+   Decision 33: not a full proptest generator but the artifact-agreement
+   residue — reserved-char escaping; the multi-tag `!1` cli bug is now closed,
+   the spacing one remains) and git-backed undo (snapshot hook gated on
+   core-seam's save_file delegation).
 3. **[[query-system]]** (`!2`) — dependency views: frontier, unblock-impact,
    critical path, graph-shaped response type.
 4. **[[trust]]** (`!2`) — doctor fsck and the five standing decisions.

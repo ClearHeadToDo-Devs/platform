@@ -6,6 +6,69 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 33: Round-Trip Fidelity Lives at the Text Boundary
+
+Decision 9 committed us to a *lossless* round-trip between the `.actions` text and
+the domain structs. This decision records *where* that contract is actually at
+risk and how we enforce it — because a design conversation about "add round-trip
+property tests" surfaced that most of the surface is better protected by more
+static tools, and only a narrow residue is a genuine test target.
+
+### The type system owns the model; the test owns the crossing
+
+The type system already guarantees an `Action` is well-formed *in memory*. It
+guarantees nothing about `parse(format(x)) == x`, because `format` and `parse`
+are hand-written string manipulation over three independently-maintained
+artifacts — the formatter (`fmt_content`), the tree-sitter grammar, and the
+Topiary query — that must agree on one wire protocol. No type relates three
+programs. So the round-trip contract's real job is *not* "is the model valid"
+(types and tree structure cover that); it is "do those three artifacts agree,"
+and that is the only thing that needs a round-trip check.
+
+Consequently, most candidate invariants get pushed to a more static layer:
+
+- **Referential coherence** (parent exists, no cycles) — free by construction:
+  the parser builds `parent_id` from `>` nesting, so it *cannot* emit a dangling
+  parent. A generator would produce trees, not flat lists, for the same reason.
+- **Datetime precision** — a *type* concern, not a test concern. Make the type's
+  expressiveness match the format's (or vice versa) so there is nothing to lose.
+- **Horizontal spacing** — already fixed and guarded by a regression test.
+- **Ambiguity of human intent** (`#42` — id, or literal, or half-typed?) — a
+  *lint* concern, never a test. The file is a live buffer that passes through
+  many not-yet-valid states while editing; hard validation fights that. This is
+  Decision 6 (relaxed parser, strict linter) applied to the text boundary.
+
+Net: a full property-test *generator* over arbitrary `ActionList`s is
+over-scoped. The right-sized tool is targeted round-trip tests aimed squarely
+at the artifact-agreement residue, plus pinned regressions for real bugs.
+
+### Two concrete rulings
+
+**1. Context tags: comma is canonical; the parser recovers space form losslessly.**
+The formatter and grammar use the comma form (`+work,meeting,client`); the spec
+documented the space form (`+work +meeting +client`). Space form parses as
+separate context nodes, and the parser was *assigning* per node — silently
+keeping only the last tag (the multi-tag data-loss bug found by dogfooding
+2026-07-02). Resolution: the formatter continues to emit the comma form as
+canonical, and the parser *collects* every context node rather than overwriting,
+so a spec-following hand-authored file is recovered without loss rather than
+corrupted. Be liberal in what you accept. (Implemented: parser append +
+regression test; spec aligned.)
+
+**2. Reserved characters in freeform fields require explicit escaping.**
+`$ # + < *` etc. carry syntactic meaning. If a title genuinely needs one
+(`save $500`, `PR #42`), the human escapes it, and the *formatter* is obligated
+to escape on write so its own output always round-trips — escaping is a
+write-side discipline, never a read-side heuristic that guesses intent. An
+*unescaped* reserved char in hand-authored text is a **lint warning**, not a
+parse error and not a test failure (again: live buffer, Decision 6). Status:
+**decided, not yet implemented** — escaping is currently absent from all three
+layers (formatter writes names raw, parser does not unescape, grammar has no
+escape rule). This spawns a coordinated grammar + parser + formatter action; the
+targeted round-trip tests land with it, since escape/unescape survival through
+Topiary is precisely the artifact-agreement residue worth testing.
+
+---
 ## Decision 32: Single Semantic Output Contract
 
 Refines Decision 29 (TTY-aware output). `read actions` and its siblings emit exactly **one** JSON shape: the JSON-LD document (`@context` + `@graph`). The `json` flag value is kept as an alias for `json-ld` purely for `jq` muscle-memory — it resolves to the same one format.
