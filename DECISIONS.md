@@ -1,9 +1,72 @@
 # Architectural Decisions
 
-**Last Updated:** July 3rd 2026
+**Last Updated:** July 4th 2026
 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
+
+---
+## Decision 34: Relaxed Reader, Strict Doctor
+
+Designing `clearhead doctor` (the trust charter's workspace fsck) surfaced that
+`load_workspace` currently entangles three roles: it **reads**, it **heals**
+(`recover_pending` replays interrupted write journals before reading anything),
+and it **judges** — but badly, hard-failing the entire workspace on one corrupt
+sidecar (`read_sidecar(...)?`) while burying real problems in `eprintln`
+warnings that `--json` consumers never see. A read-only doctor cannot be built
+on that function: calling it mutates the workspace before checking it, and it
+aborts on exactly the workspaces that need diagnosing.
+
+### The split
+
+Extract **`read_workspace`**: a pure, non-mutating, fault-tolerant reader that
+never refuses the workspace. Per-file failures — unparseable `.actions`, corrupt
+sidecar JSON, syntax errors dropping actions — become **findings** (plain data:
+code, severity, path, message, mirroring `LintDiagnostic`) returned alongside
+whatever loaded. Then:
+
+- `load_workspace` = `recover_pending` + `read_workspace` + surface the
+  findings as warnings. Behavior for existing callers is unchanged.
+- `doctor` = `read_workspace` + the cross-file checks, rendered human-readable
+  or `--json`, exit codes distinguishing clean / warnings / violations.
+
+This is Decision 6 (relaxed parser, strict linter) lifted from the file level
+to the workspace level: the reader is liberal and reports what it saw; the
+doctor is the strict judge. Same shape, one level up.
+
+### The line between recovery and cleanup
+
+Journal replay stays a `load_workspace` side effect deliberately: replaying a
+`.pending` journal *completes an already-committed write* — without it, reads
+see torn multi-file state. That is crash recovery, and recovery-to-consistency
+is a legitimate obligation of loading.
+
+Everything else — orphaned `.tmp.*` staging files, sidecar entries whose action
+is gone — is **tidying**, and tidying is never a side effect of reading or
+diagnosing. Cleanup belongs to explicit, idempotent commands owned by each file
+surface. A future `doctor --fix` is sugar that *invokes those commands*; it does
+not grow fixing logic of its own. Doctor itself reads, always.
+
+### The check inventory (initial)
+
+Grounded in the 2026-07-04 survey of the workspace layer; the linter keeps
+intra-file validity, doctor owns cross-file coherence:
+
+- **Load integrity** — files that fail to parse or lose actions to syntax
+  errors (today: stderr warning only; the query-system charter file dropped out
+  silently until 2026-07-02)
+- **UUIDs** — duplicates within and across files (copy-pasted lines; the load
+  path currently masks cross-file duplicates)
+- **References** — dangling predecessors (explicit UUID refs, unlike parents
+  which cannot dangle by construction, Decision 33); unresolvable charter
+  `parent:` aliases
+- **Aliases** — collisions (`name_to_alias` is last-writer-wins today)
+- **Sidecar ↔ actions** — orphaned sidecar entries; unparseable sidecar JSON;
+  `source_vevent` pointing at a VEVENT UID absent from `plans/`
+- **Calendar** — `plans/<slug>/` directories matching no charter (load
+  currently invents an implicit charter instead of reporting)
+- **Durability residue** — a `.pending` journal present (report, do not
+  replay); orphaned `.tmp.*` staging files
 
 ---
 ## Decision 33: Round-Trip Fidelity Lives at the Text Boundary
