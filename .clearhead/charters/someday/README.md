@@ -38,3 +38,6 @@ backlog.
   local-first.
 - [[explainable-reasoning]] — a real reasoner, gated on evidence, with
   derivation transparency as a hard requirement.
+- [[semantic-token-augmentation]] — LSP semantic tokens that augment
+  tree-sitter with computed meaning (overdue, dangling, blocked), projecting
+  the linter's analysis into ambient colour instead of re-emitting syntax.
