@@ -1,7 +1,7 @@
 ---
 alias: agenda-view
 state: Active
-description: Cross-cutting agenda view spanning core query logic, CLI commands, and Neovim virtual buffer with change routing
+description: Cross-cutting agenda view spanning core query logic, CLI index queries, and Neovim quickfix integration with change routing via canonical ids
 ---
 
 # Agenda View
@@ -32,7 +32,7 @@ State mutations route back to source files via UUID.
 ## Layers
 
 - **core** — named agenda queries alongside `run_workspace_sql_query`
-- **cli** — `clearhead query agenda [daily|weekly]` command
+- **cli** — `clearhead query index agenda` command
 - **lsp** — decide: new LSP command vs plugin calls CLI directly
 - **nvim** — virtual buffer + change routing via UUID
 
@@ -54,3 +54,20 @@ forward direction refines that into a **live index**, not an editable projection
   acts.
 - Celebration/provenance of *how* an action surfaced belongs to analytics, not here —
   this is the workhorse "just do it" list. Silent re-settle; keep the user's place.
+
+## The Index Shape (2026-07-07)
+
+The response shape formerly called `qflist` is renamed **index** — the widget name
+leaked Neovim into the engine, exactly the seam violation query_output.md warns
+against. An index is the dictionary sense: ordered, display-labeled, locator-bearing
+entries, plus `@id` so each entry is addressable.
+
+The logic/shape border is the SPARQL query itself: `WHERE` carries the query logic
+(the wisdom), the `SELECT` projection satisfies the shape's contract (`id`, `name`,
+`status`, `source_file`, `source_line`, `charter_root`; sort keys when bound). The
+engine validates the projection, never composes or repairs. Future shapes slot
+alongside: `table` for aggregates, `graph` for networks.
+
+Consequences landed with the rename: the duplicate contract-less agenda query is
+collapsed (one agenda, one source of truth) and `read agenda` is removed — an agenda
+is a query, so `clearhead query index agenda` is the single entry point.
