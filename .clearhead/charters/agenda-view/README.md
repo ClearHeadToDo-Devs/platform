@@ -35,3 +35,22 @@ State mutations route back to source files via UUID.
 - **cli** — `clearhead query agenda [daily|weekly]` command
 - **lsp** — decide: new LSP command vs plugin calls CLI directly
 - **nvim** — virtual buffer + change routing via UUID
+
+## Output Contract & Direction (2026-07-05)
+
+The agenda conforms to the [Query Output Specification](../../../specifications/query_output.md).
+The v1 slice shipped a virtual `ft=actions` buffer with state-cycle change routing; the
+forward direction refines that into a **live index**, not an editable projection:
+
+- The agenda is a flat, ordered **list** — a `SELECT` framed as a JSON-LD `@graph`. Its
+  "aliveness" is emergent: predicates over mutable relational state (open predecessors,
+  open parents) mean completing one action surfaces its successors on the next run. No
+  reactive machinery — just a cheap, idempotent re-query.
+- Identity is **`@id`** (canonical, not `source_line` — a line number is fine to *jump*
+  to but too fragile to *act* on). This is the address mutation verbs target.
+- The loop is **read → verb-by-`@id` → re-read**, refresh gated on an explicit save.
+  The plugin maps each JSON-LD node to a quickfix entry: `@id` → `user_data`, locator →
+  `filename`/`lnum`, composed display → `text`. The line number navigates; the `@id`
+  acts.
+- Celebration/provenance of *how* an action surfaced belongs to analytics, not here —
+  this is the workhorse "just do it" list. Silent re-settle; keep the user's place.
