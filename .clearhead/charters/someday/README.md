@@ -41,3 +41,6 @@ backlog.
 - [[semantic-token-augmentation]] — LSP semantic tokens that augment
   tree-sitter with computed meaning (overdue, dangling, blocked), projecting
   the linter's analysis into ambient colour instead of re-emitting syntax.
+- [[application-ontology]] — a semantic layer for workspace-scoped operational
+  facts and interface-facing projections, kept out of the core ontology until
+  repetition proves the abstraction.
