@@ -7,10 +7,7 @@ description: Re-route the CLI through the machinery core already built — one w
 # Core Seam
 
 The 2026-07-02 architecture review found a single recurring failure mode: **the
-CLI command layer stopped calling core**. Core grew real machinery — atomic
-writes with crash recovery, a spec-complete reference resolver, a semantic
-`WorkspaceConfig` — and the commands kept (or re-grew) their own weaker copies
-beside it. Every finding below is an instance of that one gap.
+CLI command layer stopped calling core**. Core grew real machinery — atomic writes with crash recovery, a spec-complete reference resolver, a semantic `WorkspaceConfig` — and the commands kept (or re-grew) their own weaker copies beside it. Every finding below is an instance of that one gap.
 
 ## Why this charter exists
 

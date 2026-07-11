@@ -1,337 +1,396 @@
-<urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-23T16:44:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "im hitting this strange behavior where after moving one of the plans to another charter now it says there is a duplicate id from the diagnostics which tells me we are making another plan instead of moving the existing one..." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Research what is happening with the duplicate id for an action after moving" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d1b2b-2ea5-78e2-b432-8c6eb4b448bf" ;
+<urn:uuid:019f0bc9-895b-7fda-a476-dd426127cd39> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "simulate failure mid-write, mid-batch, and mid-staged-commit (A committed, B not); assert no torn/partial state, prior content always survives, and .pending journal replays correctly on restart — this action is the charter's completion gate" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "crash-safety tests (DONE GATE)" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-895b-7fda-a476-dd426127cd39" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "we want to allow people to incrementally adopt and only use the tools they want without downloading heavy deps like the LSP" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "split the cli from the LSP binary" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cfa3d-30d5-7611-9a7d-4148b3e97b84" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp_ref_integration" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Integrate core reference resolver in LSP" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d0dfa-0995-75b3-a22f-74175e0511bf" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> , <urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> , <urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> .
-<urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> <https://clearhead.us/vocab/actions/v4#hasScheduledDateTime> "2026-05-26T10:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://clearhead.us/vocab/actions/v4#hasExternalScheduleId> "019e5205-fb4b-7742-ab45-32fc90e87e0e" ;
-	<https://clearhead.us/vocab/actions/v4#hasRecurrenceRule> "FREQ=WEEKLY" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "test-move-plan" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "51739021-7c8d-590c-87bc-0d89a4c74298" ;
-	a <https://www.commoncoreontologies.org/ont00000974> .
-<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> .
-<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> .
-<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "482b621a-75ba-5bdd-b74b-881ceeea82e5" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "lsp" ;
-	a <https://clearhead.us/vocab/actions/v4#Charter> .
-<urn:uuid:019dad29-c05d-7781-a92c-40b108acbd93> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update expand_acts to write linked instances into .actions files (not just TTL)" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40b108acbd93" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:plan> .
-<urn:context:plan> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "plan" ;
+<urn:uuid:019f0bc9-8954-7740-80a5-76b0997047a7> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> , <urn:context:cli> .
+<urn:context:cli> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "cli" ;
 	a <https://clearhead.us/vocab/actions/v4#Context> .
-<urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> <http://www.w3.org/2000/01/rdf-schema#label> "generated acts carry" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40a889a5cf72" ;
+<urn:uuid:019f0bc9-8954-7740-80a5-76b0997047a7> <http://www.w3.org/2000/01/rdf-schema#comment> "lockfile guarding ClearHead writes against concurrent ClearHead invocations only — does NOT serialize radicale; stale-lock handling (PID check / TTL) and non-blocking-acquire semantics must be defined" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add advisory workspace lock" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-8954-7740-80a5-76b0997047a7" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-4089e77610bf> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update graph insert logic to reflect new semantics" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4089e77610bf" ;
+<urn:uuid:019f0bc9-894d-7f18-9683-b6a159ca0d91> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the bracket reconcile will use to move an action and its sidecar snapshot together — A and B land or neither does" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add staged multi-file commit seam" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-894d-7f18-9683-b6a159ca0d91" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad27-c0e9-7280-8323-7bbdd357d6e9> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "consider cloud integration options" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad27-c0e9-7280-8323-7bbdd357d6e9" ;
+<urn:uuid:019f0bc9-893f-7e9a-9d97-cd40f58eab92> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "replace naive std::fs::write in action_files.rs, sidecar.rs, store/save.rs, and archive_charter.rs — tests can stay as-is" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "route all production writes through the primitive" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-893f-7e9a-9d97-cd40f58eab92" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad27-9e28-7a62-b430-2bd597f61ac1> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "maybe we do something where we can update it from the calendar as well???" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad27-9e28-7a62-b430-2bd597f61ac1" ;
+<urn:uuid:019f0bc9-8938-73b2-8c47-d359438fa494> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8946-70cb-a08f-74ce8be6f2b4> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "single owner: write to a temp file in the same directory, fsync, then atomic rename over the target. one function every write goes through" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add atomic write primitive" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-8938-73b2-8c47-d359438fa494" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad26-87ff-7721-9ea3-e72bed5dc53f> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "plans should now generate or update ics files" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad26-87ff-7721-9ea3-e72bed5dc53f" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update interface to make things easier" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad1f-99a6-7823-8c97-3f30948e8732" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad1d-e83e-7d50-8efe-3f7c31162f2b> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-20T18:54:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update spec to reflect change" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad1d-e83e-7d50-8efe-3f7c31162f2b" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb1-cfdf-7841-844b-3b3be54d671b> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update generate code to primarily use ics files" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b3be54d671b" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update core to respect ics files" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b282635aa75" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb2-1656-71a0-afec-4ff455913897> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "remove rrule expansion code" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb2-1656-71a0-afec-4ff455913897" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "rip out code" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b12aa58cc09" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb1-cfdf-7841-844b-3b09835cb9e4> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update spec to reflect change" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b09835cb9e4" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "remove RRULE syntax from actions DSL" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3afff25c7266" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40f15478ac2a> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "uses DESCRIPTION convention instead of X-CLEARHEAD-TEMPLATE; deterministic child UUIDs via occurrence_act_id; falls back to flat act with warning if template missing" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "wire template binding in expand_acts to pre-populate children from template" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40f15478ac2a" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40ec4f3080a2> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "Verb::Apply + ApplyTarget::Template in argparser; commands/template.rs handler; fresh UUIDv7s for on-demand use" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "implement apply template command" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40ec4f3080a2" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40d71adfb88e> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "resolve_template in clearhead-core/src/workspace/templates.rs" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "define templates/ discovery convention (charter-local first, platform root fallback)" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40d71adfb88e" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "templates.rs in core (resolve + instantiate); apply template CLI command; expand acts wires template children; template binding moved from X-CLEARHEAD-TEMPLATE to DESCRIPTION convention for calendar app compatibility" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "implement templates folder and apply template command" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40cd1b57501d" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> ;
-	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:plan-linking-on-generated-acts> .
-<urn:context:plan-linking-on-generated-acts> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "plan-linking-on-generated-acts" ;
+<urn:uuid:019f0bc9-8946-70cb-a08f-74ce8be6f2b4> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> .
+<urn:context:library> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "library" ;
 	a <https://clearhead.us/vocab/actions/v4#Context> .
-<urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> <http://www.w3.org/2000/01/rdf-schema#label> "implement" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4099b5a64e31" ;
+<urn:uuid:019f0bc9-8946-70cb-a08f-74ce8be6f2b4> <http://www.w3.org/2000/01/rdf-schema#comment> "staged-temps + ordered renames + directory fsync + a .pending journal replayed on startup — recoverable-durability, not true atomicity; partial failure leaves pre-batch or full post-batch, never torn" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "make save_domain_model set-atomic" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-8946-70cb-a08f-74ce8be6f2b4" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-407025b0b35d> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Plans now sourced from .ics VEVENTs (non-recurring acts are implicit single-instance Plans)" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-407025b0b35d" ;
+<urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "establish write durability layer" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f0bc9-8931-7b05-a1be-0cc39ed83d20" ;
 	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-4060e4e5153c> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "audit load_domain_model — currently creates Plans from .actions lines" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4060e4e5153c" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019dad29-c05d-7781-a92c-40550ace5866> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "update domain model loading to treat .actions as PlannedActs" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40550ace5866" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019dad29-c05d-7781-a92c-40b108acbd93> , <urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> , <urn:uuid:019dad29-c05d-7781-a92c-4089e77610bf> , <urn:uuid:019dad27-c0e9-7280-8323-7bbdd357d6e9> , <urn:uuid:019dad27-9e28-7a62-b430-2bd597f61ac1> , <urn:uuid:019dad26-87ff-7721-9ea3-e72bed5dc53f> , <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> , <urn:uuid:019dad1d-e83e-7d50-8efe-3f7c31162f2b> , <urn:uuid:019dacb1-cfdf-7841-844b-3b3be54d671b> , <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> , <urn:uuid:019dacb2-1656-71a0-afec-4ff455913897> , <urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> , <urn:uuid:019dacb1-cfdf-7841-844b-3b09835cb9e4> , <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> , <urn:uuid:019dad29-c05d-7781-a92c-40f15478ac2a> , <urn:uuid:019dad29-c05d-7781-a92c-40ec4f3080a2> , <urn:uuid:019dad29-c05d-7781-a92c-40d71adfb88e> , <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> , <urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> , <urn:uuid:019dad29-c05d-7781-a92c-407025b0b35d> , <urn:uuid:019dad29-c05d-7781-a92c-4060e4e5153c> , <urn:uuid:019dad29-c05d-7781-a92c-40550ace5866> .
-<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> .
-<urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "templates" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "Template system — superseded by workspace layer rework and ICS-based plans." ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "51301abf-234e-55c6-8a59-c100ca5d5b1f" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Templates" ;
+<urn:uuid:4a533b52-ba3c-5526-9700-f28a4555900c> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019f0bc9-895b-7fda-a476-dd426127cd39> , <urn:uuid:019f0bc9-8954-7740-80a5-76b0997047a7> , <urn:uuid:019f0bc9-894d-7f18-9683-b6a159ca0d91> , <urn:uuid:019f0bc9-893f-7e9a-9d97-cd40f58eab92> , <urn:uuid:019f0bc9-8938-73b2-8c47-d359438fa494> , <urn:uuid:019f0bc9-8946-70cb-a08f-74ce8be6f2b4> , <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:4a533b52-ba3c-5526-9700-f28a4555900c> .
+<urn:uuid:4a533b52-ba3c-5526-9700-f28a4555900c> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "write-durability" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Foundational pre-work for [[caldav-integration]]. Before any two-way reconcile\ntouches the A/B/C triangle (action / sidecar snapshot / ICS), the workspace\nneeds to make file writes *safe under failure* — otherwise the file-authoritative\nmodel will get blamed for losing data that an unprotected write actually lost.\n\n## Why this comes first\n\nThe architecture is aligned with the product's values — plaintext files are the\nsource of truth, the graph is a derived read-model, the sidecar is a ruthlessly\nscoped ledger. What's missing is **durability discipline**, and it's the one part\nof the file model that is not optional once an external writer (radicale via ICS)\nshares the workspace.\n\nToday every production write is a naive `std::fs::write(path, content)`:\n\n- `workspace/action_files.rs` — `.actions` files\n- `workspace/sidecar.rs` — the `.json` ledger\n- `workspace/store/save.rs` — the whole domain model\n- `workspace/archive_charter.rs` — `archive.ttl`\n\n`NamedTempFile` appears only in tests. A crash or a concurrent reader mid-write\ncan observe a truncated file, and `save_domain_model` writes files one at a time\nwith a separate orphan-removal pass — so a partial failure can leave a torn\nworkspace with no rollback.\n\n## The disciplines\n\nThere are four disciplines total. This charter owns the two durability\ndisciplines; the other two — non-destructive archival and loud conflicts — live\nwith the reconcile work itself:\n\n1. **Atomic single-file write** *(durability — this charter)* — temp file in\n   the same directory, fsync, atomic rename. One primitive, every write routed\n   through it.\n2. ** Recoverable saves** *(durability — this charter)* — `save_domain_model`\n   stages all writes and commits them as a batch so a partial failure can't\n   tear the workspace. even with our partial method this should be fine due to the idempotency of many commands\n3. **Staged multi-file commit** *(durability — this charter, as a seam)* — the\n   seam reconcile will use to move an action and its sidecar snapshot together\n   (A + B as one unit).\n4. **Advisory workspace lock** *(durability — this charter)* — serialize\n   ClearHead's own writes; reconcile only runs against a clean, unlocked\n   workspace.\n\n## Failure model (POSIX reality)\n\nA single-file atomic write is genuinely atomic on POSIX: `rename(2)` in the\nsame directory is atomic, and with an `fsync` of the temp file before and the\ndirectory after, prior content always survives a crash. Item 1 is real.\n\nA *multi-file* \"batch commit\" is **not** atomic on POSIX — there is no\n`rename`-multiple syscall. The set-atomic save (item 2) is therefore a\n**staged-temps + ordered-renames + directory-fsync + pending-marker** scheme,\nnot a true atomic batch:\n\n1. Write every target to its own temp file in the target directory, `fsync` each.\n2. Write a `.pending` journal listing the intended (temp → final) renames,\n   `fsync` it and the directory.\n3. Perform the renames in a fixed order.\n4. `fsync` the directory, then unlink the `.pending` marker.\n\nOn startup, a present `.pending` marker means a batch was interrupted: replay\nthe listed renames (idempotent — renaming a temp that's already gone is a\nno-op), then clear the marker. This is recoverable-durability, not true\natomicity, and the crash tests must assert exactly that recovery path rather\nthan an impossible all-or-nothing guarantee.\n\nthis is important especially when we consider multi-file edits between various systems as we want to commit changes to action files and sidecars for example all at once so that we dont change one set of items and NOT the other\n\n## Scope boundary\n\nThis charter does **not** build reconcile. It builds the primitive reconcile\nstands on. When the staged-commit seam exists and is crash-tested, Decision 31\nbecomes safe to implement on top.\n\n### Non-goals\n\n- **The advisory lock does not serialize radicale.** It guards ClearHead's own\n  writes against concurrent ClearHead invocations only. Radicale writes ICS\n  through its own path; serializing it is a reconcile-charter concern (a radical\n  e-side lock or a reconcile-time pause), not this one. A reader must not assume\n  the lock makes concurrent ICS writes safe — it does not.\n- **The staged-commit seam is provisional.** It has no consumer until reconcile\n  lands; its API should be treated as revisable when the reconcile charter\n  defines its actual call site.\n\n## Done when\n\nThe layer is complete when **all three** hold:\n\n1. Every production write site named above routes through the atomic primitive\n   (tests may stay naive).\n2. `save_domain_model` uses the staged-batch scheme and a crash mid-batch leaves\n   either the pre-batch state or the full post-batch state — never a torn one —\n   per the crash tests.\n3. The staged-commit seam has a passing A+B failure test (commit A's file,\n   simulate failure before B, assert neither A nor B is committed and prior\n   content survives).\n\nThe advisory lock and its tests are required but are not a gate — they protect\nClearHead from itself, and a missing lock degrades to today's behavior rather\nthan to data loss." ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "4a533b52-ba3c-5526-9700-f28a4555900c" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Write Durability" ;
 	a <https://clearhead.us/vocab/actions/v4#Charter> .
-<urn:uuid:019db111-0014-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:35:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+<urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:48:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "update naming/process docs and repo next.actions notes so strict-vs-recover behavior and observability signals are explicit for contributors." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "document parse semantics in specs and next actions" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0014-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0013-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "integration coverage now includes expand-acts safety plus additional read/export/sync/file command parse-boundary checks and mutation byte-stability assertions." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add integration tests for non-destructive failure behavior" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0013-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0012-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "helper-level emission now includes command + source context so all adopted command paths share observability behavior." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "emit parse telemetry in CLI boundary helpers" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0012-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0011-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "parse_failed, parse_recovered, and mutation_skipped_due_to_parse telemetry events are now part of the shared schema." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add telemetry event variants for parse outcomes" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0011-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0010-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "parse outcomes now emit consistent telemetry and user-facing diagnostics from shared command-boundary helpers." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "wire parse boundary into observability pipeline" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0010-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0009-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "add/update/complete/delete/archive all use mutation-safe loading and preserve non-destructive failure semantics." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "migrate plan mutating commands to shared parse boundary" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0009-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0008-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "malformed files are skipped, healthy files continue, and overall command returns non-zero when any parse failures occur." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "migrate expand acts to shared parse boundary" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0008-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0007-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "mutation-safe loader and content parser enforce parse gating so malformed input never proceeds to write paths." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add load_actions_for_mutation helper" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0007-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0006-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "recover-mode read helper is now the shared entry point for file-based and content-based read paths with warning diagnostics." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add load_actions_for_read helper" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0006-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0005-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "read and mutation policies are centralized in commands/mod.rs helpers and now reused by plan, act, service, and file command paths. mutation paths block writes on parse failure." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "create CLI parse policy boundary for command handlers" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0005-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0004-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "strict-vs-recover behavior is covered in core parser tests, including syntax failure and recovery semantics." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add parse contract tests in core" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0004-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0003-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "parse failures now carry explicit machine-readable structure so callers can enforce policy and present consistent failure output." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add explicit ParseFailure diagnostic type" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0003-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0002-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "strict/recover modes plus shared outcome payload (diagnostics + recovery metadata) are now exposed through the core parser seam." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add ParseMode and ParseOutcome types" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0002-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:019db111-0001-7000-0000-000000000001> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "explicit parse mode + outcome model landed in clearhead-core; syntax errors are systemic failures for mutation boundaries while lint remains advisory. legacy parse entry points remain available as wrappers over the new contract." ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "define parse boundary contract in core" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0001-7000-0000-000000000001" ;
-	a <https://clearhead.us/vocab/actions/v4#Action> .
-<urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019db111-0014-7000-0000-000000000001> , <urn:uuid:019db111-0013-7000-0000-000000000001> , <urn:uuid:019db111-0012-7000-0000-000000000001> , <urn:uuid:019db111-0011-7000-0000-000000000001> , <urn:uuid:019db111-0010-7000-0000-000000000001> , <urn:uuid:019db111-0009-7000-0000-000000000001> , <urn:uuid:019db111-0008-7000-0000-000000000001> , <urn:uuid:019db111-0007-7000-0000-000000000001> , <urn:uuid:019db111-0006-7000-0000-000000000001> , <urn:uuid:019db111-0005-7000-0000-000000000001> , <urn:uuid:019db111-0004-7000-0000-000000000001> , <urn:uuid:019db111-0003-7000-0000-000000000001> , <urn:uuid:019db111-0002-7000-0000-000000000001> , <urn:uuid:019db111-0001-7000-0000-000000000001> .
-<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> .
-<urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "parse_boundary" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "The parser currently has two behaviors (strict failure and recoverable parse), but command-level handling is inconsistent. This creates unsafe edges where partial recovery can silently become destructive file rewrites.\n\nThis charter defines a single parse boundary contract for the platform: syntax errors are systemic and block mutation; lint remains advisory for valid parses. It also defines observability hooks so parse health is measurable over time rather than inferred from incidents." ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "fbeed33b-787a-5702-aa16-37fd42a87478" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Parse Boundary and Mutation Safety" ;
-	a <https://clearhead.us/vocab/actions/v4#Charter> .
-<urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> a <https://clearhead.us/vocab/actions/v4#Charter> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "Observability and Debugging Tools" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "8e798316-ed1f-512c-91d3-d02eceb47c48" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "Right now debugging the clearhead system requires `RUST_LOG=debug` and reading source code — you can't inspect what the graph actually contains, why a SPARQL query returned nothing, or what the system resolved a charter name to.\n\nThe architecture already has everything needed to fix this: the RDF store is queryable, the domain model is structured, and the CLI is the right place to expose it. The goal is to make the system self-describing so that bugs like the \"recursive charter returns empty\" class can be diagnosed in seconds, not hours.\n\nLonger term, this is also the foundation for unifying telemetry — if events are written as RDF triples into the store, `query sparql` becomes the single interface for debugging, analytics, and introspection." ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "observability" ;
-	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
-<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> .
-<urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019cffdc-b1b8-7e63-a96f-10d0816b25ac> , <urn:uuid:019cffdc-b1be-7ea3-a056-51ae79a826d9> , <urn:uuid:019cffdc-b1c5-79c3-9c4a-952ad4514ccc> , <urn:uuid:019cffdc-b1ce-7842-bbf6-27f3b36feef4> .
-<urn:uuid:019cffdc-b1b8-7e63-a96f-10d0816b25ac> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1b8-7e63-a96f-10d0816b25ac" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add sparql query command to CLI" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "clearhead query sparql '<query>' runs the query against the live workspace RDF graph and returns results. the graph infrastructure already exists — this is mostly wiring run_workspace_sql_query to a new subcommand. would have cut the recursive-charter debug session from hours to minutes" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:17:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019cffdc-b1be-7ea3-a056-51ae79a826d9> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1be-7ea3-a056-51ae79a826d9" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add graph inspection command" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "clearhead show graph [--charter X] dumps the actual RDF triples for a charter or the whole workspace. critical for verifying hasSubCharter triples exist and point to the right URIs — was completely blind on this during the recursive charter fix" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:23:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019cffdc-b1c5-79c3-9c4a-952ad4514ccc> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1c5-79c3-9c4a-952ad4514ccc" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "improve empty result messages for charter queries" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "when --charter X returns zero plans, tell the user what was actually resolved and why nothing matched: e.g. 'resolved charter to Build the ClearHead Platform (explicit, README.md), graph name: build_clearhead, SPARQL returned 0 results'. silent empty with exit 0 is the worst failure mode for a query system" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:23:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019cffdc-b1ce-7842-bbf6-27f3b36feef4> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1ce-7842-bbf6-27f3b36feef4" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "unify telemetry with RDF store" ;
-	<http://www.w3.org/2000/01/rdf-schema#comment> "current try_emit/TelemetryEvent is outward-facing product analytics. if events were written as RDF triples into the oxigraph store, query sparql would serve debugging, analytics, and introspection from one interface. worth exploring after the query command exists so we can see what it would look like" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:34:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> a <https://clearhead.us/vocab/actions/v4#Charter> ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "lsp-workspace-refactor" ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6076-cdc1-79d1-8030-63fc30717e50" ;
-	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp-workspace-refactor" ;
-	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
-<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> .
-<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> , <urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> , <urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> , <urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> , <urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> .
-<urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-073d-7371-9829-28ac762c8dfd" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "read workspaceFolders from InitializeParams in the LSP backend" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0741-7150-ad95-be1d6c5e185a" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "fall back to additional_workspaces from config when workspaceFolders is absent" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0744-7192-a92d-edc575a036a4" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "load all workspace roots into Backend at init and keep them keyed by root URI" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0748-7ae2-ac4b-2ef6ce91e5db" ;
-	<http://www.w3.org/2000/01/rdf-schema#label> "add workspace_for_uri routing on Backend — replaces per-command ctx.workspace_for_file at the LSP layer" ;
-	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
-<urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> a <https://clearhead.us/vocab/actions/v4#Action> ;
-	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-074c-7e52-beac-a8c4b5816864" ;
 	<http://www.w3.org/2000/01/rdf-schema#label> "update Neovim plugin to send workspaceFolders derived from config at lsp.start — becomes a free-rider" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-074c-7e52-beac-a8c4b5816864" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
-	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:48:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+	<http://www.w3.org/2000/01/rdf-schema#label> "add workspace_for_uri routing on Backend — replaces per-command ctx.workspace_for_file at the LSP layer" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0748-7ae2-ac4b-2ef6ce91e5db" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "load all workspace roots into Backend at init and keep them keyed by root URI" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0744-7192-a92d-edc575a036a4" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "fall back to additional_workspaces from config when workspaceFolders is absent" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-0741-7150-ad95-be1d6c5e185a" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-25T12:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "read workspaceFolders from InitializeParams in the LSP backend" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6077-073d-7371-9829-28ac762c8dfd" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019e6077-074c-7e52-beac-a8c4b5816864> , <urn:uuid:019e6077-0748-7ae2-ac4b-2ef6ce91e5db> , <urn:uuid:019e6077-0744-7192-a92d-edc575a036a4> , <urn:uuid:019e6077-0741-7150-ad95-be1d6c5e185a> , <urn:uuid:019e6077-073d-7371-9829-28ac762c8dfd> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> .
+<urn:uuid:019e6076-cdc1-79d1-8030-63fc30717e50> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp-workspace-refactor" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e6076-cdc1-79d1-8030-63fc30717e50" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "lsp-workspace-refactor" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
+<urn:uuid:019cffdc-b1ce-7842-bbf6-27f3b36feef4> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:34:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "current try_emit/TelemetryEvent is outward-facing product analytics. if events were written as RDF triples into the oxigraph store, query sparql would serve debugging, analytics, and introspection from one interface. worth exploring after the query command exists so we can see what it would look like" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "unify telemetry with RDF store" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1ce-7842-bbf6-27f3b36feef4" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019cffdc-b1c5-79c3-9c4a-952ad4514ccc> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:23:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "when --charter X returns zero plans, tell the user what was actually resolved and why nothing matched: e.g. 'resolved charter to Build the ClearHead Platform (explicit, README.md), graph name: build_clearhead, SPARQL returned 0 results'. silent empty with exit 0 is the worst failure mode for a query system" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "improve empty result messages for charter queries" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1c5-79c3-9c4a-952ad4514ccc" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019cffdc-b1be-7ea3-a056-51ae79a826d9> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:23:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "clearhead show graph [--charter X] dumps the actual RDF triples for a charter or the whole workspace. critical for verifying hasSubCharter triples exist and point to the right URIs — was completely blind on this during the recursive charter fix" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add graph inspection command" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1be-7ea3-a056-51ae79a826d9" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019cffdc-b1b8-7e63-a96f-10d0816b25ac> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-03-18T16:17:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "clearhead query sparql '<query>' runs the query against the live workspace RDF graph and returns results. the graph infrastructure already exists — this is mostly wiring run_workspace_sql_query to a new subcommand. would have cut the recursive-charter debug session from hours to minutes" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add sparql query command to CLI" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cffdc-b1b8-7e63-a96f-10d0816b25ac" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019cffdc-b1ce-7842-bbf6-27f3b36feef4> , <urn:uuid:019cffdc-b1c5-79c3-9c4a-952ad4514ccc> , <urn:uuid:019cffdc-b1be-7ea3-a056-51ae79a826d9> , <urn:uuid:019cffdc-b1b8-7e63-a96f-10d0816b25ac> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> .
+<urn:uuid:8e798316-ed1f-512c-91d3-d02eceb47c48> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "observability" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Right now debugging the clearhead system requires `RUST_LOG=debug` and reading source code — you can't inspect what the graph actually contains, why a SPARQL query returned nothing, or what the system resolved a charter name to.\n\nThe architecture already has everything needed to fix this: the RDF store is queryable, the domain model is structured, and the CLI is the right place to expose it. The goal is to make the system self-describing so that bugs like the \"recursive charter returns empty\" class can be diagnosed in seconds, not hours.\n\nLonger term, this is also the foundation for unifying telemetry — if events are written as RDF triples into the store, `query sparql` becomes the single interface for debugging, analytics, and introspection." ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "8e798316-ed1f-512c-91d3-d02eceb47c48" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Observability and Debugging Tools" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
+<urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Parse Boundary and Mutation Safety" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "fbeed33b-787a-5702-aa16-37fd42a87478" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "The parser currently has two behaviors (strict failure and recoverable parse), but command-level handling is inconsistent. This creates unsafe edges where partial recovery can silently become destructive file rewrites.\n\nThis charter defines a single parse boundary contract for the platform: syntax errors are systemic and block mutation; lint remains advisory for valid parses. It also defines observability hooks so parse health is measurable over time rather than inferred from incidents." ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "parse_boundary" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> .
+<urn:uuid:fbeed33b-787a-5702-aa16-37fd42a87478> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019db111-0001-7000-0000-000000000001> , <urn:uuid:019db111-0002-7000-0000-000000000001> , <urn:uuid:019db111-0003-7000-0000-000000000001> , <urn:uuid:019db111-0004-7000-0000-000000000001> , <urn:uuid:019db111-0005-7000-0000-000000000001> , <urn:uuid:019db111-0006-7000-0000-000000000001> , <urn:uuid:019db111-0007-7000-0000-000000000001> , <urn:uuid:019db111-0008-7000-0000-000000000001> , <urn:uuid:019db111-0009-7000-0000-000000000001> , <urn:uuid:019db111-0010-7000-0000-000000000001> , <urn:uuid:019db111-0011-7000-0000-000000000001> , <urn:uuid:019db111-0012-7000-0000-000000000001> , <urn:uuid:019db111-0013-7000-0000-000000000001> , <urn:uuid:019db111-0014-7000-0000-000000000001> .
+<urn:uuid:019db111-0001-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0001-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "define parse boundary contract in core" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "explicit parse mode + outcome model landed in clearhead-core; syntax errors are systemic failures for mutation boundaries while lint remains advisory. legacy parse entry points remain available as wrappers over the new contract." ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0002-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0002-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add ParseMode and ParseOutcome types" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "strict/recover modes plus shared outcome payload (diagnostics + recovery metadata) are now exposed through the core parser seam." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0003-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0003-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add explicit ParseFailure diagnostic type" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "parse failures now carry explicit machine-readable structure so callers can enforce policy and present consistent failure output." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0004-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0004-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add parse contract tests in core" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "strict-vs-recover behavior is covered in core parser tests, including syntax failure and recovery semantics." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0001-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0005-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0005-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "create CLI parse policy boundary for command handlers" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "read and mutation policies are centralized in commands/mod.rs helpers and now reused by plan, act, service, and file command paths. mutation paths block writes on parse failure." ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0006-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0006-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add load_actions_for_read helper" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "recover-mode read helper is now the shared entry point for file-based and content-based read paths with warning diagnostics." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0007-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0007-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add load_actions_for_mutation helper" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "mutation-safe loader and content parser enforce parse gating so malformed input never proceeds to write paths." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0008-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0008-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "migrate expand acts to shared parse boundary" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "malformed files are skipped, healthy files continue, and overall command returns non-zero when any parse failures occur." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0009-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0009-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "migrate plan mutating commands to shared parse boundary" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "add/update/complete/delete/archive all use mutation-safe loading and preserve non-destructive failure semantics." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0005-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0010-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0010-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "wire parse boundary into observability pipeline" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "parse outcomes now emit consistent telemetry and user-facing diagnostics from shared command-boundary helpers." ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0011-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0011-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add telemetry event variants for parse outcomes" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "parse_failed, parse_recovered, and mutation_skipped_due_to_parse telemetry events are now part of the shared schema." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0012-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0012-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "emit parse telemetry in CLI boundary helpers" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "helper-level emission now includes command + source context so all adopted command paths share observability behavior." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0013-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0013-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add integration tests for non-destructive failure behavior" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "integration coverage now includes expand-acts safety plus additional read/export/sync/file command parse-boundary checks and mutation byte-stability assertions." ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019db111-0010-7000-0000-000000000001> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T13:40:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019db111-0014-7000-0000-000000000001> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019db111-0014-7000-0000-000000000001" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "document parse semantics in specs and next actions" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "update naming/process docs and repo next.actions notes so strict-vs-recover behavior and observability signals are explicit for contributors." ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:35:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Templates" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "51301abf-234e-55c6-8a59-c100ca5d5b1f" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Template system — superseded by workspace layer rework and ICS-based plans." ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "templates" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> .
+<urn:uuid:51301abf-234e-55c6-8a59-c100ca5d5b1f> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019dad29-c05d-7781-a92c-40550ace5866> , <urn:uuid:019dad29-c05d-7781-a92c-4060e4e5153c> , <urn:uuid:019dad29-c05d-7781-a92c-407025b0b35d> , <urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> , <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> , <urn:uuid:019dad29-c05d-7781-a92c-40d71adfb88e> , <urn:uuid:019dad29-c05d-7781-a92c-40ec4f3080a2> , <urn:uuid:019dad29-c05d-7781-a92c-40f15478ac2a> , <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> , <urn:uuid:019dacb1-cfdf-7841-844b-3b09835cb9e4> , <urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> , <urn:uuid:019dacb2-1656-71a0-afec-4ff455913897> , <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> , <urn:uuid:019dacb1-cfdf-7841-844b-3b3be54d671b> , <urn:uuid:019dad1d-e83e-7d50-8efe-3f7c31162f2b> , <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> , <urn:uuid:019dad26-87ff-7721-9ea3-e72bed5dc53f> , <urn:uuid:019dad27-9e28-7a62-b430-2bd597f61ac1> , <urn:uuid:019dad27-c0e9-7280-8323-7bbdd357d6e9> , <urn:uuid:019dad29-c05d-7781-a92c-4089e77610bf> , <urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> , <urn:uuid:019dad29-c05d-7781-a92c-40b108acbd93> .
+<urn:uuid:019dad29-c05d-7781-a92c-40550ace5866> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40550ace5866" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update domain model loading to treat .actions as PlannedActs" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> .
+<urn:uuid:019dad29-c05d-7781-a92c-4060e4e5153c> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4060e4e5153c" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "audit load_domain_model — currently creates Plans from .actions lines" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> .
+<urn:uuid:019dad29-c05d-7781-a92c-407025b0b35d> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-407025b0b35d" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Plans now sourced from .ics VEVENTs (non-recurring acts are implicit single-instance Plans)" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> .
+<urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4099b5a64e31" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "implement" .
+<urn:context:plan-linking-on-generated-acts> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "plan-linking-on-generated-acts" .
+<urn:uuid:019dad29-c05d-7781-a92c-4099b5a64e31> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:plan-linking-on-generated-acts> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Cancelled> .
+<urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40cd1b57501d" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "implement templates folder and apply template command" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "templates.rs in core (resolve + instantiate); apply template CLI command; expand acts wires template children; template binding moved from X-CLEARHEAD-TEMPLATE to DESCRIPTION convention for calendar app compatibility" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-40d71adfb88e> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40d71adfb88e" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "define templates/ discovery convention (charter-local first, platform root fallback)" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "resolve_template in clearhead-core/src/workspace/templates.rs" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-40ec4f3080a2> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40ec4f3080a2" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "implement apply template command" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Verb::Apply + ApplyTarget::Template in argparser; commands/template.rs handler; fresh UUIDv7s for on-demand use" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-40f15478ac2a> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40f15478ac2a" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "wire template binding in expand_acts to pre-populate children from template" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "uses DESCRIPTION convention instead of X-CLEARHEAD-TEMPLATE; deterministic child UUIDs via occurrence_act_id; falls back to flat act with warning if template missing" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad29-c05d-7781-a92c-40cd1b57501d> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-21T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3afff25c7266" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "remove RRULE syntax from actions DSL" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb1-cfdf-7841-844b-3b09835cb9e4> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b09835cb9e4" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update spec to reflect change" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b12aa58cc09" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "rip out code" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3afff25c7266> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb2-1656-71a0-afec-4ff455913897> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb2-1656-71a0-afec-4ff455913897" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "remove rrule expansion code" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b12aa58cc09> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b282635aa75" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update core to respect ics files" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dacb1-cfdf-7841-844b-3b3be54d671b> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dacb1-cfdf-7841-844b-3b3be54d671b" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update generate code to primarily use ics files" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad1d-e83e-7d50-8efe-3f7c31162f2b> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad1d-e83e-7d50-8efe-3f7c31162f2b" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update spec to reflect change" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dacb1-cfdf-7841-844b-3b282635aa75> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-04-20T18:54:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad1f-99a6-7823-8c97-3f30948e8732" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update interface to make things easier" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad26-87ff-7721-9ea3-e72bed5dc53f> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad26-87ff-7721-9ea3-e72bed5dc53f" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "plans should now generate or update ics files" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad27-9e28-7a62-b430-2bd597f61ac1> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad27-9e28-7a62-b430-2bd597f61ac1" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "maybe we do something where we can update it from the calendar as well???" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad27-c0e9-7280-8323-7bbdd357d6e9> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad27-c0e9-7280-8323-7bbdd357d6e9" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "consider cloud integration options" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-4089e77610bf> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-4089e77610bf" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update graph insert logic to reflect new semantics" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40a889a5cf72" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "generated acts carry" .
+<urn:context:plan> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "plan" .
+<urn:uuid:019dad29-c05d-7781-a92c-40a889a5cf72> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:plan> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019dad29-c05d-7781-a92c-40b108acbd93> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019dad29-c05d-7781-a92c-40b108acbd93" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "update expand_acts to write linked instances into .actions files (not just TTL)" ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019dad1f-99a6-7823-8c97-3f30948e8732> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-17T16:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "lsp" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "482b621a-75ba-5bdd-b74b-881ceeea82e5" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> .
+<urn:uuid:51739021-7c8d-590c-87bc-0d89a4c74298> a <https://www.commoncoreontologies.org/ont00000974> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "51739021-7c8d-590c-87bc-0d89a4c74298" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "test-move-plan" ;
+	<https://clearhead.us/vocab/actions/v4#hasRecurrenceRule> "FREQ=WEEKLY" ;
+	<https://clearhead.us/vocab/actions/v4#hasExternalScheduleId> "019e5205-fb4b-7742-ab45-32fc90e87e0e" ;
+	<https://clearhead.us/vocab/actions/v4#hasScheduledDateTime> "2026-05-26T10:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:482b621a-75ba-5bdd-b74b-881ceeea82e5> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> , <urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> , <urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> .
+<urn:uuid:019d0dfa-0995-75b3-a22f-74175e0511bf> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d0dfa-0995-75b3-a22f-74175e0511bf" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Integrate core reference resolver in LSP" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "lsp_ref_integration" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019cfa3d-30d5-7611-9a7d-4148b3e97b84> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019cfa3d-30d5-7611-9a7d-4148b3e97b84" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "split the cli from the LSP binary" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "we want to allow people to incrementally adopt and only use the tools they want without downloading heavy deps like the LSP" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-22T15:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019d1b2b-2ea5-78e2-b432-8c6eb4b448bf> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019d1b2b-2ea5-78e2-b432-8c6eb4b448bf" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Research what is happening with the duplicate id for an action after moving" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "im hitting this strange behavior where after moving one of the plans to another charter now it says there is a duplicate id from the diagnostics which tells me we are making another plan instead of moving the existing one..." ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-05-23T16:44:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
