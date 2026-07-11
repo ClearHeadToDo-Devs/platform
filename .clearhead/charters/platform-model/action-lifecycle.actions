@@ -1,8 +1,0 @@
-[ ] Strip implementation details from actions-vocabulary.owl $ remove DSL syntax references from rdfs:comment and skos:definition on hasCompletedDateTime, hasCreatedDateTime, hasScheduledDateTime, hasDueDateTime $ #89cc5776-a154-4ff4-b611-dc77e201ab6e
-[ ] Add ActionStateRecord to ontology $ Descriptive ICE subclass with hasEventType (owl:oneOf ActionCreated ActionCompleted ActionCancelled ActionReopened), is_about Action, hasDateTime $ #3f788819-252b-4069-acba-fbadda3cb0d9
-[ ] Create sidecar.schema.json $ formal JSON schema for .<charter>.json sidecar format; lifecycle object with created/completed/cancelled/reopened; source_vevent outside lifecycle $ #42bdc6ba-6b7d-4a7e-8984-75b68d01bf42
-[ ] Rename and extend domain Action struct $ add completed_at, cancelled_at, reopened_at Option<DateTime> fields; update hydration from sidecar $ #07be46c7-e0c5-49eb-a67f-1a18002cb74b
-[ ] Rewrite sidecar.rs $ rename acts→actions, ActMeta→ActionMeta; add ActionLifecycle struct; update stamp_action_entries and hydrate_actions; update all tests $ #84f0dda3-38a8-4b55-8583-9cf699518a8b
-[ ] Update CLI references $ rename stamp_sidecar_entries→stamp_action_entries, hydrate_acts→hydrate_actions, all .acts field access $ #f4757dd9-4707-4d01-a1f0-aa8c22bfea8e
-[ ] Extend LSP did_save to stamp lifecycle $ detect state transitions via last_saved_parsed diff; write completed/cancelled/reopened to sidecar; emit corresponding telemetry events $ #230157bc-ceaf-45eb-9ff9-570c2715178c
-[ ] Remove inline timestamp writing from Neovim plugin $ delete maybe_add_completion_date from actions.lua; fix smart_new_action startinsert! → startinsert; LSP owns all lifecycle timestamps $ #1d1b0db3-46ab-4d5c-9c1c-c1fcfdab57f5

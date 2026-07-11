@@ -1,5 +1,4 @@
 ---
-alias: agenda-view
 state: Active
 description: Cross-cutting agenda view spanning core query logic, CLI index queries, and Neovim quickfix integration with change routing via canonical ids
 ---

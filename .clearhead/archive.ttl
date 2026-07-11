@@ -1,3 +1,124 @@
+<urn:uuid:019f26c1-7351-7c50-8dc4-123e2f45ef57> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "critical path of open predecessors standing between a charter and its done-gate; renders naturally through the graph response type" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add the longest-open-chain view per charter" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f26c1-7351-7c50-8dc4-123e2f45ef57" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f26c1-734f-7eee-96bf-37d2fcbe6d32> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "given an action, what completing it unblocks — direct and transitive open successors; the motivational inverse of the frontier" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add the unblock-impact view" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f26c1-734f-7eee-96bf-37d2fcbe6d32" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f26c1-734e-7f08-9303-f3f4c20e1116> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "new response type beside index and calendar: declares edge columns like from, to, label; the CLI emits text and graphviz or mermaid-in-markdown do the drawing — the deliberate non-goal is a bespoke node-link explorer, which demos well and answers nothing" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add a graph-shaped response type that emits mermaid or dot" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f26c1-734e-7f08-9303-f3f4c20e1116" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f26c1-734e-71aa-b8f0-b0c06a7f0f8d> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "dependency-clean open actions, every predecessor closed — the GTD next-action computed instead of curated. the daily agenda already embeds this condition; extract it as its own invocable view so it composes" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "ship the dependency frontier as a built-in named query" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f26c1-734e-71aa-b8f0-b0c06a7f0f8d" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> , <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the dependency DAG is orthogonal to the containment tree and must never be drawn as one picture with it — these views answer named questions about ordering, which is where cross-file UUID dependency edges make the graph genuinely earn its keep over the file format" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add dependency views over the graph" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f26c1-734d-7ae9-9ca7-855632cdd3aa" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:2ded4d97-bac0-4bde-bc7f-106dbab4988d> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Update query list to show response type column derived from directory placement" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "2ded4d97-bac0-4bde-bc7f-106dbab4988d" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:2bbbcb16-7e14-46c7-90cd-4a2a81829200> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Add clearhead query index NAME as first typed response type -- default runs the built-in index queries; user queries saved under queries/index/" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "2bbbcb16-7e14-46c7-90cd-4a2a81829200" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:2563b35f-959b-4845-b8d6-08a88008d539> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Implement output column validation per response type -- error clearly if required columns are missing, do not compose or fix" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "2563b35f-959b-4845-b8d6-08a88008d539" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:1654b4ef-935b-456e-abfe-3048583fffcb> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Add typed subcommand dispatch -- clearhead query TYPE NAME routes to response type handler; bare query remains freeform; no --where on typed subcommands" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "1654b4ef-935b-456e-abfe-3048583fffcb" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:f456c320-3d57-4743-9901-4e44b7f83bae> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:52:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Extend scan_query_dir to recurse one level -- subdirectories become response type names, files inside are full SPARQL queries routed to that renderer" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "f456c320-3d57-4743-9901-4e44b7f83bae" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:d410e3af-6608-4f7f-9688-9bded137fd9f> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019f26c1-7351-7c50-8dc4-123e2f45ef57> , <urn:uuid:019f26c1-734f-7eee-96bf-37d2fcbe6d32> , <urn:uuid:019f26c1-734e-7f08-9303-f3f4c20e1116> , <urn:uuid:019f26c1-734e-71aa-b8f0-b0c06a7f0f8d> , <urn:uuid:019f26c1-734d-7ae9-9ca7-855632cdd3aa> , <urn:uuid:2ded4d97-bac0-4bde-bc7f-106dbab4988d> , <urn:uuid:2bbbcb16-7e14-46c7-90cd-4a2a81829200> , <urn:uuid:2563b35f-959b-4845-b8d6-08a88008d539> , <urn:uuid:1654b4ef-935b-456e-abfe-3048583fffcb> , <urn:uuid:f456c320-3d57-4743-9901-4e44b7f83bae> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:d410e3af-6608-4f7f-9688-9bded137fd9f> .
+<urn:uuid:d410e3af-6608-4f7f-9688-9bded137fd9f> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "query-system" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "SPARQL is the one query language. The query system's job is to make SPARQL composable and output-aware without hiding it.\n\n## Design Decisions\n\n**All query files are valid SPARQL.**\nNo fragments, no injection, no magic transformation. Every `.sparql` file runs as-is.\nTooling (syntax highlighting, linters, external validators) always sees a complete query.\n\n**Response types define the output contract.**\nA response type (`index`, `calendar`, `table`) declares the columns its\nconsumer requires. The CLI validates query output against the contract and\nerrors clearly if columns are missing — it does not attempt to fix or compose.\n\n**Directory placement routes output to the right renderer.**\nWhere a file lives determines how its output is consumed, not how the query\nis built:\n\n```\nqueries/\n  my-adhoc.sparql          # freeform — table output, no contract\n  index/\n    high-priority.sparql   # full valid SPARQL that returns index columns\n  calendar/\n    this-week.sparql       # full valid SPARQL that returns calendar columns\n```\n\n**The intended workflow is: experiment then save.**\n`clearhead query \"SELECT ...\"` or `clearhead query --where \"...\"` to explore.\nWhen the query works, save it to the appropriate subdirectory.\n`clearhead query index high-priority` runs the saved query with index framing.\n\n**Bare `clearhead query` remains freeform.**\n`clearhead query \"SELECT ...\"` runs a full query, table output.\n`clearhead query --where \"...\"` wraps the clause in `SELECT * WHERE { GRAPH ?g { } }` —\nreturns whatever variables you bind, no contract on names. Exploration sugar.\nNo typed `--where` injection — if you need a filtered index query, write the full\nquery and save it. Typed subcommands have no `--where` flag." ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "d410e3af-6608-4f7f-9688-9bded137fd9f" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Query System" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
+<urn:uuid:1d1b0db3-46ab-4d5c-9c1c-c1fcfdab57f5> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "delete maybe_add_completion_date from actions.lua; fix smart_new_action startinsert! → startinsert; LSP owns all lifecycle timestamps" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Remove inline timestamp writing from Neovim plugin" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "1d1b0db3-46ab-4d5c-9c1c-c1fcfdab57f5" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:230157bc-ceaf-45eb-9ff9-570c2715178c> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "detect state transitions via last_saved_parsed diff; write completed/cancelled/reopened to sidecar; emit corresponding telemetry events" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Extend LSP did_save to stamp lifecycle" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "230157bc-ceaf-45eb-9ff9-570c2715178c" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:f4757dd9-4707-4d01-a1f0-aa8c22bfea8e> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "rename stamp_sidecar_entries→stamp_action_entries, hydrate_acts→hydrate_actions, all .acts field access" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Update CLI references" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "f4757dd9-4707-4d01-a1f0-aa8c22bfea8e" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:84f0dda3-38a8-4b55-8583-9cf699518a8b> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "rename acts→actions, ActMeta→ActionMeta; add ActionLifecycle struct; update stamp_action_entries and hydrate_actions; update all tests" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Rewrite sidecar.rs" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "84f0dda3-38a8-4b55-8583-9cf699518a8b" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:07be46c7-e0c5-49eb-a67f-1a18002cb74b> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "add completed_at, cancelled_at, reopened_at Option<DateTime> fields; update hydration from sidecar" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Rename and extend domain Action struct" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "07be46c7-e0c5-49eb-a67f-1a18002cb74b" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:42bdc6ba-6b7d-4a7e-8984-75b68d01bf42> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "formal JSON schema for .<charter>.json sidecar format; lifecycle object with created/completed/cancelled/reopened; source_vevent outside lifecycle" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Create sidecar.schema.json" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "42bdc6ba-6b7d-4a7e-8984-75b68d01bf42" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:3f788819-252b-4069-acba-fbadda3cb0d9> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Descriptive ICE subclass with hasEventType (owl:oneOf ActionCreated ActionCompleted ActionCancelled ActionReopened), is_about Action, hasDateTime" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Add ActionStateRecord to ontology" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "3f788819-252b-4069-acba-fbadda3cb0d9" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:89cc5776-a154-4ff4-b611-dc77e201ab6e> <https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#NotStarted> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "remove DSL syntax references from rdfs:comment and skos:definition on hasCompletedDateTime, hasCreatedDateTime, hasScheduledDateTime, hasDueDateTime" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Strip implementation details from actions-vocabulary.owl" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "89cc5776-a154-4ff4-b611-dc77e201ab6e" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:c207c553-0408-4379-be65-a3a2d5336203> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:1d1b0db3-46ab-4d5c-9c1c-c1fcfdab57f5> , <urn:uuid:230157bc-ceaf-45eb-9ff9-570c2715178c> , <urn:uuid:f4757dd9-4707-4d01-a1f0-aa8c22bfea8e> , <urn:uuid:84f0dda3-38a8-4b55-8583-9cf699518a8b> , <urn:uuid:07be46c7-e0c5-49eb-a67f-1a18002cb74b> , <urn:uuid:42bdc6ba-6b7d-4a7e-8984-75b68d01bf42> , <urn:uuid:3f788819-252b-4069-acba-fbadda3cb0d9> , <urn:uuid:89cc5776-a154-4ff4-b611-dc77e201ab6e> .
+<urn:uuid:864577d6-549d-56c2-a898-41c3a089312f> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:c207c553-0408-4379-be65-a3a2d5336203> .
+<urn:uuid:c207c553-0408-4379-be65-a3a2d5336203> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "action-lifecycle" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Formalizes how lifecycle events (creation, completion, cancellation, reopening) are modeled, stored, and propagated across the platform stack.\n\n## Design Decisions\n\n**Two parallel domain models, not one.**\nThe entity model (Action, Plan, Charter) describes what exists. The event model describes semantic modifications to those entities. These evolve independently.\n\n**ActionStateRecord is a Descriptive ICE.**\nA record of a state change is itself an information artifact — a Descriptive Information Content Entity that describes a characteristic change in an Action.\nThis belongs in the InformationEntityOntology, not the EventOntology. The telemetry log is a collection of ActionStateRecords; the sidecar is a materialized summary of the most recent record per event type.\n\n**Single event class, enumerated types.**\nRather than a class per event type (explosion), one `actions:ActionStateRecord` class with `hasEventType` whose range is `owl:oneOf` named individuals: \nActionCreated, ActionCompleted, ActionCancelled, ActionReopened.\n\n**No implementation details in the ontology.**\nPredicates define meaning, not storage. Comments referencing DSL syntax (`%`, `^`), JSON paths, or UUIDv7 derivation are implementation leakage and must be stripped.\nImplementation mappings belong in the JSON schema and code documentation.\n\n**Sidecar rename and schema redesign.**\n`acts` → `actions` throughout (post-Decision 25 nomenclature). `created` moves from\ntop-level into a `lifecycle` object. New fields: `completed`, `cancelled`, `reopened`.\nClean break — no migration shims. Existing sidecar files re-stamp on next save.\n\n**Correct propagation order.**\nOntology → JSON Schema → Domain Struct → Sidecar → CLI → LSP → Plugin.\nNo layer should be modified before the layer above it is settled.\n\n## Open Questions\n\n- Should `ActionStateRecord` subclass a specific CCO Descriptive ICE subtype, or\n  sit directly under DescriptiveInformationContentEntity?\n- Does the event ontology file live alongside `actions-vocabulary.owl` or merge in?\n\n## Open Question: Is the Sidecar Still Needed for Lifecycle Fields?\n\nThe telemetry system (`~/.local/state/clearhead/telemetry/events-YYYY-MM.ndjson`)\nalready emits `action_completed`, `action_cancelled`, `action_restarted` with\n`action_uuid` as the correlation key. This IS a queryable event store (DuckDB, jq).\n`ActionStateRecord` in the ontology maps directly to what each NDJSON entry is.\n\nThe observability spec explicitly says telemetry is NOT for current state — that\nboundary was deliberate. So the sidecar lifecycle fields (`completed`, `cancelled`,\n`reopened`) would serve as the current-state snapshot that tooling reads without\nquerying NDJSON files.\n\nBut the question stands: is that snapshot worth the sync complexity, or should\ntooling query telemetry directly for lifecycle timestamps when needed? If queries\nare cheap enough (DuckDB on local NDJSON is fast), the sidecar lifecycle fields\nmay be unnecessary — and `created` + `source_vevent` might be all the sidecar\never needs to carry." ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "c207c553-0408-4379-be65-a3a2d5336203" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Action Lifecycle Tracking" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
 <urn:uuid:019f290e-669c-79f7-8223-b7113b161f0c> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:26:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
 	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:bug> , <urn:context:cli> ;
@@ -803,3 +924,112 @@
 <urn:uuid:019f268f-eb4c-7384-b316-a3b880291ab4> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:documentation> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
 	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:04:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:7f58c64d-b701-4f95-80cb-ccdfa12ef152> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Platform-Level Semantic Mutations and Undo" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "7f58c64d-b701-4f95-80cb-ccdfa12ef152" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "This charter formalizes the platform-level mutation model needed to keep ClearHead coherent across the CLI, LSP, hotkeys, sync, and future interfaces.\n\nAt the platform level, the primary mutable semantic entities are **charters** and **actions**. Files such as `.actions`, charter markdown, `.completed.actions`, and `archive.ttl` are important, but they are projections and persistence surfaces rather than the semantic center of the system.\n\nThe core design direction under this charter is:\n\n- selectors and filters resolve concrete platform objects before mutation\n- mutations are expressed as semantic operations on stable identifiers\n- observability is emitted from semantic meaning, not incidental file writes\n- persistence is a projection step that records those semantic changes into workspace files and archives\n- undo must operate on resolved targets and reversible semantic operations rather than by replaying textual queries\n\nThis work should give us a shared model for command design, editor integrations, dry runs, telemetry, and eventual undo/redo behavior.\n\nthe goal of this work is to make a _declarative system of mutation and process and automates the underlying plumbing at the filesystem level_\n\n## Ontology Extension\nanother subcharter is our work in some [ontology support](./workspace-vocabulary.md) to give a shared extension language" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform-model" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:7f58c64d-b701-4f95-80cb-ccdfa12ef152> .
+<urn:uuid:7f58c64d-b701-4f95-80cb-ccdfa12ef152> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:048752df-42e5-4b2c-87a4-51937040cbdc> , <urn:uuid:c6fdf522-b7a4-49e8-8f6c-6e8b0c83b319> , <urn:uuid:c1d13443-995d-4b5f-b690-a27b2f7df26c> , <urn:uuid:6920f861-160b-41b7-864e-2ca796b557a2> , <urn:uuid:a3bbb6bf-f60e-450e-b41a-8f00f92988f6> , <urn:uuid:594aa43d-e196-4d84-a025-0483f707335f> .
+<urn:uuid:048752df-42e5-4b2c-87a4-51937040cbdc> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "048752df-42e5-4b2c-87a4-51937040cbdc" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Write an architecture note that defines selectors, resolved targets, semantic change sets, projections, and undo boundaries" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 .
+<urn:context:architecture> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "architecture" .
+<urn:uuid:048752df-42e5-4b2c-87a4-51937040cbdc> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:architecture> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_architecture" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:c6fdf522-b7a4-49e8-8f6c-6e8b0c83b319> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "c6fdf522-b7a4-49e8-8f6c-6e8b0c83b319" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Audit current charter and action mutation commands against the proposed platform model" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:architecture> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_audit" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:c1d13443-995d-4b5f-b690-a27b2f7df26c> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "c1d13443-995d-4b5f-b690-a27b2f7df26c" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Specify how selector resolution should capture stable IDs for dry-run, replay, and undo" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:architecture> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_selector_resolution" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:6920f861-160b-41b7-864e-2ca796b557a2> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "6920f861-160b-41b7-864e-2ca796b557a2" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Prototype shared charter mutation plumbing around a typed change struct and materialization policy" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:core> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_charter_prototype" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:a3bbb6bf-f60e-450e-b41a-8f00f92988f6> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "a3bbb6bf-f60e-450e-b41a-8f00f92988f6" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Define the observability vocabulary for charter lifecycle events and semantic mutation tracing" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 .
+<urn:context:observability> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "observability" .
+<urn:uuid:a3bbb6bf-f60e-450e-b41a-8f00f92988f6> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:observability> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_observability" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:594aa43d-e196-4d84-a025-0483f707335f> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "594aa43d-e196-4d84-a025-0483f707335f" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Identify which semantic operations are safely invertible and which require compensating follow-up operations" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:architecture> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "platform_model_undo_matrix" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-37ae-7d62-8784-e791ce20c0c0> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Workspace Vocabulary" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-37ae-7d62-8784-e791ce20c0c0" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "SPARQL is the one query language for clearhead. The `read actions` filter flags (`--state`, `--priority`, `--charter`, etc.) represent a second query language that has emerged organically and must not be allowed to grow into a parallel system. The resolution is to make SPARQL complete enough that no second language is needed.\n\nThe gap that forced the second language: SPARQL queries over the domain graph cannot answer \"where in the filesystem does this action live?\" The graph holds ontological properties of actions but not their source location. This gap caused the `read actions` filter path to exist alongside SPARQL.\n\n## Design Decisions\n\n**SPARQL is the query language. There is no other.**\nThe `read actions` filter flags are a convenience shim, not a query system. They either generate SPARQL internally or are deprecated. No new filter flags are added.\n\n**Source location is workspace-layer, not domain-layer.**\n`actions:hasPriority` is a property of an action. `clearhead-ws:hasSourceFile` is a property of an action-in-this-workspace. These belong in separate vocabularies. The domain ontology stays pure.\n\n**A new workspace vocabulary extends the domain ontology.**\n`clearhead-ws:` at `https://clearhead.us/vocab/workspace/v1#` imports `actions:` and declares predicates for filesystem-layer facts. The vocabulary file lives in the ontology repo and is published at clearhead.us alongside v4, through the same Cloudflare Pages pipeline. These triples are stored in the working graph at load time and are valid for the current workspace snapshot.\n\n**The working graph is a complete snapshot.**\nWhen `load_domain_model` runs, it stores both ontological triples and workspace-layer triples (`clearhead-ws:hasSourceFile`, `clearhead-ws:hasSourceLine`). The graph answers all queries — domain and location — without a second lookup step.\n\n**JSON-LD from the workspace vocabulary is the single structured output format.**\nThe workspace vocabulary imports the domain vocabulary, so a JSON-LD export shaped by `clearhead-ws:` already contains all domain triples plus `hasSourceFile` and `hasSourceLine`. There is no separate flat JSON format — that would reintroduce the \"when to use which\" confusion. Editor integrations, scripts, and RDF tools all consume the same JSON-LD. `vim.fn.json_decode()` reads JSON-LD without ceremony.\n\n## Vocabulary Sketch\n\n```turtle\n@prefix clearhead-ws: <https://clearhead.us/vocab/workspace/v1#> .\n\nclearhead-ws:hasSourceFile a owl:DatatypeProperty ;\n    rdfs:domain actions:Action ;\n    rdfs:range xsd:string ;\n    rdfs:comment \"Relative path to the .actions file containing this action.\" .\n\nclearhead-ws:hasSourceLine a owl:DatatypeProperty ;\n    rdfs:domain actions:Action ;\n    rdfs:range xsd:integer ;\n    rdfs:comment \"1-based line number within the source file.\" .\n```" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "workspace-vocabulary" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:864577d6-549d-56c2-a898-41c3a089312f> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:019e7c9c-37ae-7d62-8784-e791ce20c0c0> .
+<urn:uuid:019e7c9c-37ae-7d62-8784-e791ce20c0c0> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4f> , <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4e> , <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4d> , <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4c> , <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4b> , <urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4a> , <urn:uuid:7e27f040-31bb-470b-b781-1a1de03d7811> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4f> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4f" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Create the clearhead-ws OWL vocabulary file in the ontology repo and publish it at clearhead.us/vocab/workspace/v1/" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4e> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4e" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Update load_domain_model in insert.rs to store workspace source location triples on load" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4d> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4d" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Update built-in SPARQL queries to select hasSourceFile and hasSourceLine from workspace vocabulary" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4c> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4c" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Update JSON-LD export to use workspace vocabulary -- workspace vocabulary replaces domain-only JSON-LD as the single structured output format" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4b> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4b" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Audit read actions filter flags -- decide which generate SPARQL internally and which to deprecate" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019e7c9c-b367-7c40-ae81-591d9faf5c4a> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019e7c9c-b367-7c40-ae81-591d9faf5c4a" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Implement query_to_qflist in clearhead.nvim consuming JSON-LD from workspace vocabulary output" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:7e27f040-31bb-470b-b781-1a1de03d7811> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "7e27f040-31bb-470b-b781-1a1de03d7811" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Model charter_root as a first-class workspace-snapshot property on actions" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "index rows currently denormalize charter_root from the workspace node. preserve shallow clients and semantic honesty by publishing clearhead-ws:hasCharterRoot on actions, while keeping ws:Workspace and inWorkspace for richer traversal rather than forcing every consumer through a second hop" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 .
+<urn:context:ontology> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "ontology" .
+<urn:uuid:7e27f040-31bb-470b-b781-1a1de03d7811> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:ontology> , <urn:context:core> , <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "action-charter-root" ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:49:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

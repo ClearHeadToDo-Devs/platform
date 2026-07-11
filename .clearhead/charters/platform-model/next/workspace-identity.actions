@@ -1,4 +1,0 @@
-[x] Add workspace identity group to WorkspaceConfig -- workspace sub-struct with id, name, created_at fields #019e7d01-0ad0-7810-8b02-000000000001
-[x] Implement clearhead init command -- writes workspace identity into .clearhead/config.toml, idempotent #019e7d01-0ad0-7810-8b02-000000000002
-[x] Update Workspace struct to carry id and name from WorkspaceConfig with deterministic UUIDv5 fallback from root path #019e7d01-0ad0-7810-8b02-000000000003
-[x] Add Workspace class and inWorkspace property to workspace vocabulary (clearhead-ws) #019e7d01-0ad0-7810-8b02-000000000004
