@@ -1,7 +1,7 @@
 ---
 alias: trust
 state: New
-description: The boring machinery that makes files-as-truth survivable for a decade — round-trip invariants, undo, workspace fsck, and the standing decisions (versioning, timezones, concurrency, benchmarks, CI) that must be made once and recorded
+id: 019f4c78-6778-7aec-ac23-cf4b4dd23352
 ---
 
 # Trust

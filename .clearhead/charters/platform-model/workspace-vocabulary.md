@@ -1,6 +1,7 @@
 ---
 id: 019e7c9c-37ae-7d62-8784-e791ce20c0c0
 alias: workspace-vocabulary
+objectives: [data-integration]
 state: Active
 ---
 # Workspace Vocabulary

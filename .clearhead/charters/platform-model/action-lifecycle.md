@@ -5,30 +5,23 @@ state: Active
 ---
 # Action Lifecycle Tracking
 
-Formalizes how lifecycle events (creation, completion, cancellation, reopening) are
-modeled, stored, and propagated across the platform stack.
+Formalizes how lifecycle events (creation, completion, cancellation, reopening) are modeled, stored, and propagated across the platform stack.
 
 ## Design Decisions
 
 **Two parallel domain models, not one.**
-The entity model (Action, Plan, Charter) describes what exists. The event model
-describes semantic modifications to those entities. These evolve independently.
+The entity model (Action, Plan, Charter) describes what exists. The event model describes semantic modifications to those entities. These evolve independently.
 
 **ActionStateRecord is a Descriptive ICE.**
-A record of a state change is itself an information artifact — a Descriptive
-Information Content Entity that describes a characteristic change in an Action.
-This belongs in the InformationEntityOntology, not the EventOntology. The telemetry
-log is a collection of ActionStateRecords; the sidecar is a materialized summary of
-the most recent record per event type.
+A record of a state change is itself an information artifact — a Descriptive Information Content Entity that describes a characteristic change in an Action.
+This belongs in the InformationEntityOntology, not the EventOntology. The telemetry log is a collection of ActionStateRecords; the sidecar is a materialized summary of the most recent record per event type.
 
 **Single event class, enumerated types.**
-Rather than a class per event type (explosion), one `actions:ActionStateRecord` class
-with `hasEventType` whose range is `owl:oneOf` named individuals:
+Rather than a class per event type (explosion), one `actions:ActionStateRecord` class with `hasEventType` whose range is `owl:oneOf` named individuals: 
 ActionCreated, ActionCompleted, ActionCancelled, ActionReopened.
 
 **No implementation details in the ontology.**
-Predicates define meaning, not storage. Comments referencing DSL syntax (`%`, `^`),
-JSON paths, or UUIDv7 derivation are implementation leakage and must be stripped.
+Predicates define meaning, not storage. Comments referencing DSL syntax (`%`, `^`), JSON paths, or UUIDv7 derivation are implementation leakage and must be stripped.
 Implementation mappings belong in the JSON schema and code documentation.
 
 **Sidecar rename and schema redesign.**

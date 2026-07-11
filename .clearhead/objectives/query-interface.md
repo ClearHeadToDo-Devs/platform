@@ -1,3 +1,7 @@
+---
+id: 019f485a-cf2c-77a2-9066-711bb02794a9
+state: Active
+---
 # Leveraging Graph Structures to answer questions
 
 one of the core desires of this project is to leverage the superior power of RDF, ontologies, and SPARQL to allow for declarative, graph-native data traversal.
