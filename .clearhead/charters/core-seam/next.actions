@@ -1,3 +1,1 @@
-[ ] adopt structured errors at the CLI boundary $one hundred twenty-five Result String sites re-stringify errors core already types with thiserror, burying every call in map_err format noise. anyhow with context at the binary layer deletes most of it and improves the error output — the largest same-behavior-less-code win in the review$ !3 +cli #019f268f-eb49-7e1b-9e4b-6f93ebf25fda
-    >[ ] convert the command layer to anyhow Result with context $mechanical sweep, best done file-by-file after the seam work above so it does not conflict with everything$ +cli #019f268f-eb4b-7b05-93be-92418918c451
-[ ] record the call-site sweep done-gate in the process spec $the durable lesson — a core capability is not done until CLI call sites are swept onto it and a guard exists — belongs in specifications process.md so future charters inherit it instead of rediscovering it$ !3 +documentation #019f268f-eb4c-7384-b316-a3b880291ab4
+

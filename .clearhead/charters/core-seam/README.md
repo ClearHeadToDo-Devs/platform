@@ -1,9 +1,9 @@
 ---
+id: 2451bf9d-e27a-5412-bee0-89a18bf40439
 alias: core-seam
-state: New
-description: Re-route the CLI through the machinery core already built — one write path, one reference resolver, one config, one error strategy — deleting the parallel implementations the command layer grew instead
+parent: build_clearhead
+state: Closed
 ---
-
 # Core Seam
 
 The 2026-07-02 architecture review found a single recurring failure mode: **the
