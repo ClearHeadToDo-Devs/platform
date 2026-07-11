@@ -1,3 +1,138 @@
+<urn:uuid:019f290e-669c-79f7-8223-b7113b161f0c> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:26:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:bug> , <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 3 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "NOT caused by this cleanup — test_linting_error_detection fails independently of every change here (survived reqwest removal AND cargo update). the empty-context-tag diagnostic range end_col shifted 37 -> 34, i.e. the committed snapshot is stale against the current tree-sitter-actions grammar pin (same submodule-drift theme as the CI break). decide whether 34 is correct (accept snapshot) or a grammar regression before running cargo insta accept" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "investigate the pre-existing E003 linter snapshot failure" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-79f7-8223-b7113b161f0c" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-773d-b80d-4af0cbcb80db> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:26:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:release> .
+<urn:context:release> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "release" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-773d-b80d-4af0cbcb80db> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> , <urn:context:ci> , <urn:context:cargo-binstall-pipeline> .
+<urn:context:cargo-binstall-pipeline> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "cargo-binstall-pipeline" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-773d-b80d-4af0cbcb80db> <https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the replacement for standalone CI: build and publish prebuilt clearhead binaries to GH Releases so low-power devices cargo binstall without paying Rust build times. this is where the tree-sitter-actions dependency form finally gets settled — a release build can run from the super-repo checkout where the sibling exists, or we pin a git/registry version. needs: target matrix (removing openssl already unblocked clean cross-compile)," ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "design the GH-releases" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-773d-b80d-4af0cbcb80db" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7ee5-b7b9-07cced1236e1> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-77a8-add9-2bb9366f44ac> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "rewrite both tests to assert the JSON-LD document shape (@graph array, contains title)" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7ee5-b7b9-07cced1236e1" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-77a8-add9-2bb9366f44ac> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "to OutputMode::JsonLd so --format json still resolves" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-77a8-add9-2bb9366f44ac" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7cdd-9bc7-11e1f1c8258d> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:ci> .
+<urn:context:ci> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "ci" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-7cdd-9bc7-11e1f1c8258d> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:core> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 1 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "per your call — the standalone build cannot succeed while tree-sitter-actions is a super-repo-only sibling path dep, and we would rather solve that inside a real release pipeline than patch it twice. switched ci.yml auto-triggers to workflow_dispatch only, with a comment pointing here. reversible" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "pause clearhead-core CI pending the release-pipeline rethink" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7cdd-9bc7-11e1f1c8258d" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f4fc2-ac4d-7611-8114-cf825a86270b> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-10T22:59:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-7752-a402-081b07afb4ab> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add #" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f4fc2-ac4d-7611-8114-cf825a86270b" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7703-807c-81b152e034a5> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:26:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-7752-a402-081b07afb4ab> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:someday> .
+<urn:context:someday> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "someday" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-7703-807c-81b152e034a5> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "drops the @context envelope and emits the bare @graph node array; same serializer, same vocab names, just less envelope. do NOT build speculatively — wait for a real consumer need" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add a --flatten/--no-context view on the json-ld output IF scripting friction appears" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7703-807c-81b152e034a5" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7752-a402-081b07afb4ab> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:decision> .
+<urn:context:decision> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "decision" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-7752-a402-081b07afb4ab> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 1 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the actual failing tests were test_read_acts_json_format and test_json_output_validates_against_schema, not the CI. read acts moved from a plain JSON array (orphaned to_value path in lib.rs:94, now confirmed dead for core-seam to sweep) to a JSON-LD document, and the OutputMode enum renamed the value to json-ld, but the tests still passed the old value json and asserted an array. CONFIRMED: tests follow the code to the single JSON-LD contract; json stays as an alias for jq ergonomics. principle agreed — one semantic output contract, alternate shapes (e.g. a --flatten/--no-context view dropping @context to emit the bare @graph array) are config views on that one pipeline, never a parallel serializer. the flatten view is deferred (YAGNI) until real scripting friction appears" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "fix the real \"jsonld tests failing\" — stale json output contract in clearhead-cli" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7752-a402-081b07afb4ab" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7fc2-bb76-f47645b18c11> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-721a-b6ce-790a71947db0> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "npm update in tree-sitter-actions and merge the dependabot PRs" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7fc2-bb76-f47645b18c11" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-720a-addd-73f15a07e950> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-721a-b6ce-790a71947db0> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "cargo update in clearhead-core and clearhead-cli" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-720a-addd-73f15a07e950" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-721a-b6ce-790a71947db0> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:security> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "cargo update in core and cli (bytes 1.11->1.12 patches the overflow advisory, rand 0.9.2->0.9.4, time 0.3.47->0.3.53, automerge 0.7.3->0.7.4); npm update in tree-sitter-actions took npm audit to \"found 0 vulnerabilities\" (fast-uri x2 + tar-fs cleared, all were devDependency-only)" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "refresh lockfiles across the three dependency trees" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-721a-b6ce-790a71947db0" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7f05-94ff-40e5048c9686> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-7202-94a9-fc426f79b5ed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "confirm serde_yml and libyml are gone from the lockfile" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7f05-94ff-40e5048c9686" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7884-9c2a-545a8f43cd75> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f290e-669c-7202-94a9-fc426f79b5ed> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "replace the two serde_yml call sites and the Cargo.toml line" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7884-9c2a-545a8f43cd75" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7202-94a9-fc426f79b5ed> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:security> , <urn:context:core> .
+<urn:context:core> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "core" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-7202-94a9-fc426f79b5ed> <https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "replaced serde_yml (unsound) with serde_yaml_ng 0.10 (API-compatible drop-in) at the two charter.rs frontmatter call sites; cargo tree confirms serde_yml and libyml are both gone from the lockfile, core suite green (219+ tests)" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "swap serde_yml for a maintained yaml crate in clearhead-core" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7202-94a9-fc426f79b5ed" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:019f290e-669c-7027-bc60-f5a3094a3cb5> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:security> .
+<urn:context:security> <https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "security" ;
+	a <https://clearhead.us/vocab/actions/v4#Context> .
+<urn:uuid:019f290e-669c-7027-bc60-f5a3094a3cb5> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 1 ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "reqwest was declared with zero usages anywhere in the crate; it alone pulled native-tls -> openssl and the hyper/h2 stack. removed the line; cargo tree -i openssl now matches nothing, full cli suite green (bar the pre-existing linter snapshot below). eliminates all 8 openssl alerts. also a prerequisite for cross-compiling release binaries — openssl is the classic cross-compile blocker" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delete the dead reqwest dependency from clearhead-cli" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f290e-669c-7027-bc60-f5a3094a3cb5" ;
+	a <https://clearhead.us/vocab/actions/v4#Action> .
+<urn:uuid:70dc88dc-7e87-5d5f-8796-a51dc5c3cfc0> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019f290e-669c-79f7-8223-b7113b161f0c> , <urn:uuid:019f290e-669c-773d-b80d-4af0cbcb80db> , <urn:uuid:019f290e-669c-7ee5-b7b9-07cced1236e1> , <urn:uuid:019f290e-669c-77a8-add9-2bb9366f44ac> , <urn:uuid:019f290e-669c-7cdd-9bc7-11e1f1c8258d> , <urn:uuid:019f4fc2-ac4d-7611-8114-cf825a86270b> , <urn:uuid:019f290e-669c-7703-807c-81b152e034a5> , <urn:uuid:019f290e-669c-7752-a402-081b07afb4ab> , <urn:uuid:019f290e-669c-7fc2-bb76-f47645b18c11> , <urn:uuid:019f290e-669c-720a-addd-73f15a07e950> , <urn:uuid:019f290e-669c-721a-b6ce-790a71947db0> , <urn:uuid:019f290e-669c-7f05-94ff-40e5048c9686> , <urn:uuid:019f290e-669c-7884-9c2a-545a8f43cd75> , <urn:uuid:019f290e-669c-7202-94a9-fc426f79b5ed> , <urn:uuid:019f290e-669c-7027-bc60-f5a3094a3cb5> .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:70dc88dc-7e87-5d5f-8796-a51dc5c3cfc0> .
+<urn:uuid:70dc88dc-7e87-5d5f-8796-a51dc5c3cfc0> <https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "dependency-hygiene" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Two complaints arrived together — \"jsonld tests are failing\" and \"dependabot\nis unhappy\" — and the analysis found they share a shape with [[core-seam]]:\n**the alert count is bigger than the problem.** Most of the vulnerable\ndependencies are ones we don't use or don't directly own. Fix the small number\nof real declarations and the noise collapses.\n\n## What's actually wrong\n\n### 1. The \"failing jsonld tests\" are green — CI can't build\n\n`clearhead-core`'s jsonld suite passes locally (219 tests, 0 failures). What's\nred is the standalone CI, and it never reaches the tests: the build aborts.\n`clearhead-core/Cargo.toml` declares\n\n```\ntree-sitter-actions = { path = \"../tree-sitter-actions\", version = \"0.9.4\" }\n```\n\nThat sibling path only exists because the platform super-repo lays the\nsubmodules out side by side. `clearhead-core` has no `.gitmodules`, so its own\nCI checkout (`submodules: true` notwithstanding) has no sibling to find, and\n`cargo` fails on a missing `Cargo.toml`. The jsonld job \"fails\" only because\nthe crate never compiles. This is the same seam bug as core-seam: **a piece\nthat only works inside the super-repo.**\n\n### 2. The dependabot alerts trace to three declarations, not thirteen\n\n- **The openssl cluster (8 alerts, up to high) is a dead dependency.**\n  `clearhead-cli` declares `reqwest` with zero usages anywhere in the crate —\n  not src, tests, or benches. It drags in `native-tls → openssl` and the\n  `hyper/h2` stack. Deleting the line removes the entire cluster (and likely\n  the `bytes` alert with it).\n- **`serde_yml` / `libyml` (unmaintained + unsound) is one file.**\n  `clearhead-core` uses `serde_yml` in exactly two call sites, both in\n  `workspace/charter.rs`, to parse charter frontmatter. `serde_yaml_ng` is a\n  maintained, API-compatible drop-in.\n- **The rest is `cargo update`.** `time` (via the `jsonschema` dev-dep) and\n  `rand` (via `automerge`) are transitive and low-leverage; a lockfile refresh\n  addresses what has patches and the remainder waits on upstream bumps.\n- **The npm highs (`fast-uri` ×2, `tar-fs`) are build tooling.**\n  All three sit under `tree-sitter-actions`' devDependencies\n  (`tree-sitter-cli`, `prebuildify`), not in the shipped parser. `npm update`\n  plus merging the dependabot PRs clears them.\n\n## The one real decision\n\nFixing the CI break means choosing how `clearhead-core` names its dependency on\n`tree-sitter-actions` so the crate builds *both* standalone and inside the\nsuper-repo, without losing the local edit-both-together loop:\n\n- **git dependency** (`git = \"…\", tag = \"v0.9.4\"`) — simplest, CI already has\n  network, but local edits to the parser no longer flow into core without a\n  `[patch]`.\n- **nested submodule** + `path = \"tree-sitter-actions\"` — keeps `submodules:\n  true` meaningful and preserves local path edits, at the cost of\n  submodule-of-a-submodule bookkeeping.\n- **CI sibling-checkout step** — smallest diff, makes CI mirror local reality,\n  but leaves the crate un-buildable by anyone cloning it alone.\n\nMy lean: **git dependency pinned to a tag**, with a documented local `[patch]`\nfor the platform dev loop. It's the only option that makes `clearhead-core` a\ntruthfully self-contained crate — which is the whole point of it being a\nseparate repo — and the platform super-repo is where we already accept the\n\"edit several at once\" complexity. But this is your call on the dev loop; I\nhaven't picked it for you.\n\n## Scope boundary\n\nThis charter changes dependency *declarations* and lockfiles only — no behavior\nchange. If swapping `serde_yml` surfaces a parsing difference in charter\nfrontmatter, that's a bug to fix in place, not a scope expansion. Anything that\nneeds an upstream crate to cut a release (the residual `rand`/`time` alerts if\n`cargo update` can't reach them) is noted and left for dependabot, not forced.\n\n## Done when\n\n1. `clearhead-core` CI is green — the crate builds standalone, and the jsonld\n   suite runs (and passes) there.\n2. `clearhead-cli` no longer declares `reqwest`; `cargo tree` shows no\n   `openssl`/`native-tls`, and the crate still builds and tests clean.\n3. `clearhead-core` parses charter frontmatter through a maintained YAML crate;\n   `serde_yml`/`libyml` are gone from the lockfile.\n4. `cargo update` has been run in both Rust crates and `npm update` in\n   `tree-sitter-actions`; remaining open dependabot alerts are only ones\n   blocked on an upstream release, listed here.\n5. Dependabot shows zero high/critical across all submodules." ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "70dc88dc-7e87-5d5f-8796-a51dc5c3cfc0" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Dependency Hygiene" ;
+	a <https://clearhead.us/vocab/actions/v4#Charter> .
 <urn:uuid:019f12b8-fa9e-7b2f-8875-19a9c17054b4> <https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-10T07:41:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
 	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f027c-4524-78d0-ac22-90ac96b7064d> ;
@@ -475,3 +610,196 @@
 	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
 	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f0bc9-8931-7b05-a1be-0cc39ed83d20> ;
 	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> .
+<urn:uuid:2451bf9d-e27a-5412-bee0-89a18bf40439> a <https://clearhead.us/vocab/actions/v4#Charter> ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "Core Seam" ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "2451bf9d-e27a-5412-bee0-89a18bf40439" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "The 2026-07-02 architecture review found a single recurring failure mode: **the\nCLI command layer stopped calling core**. Core grew real machinery — atomic writes with crash recovery, a spec-complete reference resolver, a semantic `WorkspaceConfig` — and the commands kept (or re-grew) their own weaker copies beside it. Every finding below is an instance of that one gap.\n\n## Why this charter exists\n\nThe likely history: most command handlers predate core's workspace-store and\ndurability work, and nothing forced a call-site sweep when the new capability\nlanded. [[write-durability]] is the proof — it closed with \"route all\nproduction writes through the primitive\" checked off, but its scope only named\n*core's* write sites. The CLI's own `save_file` (the path every `complete`,\n`update`, `cancel`, and `delete` takes) still calls naive `std::fs::write`.\nThe crash-safety layer exists, is tested, and is bypassed by the most common\nwrites in the system.\n\nThe same shape repeats for reference resolution (three resolvers, and the one\nused by mutating commands violates the spec's resolution order — alias no\nlonger beats name-contains), configuration (tag-hierarchy methods duplicated\nverbatim in `environment_reader::Config`, tests included), and error handling\n(125 `Result<_, String>` sites re-stringifying errors core already types).\n\n## The disciplines\n\n1. **One write path** — workspace data reaches disk only through core's\n   `durability::atomic_write` (via `write_actions` or an equivalent). This\n   finishes what [[write-durability]] started.\n2. **One resolver** — a reference means the same thing in every command; the\n   spec's resolution order (UUID → short UUID → alias → name) is enforced by a\n   single implementation.\n3. **One home for domain semantics** — what \"complete an action\" *means*\n   (close the subtree, stamp timestamps, move to the completed file) is core's\n   knowledge, not a command handler's.\n4. **No compat shims for consumers that don't exist** — this codebase has one\n   consumer. Backward-compat layers are pure carrying cost; sweep call sites\n   and delete.\n\n## Process guard\n\nThe lesson worth keeping after the code is fixed: **a core capability is not\ndone until the CLI call sites are swept onto it.** Charters that add machinery\nto core should carry an explicit sweep action for the CLI (and a regression\nguard where feasible) as part of their done-gate.\n\n## Scope boundary\n\nThis charter re-plumbs existing behavior; it adds none. The CRDT/sync modules\nstay as they are (Decision 19 makes them a deliberate bet — parking or keeping\nthem is a separate conversation). The `Action`-vs-`DomainModel` intermediary\nstays (already evaluated and kept, see clearhead-core charter log).\n\n## Done when\n\n1. No `std::fs::write` of workspace data remains under `clearhead-cli/src/commands`\n   (user-directed output like `write_or_print` and one-time `init` bootstrap are\n   exempt), and a guard prevents the seam reopening.\n2. `act_matches` / `find_act_mut` and `mutations::resolve_reference` are gone;\n   mutating commands resolve through the single resolver and an\n   alias-beats-name regression test passes at the new seam.\n3. Subtree-close semantics live in core; `complete_action` and `cancel_action`\n   are thin callers of the same function.\n4. `environment_reader::Config` contains no duplicated `WorkspaceConfig` logic.\n5. The dead-code inventory (see actions) is deleted and `cargo build` is\n   warning-clean without `#[allow(dead_code)]` in the swept files." ;
+	<https://clearhead.us/vocab/actions/v4#hasAlias> "core-seam" ;
+	<https://clearhead.us/vocab/actions/v4#hasCharterState> "Closed" .
+<urn:uuid:344f2a0d-1a93-537a-b42b-a0cd1b6c7760> <https://clearhead.us/vocab/actions/v4#hasSubCharter> <urn:uuid:2451bf9d-e27a-5412-bee0-89a18bf40439> .
+<urn:uuid:2451bf9d-e27a-5412-bee0-89a18bf40439> <http://purl.obolibrary.org/obo/BFO_0000051> <urn:uuid:019f268f-eb33-7c70-b9e2-d79f46223f3d> , <urn:uuid:019f268f-eb35-7c28-9704-bfb7efbd714d> , <urn:uuid:019f268f-eb32-747c-aa98-37eabca59a11> , <urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> , <urn:uuid:019f268f-eb38-7614-b246-1d7d44c49322> , <urn:uuid:019f268f-eb3a-7e79-b865-ac4c25dcba48> , <urn:uuid:019f268f-eb3b-7adb-8fc6-1161be233e32> , <urn:uuid:019f268f-eb3f-7238-928f-7fcb123ba985> , <urn:uuid:019f268f-eb41-7389-aff1-6e7ff6cd43f0> , <urn:uuid:019f2a95-9447-7069-9604-e39ef1535549> , <urn:uuid:019f268f-eb44-7fcc-8d3d-bffd32ce2539> , <urn:uuid:019f268f-eb45-749b-8142-8e1440b45eb8> , <urn:uuid:019f268f-eb47-7f57-b8c7-2ba766b74e7a> , <urn:uuid:019f268f-eb48-7c81-ad4c-748ece362373> , <urn:uuid:019f268f-eb43-7994-8d0f-13c024980696> , <urn:uuid:019f2ea2-6339-7f52-9fe6-0514e95e1522> , <urn:uuid:019f5328-7865-7843-abd2-2c25505e47f1> , <urn:uuid:019f5328-b1d0-79d0-8d5c-1c20fe29d14e> , <urn:uuid:019f5328-b282-7a01-b519-6fd3d3fc8fd3> , <urn:uuid:019f5328-899f-7e32-ac04-3fc36b28d123> , <urn:uuid:019f268f-eb4b-7b05-93be-92418918c451> , <urn:uuid:019f268f-eb49-7e1b-9e4b-6f93ebf25fda> , <urn:uuid:019f268f-eb4c-7384-b316-a3b880291ab4> .
+<urn:uuid:019f268f-eb33-7c70-b9e2-d79f46223f3d> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb33-7c70-b9e2-d79f46223f3d" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delegate save_file to core write_actions" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "commands/mod.rs save_file duplicates core action_files::write_actions body-for-body (same format call) minus the atomic rename; replace its body with write_actions plus the sidecar stamp" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-03T09:02:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb35-7c28-9704-bfb7efbd714d> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb35-7c28-9704-bfb7efbd714d" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "sweep the remaining naive workspace-data writes" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "plan.rs writes .ics with fs::write, charter.rs writes charter markdown in three places, archive.rs writes the completed file directly — route each through durability::atomic_write. exempt: write_or_print user-directed output, init.rs one-time bootstrap, gen_man. SEQUENCED after the caldav reconcile shell because its step 1 lifts the plan.rs mirror-path logic into core — sweeping plan.rs first would collide with that move" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001775> <urn:uuid:019f12d4-4f7c-7bc2-9c76-b048067d43e8> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:05:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb32-747c-aa98-37eabca59a11> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb32-747c-aa98-37eabca59a11" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "finish routing CLI writes through the durability primitive" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "write-durability closed with core's write sites converted, but the CLI's own save paths still call naive std::fs::write — every complete, update, cancel, and delete goes through commands/mod.rs save_file, so a crash mid-write can truncate a source-of-truth file. the crash-safety layer exists and is tested; the most common writes bypass it" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 1 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:22:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb37-7ef1-acb7-dc303a66d7ae" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "unify action reference resolution on the core resolver" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "three implementations exist — core reference::resolve_reference is the real one, mutations::resolve_reference is a flat-list copy, and act_matches in commands/action.rs is a boolean check used by all mutating commands. act_matches breaks the spec's resolution order, an earlier name-contains match shadows a later exact alias, so complete can close the wrong action. NOTE 2026-07-11: this item and its three children were marked complete once already with no matching code or commit anywhere in the repo — caught during charter review and fixed for real this pass; see child descriptions for what actually landed" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 1 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> .
+<urn:context:bug> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "bug" .
+<urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:bug> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:50:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb38-7614-b246-1d7d44c49322> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb38-7614-b246-1d7d44c49322" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "fix alias-beats-name precedence in mutating commands" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "this is the user-facing bug and lands first — find_act_mut must prefer full uuid, then short uuid, then alias, then name-contains across the whole list rather than first-match-any per action. landed as action_match_tier + find_best_match/_mut/_pos in commands/action.rs, replacing the OR'd boolean action_matches for every call site that resolves identity (find_action_mut, show_action, delete_action); action_matches itself survives only as an existence-only check where identity doesn't matter. regression tests: commands::action::resolution_tests" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:bug> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:50:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb3a-7e79-b865-ac4c25dcba48> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb3a-7e79-b865-ac4c25dcba48" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delete act_matches and the mutations resolver, delegate to one implementation" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "complete, update, cancel, and delete resolve through the same code path as plan.rs and the LSP; the ActionList-level entry can live in core beside reference.rs if the DomainModel shape is too heavy for file-local commands. LANDED DIFFERENTLY: core's reference::resolve_reference deliberately excludes name-contains matching for actions (see its own doc comment) and cannot serve mutating commands as-is, so there was nothing to delegate to. What actually happened: mutations::resolve_reference/MatchType/ResolvedAction were dead code once find_plan_file/find_plan_file_for_mutation were deleted (their only callers) and got deleted with them; the real fix — precedence order — landed in place at commands/action.rs, the actual seam every mutating command goes through, not in core" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> , <urn:context:library> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> ;
+	<https://clearhead.us/vocab/actions/v4#hasSequentialChildren> true ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:50:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb3b-7adb-8fc6-1161be233e32> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb3b-7adb-8fc6-1161be233e32" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "port the alias-before-name regression test to the surviving seam" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "mutations.rs test_resolve_alias_before_name is the guard that documents the spec order — it must outlive the module it currently lives in. lands as commands::action::resolution_tests::alias_beats_earlier_name_contains_match, alongside two new tests for the uuid/short-uuid tiers the original test didn't cover" .
+<urn:context:testing> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "testing" .
+<urn:uuid:019f268f-eb3b-7adb-8fc6-1161be233e32> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:testing> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f268f-eb37-7ef1-acb7-dc303a66d7ae> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:50:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb3f-7238-928f-7fcb123ba985> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb3f-7238-928f-7fcb123ba985" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "deduplicate workspace config between CLI and core" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "environment_reader::Config carries get_tag_ancestors, expand_tag, and expand_tags as character-for-character copies of WorkspaceConfig in core config.rs, including roughly ninety lines of duplicated tests — and core's copy is strictly better because it also has descendants_and_self" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb41-7389-aff1-6e7ff6cd43f0> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb41-7389-aff1-6e7ff6cd43f0" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delete the dead tag-hierarchy methods and their copied tests" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "get_tag_ancestors, expand_tag, and expand_tags on environment_reader::Config had zero callers outside their own test module — every real call site already resolved through ctx.workspace_config() and core's WorkspaceConfig, and action.rs:549 needs descendants_and_self, which only exists on the core copy. reworded from \"delegate\" to \"delete\" during review since no delegation was needed. Config keeps loading, precedence, and cli_ fields" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<http://purl.obolibrary.org/obo/BFO_0000050> <urn:uuid:019f268f-eb3f-7238-928f-7fcb123ba985> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f2a95-9447-7069-9604-e39ef1535549> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f2a95-9447-7069-9604-e39ef1535549" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delete the redundant per-action ActionSource" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "SourcedAction.source stamps a per-file value onto every action: load.rs:172 sets file_path to the same PathBuf MarkdownCharter.acts_file already holds (line 183), and .project is never read anywhere. the only two readers (graph/insert.rs:120, graph/jsonld.rs:51) already iterate charters, so they read the path from the enclosing group. 3 of 5 construction sites already pass dummy PathBuf::new(). delete ActionSource and the now-dead ActionRepository, drop the field, derive provenance from the file/charter group — the more proper structure surfaced by the doctor-inventory design 2026-07-03" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> , <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:36:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb44-7fcc-8d3d-bffd32ce2539> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb44-7fcc-8d3d-bffd32ce2539" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "delete the unused lib.rs and commands/mod.rs dead surface" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "merge_hashmaps, run_workspace_sql_query, and load_workspace_actions in lib.rs have zero callers outside their own module (the sql name is wrong regardless, it is SPARQL). find_plan_file and find_plan_file_for_mutation live in commands/mod.rs, not lib.rs as originally titled, and are equally dead. deleting those two removes the last production callers of mutations::resolve_reference, MatchType, and ResolvedAction, which then also become test-only and should go too — a dead-code chain the reference-resolution unification missed because it was hiding behind these two functions" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:51:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb45-749b-8142-8e1440b45eb8> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb45-749b-8142-8e1440b45eb8" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "make update_action use ActionUpdate and apply_updates or delete them" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the struct-based update pattern in mutations.rs is good design lying dead while update_action pokes ten positional params and reimplements it inline — same call as PlanFields already proves in the argparser. done: extended ActionUpdate with scheduled_at and duration (the two fields update_action needed that it lacked), update_action now builds one ActionUpdate and calls apply_updates instead of six inline field pokes. behavior improvement as a side effect: state transitions through update now stamp completed_at like complete/cancel already do, which the old inline code did not do. verified end-to-end against a scratch workspace (priority, description, state+completed_at, scheduled_at, duration all confirmed)" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:53:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb47-7f57-b8c7-2ba766b74e7a> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb47-7f57-b8c7-2ba766b74e7a" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "drop the vestigial opts parameter from the parse wrapper chain" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "get_action_list_struct threads an unused serde_json Value through tests and archive.rs — a leftover from the js-style options era. done: dropped the opts param entirely (signature is now get_action_list_struct(actions: &str)), updated the one production call site (archive.rs) and all test/example call sites (tests/lib.rs x11, tests/error_reporting.rs, tests/snapshots_from_examples.rs, examples/format_demo.rs). also deleted get_action_list — the JSON-Value-returning wrapper around it — which turned out to have zero callers anywhere, production or test" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:56:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb48-7c81-ad4c-748ece362373> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb48-7c81-ad4c-748ece362373" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "extract build_workspace_store from the query helpers" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "run_workspace_raw_query and its siblings duplicate the create-store, insert-metadata, load-additional-workspaces dance; one helper returning the populated store collapses them to a few lines each. RESOLVED DIFFERENTLY: the sibling this was written against, run_workspace_sql_query, was deleted in the lib.rs dead-code sweep (eb44) rather than kept and deduplicated — it had zero production callers. run_workspace_raw_query is now the only function doing this dance; extracting build_workspace_store for a single caller would be a premature abstraction, not a fix. no code change needed" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:56:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb43-7994-8d0f-13c024980696> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb43-7994-8d0f-13c024980696" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "sweep dead code and single-consumer compat shims" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "nothing links these crates except the CLI binary itself — the nvim plugin shells out — so backward-compat layers are pure carrying cost" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T14:56:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f2ea2-6339-7f52-9fe6-0514e95e1522> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f2ea2-6339-7f52-9fe6-0514e95e1522" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "route read actions through the workspace loader" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "collect_all_actions lists files and parses each directly — no sidecar hydration, no journal recovery, no load findings — so the most-used read command sees a different workspace than every other command: created dates missing, an interrupted batch shows torn state any loading command would have healed, and load warnings are invisible. converge on the loader; a per-file fast path survives only if the trust benchmark action proves it matters. done: collect_all_actions and collect_workspace_actions (same bug, not named in the original title but identical pattern across the multi-workspace read path) now both route through clearhead_core::load_workspace, matching every other command. --file/--charter filtering now matches MarkdownCharter.actions_file against the requested path (via charter_root-join + canonicalize) instead of reading that one file directly — the fast path is gone per the note, since no trust-benchmark action exists to justify keeping it. .completed.actions still read directly per matching file (the loader deliberately excludes them, they are an archive not live state). verified end-to-end: sidecar-hydrated created_at now shows in read/show output (previously silently absent); malformed-file recovery now warns+continues instead of hard-failing (test_read_acts_file_fails_on_malformed_input renamed/updated to assert the new behavior); multi-workspace read verified manually across two scratch workspaces" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T15:18:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f5328-7865-7843-abd2-2c25505e47f1> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f5328-7865-7843-abd2-2c25505e47f1" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add a guard so the durability write seam cannot silently reopen" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "deny std::fs::write under src/commands via clippy disallowed-methods or a small test that greps the tree. done: a grep-guard test (tests/no_naive_writes.rs), not clippy disallowed-methods — clearhead-cli has no CI wired up at all (only clearhead-core has a workflow, and it is workflow_dispatch-only), so a clippy lint nobody runs would be a guard in name only; a cargo test guard fires on every local test run regardless. walking src/commands/ turned up two fs::write call sites the original write-durability sweep note did not name: mod.rs write_or_print (user-directed --write output) and plan.rs:899 (export --output icalendar) — both legitimately exempt for the same reason as write_or_print, both added to the EXEMPT allowlist with reasons. verified the guard actually catches a regression: added a decoy std::fs::write in src/commands/action.rs, confirmed the test fails and names the exact file:line, then removed it" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T15:20:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f5328-b1d0-79d0-8d5c-1c20fe29d14e> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f5328-b1d0-79d0-8d5c-1c20fe29d14e" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "add close_subtree to core with tests" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "one function taking the action list, root id, closing state, and timestamp; returns the closed subtree for the caller to append to the completed file. collect_subtree_ids moves with it. done: clearhead_core::domain::{close_subtree, collect_subtree_ids} (re-exported at crate root), landed as free functions next to Action's impl block. close_subtree stamps completed_at for both Completed and Cancelled states, matching the CLI's current inline behavior exactly — no cancelled_at field exists yet (action-lifecycle charter, still not-started); user decided to build now and accept a follow-up tweak rather than block on it. 5 unit tests covering subtree collection (root+descendants, leaf-only), state stamping, parent detachment, and that source actions are left untouched" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T15:25:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f5328-b282-7a01-b519-6fd3d3fc8fd3> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f5328-b282-7a01-b519-6fd3d3fc8fd3" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "collapse complete_action and cancel_action onto it" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "both become thin callers passing Completed or Cancelled; dry-run and messaging stay in the command layer. done: extracted close_action_subtree in commands/action.rs, taking closing_state plus present/past-tense verb strings (complete/Completed, cancel/Cancelled) since simple string-suffix derivation breaks on cancel -> cancelled (double l). complete_action and cancel_action are now two-line callers. also deleted the CLI-local collect_subtree_ids (now a pure duplicate of core's) and routed delete_action onto clearhead_core::collect_subtree_ids too, so all three mutating commands share one subtree-walk implementation. verified end-to-end against a scratch workspace: complete/cancel with children stamps completed_at, detaches parent_id, moves the whole subtree to .completed.actions, dry-run and success messages byte-for-byte match the pre-refactor wording" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T15:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f5328-899f-7e32-ac04-3fc36b28d123> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f5328-899f-7e32-ac04-3fc36b28d123" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "move subtree-close semantics into core" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "what complete means (close the descendants, stamp completed_at, detach parents, move to the completed file) is business logic implemented inline in the CLI while core claims to own it. complete_action and cancel_action are fifty-line twins differing only in the target state. reopened 2026-07-11: originally marked complete but verification during charter review found no close_subtree function anywhere in clearhead-core, and complete_action/cancel_action in commands/action.rs are byte-for-byte unchanged from the pre-completion description — no commit, no stash, no other branch has this work" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 2 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:library> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T15:27:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb4b-7b05-93be-92418918c451> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb4b-7b05-93be-92418918c451" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "convert the command layer to anyhow Result with context" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "mechanical sweep, best done file-by-file after the seam work above so it does not conflict with everything. done: converted every commands/*.rs signature (80 sites across 12 files) plus main.rs/dispatch from Result<T, String> to anyhow::Result<T>. map_err(|e| e.to_string()) sites became bare ? (WorkspaceError/ParseFailure/ArchiveCharterError/etc. all implement std::error::Error, anyhow converts them for free). map_err(|e| format!(\"doing X: {}\", e)) sites became .context(\"doing X\")/.with_context(...) — same message, but now anyhow chains the source error's own Display underneath instead of string-interpolating it, so nested failures show their full cause chain. Err(format!(...))/Err(string) became anyhow::bail!(...). A few core functions (format, format_as_icalendar, run_workspace_raw_query) still return Result<T, String> directly rather than a typed error, so those sites use .map_err(|e| anyhow::anyhow!(e)) instead of .context() — context requires the source to impl std::error::Error. main.rs prints the full chain via anyhow's Debug format ({:?}) instead of just the top message. found and deleted commands/complete.rs along the way — an entire dead module (complete_action/CompletionResult) with zero callers anywhere, superseded by commands/action.rs's complete_action long ago. verified: full workspace build+test clean (all features, examples, bins), zero warnings, manually confirmed the new single-line and chained error output end-to-end against a scratch workspace" ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:03:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb49-7e1b-9e4b-6f93ebf25fda> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb49-7e1b-9e4b-6f93ebf25fda" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "adopt structured errors at the CLI boundary" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "one hundred twenty-five Result String sites re-stringify errors core already types with thiserror, burying every call in map_err format noise. anyhow with context at the binary layer deletes most of it and improves the error output — the largest same-behavior-less-code win in the review" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 3 ;
+	<https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:cli> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:03:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:uuid:019f268f-eb4c-7384-b316-a3b880291ab4> a <https://clearhead.us/vocab/actions/v4#Action> ;
+	<https://clearhead.us/vocab/actions/v4#hasUUID> "019f268f-eb4c-7384-b316-a3b880291ab4" ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "record the call-site sweep done-gate in the process spec" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "the durable lesson — a core capability is not done until CLI call sites are swept onto it and a guard exists — belongs in specifications process.md so future charters inherit it instead of rediscovering it. done: added an Engineering Process section to specifications/process.md with a Call-Site Sweep Done-Gate subsection, naming the 2026-07-11 false-completion incident concretely (precedence bug, subtree-close semantics, durability guard all marked done with no matching commit) and the four-step gate: implement once, sweep every call site, add a proportional guard, verify the claim against git log/source rather than trusting the description" ;
+	<https://clearhead.us/vocab/actions/v4#hasPriority> 3 .
+<urn:context:documentation> a <https://clearhead.us/vocab/actions/v4#Context> ;
+	<https://clearhead.us/vocab/actions/v4#hasContextIdentifier> "documentation" .
+<urn:uuid:019f268f-eb4c-7384-b316-a3b880291ab4> <https://clearhead.us/vocab/actions/v4#requiresContext> <urn:context:documentation> ;
+	<https://www.commoncoreontologies.org/ont00001868> <https://clearhead.us/vocab/actions/v4#Completed> ;
+	<https://clearhead.us/vocab/actions/v4#hasCompletedDateTime> "2026-07-11T16:04:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

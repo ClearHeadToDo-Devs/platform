@@ -1,7 +1,8 @@
 ---
 id: 7f58c64d-b701-4f95-80cb-ccdfa12ef152
 alias: platform-model
-state: Active
+parent: build_clearhead
+state: Closed
 ---
 # Platform-Level Semantic Mutations and Undo
 

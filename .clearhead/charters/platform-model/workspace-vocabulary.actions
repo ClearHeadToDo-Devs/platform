@@ -1,7 +1,7 @@
-[x] Create the clearhead-ws OWL vocabulary file in the ontology repo and publish it at clearhead.us/vocab/workspace/v1/ #019e7c9c-b367-7c40-ae81-591d9faf5c4f
-[x] Update load_domain_model in insert.rs to store workspace source location triples on load #019e7c9c-b367-7c40-ae81-591d9faf5c4e
-[x] Update built-in SPARQL queries to select hasSourceFile and hasSourceLine from workspace vocabulary #019e7c9c-b367-7c40-ae81-591d9faf5c4d
-[x] Update JSON-LD export to use workspace vocabulary -- workspace vocabulary replaces domain-only JSON-LD as the single structured output format #019e7c9c-b367-7c40-ae81-591d9faf5c4c
-[x] Audit read actions filter flags -- decide which generate SPARQL internally and which to deprecate #019e7c9c-b367-7c40-ae81-591d9faf5c4b
-[x] Implement query_to_qflist in clearhead.nvim consuming JSON-LD from workspace vocabulary output #019e7c9c-b367-7c40-ae81-591d9faf5c4a
-[ ] Model charter_root as a first-class workspace-snapshot property on actions =action-charter-root $index rows currently denormalize charter_root from the workspace node. preserve shallow clients and semantic honesty by publishing clearhead-ws:hasCharterRoot on actions, while keeping ws:Workspace and inWorkspace for richer traversal rather than forcing every consumer through a second hop$ !2 +ontology,core,cli #7e27f040-31bb-470b-b781-1a1de03d7811
+[x] Create the clearhead-ws OWL vocabulary file in the ontology repo and publish it at clearhead.us/vocab/workspace/v1/ %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4f
+[x] Update load_domain_model in insert.rs to store workspace source location triples on load %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4e
+[x] Update built-in SPARQL queries to select hasSourceFile and hasSourceLine from workspace vocabulary %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4d
+[x] Update JSON-LD export to use workspace vocabulary -- workspace vocabulary replaces domain-only JSON-LD as the single structured output format %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4c
+[x] Audit read actions filter flags -- decide which generate SPARQL internally and which to deprecate %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4b
+[x] Implement query_to_qflist in clearhead.nvim consuming JSON-LD from workspace vocabulary output %2026-07-11T16:27 #019e7c9c-b367-7c40-ae81-591d9faf5c4a
+[-] Model charter_root as a first-class workspace-snapshot property on actions =action-charter-root $index rows currently denormalize charter_root from the workspace node. preserve shallow clients and semantic honesty by publishing clearhead-ws:hasCharterRoot on actions, while keeping ws:Workspace and inWorkspace for richer traversal rather than forcing every consumer through a second hop$ !2 +ontology,core,cli #7e27f040-31bb-470b-b781-1a1de03d7811
