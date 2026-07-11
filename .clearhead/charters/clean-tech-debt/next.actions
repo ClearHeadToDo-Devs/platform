@@ -1,12 +1,13 @@
-[ ] review existing code base for act references #019f4f40-67c1-7232-945b-483629704857
-    >[ ] review specifications #019f4f40-67c1-7232-945b-485b84f8c436
-    >[ ] review core #019f4f40-67c1-7232-945b-4873325fbe0b
-        >>[ ] review source #019f4f40-67c1-7232-945b-48977693bb9b
-        >>[ ] review tests #019f4f40-67c1-7232-945b-48b5d0d10cc2
-    >[ ] review cli #019f4f40-cdcc-7642-9922-a52ad0a1879c
-        >>[ ] review source #019f4f40-cdcc-7642-9922-a54127031576
-        >>[ ] review tests #019f4f40-cdcc-7642-9922-a56a4fff6f65
-[ ] make the json schemas live, linked contracts not dead docs $ specifications/schemas/ describes the wire formats but the serde structs that define them live in the clearhead-core submodule — different repo, no enforced link, so they drift silently and only one schema is ever loaded at runtime (a single jsonld test). adding charter.id to the sidecar is the trigger: struct and schema must move in lockstep with nothing to catch a miss $ !2 +specifications,library #019f4f67-be9d-7f58-96f6-cc30b2f5741d
-    >[ ] add a drift check that validates the serde structs against their schemas $ core cannot see specifications/, so this belongs in the platform integration CI over the pinned submodules — serialize a representative CharterMetadata and assert it validates, so struct-vs-schema drift fails a build instead of shipping $ +testing #019f4f67-be9d-70d6-b07a-d7f13098cef5
-    >[ ] have emitted data files carry a \$schema pointer $ sidecars written with a \$schema key so editors validate on write and the file is self-describing — the declarative-filesystem theme, same spirit as recording charter.id in the sidecar $ +library #019f4f67-be9d-748c-986f-7739e16e4660
-    >[ ] decide the schema source of truth and record it $ hand-maintained schema plus a drift test, or generate the schema from the structs (schemars) so drift is structurally impossible at the cost of coupling the format spec to the rust crate. decide in DECISIONS.md $ +specifications #019f4f67-be9d-7c7b-860d-bdd95659c486
+[x] review existing code base for act references #019f4f40-67c1-7232-945b-483629704857
+    >[x] review specifications $charter_metadata.schema.json acts->actions property rename$ #019f4f40-67c1-7232-945b-485b84f8c436
+    >[x] review core #019f4f40-67c1-7232-945b-4873325fbe0b
+        >>[x] review source #019f4f40-67c1-7232-945b-48977693bb9b
+        >>[x] review tests $clearhead-core/tests/graph_queries.rs, workspace_store.rs swept; sidecar.rs got dedicated legacy-acts-key backward-compat tests$ #019f4f40-67c1-7232-945b-48b5d0d10cc2
+    >[x] review cli #019f4f40-cdcc-7642-9922-a52ad0a1879c
+        >>[x] review source $argparser.rs alias attrs removed, sparql files renamed (actions-by-phase, orphaned-actions), all ?act sparql vars -> ?action, action.rs/resolver.rs/debug.rs/plan.rs/charter.rs/template.rs/tree.rs identifiers + messages renamed, occurrence_act_id call site fixed$ #019f4f40-cdcc-7642-9922-a54127031576
+        >>[x] review tests $expand.rs/actions.rs CLI invocation strings, normalize.rs field access, query.rs embedded sparql var all updated; plans.rs kept 3 legacy-acts-key literals as integration coverage for the serde alias$ #019f4f40-cdcc-7642-9922-a56a4fff6f65
+    >[x] normalize existing sidecar data acts to actions key $13 files in this repo's .clearhead/ migrated (verified via git diff = key rename only); 14 files in ~/.local/share/clearhead/ migrated after user confirmation, backed up first to /tmp scratchpad, doctor clean on both before and after (0 violations)$ #019f5061-cfc3-7aa1-94d5-9b116a52d2d3
+[ ] make the json schemas live, linked contracts not dead docs $specifications/schemas/ describes the wire formats but the serde structs that define them live in the clearhead-core submodule — different repo, no enforced link, so they drift silently and only one schema is ever loaded at runtime (a single jsonld test). adding charter.id to the sidecar is the trigger: struct and schema must move in lockstep with nothing to catch a miss$ !2 +specifications,library #019f4f67-be9d-7f58-96f6-cc30b2f5741d
+    >[ ] add a drift check that validates the serde structs against their schemas $core cannot see specifications/, so this belongs in the platform integration CI over the pinned submodules — serialize a representative CharterMetadata and assert it validates, so struct-vs-schema drift fails a build instead of shipping$ +testing #019f4f67-be9d-70d6-b07a-d7f13098cef5
+    >[ ] have emitted data files carry a \$schema pointer $sidecars written with a \$schema key so editors validate on write and the file is self-describing — the declarative-filesystem theme, same spirit as recording charter.id in the sidecar$ +library #019f4f67-be9d-748c-986f-7739e16e4660
+    >[ ] decide the schema source of truth and record it $hand-maintained schema plus a drift test, or generate the schema from the structs (schemars) so drift is structurally impossible at the cost of coupling the format spec to the rust crate. decide in DECISIONS.md$ +specifications #019f4f67-be9d-7c7b-860d-bdd95659c486
