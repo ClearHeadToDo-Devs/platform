@@ -13,3 +13,4 @@
 [x] Emit agenda output as JSON-LD conforming to query_output.md =agenda-jsonld-output ~ $SELECT stays the query form for an ordered list; frame the bindings into a single graph document with a node id, locator, display fields, and sort keys. one payload for the plugin and any integration partner, simple clients read the graph array and ignore the context$ !1 +core,cli %2026-07-07T18:00 <agenda-id-contract #cdb5b053-d4f2-4dfa-a8aa-bf89a28b8799
 [x] test out the new view %2026-07-11T19:19 #019f541a-844f-71d2-a75f-f5f1ec536972
 [x] research why this isnt working for the main clearhead workspace +bug %2026-07-11T22:25 #019f54b5-4a90-7492-9f5c-f4f3ce4d4f6a
+[x] reverse the sequential sigil $right now, we are highlighting the FINAL thing in a sequence chain, not the first so we obviously want the first thing in a chain of todos$ +bug %2026-07-11T22:52 #019f54de-7a22-7622-8d8a-a01aef56dd1b
