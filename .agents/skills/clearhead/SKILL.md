@@ -47,3 +47,20 @@ we use views to surface our work via both the cli and nvim plugin for your purpo
 so something like `clearhead query index unscheduled`
 
 this gives you your NEXT ACTIONS where if nothing else, you can look and start running the work in order of priority
+
+### the workflow
+
+Unless told otherwise, you are intended to use the views (`unscheduled` and `agenda` are great ones to start with) to answer "what should i be doing next?"
+
+then the workflow arises:
+1. check the view
+2. pick view action to focus on
+3. implement changes
+4. update the actions/charters (using the cli!)
+5. commit changes (if in a git repo)
+6. push changes
+7. go back to the beginning!
+
+This represents our tight "loop" where we are able to be self-sufficient without needing to "review" the list all day
+
+in an ideal world the entire workflow happens using the cli and never requires changes
