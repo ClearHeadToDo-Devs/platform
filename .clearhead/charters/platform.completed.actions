@@ -1,1 +1,2 @@
 [x] retire the data-root default_file location\: default_file should resolve into charters/ so adds cannot recreate an invisible root actions file (inbox merge done 2026-07-11) !3 %2026-07-11T22:47 #019f54cf-f74b-7ee2-8391-db7aaf893426
+[x] migrate ontology repo actions into .clearhead/charters/ and current syntax\: file sits at data root AND fails to parse (line 22), so its three open actions are invisible to queries !3 %2026-07-12T09:37 #019f54cf-f694-7953-8406-d46888c5fe10
