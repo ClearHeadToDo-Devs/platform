@@ -1,1 +1,1 @@
-[ ] reverse the sequential sigil $right now, we are highlighting the FINAL thing in a sequence chain, not the first so we obviously want the first thing in a chain of todos$ +bug #019f54de-7a22-7622-8d8a-a01aef56dd1b
+[ ] reverse the sequential sigil $right now, we are highlighting the FINAL thing in a sequence chain, not the first so we obviously want the first thing in a chain of todos$ !2 +bug #019f54de-7a22-7622-8d8a-a01aef56dd1b
