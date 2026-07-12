@@ -18,14 +18,14 @@ State mutations route back to source files via UUID.
 
 ## Built-in Views
 
-**daily** — what to do today
+**unscheduled** — shows unplanned stuff that is not specifically due 
   - open/in-progress, no open predecessors
-  - due date <= today OR do date <= today
-  - sorted by priority, then due date
+    - IE NOT blocked 
+  - due/start date is empty for action and parents
+  - sorted by priority
 
-**weekly** — what's on the horizon
-  - open/in-progress/blocked, no strict date filter
-  - due or do date within 7 days, or undated
+**upcoming**: intended to be the "calendar" view that shows upcoming work
+  - root action due/start date of this week or earlier
   - sorted by due date, then priority
 
 ## Layers

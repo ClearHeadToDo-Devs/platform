@@ -1,6 +1,8 @@
-[x] Define daily and weekly agenda SPARQL queries in clearhead-core =agenda-core-queries!1+core  %2026-06-01T11:04#019e6da3-e28e-7562-98ad-c177772a965f
-[x] Add clearhead query agenda CLI subcommands daily and weekly =agenda-cli!1+cli  %2026-06-01T11:04 <agenda-core-queries #019e6da3-e28e-7562-98ad-c19a345b2769
-[x] Decide query source architecture LSP command vs plugin calls CLI directly =agenda-lsp-decision!1+lsp  %2026-06-01T11:07#019e6da3-e28e-7562-98ad-c1b5f6e8032f
-[x] Implement ClearheadAgenda virtual buffer in nvim plugin read-only first =agenda-nvim-buffer!2+nvim  %2026-06-01T11:08 <agenda-cli #019e6da3-e28e-7562-98ad-c1d5ed310401
-[x] Add change routing so cycle_state in agenda buffer routes to source file via UUID =agenda-change-routing!2+nvim  %2026-06-01T11:09 <agenda-nvim-buffer #019e6da3-e28e-7562-98ad-c1fd3107ff8c
-[_] smoke test agenda query @2026-06-01T13:24 %2026-06-01T13:24#019e84dc-2a87-7cc2-ade2-f43feb8f2766
+[x] Define daily and weekly agenda SPARQL queries in clearhead-core =agenda-core-queries !1 +core %2026-06-01T11:04 #019e6da3-e28e-7562-98ad-c177772a965f
+[x] Add clearhead query agenda CLI subcommands daily and weekly =agenda-cli !1 +cli %2026-06-01T11:04 <agenda-core-queries #019e6da3-e28e-7562-98ad-c19a345b2769
+[x] Decide query source architecture LSP command vs plugin calls CLI directly =agenda-lsp-decision !1 +lsp %2026-06-01T11:07 #019e6da3-e28e-7562-98ad-c1b5f6e8032f
+[x] Implement ClearheadAgenda virtual buffer in nvim plugin read-only first =agenda-nvim-buffer !2 +nvim %2026-06-01T11:08 <agenda-cli #019e6da3-e28e-7562-98ad-c1d5ed310401
+[x] Add change routing so cycle_state in agenda buffer routes to source file via UUID =agenda-change-routing !2 +nvim %2026-06-01T11:09 <agenda-nvim-buffer #019e6da3-e28e-7562-98ad-c1fd3107ff8c
+[_] smoke test agenda query @2026-06-01T13:24 %2026-06-01T13:24 #019e84dc-2a87-7cc2-ade2-f43feb8f2766
+[x] nvim maps JSON-LD nodes to quickfix entries =nvim-qflist-mapping $the node id goes into the entry user_data as the invisible stable address, the locator into filename and lnum as the jump target, and the composed name, status, and due into the display text. the CLI never learns what quickfix is, this ten-line mapping is the plugin job$ !2 +nvim %2026-07-11T17:11 <agenda-jsonld-output #002abe33-96f3-4b35-9fec-d4e89b685a34
+[x] Make mutation verbs addressable by a bare id =verbs-by-id $complete, update, and cancel must resolve a raw UUID directly with no fuzzy charter or alias resolution in the path, so a client holding a node id acts on exactly that node. this is the write half of the read, verb, reread loop$ !1 +cli %2026-07-11T18:05 <agenda-id-contract #87a4395a-1dea-4d10-a82c-ae0b2e5d8985
