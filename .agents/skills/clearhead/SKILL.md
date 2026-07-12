@@ -36,3 +36,14 @@ in an ideal world, we would have an easy way to sync new information and we larg
 ## Specifications
 
 For questions on the workspace, file formats, and even data model please always review [the specs](./../../../specifications)
+
+
+## The views
+
+we use views to surface our work via both the cli and nvim plugin for your purpose you can work from
+- unscheduled
+- weekly
+
+so something like `clearhead query index unscheduled`
+
+this gives you your NEXT ACTIONS where if nothing else, you can look and start running the work in order of priority
