@@ -1,8 +1,9 @@
 [ ] build VTODO integration ~ !1 #019f5847-e4ef-75f2-a736-831b6a828f63
-    >[ ] learn to export things to VTODO format #019f5848-c3bf-7062-a94a-3a974ca12f85
+    >[ ] learn to export things to VTODO format $Covers both ics.rs::action_to_vevent -> action_to_vtodo (actions) and plan.rs::plan_to_event -> plan_to_todo + ics.rs::parse_ics_file's Event filter -> Todo (recurring plans). VTODO is primary for both; VEVENT is reserved for reading external non-ClearHead calendar data. See caldav-integration/README.md design notes 2026-07-12.$ #019f5848-c3bf-7062-a94a-3a974ca12f85
     >[ ] learn to import VTODO #019f5848-c3bf-7062-a94a-3abe216ea948
-    >[ ] add fields to the sync list of the sidecar ~ $whether we do that with a single date field or multiple is something worth considering$ #019f5848-c3bf-7062-a94a-3adcba9847ba
+    >[ ] add fields to the sync list of the sidecar ~ $Genericize reconcile() to reconcile<T: PartialEq + Clone> and add a _sync merge-base column per field (state, title, description, due_date), same shape as scheduled_at_sync. due_date_sync already exists on Action/ActionMeta but is unused by any reconcile call; state_sync/title_sync/description_sync are net-new. See caldav-integration/README.md design notes 2026-07-12.$ #019f5848-c3bf-7062-a94a-3adcba9847ba
         >>[ ] state #019f5848-c3bf-7062-a94a-3afc680d10bc
         >>[ ] due date #019f5848-c3bf-7062-a94a-3b1aef80a19a
         >>[ ] title #019f5848-c3bf-7062-a94a-3b3d3dbdfcce
         >>[ ] description #019f5848-c3bf-7062-a94a-3b5faede09e7
+    >[ ] migrate existing plan .ics files from VEVENT\+RRULE to VTODO\+RRULE $One-time conversion command, not a permanent dual-format read path. Run once after plan_to_event/parse_ics_file switch to VTODO; old VEVENT plan format is retired after conversion. See caldav-integration/README.md design notes 2026-07-12.$ #019f59c4-8c0b-7aa1-88b8-8ec35dee0e2d
