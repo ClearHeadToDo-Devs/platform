@@ -1,0 +1,4 @@
+[ ] update agenda view to be today-scoped #019f584e-f2d6-7320-ab01-3973576665a7
+[ ] create weekly view #019f584e-f2d6-7320-ab01-399015346572
+[ ] create dependency-chain view. $given an existing action, create the list of all dependent actions that are required to be done for it recursively, might need to be a tree?$ #019f5850-1a79-72a2-a8d9-1083e4e195c0
+[ ] keep working on sequential view $still shows the LAST thing when we want to show the FIRST VALID thing to do, respecting children so the lowest valid child$ !2 +bug #019f5897-214a-7540-9188-3f7e61a06609

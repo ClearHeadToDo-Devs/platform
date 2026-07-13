@@ -1,0 +1,5 @@
+[ ] Integrate the objectives into the domain model ~ #019f5895-6948-70b2-88e2-a7685b0dddda
+    >[ ] create MarkdownObjective type #019f5895-6948-70b2-88e2-a7837e1703d1
+    >[ ] ingest new type into domain model similar to other entities #019f5895-6948-70b2-88e2-a7a24f91cd92
+    >[ ] ensure links between objectives and charters are established #019f5895-6948-70b2-88e2-a7c895dd8289
+    >[ ] create list of actions related to objective X view #019f5895-6948-70b2-88e2-a7ebf437abbf

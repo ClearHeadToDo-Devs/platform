@@ -1,0 +1,8 @@
+[ ] build VTODO integration ~ !1 #019f5847-e4ef-75f2-a736-831b6a828f63
+    >[ ] learn to export things to VTODO format #019f5848-c3bf-7062-a94a-3a974ca12f85
+    >[ ] learn to import VTODO #019f5848-c3bf-7062-a94a-3abe216ea948
+    >[ ] add fields to the sync list of the sidecar ~ $whether we do that with a single date field or multiple is something worth considering$ #019f5848-c3bf-7062-a94a-3adcba9847ba
+        >>[ ] state #019f5848-c3bf-7062-a94a-3afc680d10bc
+        >>[ ] due date #019f5848-c3bf-7062-a94a-3b1aef80a19a
+        >>[ ] title #019f5848-c3bf-7062-a94a-3b3d3dbdfcce
+        >>[ ] description #019f5848-c3bf-7062-a94a-3b5faede09e7
