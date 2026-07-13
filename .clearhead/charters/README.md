@@ -1,6 +1,5 @@
 ---
 id: 019c4f48-6441-75dd-b285-33718b9be996
-alias: build_clearhead
 ---
 # Build the ClearHead Platform
 My dream is to build the ClearHead platform out of composable, open, data-driven components with the following values:

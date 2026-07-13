@@ -33,6 +33,19 @@ State mutations route back to source files via UUID.
 - root action due/start at or before this week
 - sorted by due date
 
+**chain** (2026-07-12) — given one action, everything still open that must be
+done before it, walked recursively through the predecessor edge
+- `clearhead query chain <QUERY>` — QUERY resolves like `complete action`
+  (UUID, short prefix, alias, or name), not a fixed view name like the three
+  above
+- flat, deduped list; completed/cancelled predecessors are excluded (they no
+  longer block anything)
+- sorted by priority, then name
+- distinct from the older `dependency-chain` named query (`clearhead query
+  named dependency-chain`), which lists every predecessor edge in the whole
+  workspace, flat and unscoped — `chain` is the one-action, recursive,
+  actionable version the charter asked for
+
 ## Layers
 
 - **core** — names shapes as per the query output spec
