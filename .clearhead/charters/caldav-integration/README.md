@@ -66,13 +66,10 @@ clients see actionable work, but ClearHead restores the exact state on import.
 -> Reconcile` (`reconcile.rs`) is a clean pure 3-way diff, just hardcoded to
 `Option<DateTime<Local>>`. Genericize to `reconcile<T: PartialEq + Clone>` and
 run it once per synced field (state, title, description, due_date), each with
-its own `_sync` merge-base column — same shape as `scheduled_at_sync` already
-in the domain model and sidecar. Keeping fields independent means one field's
-conflict doesn't block sync of the others (matches decision 31's "respect
-edits on either side"). `due_date_sync` is already scaffolded end-to-end
-(`Action` struct + `ActionMeta` sidecar) but unused by any reconcile call yet —
-wiring it up is cheaper than it looks. `state_sync`/`title_sync`/
-`description_sync` are net-new fields on both.
+its own merge base. Keeping fields independent means one field's conflict
+doesn't block sync of the others (matches decision 31's "respect edits on
+either side"). *Where the merge bases live is superseded by the 2026-07-14
+notes below — per-field `_sync` columns on `Action`/`ActionMeta` are out.*
 
 **Decided: one `.ics` per action**, same shape as the existing VEVENT mirror
 (`action_mirror_path`) — matches the vdir convention of one item per file.
@@ -85,3 +82,53 @@ convert once, then the old format is gone.
 **Open, not yet decided:** whether `is_sequential`/predecessor edges get any
 iCalendar representation at all (no native analog — likely stays
 ClearHead-only, unexported).
+
+## Design notes (2026-07-14): sync state decoupled from the domain model
+
+The merge base (B) is **"the value as of the last sync between *this
+workspace* and *this remote*"** — a property of the sync *pair*, not of the
+action. That identity drives the decisions below, superseding the earlier
+per-field `_sync` column plan.
+
+**B lives in a sync-owned store, not the sidecar and not `Action`.**
+`.clearhead/sync/<pair>.json` (e.g. `caldav.json`): a map of
+`action-uuid -> { field -> merge-base value }`, owned and versioned by the
+sync layer alone. Rationale beyond keeping the domain model clean:
+
+- **Per-remote.** A `scheduled_at_sync` column on the action bakes in "exactly
+  one remote forever." A store keyed by pair name supports syncing to two
+  calendars. Same design as vdirsyncer's per-pair status files.
+- **Per-machine.** Sidecars travel with git; sync state must not. Two machines
+  syncing against the same Radicale server at different times would ship each
+  other stale merge-base stamps describing syncs the receiving machine never
+  performed — manufactured "merge base drift." The sync store is gitignored.
+
+**Code changes** (small — `reconcile(a, b, c)` is already pure and doesn't
+care where B comes from):
+- `plan_sync` takes a `base_map: &HashMap<Uuid, Time>` parameter, symmetric
+  with the `ics_dates` map it already takes, instead of reading
+  `action.scheduled_at_sync` off the hydrated model.
+- `scheduled_at_sync`/`due_date_sync` come **off** `Action` and `ActionMeta`;
+  sidecar `merge_action`/`hydrate_actions_map` shrink accordingly.
+- `apply_sync` stamps B into the sync store instead of staging sidecar writes.
+- One-time seed migration: read existing sidecar `_sync` values into the new
+  store so existing workspaces aren't forced through spurious conflicts.
+
+**Accepted trade:** sync state is unrecoverable from the repo alone. A fresh
+clone has an empty sync store and gets first-sync semantics — which is
+*correct* (a fresh clone genuinely hasn't synced): agreeing sides converge,
+disagreeing sides surface as conflicts for a human.
+
+**Two moves, not one:**
+1. **Now:** the decoupling refactor inside clearhead-core (`workspace/calendar`
+   keeps the code; `domain` gets cleansed; new sync-store module). Lands
+   *before* the action-mirror VTODO swap so the swap's `apply_sync` changes
+   stamp B in the right place from the start.
+2. **Later, once VTODO bidirectional settles:** lift `workspace/calendar` +
+   the sync store into a separate crate (e.g. `clearhead-caldav`) depending on
+   clearhead-core as a library. Depending on core is not a violation — the
+   *contract* is the workspace format; the library is shared plumbing
+   (parsing, formatting, `PendingBatch` durability) not worth reimplementing.
+   A fully separate tool driving writes through the CLI was considered and
+   rejected: `TakeCalendar` needs atomic batched writes across `.actions`
+   files, and subprocess calls would lose or reinvent the durability layer.
