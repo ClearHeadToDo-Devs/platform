@@ -6,6 +6,25 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Adding Optional Charter UUID to Actions file 
+
+After wrestling with the issue for a long time ive decided the best thing to do about dangling references is allow for an optional frontmatter field of some kind that will allow action files to represent a parent thing at the start or end of the file.
+
+while i dont love the idea, this ensures that we can have referential integrity even when we are in situations where someone moved or renamed the file, thus breaking the implicit link we use in the workspace specification
+
+This also opens the possibility of using things like virtual text to overlay the details of the parent charter rather than trying to make it a visual change
+
+with this also we will be able to use doctor to automatically fix workspace-level issues as well rather than paper over them
+
+new syntax will need to be introduced, tested, and parsed but this will ultimately improves the resiliency of the format while maintaining the commitment to backwards compatibility
+
+### Implications
+
+We already keep the link between the charter and actions in the sidecar but this also allows us to have a second source to actually check or change the structure by checking that the uuid in the sidecar matches the uuid of the action file itself
+
+this also means we will likely have highlight rules to hide the uuid at a filter level.
+
+Still this all should make tracking down changes in the structure of the data model much easier since we can do this automatically using cli commands or even during the lsp creation so that we ensure the workspace is up to a good standard without allot of hand-cleaning
 ## Decision 34: Relaxed Reader, Strict Doctor
 
 Designing `clearhead doctor` (the trust charter's workspace fsck) surfaced that
