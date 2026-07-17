@@ -73,30 +73,40 @@ the fallback when absent; `doctor` reconciles on conflict.**
 ## The workspace gap — retire the v5 fallback
 
 The spec (`specifications/workspace.md:184`) says an un-`init`'d workspace
-should fall back to a **UUIDv5 derived from the root path**. That contradicts
-the same section's own invariant (`:176`, "must never be regenerated or it
-silently breaks named-graph identity"): a path-derived id changes when the
-directory moves, and differs from the v7 that `init` later writes. It's exactly
-the path-coupling this charter removes.
+should fall back to a **UUIDv5 derived from the root path**. That fallback is
+now *implemented* (`effective_id()`, `load.rs:60`) and it is the wrong kind of
+stable: a path-derived id changes when the directory moves, and differs from the
+v7 that `init` later writes — so `init` silently *re-identifies* a workspace
+that was already answering queries. It's exactly the path-coupling this charter
+removes, against the section's own invariant (`:176`, "must never be
+regenerated").
 
-Fix it by splitting along the write/read line the decoupling charter draws:
+The fix rests on one observation: **the workspace_id is an in-session
+graph-node identity — nothing references it durably.** The graph is rebuilt in
+memory on every read; no file and no external tool consumes the workspace URI
+across sessions. So persistence is *polish, not correctness*, and the write/read
+split the decoupling charter draws falls out gently:
 
-- **Write side** (`init` + any mutating command): mint v7, persist to
-  `config.json`. Explicit on `init`; lazy on first mutation of a workspace that
-  lacks an id.
-- **Read side** (graphd / queries): an un-`init`'d workspace uses an
-  **ephemeral** session graph id (`TRANSIENT_GRAPH_URI` already exists for
-  this) — never persisted, never path-derived. Queries stop dropping rows, and
-  the read side never mutates the workspace.
+- **Read side** (graphd / queries): when `workspace_id` is absent, mint an
+  **ephemeral id per load** — distinct per workspace, never path-derived, never
+  written back. Queries always resolve because the query graph and the
+  `ws:Workspace` node both go through the same fallback. This replaces the v5
+  branch outright.
+- **Write side**: `init` is the *sole* minting site — the one deliberate act
+  that makes identity durable, extended to cover the home/user workspace, which
+  nothing stamps today. No mutating command stamps identity as a side effect.
+- **`doctor`**: reports a missing `workspace_id` as an informational nudge to
+  run `init`, not an error. Identity is *offered, not forced*.
 
 Net: the v5-from-path fallback is needed by neither side. Delete it from the
 spec.
 
 ## First slice
 
-The workspace-uuid fix is independently shippable and closes a live bug
-(un-`init`'d → queries drop all rows). Do it first, ahead of the rest of this
-charter and ahead of the graph-decoupling crate split.
+The read-side ephemeral fallback (swap out v5-from-path) is independently
+shippable: it makes queries correct for any workspace, init'd or not, without a
+single persisted write. Do it first, ahead of the rest of this charter and
+ahead of the graph-decoupling crate split.
 
 ## Relationship to graph-decoupling
 
