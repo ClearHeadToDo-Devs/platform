@@ -11,7 +11,7 @@ Awhile ago we moved from using the Act noun to the Action since that matches the
 
 Leftover `Act` naming across specifications, `clearhead-core`, and `clearhead-cli` (types, functions, SPARQL variables, CLI aliases) has been renamed. The one wire-sensitive spot — the sidecar's `acts` JSON key — got a `#[serde(alias = "acts")]` for backward-compatible reads plus a one-off migration of every existing sidecar file, in this workspace and the user's real one. See `next.actions` for the itemized breakdown. The CRDT/Automerge mirror types (`SyncActPhase`, `SyncPlannedAct`) were deliberately left as-is, matching prior team precedent for that layer.
 
-## Schema Enforcement & Linking
+## Schema Enforcement & Linking - resolved
 The json schemas in `specifications/schemas/` describe our wire formats, but the serde structs that actually define them live in the `clearhead-core` submodule — a different repo with no enforced link. So schema and code are free to drift, and today a schema is only ever loaded in a single test.
 
 A schema should be a contract the code is held to and the data points back at, not prose that rots. We want drift caught by a build, data files that carry a `$schema` pointer, and a decided source of truth.
@@ -19,3 +19,4 @@ A schema should be a contract the code is held to and the data points back at, n
 The data-carries-a-`$schema`-pointer half is done: `write_sidecar` (clearhead-core) and `clearhead init` (clearhead-cli) now stamp every emitted sidecar and `config.json` with a `$schema` key pointing at the raw GitHub URL of the matching schema in `specifications/schemas/` (whose `$id` fields were updated to match, replacing dead `github.com` blob-URL placeholders). Every sidecar and `config.json` in this repo's own `.clearhead/` trees was backfilled the same way — round-tripped through the real `read_sidecar`/`write_sidecar` path rather than hand-edited, which also quietly fixed 10 sidecars still carrying the pre-rename `acts` key that the earlier migration missed (they'd been hand-authored, not written by the CLI, so they never passed through the code that would have normalized them).
 
 Still open, tracked in `next.actions`: a build-time drift check between the serde structs and the schemas, and deciding — and recording in `DECISIONS.md` — whether the schema stays hand-maintained-plus-drift-test or gets generated from the structs (schemars).
+
