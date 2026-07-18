@@ -1,3 +1,2 @@
 book/*
 *.log
-/clearhead-graphd/target/

@@ -20,7 +20,11 @@ Both `clearhead-core` and `clearhead-cli` dependency trees are Oxigraph-free.
 
 ### `clearhead-graphd`
 
-Graphd encapsulates the graph dependency and all graph-specific functionality:
+Graphd is an independent public repository at
+`https://github.com/ClearHeadToDo-Devs/clearhead-graphd`, pinned into the
+platform workspace as a Git submodule.
+
+It encapsulates the graph dependency and all graph-specific functionality:
 
 - `src/graph/insert.rs` — domain/workspace model to RDF
 - `src/graph/query.rs` — SPARQL execution and validation

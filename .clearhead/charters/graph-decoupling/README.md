@@ -31,7 +31,8 @@ The extraction landed on 2026-07-17:
 
 - `clearhead-core` is graph-neutral and has no Oxigraph dependency
 - `clearhead-cli` speaks JSON to the out-of-process graph backend
-- `clearhead-graphd` owns RDF insertion, SPARQL, Turtle, query shapes, JSON-LD,
+- the independent `ClearHeadToDo-Devs/clearhead-graphd` repository—pinned here
+  as a submodule—owns RDF insertion, SPARQL, Turtle, query shapes, JSON-LD,
   Oxigraph, graph resources, and graph tests
 
 See [inventory.md](./inventory.md) for the final ownership map and transition

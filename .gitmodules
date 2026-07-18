@@ -16,3 +16,6 @@
 [submodule "clearhead-core"]
 	path = clearhead-core
 	url = https://github.com/ClearHeadToDo-Devs/clearhead-core.git
+[submodule "clearhead-graphd"]
+	path = clearhead-graphd
+	url = https://github.com/ClearHeadToDo-Devs/clearhead-graphd.git
