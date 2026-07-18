@@ -17,5 +17,5 @@
     >[x] Run CLI and LSP regression suites across the process seam $Prove command behavior, editor behavior, and compatibility startup independently.$ %2026-07-17T21:36 #019f733d-4670-71c1-92c1-a983348c43c2
 [-] Publish clearhead-lsp as an independent repository and submodule =lsp-repo ~ $Give the extracted runtime its own workspace identity, release history, repository, and pinned platform submodule.$ !3 #019f733c-da13-7b82-95f9-1571cb1860c1
     >[x] Initialize the clearhead-lsp workspace and repository metadata $Add ClearHead workspace identity, README, ignore rules, and release ownership.$ %2026-07-17T21:37 #019f733d-4681-7fe0-b5d4-331ae563a01d
-    >[-] Create and push the ClearHeadToDo-Devs clearhead-lsp repository $Preserve extraction history where practical and use main as the default branch.$ #019f733d-4692-7573-a779-6de6d3268c01
-    >[ ] Replace the platform directory with a pinned clearhead-lsp submodule $Validate clean clones and sibling clearhead-core path development.$ #019f733d-46a3-75a2-a906-10d7cf212078
+    >[x] Create and push the ClearHeadToDo-Devs clearhead-lsp repository $Preserve extraction history where practical and use main as the default branch.$ %2026-07-17T21:37 #019f733d-4692-7573-a779-6de6d3268c01
+    >[-] Replace the platform directory with a pinned clearhead-lsp submodule $Validate clean clones and sibling clearhead-core path development.$ #019f733d-46a3-75a2-a906-10d7cf212078
