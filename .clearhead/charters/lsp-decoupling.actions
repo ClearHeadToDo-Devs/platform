@@ -9,8 +9,8 @@
     >[x] Add black-box stdio protocol coverage $Exercise initialize, open/change/save, diagnostics, formatting, and shutdown through JSON-RPC.$ %2026-07-17T21:28 #019f733d-4612-7770-af8f-c6e1da5214bb
 [-] Migrate LSP clients and compatibility surfaces =lsp-clients ~ $Launch clearhead-lsp directly from editor clients while preserving a deliberate short-lived compatibility path.$ !2 #019f733c-d9f5-7372-99e3-f67237621bf3
     >[x] Make clearhead.nvim launch clearhead-lsp directly $Prefer configured path then PATH; retain an explicit temporary legacy fallback if needed.$ %2026-07-17T21:30 #019f733d-4621-7ed3-9838-964a65f99c32
-    >[-] Turn clearhead start lsp into an external compatibility shim $Inherit stdio and exec clearhead-lsp without linking Tokio or Tower LSP.$ #019f733d-4630-7341-b89a-032e18b1de0f
-    >[ ] Update health checks installation docs and invocation examples $Converge stale clearhead_cli lsp, clearhead start lsp, and clearhead-lsp instructions.$ #019f733d-4640-7ce2-b971-389031d2e292
+    >[x] Turn clearhead start lsp into an external compatibility shim $Inherit stdio and exec clearhead-lsp without linking Tokio or Tower LSP.$ %2026-07-17T21:32 #019f733d-4630-7341-b89a-032e18b1de0f
+    >[-] Update health checks installation docs and invocation examples $Converge stale clearhead_cli lsp, clearhead start lsp, and clearhead-lsp instructions.$ #019f733d-4640-7ce2-b971-389031d2e292
 [ ] Remove the LSP runtime and dependencies from clearhead-cli =lsp-cli-clean ~ $Return the CLI to synchronous command ownership and prove its dependency tree no longer contains the LSP runtime stack.$ !2 #019f733c-da05-78b3-a385-d025053545bc
     >[ ] Remove the CLI LSP feature binary target and source modules $Delete embedded runtime ownership after clients are migrated.$ #019f733d-4650-7020-bb53-d072605d298b
     >[ ] Remove Tokio Tower LSP and DashMap from CLI $Verify they are absent from the clearhead-cli dependency tree.$ #019f733d-4660-79a2-aec9-086a7537093d
