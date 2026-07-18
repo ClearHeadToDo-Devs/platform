@@ -13,8 +13,8 @@
     >[x] Update health checks installation docs and invocation examples $Converge stale clearhead_cli lsp, clearhead start lsp, and clearhead-lsp instructions.$ %2026-07-17T21:33 #019f733d-4640-7ce2-b971-389031d2e292
 [-] Remove the LSP runtime and dependencies from clearhead-cli =lsp-cli-clean ~ $Return the CLI to synchronous command ownership and prove its dependency tree no longer contains the LSP runtime stack.$ !2 #019f733c-da05-78b3-a385-d025053545bc
     >[x] Remove the CLI LSP feature binary target and source modules $Delete embedded runtime ownership after clients are migrated.$ %2026-07-17T21:34 #019f733d-4650-7020-bb53-d072605d298b
-    >[-] Remove Tokio Tower LSP and DashMap from CLI $Verify they are absent from the clearhead-cli dependency tree.$ #019f733d-4660-79a2-aec9-086a7537093d
-    >[ ] Run CLI and LSP regression suites across the process seam $Prove command behavior, editor behavior, and compatibility startup independently.$ #019f733d-4670-71c1-92c1-a983348c43c2
+    >[x] Remove Tokio Tower LSP and DashMap from CLI $Verify they are absent from the clearhead-cli dependency tree.$ %2026-07-17T21:35 #019f733d-4660-79a2-aec9-086a7537093d
+    >[-] Run CLI and LSP regression suites across the process seam $Prove command behavior, editor behavior, and compatibility startup independently.$ #019f733d-4670-71c1-92c1-a983348c43c2
 [ ] Publish clearhead-lsp as an independent repository and submodule =lsp-repo ~ $Give the extracted runtime its own workspace identity, release history, repository, and pinned platform submodule.$ !3 #019f733c-da13-7b82-95f9-1571cb1860c1
     >[ ] Initialize the clearhead-lsp workspace and repository metadata $Add ClearHead workspace identity, README, ignore rules, and release ownership.$ #019f733d-4681-7fe0-b5d4-331ae563a01d
     >[ ] Create and push the ClearHeadToDo-Devs clearhead-lsp repository $Preserve extraction history where practical and use main as the default branch.$ #019f733d-4692-7573-a779-6de6d3268c01

@@ -130,9 +130,18 @@ Before extraction:
   CLI and 430 MB for `clearhead-lsp` (debug sizes are directional, not release
   benchmarks)
 
-The important acceptance test is structural: Tokio, Tower LSP, and DashMap must
-be absent from the final CLI dependency tree, not merely dead-code eliminated
-from its binary.
+The important acceptance test is structural: Tower LSP and DashMap must be
+absent from the final CLI dependency tree, and the LSP-owned full-feature Tokio
+edge must disappear rather than merely being dead-code eliminated. The
+pre-extraction `--no-default-features` baseline already contained Tokio through
+`clearhead-core -> topiary-core`; formatter ownership is outside this charter
+and that pre-existing transitive edge is not evidence of an embedded LSP.
+
+After removing the embedded runtime, the CLI tree returned from 695 to the
+641-line no-LSP baseline. Tower LSP and DashMap are absent. The only normal
+Tokio path is the pre-existing `clearhead_cli -> clearhead_core ->
+topiary-core -> tokio` formatter path; Tokio, Tower, and DashMap are no longer
+direct CLI dependencies.
 
 ## Done gate
 
