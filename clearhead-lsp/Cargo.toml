@@ -1,9 +1,11 @@
 [package]
 name = "clearhead-lsp"
 version = "0.1.0"
+authors = ["Darrion Burgess <darrionburgess@gmail.com>"]
 edition = "2024"
 description = "Standalone Language Server Protocol runtime for ClearHead"
 license = "MIT"
+repository = "https://github.com/ClearHeadToDo-Devs/clearhead-lsp.git"
 
 [[bin]]
 name = "clearhead-lsp"

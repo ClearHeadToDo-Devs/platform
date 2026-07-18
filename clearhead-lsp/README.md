@@ -22,6 +22,13 @@ Archive mutations are intentionally absent from the LSP surface. Editor clients
 save their buffers, invoke the CLI's durable workspace operation, and reload or
 close the affected buffer only after success.
 
+## Ownership and releases
+
+The LSP is released independently from `clearhead-cli` at
+`ClearHeadToDo-Devs/clearhead-lsp`. Its public process contract is standard LSP
+over stdio; provider changes and async-runtime upgrades follow this repository's
+own release history.
+
 ## Development
 
 Sibling checkouts are used for path development:
