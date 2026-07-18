@@ -1,1 +1,1 @@
-
+[ ] Restore strict Clippy cleanliness in clearhead-cli $cargo clippy --all-targets --no-deps -- -D warnings currently fails on six pre-existing findings: collapsible conditionals, needless lifetimes, PathBuf argument, and manual prefix stripping. Fix them and enforce the command in CI.$ !3 #019f7390-170f-79c3-9025-9d5b24882745

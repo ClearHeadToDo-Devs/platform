@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/master/schemas/charter_metadata.schema.json",
+  "charter": {
+    "id": "019f738f-0897-7e92-988f-3cfe7cd84fc0"
+  },
+  "actions": {
+    "019f738f-08ac-7de3-8f16-0e574aa40f60": {
+      "created": "2026-07-17T21:49:41.548-07:00"
+    },
+    "019f738f-08b8-7532-93b0-09da7216b3db": {
+      "created": "2026-07-17T21:49:41.560-07:00"
+    },
+    "019f738f-08c4-78e1-857d-83da7369d1f6": {
+      "created": "2026-07-17T21:49:41.572-07:00"
+    },
+    "019f7391-2da9-7aa3-a686-c46caf24849c": {
+      "created": "2026-07-17T21:52:02.089-07:00"
+    }
+  }
+}
