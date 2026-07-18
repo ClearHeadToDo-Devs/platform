@@ -45,12 +45,14 @@ Please review product-specific documentation for more details on each repository
   - used by the CLI and other tools to parse and validate action files
 - [Core Library](./clearhead-core/README.md) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools
   - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
-- [CLI](./clearhead-cli/README.md) the CLI and server implementation of many of the specifications outlined
-  - handles much of the file ingestion, formatting, and linting required to translate strings in files into data that can be queried
-  - uses the ontology to do semantic reasoning and validation on the data ingested
-  - parses everything with the above tree-sitter parser
-  - also serves as an LSP server so that linting and validation can be done in editors
-- [Neovim App](./clearhead-nvim/README.md) a neovim plugin that uses the CLI as a backend to provide in-editor support for the action file format
+- [CLI](./clearhead-cli/README.md) the synchronous command client for the specifications outlined
+  - handles terminal workflows and durable workspace mutations through clearhead-core
+  - delegates graph-shaped query execution to clearhead-graphd
+  - parses action files with the above tree-sitter parser
+- [LSP](./clearhead-lsp/README.md) the standalone editor protocol runtime
+  - owns Tokio, Tower LSP, open-document state, diagnostics, providers, and stdio lifecycle
+  - depends directly on clearhead-core rather than the CLI
+- [Neovim App](./clearhead.nvim/README.md) a neovim plugin that uses the CLI for mutations and clearhead-lsp for editor analysis
   - provides syntax highlighting, linting, and validation for action files within neovim
-  - leverages the CLI's LSP server capabilities to offer real-time feedback and assistance while editing action files
+  - launches `clearhead-lsp` directly for real-time feedback and assistance
   - also leverages the tree-sitter parser for accurate syntax parsing, folding, and highlighting
