@@ -1,7 +1,11 @@
 ---
 id: 019f4f3c-47e2-7162-80de-f4dcb0974960
+alias: clean-tech-debt
+parent: platform
+state: Closed
 ---
-# Cleaning Up Technical Debt 
+# Cleaning Up Technical Debt
+
 We want to always keep a tidy code base because what starts as small divergence will cause issues in the long run
 
 This will be a general guide on the open items and is a good dumping ground for what we need to do
@@ -18,5 +22,8 @@ A schema should be a contract the code is held to and the data points back at, n
 
 The data-carries-a-`$schema`-pointer half is done: `write_sidecar` (clearhead-core) and `clearhead init` (clearhead-cli) now stamp every emitted sidecar and `config.json` with a `$schema` key pointing at the raw GitHub URL of the matching schema in `specifications/schemas/` (whose `$id` fields were updated to match, replacing dead `github.com` blob-URL placeholders). Every sidecar and `config.json` in this repo's own `.clearhead/` trees was backfilled the same way — round-tripped through the real `read_sidecar`/`write_sidecar` path rather than hand-edited, which also quietly fixed 10 sidecars still carrying the pre-rename `acts` key that the earlier migration missed (they'd been hand-authored, not written by the CLI, so they never passed through the code that would have normalized them).
 
-Still open, tracked in `next.actions`: a build-time drift check between the serde structs and the schemas, and deciding — and recording in `DECISIONS.md` — whether the schema stays hand-maintained-plus-drift-test or gets generated from the structs (schemars).
+Both follow-ups landed: platform integration CI validates representative serialized metadata against the schemas, and `DECISIONS.md` records hand-maintained schemas plus drift tests as the source-of-truth policy.
 
+## Strict CLI Clippy — resolved
+
+`cargo clippy --all-targets --no-deps -- -D warnings` is clean across the CLI library, binary, and integration tests. The cleanup covered the original production findings plus test-target findings exposed once `--all-targets` advanced past them. A CLI workflow now checks out the sibling core and tree-sitter repositories explicitly, runs the locked test suite, and enforces this exact Clippy command on pushes and pull requests.
