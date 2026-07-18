@@ -1,0 +1,21 @@
+[-] Make action archival safe for an out-of-process LSP =lsp-archive-gate ~ $Replace the completed-file write followed by editor applyEdit with a shared durable core mutation and explicit open-buffer semantics.$ !1 #019f733c-d9d8-7342-8ce8-61fcdcb0edd5
+    >[ ] Implement the durable action-archive operation in core $Use the existing durability subsystem so active and completed files cannot diverge after a partial write.$ #019f733d-45b2-7f21-bcad-5610887b7230
+    >[ ] Route CLI action archival through the core operation $Remove the CLI-owned naive archive writer.$ #019f733d-45c2-7dd2-91dc-8631f33c6b77
+    >[ ] Define and test LSP open-buffer archive semantics $Avoid writing one half on disk and applying the other half through the editor without a recovery contract.$ #019f733d-45d3-7e51-98e5-4424b732ae10
+[ ] Extract the clearhead-lsp crate and runtime =lsp-extract ~ $Move the stdio server, protocol handlers, providers, state, and tests into a crate depending on clearhead-core rather than clearhead-cli.$ !1 #019f733c-d9e7-7310-b58a-74974f570b72
+    >[ ] Scaffold clearhead-lsp as a core-dependent crate $Own Tokio, Tower LSP, DashMap, tree-sitter editor state, and stdio startup.$ #019f733d-45e3-7450-be8d-6b653a6a2acb
+    >[ ] Move LSP handlers providers state and tests $Preserve behavior while changing ownership; do not redesign protocol features during the move.$ #019f733d-45f2-76a0-aaa2-65696cee12ad
+    >[ ] Replace clearhead-cli imports with core APIs $Keep only an LSP-owned telemetry/output adapter and protocol-specific conversions.$ #019f733d-4602-7730-a6f0-033970dbfc20
+    >[ ] Add black-box stdio protocol coverage $Exercise initialize, open/change/save, diagnostics, formatting, and shutdown through JSON-RPC.$ #019f733d-4612-7770-af8f-c6e1da5214bb
+[ ] Migrate LSP clients and compatibility surfaces =lsp-clients ~ $Launch clearhead-lsp directly from editor clients while preserving a deliberate short-lived compatibility path.$ !2 #019f733c-d9f5-7372-99e3-f67237621bf3
+    >[ ] Make clearhead.nvim launch clearhead-lsp directly $Prefer configured path then PATH; retain an explicit temporary legacy fallback if needed.$ #019f733d-4621-7ed3-9838-964a65f99c32
+    >[ ] Turn clearhead start lsp into an external compatibility shim $Inherit stdio and exec clearhead-lsp without linking Tokio or Tower LSP.$ #019f733d-4630-7341-b89a-032e18b1de0f
+    >[ ] Update health checks installation docs and invocation examples $Converge stale clearhead_cli lsp, clearhead start lsp, and clearhead-lsp instructions.$ #019f733d-4640-7ce2-b971-389031d2e292
+[ ] Remove the LSP runtime and dependencies from clearhead-cli =lsp-cli-clean ~ $Return the CLI to synchronous command ownership and prove its dependency tree no longer contains the LSP runtime stack.$ !2 #019f733c-da05-78b3-a385-d025053545bc
+    >[ ] Remove the CLI LSP feature binary target and source modules $Delete embedded runtime ownership after clients are migrated.$ #019f733d-4650-7020-bb53-d072605d298b
+    >[ ] Remove Tokio Tower LSP and DashMap from CLI $Verify they are absent from the clearhead-cli dependency tree.$ #019f733d-4660-79a2-aec9-086a7537093d
+    >[ ] Run CLI and LSP regression suites across the process seam $Prove command behavior, editor behavior, and compatibility startup independently.$ #019f733d-4670-71c1-92c1-a983348c43c2
+[ ] Publish clearhead-lsp as an independent repository and submodule =lsp-repo ~ $Give the extracted runtime its own workspace identity, release history, repository, and pinned platform submodule.$ !3 #019f733c-da13-7b82-95f9-1571cb1860c1
+    >[ ] Initialize the clearhead-lsp workspace and repository metadata $Add ClearHead workspace identity, README, ignore rules, and release ownership.$ #019f733d-4681-7fe0-b5d4-331ae563a01d
+    >[ ] Create and push the ClearHeadToDo-Devs clearhead-lsp repository $Preserve extraction history where practical and use main as the default branch.$ #019f733d-4692-7573-a779-6de6d3268c01
+    >[ ] Replace the platform directory with a pinned clearhead-lsp submodule $Validate clean clones and sibling clearhead-core path development.$ #019f733d-46a3-75a2-a906-10d7cf212078

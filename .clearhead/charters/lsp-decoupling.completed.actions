@@ -1,0 +1,5 @@
+[x] Document CLI-only coupling and current LSP ownership $Capture code, dependency, test, configuration, and client callsites.$ %2026-07-17T20:21 #019f733d-4572-7811-b8d2-a28ebaa8dc4d
+[x] Define the canonical binary and compatibility contract $Use clearhead-lsp over stdio as canonical; decide the lifetime of clearhead start lsp.$ %2026-07-17T20:21 #019f733d-4585-7692-9bf2-a5fc270e4ce0
+[x] Measure the CLI dependency and build baseline $Record dependency-tree and binary/build impact before extraction.$ %2026-07-17T20:21 #019f733d-4594-7f00-9abc-427b4e484cdd
+[x] Inventory the LSP extraction boundary =lsp-inventory ~ $Record callsites, dependency ownership, protocol surfaces, client invocation, and the transition contract before moving code.$ !1 %2026-07-17T20:21 #019f733c-d8fd-7c02-a06f-466019b1a369
+[x] Trace action archival ordering across CLI, LSP, and core $Name the source-of-truth operation, open-buffer behavior, locks, and failure recovery.$ %2026-07-17T20:22 #019f733d-45a3-7882-88d5-9dcb816059ff
