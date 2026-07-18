@@ -12,10 +12,15 @@ clearhead-lsp
 `clearhead-core` for parsing and domain/workspace behavior. It does not depend
 on `clearhead-cli`.
 
-This crate is currently the extraction target for the LSP implementation still
-shipped by `clearhead-cli`. The scaffold owns Tokio, Tower LSP, DashMap,
-tree-sitter document state, and stdio startup; protocol providers and their
-tests move here in the next migration slice.
+The protocol runtime has moved here from `clearhead-cli`. This crate now owns
+Tokio, Tower LSP, DashMap, tree-sitter document state, stdio startup, workspace
+routing, diagnostics, code actions, completion, inlay hints, semantic tokens,
+definition, references, formatting, protocol conversions, provider tests, and
+its NDJSON telemetry adapter.
+
+Archive mutations are intentionally absent from the LSP surface. Editor clients
+save their buffers, invoke the CLI's durable workspace operation, and reload or
+close the affected buffer only after success.
 
 ## Development
 
