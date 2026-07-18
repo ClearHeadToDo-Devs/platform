@@ -3,8 +3,8 @@
     >[x] Route CLI action archival through the core operation $Remove the CLI-owned naive archive writer.$ %2026-07-17T20:59 #019f733d-45c2-7dd2-91dc-8631f33c6b77
     >[x] Define and test LSP open-buffer archive semantics $Avoid writing one half on disk and applying the other half through the editor without a recovery contract.$ %2026-07-17T21:06 #019f733d-45d3-7e51-98e5-4424b732ae10
 [ ] Extract the clearhead-lsp crate and runtime =lsp-extract ~ $Move the stdio server, protocol handlers, providers, state, and tests into a crate depending on clearhead-core rather than clearhead-cli.$ !1 #019f733c-d9e7-7310-b58a-74974f570b72
-    >[ ] Scaffold clearhead-lsp as a core-dependent crate $Own Tokio, Tower LSP, DashMap, tree-sitter editor state, and stdio startup.$ #019f733d-45e3-7450-be8d-6b653a6a2acb
-    >[ ] Move LSP handlers providers state and tests $Preserve behavior while changing ownership; do not redesign protocol features during the move.$ #019f733d-45f2-76a0-aaa2-65696cee12ad
+    >[x] Scaffold clearhead-lsp as a core-dependent crate $Own Tokio, Tower LSP, DashMap, tree-sitter editor state, and stdio startup.$ %2026-07-17T21:24 #019f733d-45e3-7450-be8d-6b653a6a2acb
+    >[-] Move LSP handlers providers state and tests $Preserve behavior while changing ownership; do not redesign protocol features during the move.$ #019f733d-45f2-76a0-aaa2-65696cee12ad
     >[ ] Replace clearhead-cli imports with core APIs $Keep only an LSP-owned telemetry/output adapter and protocol-specific conversions.$ #019f733d-4602-7730-a6f0-033970dbfc20
     >[ ] Add black-box stdio protocol coverage $Exercise initialize, open/change/save, diagnostics, formatting, and shutdown through JSON-RPC.$ #019f733d-4612-7770-af8f-c6e1da5214bb
 [ ] Migrate LSP clients and compatibility surfaces =lsp-clients ~ $Launch clearhead-lsp directly from editor clients while preserving a deliberate short-lived compatibility path.$ !2 #019f733c-d9f5-7372-99e3-f67237621bf3
