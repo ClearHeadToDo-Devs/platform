@@ -1,7 +1,7 @@
-[-] Make action archival safe for an out-of-process LSP =lsp-archive-gate ~ $Replace the completed-file write followed by editor applyEdit with a shared durable core mutation and explicit open-buffer semantics.$ !1 #019f733c-d9d8-7342-8ce8-61fcdcb0edd5
-    >[ ] Implement the durable action-archive operation in core $Use the existing durability subsystem so active and completed files cannot diverge after a partial write.$ #019f733d-45b2-7f21-bcad-5610887b7230
-    >[ ] Route CLI action archival through the core operation $Remove the CLI-owned naive archive writer.$ #019f733d-45c2-7dd2-91dc-8631f33c6b77
-    >[ ] Define and test LSP open-buffer archive semantics $Avoid writing one half on disk and applying the other half through the editor without a recovery contract.$ #019f733d-45d3-7e51-98e5-4424b732ae10
+[x] Make action archival safe for an out-of-process LSP =lsp-archive-gate ~ $Replace the completed-file write followed by editor applyEdit with a shared durable core mutation and explicit open-buffer semantics.$ !1 %2026-07-17T21:06 #019f733c-d9d8-7342-8ce8-61fcdcb0edd5
+    >[x] Implement the durable action-archive operation in core $Use the existing durability subsystem so active and completed files cannot diverge after a partial write.$ %2026-07-17T20:54 #019f733d-45b2-7f21-bcad-5610887b7230
+    >[x] Route CLI action archival through the core operation $Remove the CLI-owned naive archive writer.$ %2026-07-17T20:59 #019f733d-45c2-7dd2-91dc-8631f33c6b77
+    >[x] Define and test LSP open-buffer archive semantics $Avoid writing one half on disk and applying the other half through the editor without a recovery contract.$ %2026-07-17T21:06 #019f733d-45d3-7e51-98e5-4424b732ae10
 [ ] Extract the clearhead-lsp crate and runtime =lsp-extract ~ $Move the stdio server, protocol handlers, providers, state, and tests into a crate depending on clearhead-core rather than clearhead-cli.$ !1 #019f733c-d9e7-7310-b58a-74974f570b72
     >[ ] Scaffold clearhead-lsp as a core-dependent crate $Own Tokio, Tower LSP, DashMap, tree-sitter editor state, and stdio startup.$ #019f733d-45e3-7450-be8d-6b653a6a2acb
     >[ ] Move LSP handlers providers state and tests $Preserve behavior while changing ownership; do not redesign protocol features during the move.$ #019f733d-45f2-76a0-aaa2-65696cee12ad
