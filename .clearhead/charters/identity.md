@@ -1,6 +1,6 @@
 ---
 id: 019f6e9c-2118-7ff1-8565-5ac7194accac
-state: Active
+state: Closed
 ---
 # Durable Concept Identity
 
