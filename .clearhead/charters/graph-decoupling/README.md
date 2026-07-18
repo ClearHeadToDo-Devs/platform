@@ -21,3 +21,7 @@ this means that our cli/core structure will have all the graph data/logic remove
 - archive will be created using the DSL and normal files rather than pushing everything to the archive.ttl
 - reference handling is going to be done entirely using the domain structure
 - views/queries will be the purview of the graph binary not the cli 
+
+## inventory
+
+see [inventory.md](./inventory.md) for the 2026-07-17 callsite inventory and transition notes.

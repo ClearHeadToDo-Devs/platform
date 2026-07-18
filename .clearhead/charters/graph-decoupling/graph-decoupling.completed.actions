@@ -1,0 +1,8 @@
+[x] route all CLI query execution through one backend module instead of direct core graph calls %2026-07-17T18:12 #019f72c6-bbde-7720-ace9-f44b1bf395d9
+[x] inventory remaining graph/Oxigraph entrypoints across clearhead-core and clearhead-cli %2026-07-17T18:24 #019f72c6-bbcf-77e2-9c0a-b59e46eec502
+[x] implement one-shot workspace load plus raw query execution in clearhead-graphd %2026-07-17T18:53 #019f72c6-bbfe-7ff1-8a67-a788171b87f1
+[x] add query seam coverage for raw, named, index, and chain flows %2026-07-17T19:21 #019f72c6-bbe8-7c93-acdb-b82d5e8d4561
+[x] define the graphd invocation/output contract that preserves current CLI output shapes %2026-07-17T19:21 #019f72c6-bbf3-78a1-b9fb-e0b8b8770ba1
+[x] switch clearhead query run to invoke graphd %2026-07-17T19:21 #019f72c6-bc0a-7500-8e34-8421e547623c
+[x] extract the query runtime behind a clearhead-graphd seam ~ !1 %2026-07-17T19:21 #019f72c6-a463-75d3-8432-d60d2bdcceb2
+[x] ship the first clearhead-graphd binary ~ !1 %2026-07-17T19:21 #019f72c6-a472-7581-bbf3-a69e9f51d8b2
