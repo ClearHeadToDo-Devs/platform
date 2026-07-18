@@ -2,6 +2,7 @@
 id: 019f738f-0897-7e92-988f-3cfe7cd84fc0
 alias: workspace-durability
 parent: platform
+state: Closed
 ---
 # Workspace Mutation Durability
 
@@ -39,3 +40,31 @@ contention, and recovery semantics shared by every writer.
 - interrupted batches recover before a subsequent mutation reads workspace
   state
 - no obsolete alternate archive implementation remains in the CLI
+
+## Resolution (2026-07-17)
+
+The mutation seam is now core-owned end to end:
+
+- `close_action_subtree` performs the locked recovery/read/plan/batch-commit for
+  complete and cancel; the CLI only resolves a selector and emits the result
+- legacy id-less lines survive the second parse through a selector carrying the
+  preferred UUID plus alias/name fallback, while inline UUID remains canonical
+- `WorkspaceLock` uses an OS exclusive file lock (`fs2`) on a persistent inode;
+  PID text is diagnostic only, process death releases ownership, and callers
+  uniformly fail on contention rather than continuing unlocked
+- action archival, charter archival, model save, and calendar reconciliation
+  recover pending intent under the lock before reading mutation inputs
+- batch commit and recovery fsync every affected source/destination directory
+  before removing the journal; malformed journals are retained for diagnosis
+- directory-form charter archival moves every charter-local supporting file,
+  not only formats core already recognizes
+- the dead `clearhead-cli/src/archive.rs` duplicate was removed; its behavioral
+  coverage already lives with the core implementation
+- the remaining `archive plans` cross-boundary writer was retired: plans are
+  externally-owned schedules, `delete plan` is the explicit deletion verb, and
+  generated actions keep their independent action lifecycle
+
+The shared policy is specified in `specifications/workspace.md` under “Mutation
+durability and locking.” Crash recovery, lock contention/stale PID behavior,
+selected-subtree closure, duplicate prevention, and supporting-file archival
+all have core regression coverage.
