@@ -1,7 +1,8 @@
 ---
 id: 019f733b-fa0e-7871-8ed0-2f1100562699
 alias: lsp-decoupling
-state: Active
+parent: platform
+state: Closed
 ---
 # Decoupling the LSP
 
@@ -142,6 +143,16 @@ After removing the embedded runtime, the CLI tree returned from 695 to the
 Tokio path is the pre-existing `clearhead_cli -> clearhead_core ->
 topiary-core -> tokio` formatter path; Tokio, Tower, and DashMap are no longer
 direct CLI dependencies.
+
+## Outcome (2026-07-17)
+
+The extraction is complete. `ClearHeadToDo-Devs/clearhead-lsp` is public and
+pinned here as a submodule; a clean clone with the sibling core and parser
+submodules passes the full provider and black-box stdio suites. Neovim launches
+the standalone binary directly, while `clearhead start lsp` is only an
+inherited-stdio `exec` compatibility shim. The CLI returned to its 641-line
+no-LSP dependency baseline and no longer contains LSP sources, targets, direct
+dependencies, or async-runtime symbols.
 
 ## Done gate
 
