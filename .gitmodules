@@ -19,3 +19,6 @@
 [submodule "clearhead-graphd"]
 	path = clearhead-graphd
 	url = https://github.com/ClearHeadToDo-Devs/clearhead-graphd.git
+[submodule "clearhead-lsp"]
+	path = clearhead-lsp
+	url = https://github.com/ClearHeadToDo-Devs/clearhead-lsp.git
