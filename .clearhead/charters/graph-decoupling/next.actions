@@ -1,2 +1,1 @@
-[ ] finish the extraction out of core and CLI ~ !2 #019f72c6-a47d-7790-99ee-50cfefe5b30a
-    >[ ] remove in-process Oxigraph from clearhead-core once no non-graph callsites remain #019f72c6-bc2d-7861-8a80-a2ee18f5944c
+

@@ -8,3 +8,5 @@
 [x] ship the first clearhead-graphd binary ~ !1 %2026-07-17T19:21 #019f72c6-a472-7581-bbf3-a69e9f51d8b2
 [x] move JSON-LD/query framing code out of clearhead-core or gate it behind the graph daemon %2026-07-17T19:32 #019f72c6-bc16-72d3-9953-7dd023c72ed9
 [x] remove in-process Oxigraph from clearhead-cli %2026-07-17T19:32 #019f72c6-bc22-7400-91d5-239c892a7917
+[x] remove in-process Oxigraph from clearhead-core once no non-graph callsites remain %2026-07-17T19:54 #019f72c6-bc2d-7861-8a80-a2ee18f5944c
+[x] finish the extraction out of core and CLI ~ !2 %2026-07-17T19:54 #019f72c6-a47d-7790-99ee-50cfefe5b30a

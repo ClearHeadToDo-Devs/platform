@@ -1,5 +1,8 @@
 ---
 id: 019f6da6-c313-7531-92dc-0f69ca01c4e3
+alias: graph-decoupling
+parent: platform
+state: Closed
 ---
 # Decoupling the graph
 
@@ -22,6 +25,14 @@ this means that our cli/core structure will have all the graph data/logic remove
 - reference handling is going to be done entirely using the domain structure
 - views/queries will be the purview of the graph binary not the cli 
 
-## inventory
+## outcome
 
-see [inventory.md](./inventory.md) for the 2026-07-17 callsite inventory and transition notes.
+The extraction landed on 2026-07-17:
+
+- `clearhead-core` is graph-neutral and has no Oxigraph dependency
+- `clearhead-cli` speaks JSON to the out-of-process graph backend
+- `clearhead-graphd` owns RDF insertion, SPARQL, Turtle, query shapes, JSON-LD,
+  Oxigraph, graph resources, and graph tests
+
+See [inventory.md](./inventory.md) for the final ownership map and transition
+notes.
