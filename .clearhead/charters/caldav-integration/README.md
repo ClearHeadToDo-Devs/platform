@@ -17,15 +17,19 @@ this includes:
 - title
 - description
 
-we will use most of the integration points that already exist like:
-- templates
-- syncing fields via sidecar
+we will use the integration points that already exist, especially templates
+and the configured plans vdir. Sync bookkeeping does not belong in charter
+sidecars or the domain model.
 
 still, we are going to need to go another level of strong to get it all working properly and we are going to want to be doing the most cononacle version of this so that we are able to do this right rather than just this event structure we have
 
-## caldav-compatible
+## The vdir boundary
 
-the HOW should come down to integrations with the caldav implementations, and not even that, since we largely conform to the vdir format we should be able to get this all setup by just changing the plan path of our workspace but doing it right will take some thought
+ClearHead integrates with a configured plans path containing one RFC 5545
+component per `.ics` file: a vdir. That filesystem convention is the complete
+boundary. A user may put vdirsyncer and CalDAV, Syncthing, Git, a mounted
+filesystem, or nothing at all behind it; core and the CLI neither know nor
+care. Configuring the plans path is the only integration configuration.
 
 ## Design notes (2026-07-12)
 
@@ -59,7 +63,7 @@ timestamp) carries over close to as-is via the shared `Component` trait.
 **State → VTODO STATUS is lossy — by design, not by accident.** iCalendar's
 `TodoStatus` only has 4 values (`NeedsAction`/`InProcess`/`Completed`/`Cancelled`);
 ClearHead's `ActionState` has 5 (`BlockedOrAwaiting` has no home). Decision:
-emit `STATUS:NEEDS-ACTION` plus `X-CLEARHEAD-STATUS:blocked` — generic CalDAV
+emit `STATUS:NEEDS-ACTION` plus `X-CLEARHEAD-STATUS:blocked` — generic iCalendar
 clients see actionable work, but ClearHead restores the exact state on import.
 
 **Reconcile generalizes, doesn't get replaced.** `reconcile(action, base, ics)
@@ -83,52 +87,41 @@ convert once, then the old format is gone.
 iCalendar representation at all (no native analog — likely stays
 ClearHead-only, unexported).
 
-## Design notes (2026-07-14): sync state decoupled from the domain model
+## Design notes (2026-07-17): sync state belongs to the plans vdir projection
 
-The merge base (B) is **"the value as of the last sync between *this
-workspace* and *this remote*"** — a property of the sync *pair*, not of the
-action. That identity drives the decisions below, superseding the earlier
-per-field `_sync` column plan.
+The merge base (B) is **the value at the last agreement between the actions
+workspace and its configured plans vdir**. The vdir is the abstraction; there
+is no remote, account, server, or sync-pair concept in core or the CLI.
+CalDAV, when present, is an optional transport outside ClearHead.
 
-**B lives in a sync-owned store, not the sidecar and not `Action`.**
-`.clearhead/sync/<pair>.json` (e.g. `caldav.json`): a map of
-`action-uuid -> { field -> merge-base value }`, owned and versioned by the
-sync layer alone. Rationale beyond keeping the domain model clean:
+**B lives in one machine-local projection store, not the sidecar and not
+`Action`.** `.clearhead/sync/plans.json` is a map of
+`action-uuid -> { field -> merge-base value }`, owned by the plans-vdir
+projection. There is one configured plans path, so there is one store — no
+`<pair>` names and no CalDAV-named default.
 
-- **Per-remote.** A `scheduled_at_sync` column on the action bakes in "exactly
-  one remote forever." A store keyed by pair name supports syncing to two
-  calendars. Same design as vdirsyncer's per-pair status files.
-- **Per-machine.** Sidecars travel with git; sync state must not. Two machines
-  syncing against the same Radicale server at different times would ship each
-  other stale merge-base stamps describing syncs the receiving machine never
-  performed — manufactured "merge base drift." The sync store is gitignored.
+The store is gitignored because it records local projection history, while
+sidecars and actions remain durable workspace data. Changing the configured
+plans path means establishing a new first sync, not inventing remote identity
+inside ClearHead.
 
-**Code changes** (small — `reconcile(a, b, c)` is already pure and doesn't
-care where B comes from):
-- `plan_sync` takes a `base_map: &HashMap<Uuid, Time>` parameter, symmetric
-  with the `ics_dates` map it already takes, instead of reading
-  `action.scheduled_at_sync` off the hydrated model.
-- `scheduled_at_sync`/`due_date_sync` come **off** `Action` and `ActionMeta`;
-  sidecar `merge_action`/`hydrate_actions_map` shrink accordingly.
-- `apply_sync` stamps B into the sync store instead of staging sidecar writes.
-- One-time seed migration: read existing sidecar `_sync` values into the new
-  store so existing workspaces aren't forced through spurious conflicts.
+**No legacy compatibility path.** The code does not scan old sidecars, define
+legacy metadata structs, or carry migration aliases. A missing store simply
+gets first-sync semantics: agreeing action/vdir values converge; differing
+values surface as conflicts. Keeping the current code and model clean is more
+important than preserving obsolete sync bookkeeping.
 
-**Accepted trade:** sync state is unrecoverable from the repo alone. A fresh
-clone has an empty sync store and gets first-sync semantics — which is
-*correct* (a fresh clone genuinely hasn't synced): agreeing sides converge,
-disagreeing sides surface as conflicts for a human.
+**Code shape:**
+- `plan_sync` takes an explicit `base_map`, symmetric with the vdir values.
+- `scheduled_at_sync`/`due_date_sync` stay off `Action` and `ActionMeta`.
+- `apply_sync` atomically stages the one plans sync store with `.actions`
+  changes; it has no pair parameter.
+- terminology throughout is actions, plans, iCalendar/VTODO, and vdir — never
+  a CalDAV server integration.
 
 **Two moves, not one:**
-1. **Now:** the decoupling refactor inside clearhead-core (`workspace/calendar`
-   keeps the code; `domain` gets cleansed; new sync-store module). Lands
-   *before* the action-mirror VTODO swap so the swap's `apply_sync` changes
-   stamp B in the right place from the start.
-2. **Later, once VTODO bidirectional settles:** lift `workspace/calendar` +
-   the sync store into a separate crate (e.g. `clearhead-caldav`) depending on
-   clearhead-core as a library. Depending on core is not a violation — the
-   *contract* is the workspace format; the library is shared plumbing
-   (parsing, formatting, `PendingBatch` durability) not worth reimplementing.
-   A fully separate tool driving writes through the CLI was considered and
-   rejected: `TakeCalendar` needs atomic batched writes across `.actions`
-   files, and subprocess calls would lose or reinvent the durability layer.
+1. Keep the decoupled implementation in `clearhead-core::workspace::calendar`
+   while VTODO bidirectional behavior settles.
+2. If extraction later pays for itself, lift the vdir projection into a crate
+   named for that boundary (not `clearhead-caldav`) while retaining core's
+   parsing and `PendingBatch` durability seams.
