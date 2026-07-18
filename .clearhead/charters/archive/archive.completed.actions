@@ -1,3 +1,4 @@
 [x] archive sidecar data $right now, the sidecar data is not archived like the other pieces$ +bug %2026-07-11T13:39 #019f52d7-138c-7a40-aa19-4ac0fa1d1b17
 [x] extend archive to include cancelled Charters and Actions %2026-07-11T13:39 #019f52d7-b7a1-7fd0-a9d5-40c61da557cd
 [x] archive child charters as well $right now we just do the charter itself when we would assume that the child charters would be archived as well$ !3 %2026-07-11T20:17 #019f5396-f705-72c0-a1fb-8e15b4aa557c
+[x] rework charter archival to move plaintext files into archive/ instead of serializing to archive.ttl %2026-07-17T17:35 #019f72a6-9a1d-7e20-9641-0b41d6b4b1df
