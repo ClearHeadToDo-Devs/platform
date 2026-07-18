@@ -6,3 +6,5 @@
 [x] switch clearhead query run to invoke graphd %2026-07-17T19:21 #019f72c6-bc0a-7500-8e34-8421e547623c
 [x] extract the query runtime behind a clearhead-graphd seam ~ !1 %2026-07-17T19:21 #019f72c6-a463-75d3-8432-d60d2bdcceb2
 [x] ship the first clearhead-graphd binary ~ !1 %2026-07-17T19:21 #019f72c6-a472-7581-bbf3-a69e9f51d8b2
+[x] move JSON-LD/query framing code out of clearhead-core or gate it behind the graph daemon %2026-07-17T19:32 #019f72c6-bc16-72d3-9953-7dd023c72ed9
+[x] remove in-process Oxigraph from clearhead-cli %2026-07-17T19:32 #019f72c6-bc22-7400-91d5-239c892a7917

@@ -142,6 +142,23 @@ So the immediate contract to define is not a daemon protocol; it is the **invoca
 - direct JSON-LD serialization calls in `src/commands/action.rs`
 - direct JSON-LD serialization calls in `src/commands/charter.rs`
 
+## Transition update (2026-07-17, second slice)
+
+The process boundary now owns every query execution path and every JSON-LD
+projection:
+
+- raw, named, index, and chain queries invoke `clearhead-graphd`
+- index contract validation and JSON-LD framing happen in graphd
+- action/charter JSON-LD export sends a plain JSON `DomainModel` to graphd's
+  `export-jsonld` command
+- `clearhead-cli` has no graph API callsites and no direct Oxigraph dependency
+- `clearhead-core`'s graph module is feature-gated; CLI disables that feature,
+  while graphd enables it explicitly, so Oxigraph is absent from the CLI build
+
+The remaining extraction is physical ownership: move the feature-gated graph
+module out of core and into graphd (or a graphd-owned library crate), then remove
+core's graph feature and Oxigraph dependency entirely.
+
 ## Bottom line
 
 The meaningful boundary is now visible:
