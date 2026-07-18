@@ -1,9 +1,12 @@
 ---
 id: 019f5850-577c-769e-b204-e96a3e576229
-state: Active
-objectives: [query-interface, data-integration]
+alias: graph-views
+parent: platform
+objectives:
+  - query-interface
+  - data-integration
+state: Closed
 ---
-
 # Views
 
 A named-query agenda system that surfaces the right actions at the right time.

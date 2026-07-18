@@ -1,1 +1,1 @@
-
+[ ] archive charter moves every charter-local completed history file $Archiving graph-views moved graph-views.completed.actions but left next.completed.actions behind under charters/graph-views, keeping a ghost active directory. The leftover was moved manually to archive/graph-views for this cleanup. Fix archive discovery so all charter-local supporting files move atomically, including alternate *.completed.actions histories.$ !2 +bug #019f7457-51fc-7e02-90bf-d2cdb11f2964

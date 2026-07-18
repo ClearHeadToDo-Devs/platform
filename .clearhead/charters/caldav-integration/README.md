@@ -78,6 +78,33 @@ notes below — per-field `_sync` columns on `Action`/`ActionMeta` are out.*
 **Decided: one `.ics` per action**, same shape as the existing VEVENT mirror
 (`action_mirror_path`) — matches the vdir convention of one item per file.
 
+## Recurrence and identity decision (2026-07-17)
+
+**RRULE remains exclusively Plan semantics.** Decision 21 stands: `.actions`
+contains executable instances, never recurrence definitions. A VTODO with
+RRULE is a Plan master; a VTODO without RRULE is an Action projection. We will
+not add temporary RRULE syntax to the DSL, mutate files on read, or maintain
+two recurrence authoring models. Convenient recurring capture belongs in
+`add plan`/calendar UX, which writes the VTODO+RRULE directly and then invokes
+normal expansion into primary and upcoming Action instances.
+
+**Standalone identity is one-to-one and needs no sidecar link:**
+
+```text
+Action.id == VTODO UID == vdir filename
+```
+
+RFC 5545 UID is text requiring global uniqueness, so a ClearHead UUID is a
+valid canonical VTODO UID. The VTODO and `.actions` line are two projections
+of the same logical Action, not separately identified entities. A sidecar
+mirror-ID map is therefore redundant and should be removed.
+
+Recurring instances are intentionally different: the VTODO+RRULE master has
+the Plan identity, while each executable occurrence has its own deterministic
+UUIDv5 from the Plan UID and recurrence key. Any retained plan/occurrence
+linkage records that real prescriptive relationship; it must not be confused
+with identity linkage for standalone Action mirrors.
+
 **Decided: one-time migration command** for plan files currently on disk as
 VEVENT+RRULE, converting them to VTODO+RRULE once `plan_to_event`/
 `parse_ics_file` switch. Not a permanent read-both-write-one dual-format path —

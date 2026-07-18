@@ -1,8 +1,11 @@
 ---
 id: 019f52cd-924a-782c-9e3a-572b24b35e26
-state: Active
+alias: archive
+parent: platform
+state: Closed
 ---
 # Archive Functionality
+
 Within the structure we have a concept of archival which is different from the existing work of actually closing a piece of work.
 
 in preparation for the graph rework, we are going to update the archive process to have the entire structure done using the DSL/markdown files of the domain model and NOT the archive we are used to
