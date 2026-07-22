@@ -31,16 +31,26 @@ to the CLI.
 
 ## Output model
 
-graphd emits JSON-LD as its semantic contract; the query output specification
-governs that layer, where meaning travels with the data and consumers opt out
-of depth rather than into it. CLI presentation is a client concern with two
-orthogonal axes:
+graphd owns the semantic representation and the query-family contracts. A
+family is a consumer guarantee around ordinary, standalone SPARQL—not a custom
+query language or per-query metadata schema. A query opts in by living under
+`queries/index/`, `queries/tree/`, or `queries/graph/`; it remains runnable
+unchanged in other SPARQL tooling.
 
-- **Shape picks the structured format** — the data's topology drives its
-  serialization, and each named query declares its shape:
-  - list (unscheduled, agenda, overdue) becomes NDJSON, one record per line
-  - tree (charter-to-action hierarchy) becomes nested JSON
-  - graph (dependencies, contexts, federation) becomes triples / JSON-LD
+- **Family picks the structured format and validation profile:**
+  - index queries are ordered `SELECT` results with canonical identity,
+    display, and locator bindings; they become NDJSON for a machine
+  - tree queries are ordered `SELECT` results with identity and a parent edge;
+    they become nested JSON
+  - graph queries are standard `CONSTRUCT` queries; they become JSON-LD or
+    another RDF serialization
+  - unrestricted named/raw `SELECT` queries return their projected rows;
+    aggregates are rows, not a fourth family
 - **Destination picks render versus emit** — a terminal renders the human view
-  (table, indented tree, graph summary); a pipe emits the shape's structured
+  (table, indented tree, graph summary); a pipe emits the family's structured
   format. Explicit format flags override both axes.
+
+JSON-LD remains the semantic/federation boundary where meaning travels with the
+data, but it is not mandatory stdout for consumers that deliberately choose a
+shallower validated projection. The CLI forwards graphd's public interface and
+never parses SPARQL or graph formats.
