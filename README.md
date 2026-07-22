@@ -47,7 +47,7 @@ Please review product-specific documentation for more details on each repository
   - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
 - [CLI](./clearhead-cli/README.md) the synchronous command client for the specifications outlined
   - handles terminal workflows and durable workspace mutations through clearhead-core
-  - delegates graph-shaped query execution to clearhead-graphd
+  - leaves graph-shaped query execution to direct consumers of clearhead-graphd
   - parses action files with the above tree-sitter parser
 - [LSP](./clearhead-lsp/README.md) the standalone editor protocol runtime
   - owns Tokio, Tower LSP, open-document state, diagnostics, providers, and stdio lifecycle
