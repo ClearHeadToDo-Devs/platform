@@ -64,6 +64,22 @@ data, but it is not mandatory stdout for consumers that deliberately choose a
 shallower validated projection. graphd alone owns those bytes; clients request
 an explicit stable format and map it onto their own interfaces.
 
+## Outcome (2026-07-22)
+
+The boundary is now explicit and dogfooded end to end:
+
+- clearhead.nvim invokes graphd directly for index reads and uses the CLI only
+  for canonical-ID mutations; the three-process living-loop test passes
+- `clearhead query` and its forwarding implementation were removed; the 27
+  index behavior tests moved into graphd
+- `tree/work-map.sparql` ships as standard `SELECT`, validates identity/parent
+  structure, and emits nested JSON or an indented terminal tree
+- `graph/dependencies.sparql` ships as standard `CONSTRUCT` and emits JSON-LD,
+  Turtle, or a terminal graph summary
+- both proving queries run unchanged under external `roqet`; graphd's Turtle
+  output was loaded and queried there as ordinary RDF
+- work-map dogfood exposed and fixed charter parent resolution by alias
+
 ## Delivery order and done gate
 
 1. move clearhead.nvim's query reads from the CLI facade to graphd and prove the
