@@ -18,16 +18,24 @@ to the CLI.
   fields where needed. Core's older "no I/O / never reads config.json / concrete
   impls live downstream" comments were written for graph-in-core and no longer
   hold.
-- **graphd is a standalone, first-class tool** usable directly by humans and
-  agents, not just the CLI. The test of the decoupling: installing only graphd
-  must work. It self-discovers config via core, owns the named-query registry,
-  and owns its output modes behind a clean argument interface. The current
-  stdin JSON-envelope-with-embedded-SPARQL is a coupling smell to remove. The
-  `-d` suffix implies a daemon it is not; a resident daemon is deferred, not
-  needed yet.
-- **The CLI is a projection** over graphd's public interface — the same one
-  humans and agents use, not a private protocol. It never parses graph formats
-  and holds no SPARQL or prefixes.
+- **graphd is the standalone, first-class read/query/export tool** used
+  directly by humans, editors, and agents. The test of the decoupling:
+  installing only graphd must support workspace discovery, saved and ad-hoc
+  queries, validation, and every public output format. It self-discovers config
+  via core and owns the named-query registry, SPARQL execution, query-family
+  contracts, serialization, terminal rendering, stdout/stderr, and exit
+  semantics. The `-d` suffix implies a daemon it is not; a resident daemon is
+  deferred, not needed yet.
+- **The CLI is a separate mutation and workspace-lifecycle convenience.** It
+  resolves human references, invokes core's durable write path, and returns
+  structured mutation outcomes. It does not forward graphd commands, inspect
+  dependencies, hold SPARQL or prefixes, decode graph results, or reserialize
+  query output. Dependency traversal and actionability remain inspectable
+  SPARQL rather than bespoke CLI logic.
+- **Clients compose the tools directly.** Neovim and agents call graphd for
+  reads, the CLI for identity-addressed mutations, and the LSP for document
+  intelligence. The living loop is graphd read → CLI act by canonical ID →
+  graphd re-read; no tool is middleware for another.
 
 ## Output model
 
@@ -52,5 +60,20 @@ unchanged in other SPARQL tooling.
 
 JSON-LD remains the semantic/federation boundary where meaning travels with the
 data, but it is not mandatory stdout for consumers that deliberately choose a
-shallower validated projection. The CLI forwards graphd's public interface and
-never parses SPARQL or graph formats.
+shallower validated projection. graphd alone owns those bytes; clients request
+an explicit stable format and map it onto their own interfaces.
+
+## Delivery order and done gate
+
+1. move clearhead.nvim's query reads from the CLI facade to graphd and prove the
+   three-tool living loop
+2. remove `clearhead query` and its forwarding/format surface so the process
+   boundary is explicit
+3. implement `tree/work-map.sparql` as the first parent-linked `SELECT` family
+   and prove the same file in external SPARQL tooling
+4. implement `graph/dependencies.sparql` as the first standard `CONSTRUCT`
+   family and prove its RDF output in external tooling
+
+This charter is done when graphd independently owns all query families and
+formats, the CLI contains no graph query facade or dependency reasoning, and
+Neovim consumes graphd directly while mutating through canonical CLI verbs.
