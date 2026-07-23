@@ -12,6 +12,20 @@ As the clearhead platform grows, I find myself wanting to separate out orthogona
 
 On the one hand, these are different tools with their own toolschains and lifecycles. On the other hand, as a platform, they are deeply coupled and a change in one repository often cascades into changes in other repositories.
 
+### Getting Started
+
+With Git and Rust installed, bootstrap a checkout from the repository root:
+
+```sh
+scripts/startup
+```
+
+The script initializes the pinned submodules, then builds and installs the main
+user-facing Rust binaries: `clearhead`, `clearhead-lsp`, and
+`clearhead-graphd`. It is safe to rerun after pulling platform changes; Cargo
+rebuilds and replaces the installed binaries. Cargo's bin directory (normally
+`~/.cargo/bin`) must be on `PATH`.
+
 ### Working with Submodules
 Git submodules are notoriously tricky to work with, so we have laid out documentation in [Submodules](./SUBMODULES.md) to help you get started. including:
 - Day-to-day workflows

@@ -1,7 +1,43 @@
 #!/bin/sh
 
-# quick little script to get the repo up and running on first clone
-# assumed to be run at the root of the repo
+# Bootstrap a platform checkout and install its user-facing Rust binaries.
+# This may be run from any directory.
 
-# initialize submodules
-git submodule update --init --recursive
+set -eu
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+
+if ! command -v git >/dev/null 2>&1; then
+    echo "error: git is required" >&2
+    exit 1
+fi
+
+if ! command -v cargo >/dev/null 2>&1; then
+    echo "error: cargo is required; install Rust from https://rustup.rs" >&2
+    exit 1
+fi
+
+printf '%s\n' '==> Initializing platform submodules'
+git -C "$repo_root" submodule update --init --recursive
+
+install_rust_binary() {
+    project=$1
+    binary=$2
+    manifest="$repo_root/$project/Cargo.toml"
+
+    if [ ! -f "$manifest" ]; then
+        echo "error: $project is not initialized (missing $manifest)" >&2
+        exit 1
+    fi
+
+    printf '\n==> Building and installing %s from %s\n' "$binary" "$project"
+    cargo install --locked --force --path "$repo_root/$project"
+}
+
+install_rust_binary clearhead-cli clearhead
+install_rust_binary clearhead-lsp clearhead-lsp
+install_rust_binary clearhead-graphd clearhead-graphd
+
+printf '%s\n' '' '==> ClearHead is ready'
+printf '%s\n' 'Installed: clearhead, clearhead-lsp, clearhead-graphd'
+printf '%s\n' 'Try: clearhead --help'
