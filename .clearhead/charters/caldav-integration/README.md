@@ -5,7 +5,7 @@ parent: platform
 objectives:
   - calendar-view
   - data-integration
-state: Closed
+state: Active
 ---
 # VTODO Bidirectional sync
 
@@ -167,3 +167,60 @@ important than preserving obsolete sync bookkeeping.
 2. If extraction later pays for itself, lift the vdir projection into a crate
    named for that boundary (not `clearhead-caldav`) while retaining core's
    parsing and `PendingBatch` durability seams.
+
+## Client-surface projection (2026-07-24): occurrences are rendered, not filed
+
+Core sync is settled (above). What is *not* yet built is what happens to the
+**clients** once a recurring Plan projects executable occurrences. Decision 21
+already says a VTODO+RRULE master is a Plan and each occurrence is an Action
+projection with its own UUIDv5 (Plan UID + recurrence key). The consequence
+that layer never spelled out: **the action list is now a windowed union of
+materialized actions ∪ projected occurrences**, where an occurrence is
+`render(master + deviations, window)` — it has no line in any `.actions` file.
+The window reuses the existing configurable defaults.
+
+This breaks the founding ergonomic where *the file is both the truth and the
+interface*. So we draw one seam and hold it:
+
+**Operations are uniform; text-editing is not.** A materialized action supports
+both direct text edits and operations (complete / reschedule / skip). A
+projected occurrence supports **only operations** — there is no text to edit;
+completing or moving one writes a *deviation* (a `RECURRENCE-ID` override, or
+`EXDATE`) into the single Plan resource, never a line. No consumer — query, CLI,
+resolver — may branch on "materialized vs projected"; the difference lives
+behind the operation, not in front of it.
+
+The client shape follows org-mode's agenda precedent (leverage the pattern,
+don't reinvent it): raw-file editing stays exactly as-is for materialized
+actions; occurrences are surfaced through the rendered views and acted on via
+commands. In nvim specifically, **keep the buffer honest** — occurrences render
+as virtual lines / extmarks, never as editable buffer text that would have
+nowhere to save back to, and their operations are LSP code-actions.
+
+**Two interop invariants this exposes** (verify against current code — they may
+already hold):
+
+- **Canonicalize the recurrence-id before it enters the UUIDv5.** RFC 5545 lets
+  peers emit the same slot as UTC, TZID-local, or floating. Same occurrence,
+  different bytes → different handle → ghost/duplicate instances. Normalize the
+  recurrence key to the master's DTSTART value-type/TZID *before* hashing, so
+  two peers derive the identical occurrence UUID. Hash the slot, never the
+  occurrence's mutable DUE.
+- **Ingest a foreign roll-forward as a completion.** A camp-B client (Apple
+  Reminders, etc.) completes a recurring VTODO by *advancing the master* with no
+  override. Import must recognize "master DTSTART advanced one period, no new
+  override" as completion of the prior occurrence and record that deviation —
+  not silently reinterpret it as a reschedule of the series.
+
+  ### thought experiment: datedness
+  one other thought that was explored is the concept of having the actions with dates flip to have the ics own our actions file but this was decided against because it would break the flow of the line by having new actions "vanish" from the file to be replaced by a projection.
+
+  dated actions are synced to plans but they are still the primary owner 
+
+  this ensures that wherever possible we are still using the standard methods of file editing and only using projections when necessary such has handling rrule recurrence.
+
+  the main distinction is the rrule role as a generator rather than an individual instance
+
+  in particular, we are working with the issue of lossy conversion and the fact that an action has MORE properties than are supported in the VTODO format
+
+  therefore, we keep the action as the primary unit of abstraction UNLESS it is an RRULE-based plan and this is more of a compromise than a structure
