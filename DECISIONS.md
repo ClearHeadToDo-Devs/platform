@@ -181,10 +181,10 @@ Git, mounted storage, or no transport may sit behind it; core and the CLI have
 no account, server, href, ETag, or vendor-property concepts.
 
 ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters
-and standalone VTODOs project Actions. VEVENT is external calendar context and
-may be consumed only by an explicit import operation that writes current VTODO
-resources. There is no legacy Plan compatibility or migration command; during
-pre-release development, existing files are fixed directly.
+and standalone VTODOs project Actions. Other iCalendar component types are
+outside the ClearHead projection. There is no legacy Plan compatibility,
+alternate import, or migration command; during pre-release development,
+existing files are fixed directly.
 
 Standalone fields synchronize independently with a three-way merge:
 
@@ -316,7 +316,7 @@ this continues to process of making the onotlogy an extension of CCO rather than
 ### Details
   - Plans exist only for recurrence — not for single dates.
   - Single dates are adorned on Action directly, not expressed via a Plan object
-  - VEVENTs generated for single-date actions are a serialization artifact, not a domain entity — reading them back doesn't instantiate a Plan
+  - Standalone VTODOs project single-date or unscheduled Actions; only RRULE-bearing VTODOs instantiate Plans
   - we are keeping the per charter distinction as we cant use categories within google calender to denote charters and we want to be able to have multiple charters in the same calendar if we want to, so this is a good way to keep that distinction without needing to rely on the calendar semantics for it
   - cco:PlannedAct is retired as a standing type — Actions fulfill that role relationally when prescribed by a recurring Plan
     - CCO has no natural class for committed-but-not-yet-executed tasks; Action fills a genuine domain gap rather than inheriting from Plan or PlannedAct
@@ -324,7 +324,7 @@ this continues to process of making the onotlogy an extension of CCO rather than
 
 while i was pondering the linkage between actions and ics files i realized the best way to handle this problem of linkage is the introduction of a json sidecare for each charter (optional) that can be used for various purposes of adding data that we dont want to bother the humans with we might even make these hidden files to make that even more explicit
 
-it will be something like `.<charter>.json` within the same folder of the core action file so that we can link the various actions to their various counterparts like in this case, the link to the vevent that the action is either derived from or for which there was something we wanted to track
+it will be something like `.<charter>.json` within the same folder of the core action file so that we can retain machine-managed metadata such as the recurring Plan UID and occurrence key without cluttering the Action DSL
 
 this will all be captured into the domain model as just normal properties and in the graph as links but for our day to day this will allow us to keep working without cluttering the workspace or the files with the data we dont want to bother with
 ## Decision 23: Moving charters to a subfolder
@@ -347,7 +347,7 @@ As we move plans/schedules into `.ics` and keep `.actions` focused on actions, w
    - `externalScheduleId` (series identity)
    - `externalOccurrenceKey` (instance identity)
 4. ICS profile maps:
-   - `externalScheduleId <- VEVENT.UID`
+   - `externalScheduleId <- recurring VTODO.UID`
    - `externalOccurrenceKey <- RECURRENCE-ID` or canonicalized occurrence datetime
 5. Deterministic generation uses these keys for idempotent expansion (recommended UUIDv5 derivation).
 
@@ -361,8 +361,8 @@ As we move plans/schedules into `.ics` and keep `.actions` focused on actions, w
 ### Consequences
 
 - Specifications must distinguish core ontology language from ICS integration language.
-- Existing VEVENT-specific naming proposals in ontology planning should be generalized.
-- Implementations can still expose VEVENT fields in adapter layers while using neutral core fields.
+- Calendar-component-specific naming in the ontology remains generalized.
+- VTODO fields stay in the projection layer while core uses neutral identity fields.
 
 ## Decision 21: `ics` as the plan format
 
