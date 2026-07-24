@@ -1,8 +1,14 @@
 ---
 id: 019f5841-1012-7fa2-9d9d-57dec5d906c7
-objectives: [calendar-view, data-integration]
+alias: caldav-integration
+parent: platform
+objectives:
+  - calendar-view
+  - data-integration
+state: Closed
 ---
-# VTODO Bidirectional sync 
+# VTODO Bidirectional sync
+
 While the VEVENT is fine for integration, the true next-steps for us will be about building out the VTODO integration such that we can manage scheduled actions entirely from the calendar view exactly where they were always destined to be.
 
 while we got the sync mechanism down for a single column we have a few functionality and non-functional goals for this charter
@@ -88,16 +94,19 @@ two recurrence authoring models. Convenient recurring capture belongs in
 `add plan`/calendar UX, which writes the VTODO+RRULE directly and then invokes
 normal expansion into primary and upcoming Action instances.
 
-**Standalone identity is one-to-one and needs no sidecar link:**
+**Standalone identity is one-to-one and needs no charter-sidecar link.** For
+ClearHead-authored resources the canonical shape remains:
 
 ```text
 Action.id == VTODO UID == vdir filename
 ```
 
-RFC 5545 UID is text requiring global uniqueness, so a ClearHead UUID is a
-valid canonical VTODO UID. The VTODO and `.actions` line are two projections
-of the same logical Action, not separately identified entities. A sidecar
-mirror-ID map is therefore redundant and should be removed.
+Calendar clients may legally mint any globally unique text UID, not only a
+UUID. Calendar-authored standalone VTODOs therefore retain their original UID
+and derive `Action.id` deterministically with UUIDv5. The plans projection
+store remembers that UID only so a missing resource can be recreated without
+changing interoperable identity. Transport-selected filenames are preserved.
+This is projection bookkeeping, not domain or charter-sidecar identity.
 
 Recurring instances are intentionally different: the VTODO+RRULE master has
 the Plan identity, while each executable occurrence has its own deterministic
@@ -106,13 +115,19 @@ linkage records that real prescriptive relationship; it must not be confused
 with identity linkage for standalone Action mirrors.
 
 **Decided: one-time migration command** for plan files currently on disk as
-VEVENT+RRULE, converting them to VTODO+RRULE once `plan_to_event`/
-`parse_ics_file` switch. Not a permanent read-both-write-one dual-format path —
-convert once, then the old format is gone.
+VEVENT+RRULE, converting them to VTODO+RRULE. Normal workspace loading accepts
+only VTODO Plan masters; a separately named legacy parser exists solely for
+explicit import/migration. This is not a permanent read-both-write-one path.
 
-**Open, not yet decided:** whether `is_sequential`/predecessor edges get any
-iCalendar representation at all (no native analog — likely stays
-ClearHead-only, unexported).
+**Calendar-authored standalone VTODOs create root Actions** in the charter
+selected by the containing vdir directory. Resource deletion has no lifecycle
+meaning: a missing projection is recreated from the Action. Only VTODO STATUS
+changes Action state, including cancellation.
+
+**PRIORITY and CATEGORIES synchronize directly** through their standard RFC
+5545 properties. ClearHead priorities now use the same 1–9 range. Contexts map
+to category strings; predecessors, sequential behavior, Action hierarchy, and
+charter hierarchy remain ClearHead-only because RFC 5545 has no equivalent.
 
 ## Design notes (2026-07-17): sync state belongs to the plans vdir projection
 

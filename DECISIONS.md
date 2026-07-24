@@ -81,7 +81,7 @@ intra-file validity, doctor owns cross-file coherence:
   `parent:` aliases
 - **Aliases** — collisions (`name_to_alias` is last-writer-wins today)
 - **Sidecar ↔ actions** — orphaned sidecar entries; unparseable sidecar JSON;
-  `source_vevent` pointing at a VEVENT UID absent from `plans/`
+  `external_schedule_id` pointing at a recurring Plan UID absent from `plans/`
 - **Calendar** — `plans/<slug>/` directories matching no charter (load
   currently invents an implicit charter instead of reporting)
 - **Durability residue** — a `.pending` journal present (report, do not
@@ -173,61 +173,33 @@ The legitimate need behind "raw JSON":  the `@context` block is verbose and `.["
 Consumers pay a slightly heavier default payload and a longer `jq` path in exchange for a stable, semantic, single-sourced contract.
 
 ---
-## Decision 31: CalDAV Integration
-After wrestling with this guy for awhile i have a better understanding of how we are going to finally integrate properly with ical and the caldav server
+## Decision 31: Plans-vdir synchronization boundary
 
-to do this, we are simply going to expose a new flag in the standard config `plan_path` which will be the default place that all plans will be placed within
+ClearHead integrates with one configured iCalendar vdir (`plan_path`). The
+filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing,
+Git, mounted storage, or no transport may sit behind it; core and the CLI have
+no account, server, href, ETag, or vendor-property concepts.
 
-since this is a default config this will also apply to all project workspace unless otherwise overwritten with a local config
+ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters
+and standalone VTODOs project Actions. VEVENT is external calendar context,
+except for an explicit one-time migration reader for retired Plan files.
 
-this allows for clients like radicale to actually see and edit these ics files without needing to worry about an integration layer between them and that way the calendar data is owned by the calendar server
+Standalone fields synchronize independently with a three-way merge:
 
-we just need to make sure that all calendar activities ONLY read ics data because we dont want to read in things like the radicale json for properties as that is tied to the implementation of the caldav server in particular.
+- **A** — current Action value
+- **B** — last agreed value in `.clearhead/sync/plans.json`
+- **C** — current standalone VTODO value
 
-this allows two applications to sync (in this case, the calendar and clearhead) without either one knowing about the other.
+Comparing A and C independently against B respects edits from either side
+without relying on timestamps. Identical edits converge; divergent edits
+conflict. One field conflict does not block safe changes in another. The merge
+bases are local projection history, never Action fields or charter sidecars.
 
-users will be able to edit the calendar events on the calendar app of their choosing, those changes go through the caldav server and our clearhead commands will help those changes propigate to the underlying actions when necessary
-
-the implication is that the caldav server owns the whole calendar process especially the display layer but that is okay, great even because it ensure that we are not eating the complexity of calendar integration while still enabling the pieces that matter for our work
-### Syncing State
-to get this done, we are going to do another subtle point of syncing between the two.
-
-to do this, we will add a new property to the action-level properties: 
-- `scheduled_at_sync` a copy of the scheduled at date in the action file
-- `due_at_sync` same, but for due_at
-
-- A the action date
-- B the sync-copy date
-- C the ics update date
-
-
-|A state | B state | C state | result       |
-|--------|---------|---------|--------------|
-|Same    | Same    | same    | no op        |
-|changed | Same    | same    |Change C and B|
-|Same    | Same    |changed  |Change A and B|
-|changed | Same    |changed  |Conflict-merge*|
-|removed | Same    | same    |Remove C and B|
-|Same    | Same    |removed  |Remove A and B|
-|removed | Same    | changed |Conflict-merge|
-|changed | Same    | removed |Conflict-merge|
-
-\* Unless A and C moved to the *same* value: two identical edits are a clean
-convergence, not a conflict (exactly as a 3-way text merge treats them). That
-case writes no payload — it only restamps the stale B to the agreed value. So
-`changed/changed` is a conflict precisely when **A ≠ C**.
-
-This simple table facilitate a 3 way sync without actually checking when the different things are changed and handles edge cases like the sync date not tracking.
-
-More importantly, this allows the proper workflow we are trying to handle of actually respecting the decision of the user and supporting edits on EITHER side of the divide and allowing that to make it to the other side but ONLY if it was edited properly
-
-Another important point, the issue where B is changed or removed should be considered a BUG, and these actions are meant to have a full correct view and give guidance on this edge case but this should not happen normally and should be considered a bug when found (logs should reflect this)
-
-#### Merge
-
-we saw a few merge options there, now when we consider edge cases on the few cases where there is a conflict the tools should help by using some conflict semantics to let users choose what to do in these edge cases:
-- normal conflict: decide which source wins
-- one removed, one changed: decide if the removal or the change is proper and implement those changes
+Calendar-created standalone VTODOs become root Actions in the charter selected
+by their vdir directory. Missing resources are recreated and have no lifecycle
+meaning; only VTODO STATUS changes Action state. PRIORITY and CATEGORIES use
+their standard RFC 5545 properties directly. Existing resources retain unknown
+properties, alarms, original UID, and transport-selected path.
 
 ## Decision 30: Workspaces as first-class entities in new application ontology
 after pondering the work for awhile we have be working through many workspace-specific problems that have made two needs clear:
