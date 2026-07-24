@@ -181,8 +181,10 @@ Git, mounted storage, or no transport may sit behind it; core and the CLI have
 no account, server, href, ETag, or vendor-property concepts.
 
 ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters
-and standalone VTODOs project Actions. VEVENT is external calendar context,
-except for an explicit one-time migration reader for retired Plan files.
+and standalone VTODOs project Actions. VEVENT is external calendar context and
+may be consumed only by an explicit import operation that writes current VTODO
+resources. There is no legacy Plan compatibility or migration command; during
+pre-release development, existing files are fixed directly.
 
 Standalone fields synchronize independently with a three-way merge:
 
