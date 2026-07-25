@@ -224,3 +224,80 @@ already hold):
   in particular, we are working with the issue of lossy conversion and the fact that an action has MORE properties than are supported in the VTODO format
 
   therefore, we keep the action as the primary unit of abstraction UNLESS it is an RRULE-based plan and this is more of a compromise than a structure
+
+## Design notes (2026-07-24, cont.): occurrences project, they don't expand
+
+Locking the client-surface decisions above into the mechanism they imply. The
+section above said occurrences are "rendered, not filed"; this states what that
+*demolishes* and what replaces it — it is a replacement of shipped behavior, not
+an addition on top of it.
+
+**Retire `expand` materialization.** The currently shipped path —
+`expand_plans_into_actions` writing occurrence lines into `<charter>.actions` and
+`<charter>.upcoming.actions` with slot accounting (`primary_cap` / `upcoming_cap`
+/ completed-vacates-slot) — is removed for recurring plans. A materialized
+occurrence line is a *second master* that drifts from its RRULE the instant either
+side is edited; the slot accounting only ever existed to police that drift.
+Projection dissolves it: one master, occurrences always freshly rendered.
+
+Consequences:
+- `<charter>.upcoming.actions` stops existing, and `expansion_primary_instances`
+  retires with it.
+- The window is a **single per-plan instance count** — `expansion_total_instances`,
+  read as "project N occurrences of each plan." Deliberately *not* a time horizon:
+  a next-action queue wants the next standup **and** the next annual review, which
+  a fixed 14-day window would hide. The count is per-plan, so each plan surfaces
+  its own next N regardless of frequency. (Rejected the org-agenda time-window
+  framing: that fits a calendar grid, not a queue.)
+- No two-tier primary/upcoming render survives — the split only ever chose a file.
+
+**The union has exactly one address.** Projected occurrences enter the Action
+stream at the domain-load boundary (`load_domain_model`): load materialized
+actions, render plans-in-window, union into one uniform list. Query / CLI / LSP
+stay ignorant of materialized-vs-projected. The seam is "the union happens in one
+place," not "no code knows."
+
+**Deviations are net-new domain model.** `render(master + deviations, window)`
+needs deviations as input, and today `Plan` (`domain/mod.rs`) has none: no EXDATE
+set, no RECURRENCE-ID override map, and `expand_occurrences` parses raw
+DTSTART+RRULE with nothing subtracted or applied. This is the greenfield core the
+whole surface sits on; both `!1` invariants above (canonicalize the recurrence key
+before the UUIDv5; ingest a foreign roll-forward as completion) presuppose it —
+they are **build** tasks, not verify-only, because there is no deviation storage
+for them to hold against yet.
+
+**The sidecar shrinks to workspace provenance.** Removing materialization kills the
+two sidecar fields that *only* ever served it: `ActionMeta.external_schedule_id`
+(no materialized generated lines remain to re-link — a projected occurrence carries
+its plan linkage inherently, in memory) and `PlanMeta.last_expanded` (nothing
+expands). What is left — `charter.id`, `charter.created`, `ActionMeta.created` — is
+generic provenance orthogonal to calendar sync. Whether *that* residue can also
+leave the sidecar (UUIDv7 already embeds `created` for v7 ids; charter frontmatter
+already carries identity for non-action-only charters) is a separate
+workspace/provenance question, not this charter's to decide. This charter owns
+only the removal of the two calendar-serving fields.
+
+## Implementation status (2026-07-25)
+
+Anchoring the design above to what is actually built, so it doesn't read as
+purely aspirational:
+
+- **Landed and e2e-proven.** The deviation *read model* (`ICSPlan.exdates` /
+  `overrides`, parsed by grouping `RECURRENCE-ID` VTODOs + `EXDATE` onto their
+  master), `render_occurrences`, and the `From<Workspace> for DomainModel`
+  *union* (materialized ∪ projected, materialized wins by id) all exist and are
+  tested. `Workspace` carries a `Projection { now, window }`;
+  `load_domain_model_with_projection` is the deterministic entry point. A live
+  scratch workspace confirms `clearhead read actions` surfaces a recurring
+  plan's windowed occurrences with deterministic UUIDv5 ids.
+- **Blocked on the frame fix.** Deviation *matching* does not yet fire:
+  `expand_occurrences` collapses DTSTART to Local and re-emits it as a floating
+  string, dropping the UTC offset, so occurrence keys and `EXDATE` /
+  `RECURRENCE-ID` keys land in different frames (DST-drift confirmed on
+  US/Pacific: a Jan `08:00Z` master → July occurrences at `07:00Z`). This is the
+  canonicalize-the-recurrence-key invariant, and it is now the critical path —
+  `EXDATE` skips and override overlays are written and waiting on it.
+- **Known debt.** The union is assembled in two places (the `From<Workspace>`
+  lowering and the CLI's `collect_all_actions`), both via the single
+  `render_occurrences` primitive; consolidating them is part of the
+  occurrence-view "no consumer branches" work.
