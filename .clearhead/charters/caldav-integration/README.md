@@ -321,7 +321,53 @@ purely aspirational:
   master, not the standalone-VTODO channel. Occurrences aren't excluded by a
   fragile per-action flag; the loader boundary is exact. Regression-locked in
   `workspace_store.rs`.
-- **Known debt.** The union is assembled in two places (the `From<Workspace>`
-  lowering and the CLI's `collect_all_actions`), both via the single
-  `render_occurrences` primitive; consolidating them is part of the
-  occurrence-view "no consumer branches" work.
+- **Occurrence-ops complete (2026-07-25).** `reschedule` now joins `complete`/`skip`:
+  `update <occurrence> --scheduled-at` on a projected occurrence writes a
+  `RECURRENCE-ID` override with the new time (hash the immutable slot, move the
+  value) via `apply_occurrence_op`. Per the seam, a projected occurrence supports
+  *only* operations — any other field edit on one is rejected with a pointer to
+  edit the plan or a materialized action instead.
+- **Calendar-only sidecar fields stripped (2026-07-25).** With materialization
+  retired, the two fields that only ever served it are gone: `ActionMeta.external_
+  schedule_id` (a projected occurrence carries plan linkage inherently in memory
+  via `plan_id` + `external_occurrence_key`) and `PlanMeta.last_expanded` (nothing
+  expands — `PlanMeta` and the sidecar `plans` map removed entirely). The now-dead
+  `plan_sync` skip-guard and the doctor `dangling-plan-link` check went with them.
+  Retained: `charter.id/created`, `ActionMeta.created` — generic provenance, not
+  calendar sync. Snapshots/fixtures regenerated (only the removed-field lines).
+- **Foreign roll-forward ingest landed (2026-07-25).** A camp-B client (Apple
+  Reminders, etc.) completes a recurring occurrence by *advancing the master
+  `DTSTART`* with no override. `sync_master_rollforwards` (`reconcile.rs`) detects
+  this — the new `DTSTART` lands on a later point of the recurrence grid anchored
+  at the origin we hold in `PlansSyncStore` under `MASTER_DTSTART_FIELD` — and
+  translates it to canonical form via `write_master_rollforward` (`ics.rs`): reset
+  the anchor to the origin and record each passed slot as a completed
+  `RECURRENCE-ID` override. **Spec-first, per the decision:** overrides only bind
+  on the recurrence grid, so the anchor is held fixed at the origin forever;
+  completion history lives in slot-keyed **idempotent** overrides, so a client
+  that ignores overrides and re-advances churns only the anchor *value*, never the
+  history (the acknowledged, benign ping-pong residual). Handles N-period advances
+  across a sync gap (records every passed occurrence, not just the last) and
+  distinguishes an off-grid `DTSTART` as a genuine reschedule (accept, don't
+  record). Wired into `sync calendar`. **Bug fixed en route:** `parse_vtodo_actions`
+  now skips `RECURRENCE-ID` components, which were being misread as spurious new
+  standalone actions by the standalone sync.
+- **Expand materialization retired (2026-07-25).** The demolition the projection
+  model implied. Deleted: the `clearhead expand` verb + `expand_actions` (and its
+  template-instantiation glue), `expand_plans_into_actions` + `ExpandResult` +
+  `ExpansionConfig` + slot accounting, `upcoming_actions_path` and the whole
+  `.upcoming.actions` concept (archival + docs), `expansion_primary_instances`
+  config, `Plan.primary_instances`, and the `upcoming:` DESCRIPTION directive.
+  `expansion_total_instances` survives as the projection *window*; the shared
+  `templates` module survives (used by `charter`/`template`/`plan`). `discover_
+  action_files` now also skips `.upcoming.actions` so any lingering legacy file
+  can't shadow projections. Occurrences are projected on read, never filed —
+  `read` needs no prior `expand`. Snapshot regenerated (one field removed).
+- **Union consolidated (2026-07-25).** The materialized ∪ projected rule now
+  lives in exactly one function, `extend_with_projected_occurrences` (`expand.rs`),
+  called by the `From<Workspace>` lowering *and* both CLI read collectors. This
+  closed a real bug: `collect_workspace_actions` (multi-workspace listings) never
+  rendered occurrences at all, so they silently vanished there; it now unions via
+  the shared rule like every other path. Unit-locked (`extend_unions_occurrences_
+  and_materialized_wins`) and e2e-confirmed that the TTY tree and non-TTY flat
+  paths agree.
