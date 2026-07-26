@@ -290,13 +290,37 @@ purely aspirational:
   `load_domain_model_with_projection` is the deterministic entry point. A live
   scratch workspace confirms `clearhead read actions` surfaces a recurring
   plan's windowed occurrences with deterministic UUIDv5 ids.
-- **Blocked on the frame fix.** Deviation *matching* does not yet fire:
-  `expand_occurrences` collapses DTSTART to Local and re-emits it as a floating
-  string, dropping the UTC offset, so occurrence keys and `EXDATE` /
-  `RECURRENCE-ID` keys land in different frames (DST-drift confirmed on
-  US/Pacific: a Jan `08:00Z` master → July occurrences at `07:00Z`). This is the
-  canonicalize-the-recurrence-key invariant, and it is now the critical path —
-  `EXDATE` skips and override overlays are written and waiting on it.
+- **Frame fix landed (2026-07-25).** Deviation *matching* now fires.
+  `expand_occurrences` anchors expansion in UTC (formats DTSTART as
+  `…%SZ`) instead of re-emitting a zoneless Local wall-clock string, so
+  occurrence keys and `EXDATE` / `RECURRENCE-ID` keys share one absolute-instant
+  frame and agree. Regression-locked by
+  `expand::tests::exdate_across_dst_boundary_skips_the_occurrence` (a winter
+  `08:00Z` master with a post-DST-boundary EXDATE — proven to fail on the old
+  code and pass now under `TZ=America/Los_Angeles`). This is Option A of the
+  frame decision: fully lossless for every DTSTART form ClearHead authors
+  (always UTC) and for UTC/floating foreign masters. **Deferred:** a foreign
+  *TZID-anchored* series across a DST boundary is the one shape UTC expansion
+  does not preserve — it needs the original frame carried on `Plan`
+  (value-type/TZID), logged as the next interop rung, not this fix.
+- **Deviation write model landed (2026-07-25).** The occurrence handle
+  (`plan_id` + `external_occurrence_key`) is now stamped on every rendered
+  occurrence. `write_occurrence_deviation` (`ics.rs`) writes the deviation into
+  the master — `Skip`→dedup `EXDATE`, `Complete`→completed `RECURRENCE-ID`
+  override, `Reschedule`→override with new times — preserving all other
+  components/properties, atomically; `apply_occurrence_op` (`plans.rs`) resolves
+  `plan_id`→master file. The CLI routes `complete`/`cancel` to this write path
+  when the query isn't a materialized line (materialized always wins);
+  `cancel`→`Skip`, `complete`→`Complete`, no new verb surface. Proven end to end
+  through the real binary (complete → `RECURRENCE-ID` override → re-render `[x]`;
+  cancel → `EXDATE` → slot drops, window pulls the next). **Remaining:**
+  `reschedule` (needs datetime args).
+- **Sync-leak sealed (2026-07-25).** `sync_calendar` now loads a window-0
+  (`Projection::without_occurrences`) model, so projected occurrences are
+  structurally absent from `plan_sync` — they reconcile via deviations on the
+  master, not the standalone-VTODO channel. Occurrences aren't excluded by a
+  fragile per-action flag; the loader boundary is exact. Regression-locked in
+  `workspace_store.rs`.
 - **Known debt.** The union is assembled in two places (the `From<Workspace>`
   lowering and the CLI's `collect_all_actions`), both via the single
   `render_occurrences` primitive; consolidating them is part of the
