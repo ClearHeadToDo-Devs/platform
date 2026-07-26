@@ -371,3 +371,155 @@ purely aspirational:
   the shared rule like every other path. Unit-locked (`extend_unions_occurrences_
   and_materialized_wins`) and e2e-confirmed that the TTY tree and non-TTY flat
   paths agree.
+
+## Design notes (2026-07-26): templated recurrence is cron, not calendar
+
+Resolves the last open client-surface question — what a *multi-step* recurring
+plan (the weekly review: regular **and** stateful) does — and reverses a
+near-decision to delete templated recurrence outright. It survives, but on a
+different mechanism than atomic recurrence.
+
+**The complexity was the straddle.** Every hard question — when to spawn, how to
+dedup, drift, "what does the agenda point at," reconcile-a-subtree-into-a-
+deviation — came from making one occurrence *both* a projection (rendered on the
+fly, stateless) and materialized (a real subtree with per-instance state).
+Nothing about recurrence forces that straddle; removing it dissolves the
+complexity.
+
+**Two disjoint lanes, selected by whether an occurrence accumulates state.**
+- **Stateless occurrence → project.** A bare recurring plan (no template) is
+  fully described by `master + slot`; its only state is done/skip/move. It
+  renders on the fly, deviation-backed. Unchanged from the atomic model above.
+- **Stateful occurrence → stamp.** A templated recurring plan (`template:`
+  directive) spawns a checklist you *work over its life*. That per-instance
+  state has no home in a projection, so the occurrence is made real from birth
+  and never projected.
+
+The `template:` directive is the one-bit switch. A plan is in exactly one lane;
+it never straddles.
+
+**Stamping is cron, not calendar.** A calendar *projects* future occurrences as
+live, reconcilable objects — that is the expensive part. Cron fires, produces an
+artifact, records "last run," and forgets. A templated plan is a cron job for
+actions: on its schedule it instantiates the template into `.actions` as a real
+subtree, **dead on arrival** — it tracks nothing thereafter. No window to
+maintain, no cap, no vacate-on-complete, no reconcile. (That live-window
+maintenance is exactly what made the retired `expand` complex; stamping has none
+of it.)
+
+**The template replaces the occurrence wholesale.** A template is a *proper
+action file*, and action-file hierarchy has no parentless children — children
+require a root. So stamping does **not** synthesize a parent from the VTODO
+`SUMMARY` and graft template children beneath it. The occurrence slot is
+*replaced by* the instantiated template tree, whose own root carries the
+deterministic occurrence UUIDv5 (`hash(plan UID, slot)`); descendants remap to
+fresh ids under it. Consequently a templated master's `SUMMARY` is only the
+**generator's** label (what a calendar client shows for the schedule); the
+stamped instance's title, structure, and identity all come from the template.
+
+**Reuses existing machinery; adds one bounded function.**
+- Stamp = `instantiate_template` (already remaps ids, preserves hierarchy),
+  passed the occurrence UUIDv5 as the *root* id instead of a random `now_v7`,
+  with no parent override (it is a root).
+- Idempotency = the deterministic root id + the existing "materialized wins by
+  id" union: re-stamping a slot whose action already exists is a no-op. The
+  workspace *is* the watermark — no stored slot-accounting resurrected.
+- Skip = `EXDATE` on the master (shared with atomic recurrence); the stamp loop
+  skips EXDATE'd slots.
+- Freeze-on-edit (editing the template never mutates an in-progress instance),
+  per-instance child state, and ics flattening are all free — a stamped instance
+  is just an ordinary action.
+
+The only net-new code is an idempotent generator: *for each templated plan, for
+each due, non-EXDATE'd slot with no existing action, stamp the template.*
+
+**Stamping is a write, so it lives on the write path** (`sync calendar` / a
+`tick` verb), never on the pure `From<Workspace>` load/projection. Reads stay
+pure and see whatever has been stamped — the same read/write discipline sync
+already holds.
+
+**Worked example — the weekly review.** Plan: `VTODO + RRULE(WEEKLY;BYDAY=SU) +
+template: weekly-review`. Sunday: the generator finds the due slot has no action
+with `id = hash(uid, slot)` → stamps the template subtree, root id = that
+occurrence UUID. All week it is an ordinary materialized subtree — tick children
+as text. Complete it → normal `[x]`, archives normally. Next Sunday is a new slot
+id → a fresh empty checklist stamps; last week's completed one rests in the
+archive. Vacation week → `EXDATE` that slot. No window, no reconcile, no straddle
+at any point.
+
+**Deferred policy edges** (knobs, not architecture): a catch-up run after a long
+gap sees several due slots — cap how many it will stamp so it can't flood. Slot
+computation uses the UTC anchor established by the 2026-07-25 frame fix.
+
+## Design notes (2026-07-26, cont.): plans are facts; completions round-trip; deletion is allowed
+
+A design conversation over the templated lane surfaced the ontology underneath all
+of this and settled what the "cron, not calendar" note above left open or drew too
+starkly.
+
+**The ontology: continuant vs. occurrent.** Actions and charters are *continuants* —
+stateful entities that persist by *changing* (NotStarted→…→Completed→archived/
+deleted); their truth is their current state. Occurrences and their completions are
+*occurrents* — temporal facts: they happened, and the record is fixed once made.
+Deleting a completed occurrence deletes *meaning*; the history of completions is a
+core interface, not scrapbooking. Exact boundary: the plan **master/rule** (the
+RRULE) is itself a mutable continuant — you retire it, change its cadence — while the
+layer below it (the occurrences and completions it throws off) is factual. The
+deviation grid is an **append-only event log hanging off a mutable rule.**
+
+**Templated completion is calendar-*managed*, and round-trips (amends the note
+above).** The prior section's "dead on arrival — complete it → normal `[x]`, nothing
+goes back" is too dead. Full interior fidelity genuinely can't round-trip — a
+five-child checklist is not one VTODO `STATUS` — but the *rollup bit* can and should.
+The stamped root's id already *is* the occurrence key (`hash(plan UID, slot)`), so
+completing the root writes a completed `RECURRENCE-ID` override on the master through
+the same `write_occurrence_deviation` path the atomic lane uses. The rich interior
+stays local in `.actions`; "this slot is done" reaches the calendar. Stamped
+instances do **not** also flatten to standalone VTODOs — that would hand a foreign
+client the master's RRULE occurrence *and* the stamped todos on one slot (double
+vision). The vdir stays one master + its overrides, exactly like the atomic lane.
+
+**Graft, not wholesale replace.** The occurrence root is synthesized from the master
+VTODO the same way an atomic occurrence's action is — `SUMMARY`→title,
+`CATEGORIES`→contexts, `PRIORITY`→priority, id = occurrence UUIDv5 — and the template
+supplies only the *step forest*, grafted beneath it via the (dead-since-`expand`)
+`parent_override` in `instantiate_template`. So `SUMMARY` means one thing across both
+lanes (an earlier draft made it a "generator label" for templated plans only — a
+wart), and there is **no parentless-children invariant to relax**: a step-only
+template is already a legal forest of roots, not rootless children. Atomic occurrence
+= synthesized root, no template; templated occurrence = the same root + grafted
+steps. `template:` is the one-bit switch.
+
+**The occurrence→plan linkage is sync machinery → the sync store.** Writing the
+completion deviation needs the immutable slot key, unrecoverable from the hash id
+(non-invertible) or from `scheduled_at` (mutable once rescheduled). So it is stamped
+explicitly — `(plan_id, slot)` into `PlansSyncStore` at stamp time, alongside
+`MASTER_DTSTART_FIELD`/`UID_FIELD` (the store already holds non-merge-base sync
+machinery) — and consumed/cleared when the deviation lands. **Not** a DESCRIPTION
+directive (`description` is a bidirectionally-synced field, and the directive would
+persist permanently into the archive) and **not** new `.actions` DSL. It is an
+ephemeral live-path *cache*, reconstructible, so gitignoring it loses nothing
+durable. The occurrence-id hash stays a *join key*, never a node in the ontology.
+
+**Snapshot archived lineage; don't re-derive it.** A completion is an immutable fact
+and must be self-contained. So the semantic edge — *this instance realizes plan-M at
+temporal position T*, plus a human label — is **snapshotted onto the archived
+instance at crystallization** (completion/archival), never reverse-derived from the
+current RRULE, which may since have been edited or deleted (the invoice-snapshots-
+price-at-sale principle). Layer-sensitive: while an occurrence is *live* its lineage
+is derived from the current rule (the sync-store cache stands); the snapshot happens
+only at the phase transition. Archival = crystallization of a stateful entity into a
+durable fact; `archive/` is the fact-store; graphd projects the coherent history over
+both live entities and archived facts.
+
+**Deletion is allowed — there is no immutability invariant.** Three distinct verbs:
+`close`/`cancel` are *state transitions* (the fact persists, its status changes);
+`delete` is *retraction from history* (erase the thing). The user declares intent via
+the verb; the system does not infer human-vs-machine provenance. "Facts are
+immutable" is unenforceable across hand-editable plaintext + foreign CalDAV clients
+(which roll forward and delete at will) + eventually-consistent sync — declaring it
+would be a lie the code leans on. It is safe to allow because graphd degrades
+gracefully over a tolerant world (dangling refs, missing nodes, partial reads): a
+deleted fact is a hole a projection absorbs, not a corruption. History-preserving
+stays the **default by convention** (`close`/`cancel` are the everyday path);
+`delete` is the deliberate exception.
