@@ -614,3 +614,44 @@ token never reached simply never existed as an occurrence. Expect, don't fix, on
 consequence: the materialized file (the one active token, possibly overdue) and
 the projected calendar (the RRULE's true future dates) diverge — they answer "what
 do I do now" vs "when does this fire."
+
+## Implementation status (2026-07-26): the single-token materialization lane
+
+Building the shift the notes above decided. Landed and **e2e-proven via the real
+binary** (`sync calendar` stamps a token; `complete action` writes the deviation
+to the master and advances). Still additive — the load-time projection union
+remains until the unwind, so a read currently shows the token *and* the projected
+window (the transitional double-vision the unwind removes).
+
+- **Slot engine (`expand.rs`).** `next_active_slot(plan, floor, now)` computes the
+  single token's slot: `floor = None` → first occurrence `>= now` (initial /
+  upcoming); `floor = Some(resolved)` → first `> resolved` **and** `>= now`
+  (jump-forward, so an on-time or late resolve advances instead of replaying missed
+  slots). `render_occurrence` was extracted as the one occurrence field-mapping, so
+  the projection and the stamper agree.
+- **Store linkage (`sync_store.rs`).** `OCCURRENCE_PLAN_FIELD` /
+  `OCCURRENCE_SLOT_FIELD` keyed by the occurrence id, with `stamp_occurrence_link`
+  / `occurrence_link` / `occurrence_links` / `clear_occurrence_link`. This is the
+  durable tie a materialized line keeps to its master — confirmed that
+  `plan_id`/`external_occurrence_key` survive *neither* the DSL nor the sidecar, so
+  the link must live here.
+- **Ensure-active stamper (`reconcile.rs`, inside `apply_sync`).**
+  `ensure_active_occurrences` stamps one live token per recurring plan via the
+  shared `stage_plan_token`, riding `apply_sync`'s lock + `PendingBatch`.
+  Idempotent while a token is live; self-heals a token resolved outside the hook by
+  re-stamping on the next sync.
+- **Completion hook (`reconcile.rs` + CLI `commands/action.rs`).**
+  `resolve_materialized_occurrence` is the calendar round-trip: writes the completed
+  `RECURRENCE-ID` (or `EXDATE` for skip) deviation to the master via
+  `apply_occurrence_op`, clears the link, and jump-forward-stamps the next token,
+  atomic with the store. The CLI's `complete`/`cancel` call it *after* the ordinary
+  close, so an occurrence line's completion becomes **close + deviation + advance**
+  — the Finding-1 inversion, realized. `commit_actions_and_store` was extracted as
+  the shared `.actions`-plus-store atomic tail (used by both `apply_sync` and the
+  hook).
+
+**Remaining:** graft the template step-forest for *templated* plans (only atomic
+childless-root stamping landed); snapshot plan-lineage onto the archived instance at
+completion; and **the unwind** — remove `extend_with_projected_occurrences` from the
+load path (ends the double-vision) and re-home projection to future/past query
+views. Uncommitted across `clearhead-core` and `clearhead-cli` at session end.
