@@ -523,3 +523,94 @@ gracefully over a tolerant world (dangling refs, missing nodes, partial reads): 
 deleted fact is a hole a projection absorbs, not a corruption. History-preserving
 stays the **default by convention** (`close`/`cancel` are the everyday path);
 `delete` is the deliberate exception.
+
+## Design notes (2026-07-26, cont. 2): materialize the present, project the future — the file is the live view
+
+The templated lane forced a generator that *stamps a real subtree on the write
+path*. That reopened the question the whole client-surface arc had answered the
+other way: if we stamp templated occurrences to disk, why *project* atomic ones?
+The answer **reverses** the 2026-07-24 decision ("occurrences are rendered, not
+filed") and **collapses the two lanes** of the note above into one. The on-disk
+`.actions` file being both the truth and the interface is a core feature, not an
+ergonomic to trade away; projection-in-the-load-path quietly traded it away.
+
+**Tense is ontological status.** The continuant/occurrent split maps onto time,
+and that mapping decides where each occurrence lives:
+- **Present** — the current due occurrence is the only *actionable, stateful*
+  instance (a live continuant). It **materializes**: a real action on disk,
+  identical to a dated action. One per plan, because only one instance is "now."
+- **Past** — completed occurrences are *facts*. They crystallize into `archive/`
+  on completion (the durable history of the facts note above). Surfaced as
+  **analytics**.
+- **Future** — not yet a fact, not yet actionable (you cannot do next week's
+  standup today). It is *potential*, which is exactly a **projection** over the
+  RRULE. It lives in a **calendar view** / the graph, for planning — never as a
+  materialized action.
+
+So "why not stamp normal VTODOs too" resolves to: you do — you stamp *the
+present*. And "why keep projection" resolves to: for *the future*, where it was
+always the right tool. The 2026-07-24 mistake was projecting into the *present*
+(the load-time action-list union); that is what broke the founding ergonomic.
+Move projection to the tense it belongs to and the seam dissolves.
+
+**The guardrail that makes it safe is retained: never materialize the future.**
+That was `expand`'s sin — a window of future file-lines drifting from the RRULE,
+policed by slot accounting. We materialize only the present due occurrence (one
+per plan) and generate the next *on completion*, reading the RRULE fresh at that
+moment. No stale future exists to drift, so none of the retired slot-accounting
+returns.
+
+**One lane, not two.** The 2026-07-26 "two disjoint lanes (project atomic / stamp
+templated)" collapses: both **stamp the present**. Atomic = a synthesized
+childless root; templated = the same root + the grafted template step-forest.
+`template:` is the only difference, and it only *adds children*. Projection could
+never host the stateful lane (per-instance child state has no home in
+`render(master, window)`); materialization hosts both. So the unifiable mechanism
+is materialization, and projection is demoted from a core data-model piece to a
+query concern.
+
+**Projection is re-homed, and constrained by one hard rule.** It survives for the
+future (calendar) and the past (analytics), query-only. The rule: **projection
+must never feed an index-shape query** — one whose results resolve to
+`file:line:col` to jump to and edit. A projected occurrence has no line; if it
+leaks into such a query the qflist fills with entries that can't be navigated to
+or saved back — precisely what forced the virtual-line gymnastics. Because the
+`.actions` file stays all-materialized, every actionable entry is a real,
+jumpable, editable line and the **qflist stays a first-class editing surface.**
+Projection is fine behind analytic/planning queries; it is banned from the ones
+the editor treats as an index.
+
+**The retained cost: the tick.** The present occurrence exists on disk only after
+the write-path generator runs — honest cron semantics; a cold `read` will not
+conjure it. This is the exact machinery the stamping lane already needs, so it is
+built **once** and both former lanes share it. Pure-over-disk reads return (no
+projection at load); "is the present occurrence stamped yet" rides
+`sync calendar` / a `tick` verb, as the atomic write path already does.
+
+**Code consequence — a surgical unwind, not a rewrite.**
+`extend_with_projected_occurrences` leaves the load path;
+`load_domain_model_with_projection` stops unioning occurrences into the action
+list; query / CLI / LSP see only materialized actions (the seam disappears with
+the thing that needed it). The recurrence engine — `expand_occurrences`, the
+deviation read/write model, the frame fix — **survives**; its output now feeds
+(a) the write-path stamper and (b) the future calendar projection, instead of a
+load-time union. The nvim virtual-line/extmark surfacing is obviated for the
+present (occurrences are real lines); any future-occurrence rendering is a
+read-only calendar concern, not buffer text.
+
+**Advancement is a single token, completion-driven — the RRULE is a cadence, not
+a hard schedule.** A recurring plan has at most **one** active occurrence. It
+never advances by the clock: an overdue active occurrence just stays overdue (no
+stacking of missed cycles). It advances only when *resolved* — completed or
+skipped — and eagerly: resolving the active occurrence immediately stamps the next
+slot = the first RRULE slot both *after the resolved one* **and** *>= now*. That
+last clause is **jump-forward**: complete a long-overdue occurrence and you land
+on the next *upcoming* slot, not the next historical one; the intervening missed
+slots are *never-weres*, not recorded skips. This is deliberate product values — a
+personal tool for choosing what to do next without guilt, not an audit trail that
+punishes a skipped week by making you clear a backlog. History stays honest: an
+occurrence that was stamped and then skipped leaves an `EXDATE` fact; a period the
+token never reached simply never existed as an occurrence. Expect, don't fix, one
+consequence: the materialized file (the one active token, possibly overdue) and
+the projected calendar (the RRULE's true future dates) diverge — they answer "what
+do I do now" vs "when does this fire."
