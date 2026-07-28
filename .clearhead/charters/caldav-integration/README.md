@@ -655,3 +655,79 @@ childless-root stamping landed); snapshot plan-lineage onto the archived instanc
 completion; and **the unwind** — remove `extend_with_projected_occurrences` from the
 load path (ends the double-vision) and re-home projection to future/past query
 views. Uncommitted across `clearhead-core` and `clearhead-cli` at session end.
+
+## Implementation status (2026-07-28): graft, seal, the unwind, and graphd re-coherence
+
+Four threads landed this session, closing most of the "Remaining" above. All
+**e2e-proven via the real binaries** and green across the three crates (290 core /
+156 cli / 97 graphd). Committed across `clearhead-core` + `clearhead-cli` mid-session;
+the `clearhead-graphd` batch was left uncommitted for review.
+
+- **Template step-forest graft landed.** The templated lane's missing piece.
+  `graft_template_steps` (`reconcile.rs`), called inside `stage_plan_token`, resolves
+  a plan's `template:` and instantiates it with the occurrence root as
+  `parent_override` — so a templated plan stamps *the same synthesized root* as the
+  atomic lane plus the grafted step-forest beneath it. A named-but-missing template
+  degrades to the childless root (non-fatal, matches atomic). `data_root` threaded
+  through `ensure_active_occurrences`. Proven: `sync calendar` on a `template:` VTODO
+  stamps the root + steps as a real subtree, idempotent on re-sync. The stamping lane
+  (atomic + templated) is now complete.
+
+- **Materialized-token sync seal.** The graft surfaced (and widened) a real leak the
+  single-token lane had: a materialized occurrence token — and, with the graft, its
+  child steps — pushed to the vdir as **standalone VTODOs** on the *second* sync (the
+  "double vision" the vdir must never carry). The 2026-07-25 window-0 seal only ever
+  covered *projected* occurrences; a materialized token is a real line a window-0 load
+  keeps. Fix: `plan_sync` now excludes occurrence tokens **and their grafted subtrees**
+  (`occurrence_subtree_ids`: token roots from the store's occurrence links, descendants
+  by `parent_id`). Proven: two consecutive syncs stay idempotent, vdir holds only the
+  master `.ics`.
+
+- **The unwind landed — reads are materialized-only.** Removed
+  `extend_with_projected_occurrences` (the union rule) from `From<Workspace>` and both
+  CLI read collectors, **and** the plumbing that existed only to feed it: the
+  `Projection` struct, `Workspace.projection`, `load_domain_model_with_projection`,
+  `Projection::without_occurrences`, and the CLI's `load_model_materialized` (folded
+  into `load_model`). `load_domain_model` is materialized-only; a recurring plan now
+  surfaces **one** materialized present token on read (no projected window) — a cold
+  read conjures nothing until the write-path tick stamps it. The recurrence engine
+  (`render_occurrences`, `render_occurrence`, `next_active_slot`, deviation read/write,
+  the frame fix) **survives** for the stamper and the future calendar view. Two
+  `workspace_store.rs` union tests retired; the occurrence-ops tests now render via the
+  engine directly (`render_projection` helper). The 2026-07-24 → 2026-07-26 reversal
+  is now fully realized in code.
+
+- **graphd re-cohered with the materialized model.** graphd is a **pure `DomainModel`
+  projector** (JSON in → RDF / JSON-LD out; no workspace, sync-store, or `archive/`
+  access of its own). *Getting it working:* removed the dead per-action
+  `external_schedule_id` projection (RDF `insert.rs` + JSON-LD `jsonld.rs`) — the field
+  was stripped from core on 2026-07-25, leaving graphd uncompilable — and cleaned the
+  stale term from the v4 `actions.schema` / `context` / example. Kept
+  `hasExternalScheduleId` on the **Plan** node (the VTODO UID, still valid).
+  *Taking advantage:* graphd already projects `plan_id → cco:prescribed_by` and
+  `external_occurrence_key`, but post-unwind a materialized token reaches it with
+  `plan_id = None` (the link lives only in the sync store). So **core's loader now
+  hydrates it** — `hydrate_occurrence_links` (`store/load.rs`) restamps
+  `plan_id` + `external_occurrence_key` onto materialized tokens from the plans sync
+  store (best-effort, non-fatal on a missing/mismatched store). This is the README's
+  *live* lineage derivation ("while an occurrence is live its lineage is derived from
+  the current rule — the sync-store cache stands"), and it lights up graphd's
+  prescription edge with **zero new graphd code**. Every model consumer (query, CLI,
+  LSP, graphd) benefits. Proven end-to-end through the real graphd binary: a stamped
+  token — a plain `.actions` line with no `plan_id` in the DSL — queries back as
+  `token → cco:prescribed_by → plan` with its occurrence key.
+
+**Remaining (for the next agent):**
+- **Snapshot plan-lineage onto the archived instance at completion** — the *archived*
+  half of lineage, the counterpart to the live hydration above. Snapshot the semantic
+  edge (realizes plan-M at position T + a human label) at crystallization; do not
+  reverse-derive from the possibly-since-edited RRULE. End state: graphd projects
+  coherent history over live (hydrated) + archived (snapshotted) facts.
+- **Re-home projection to future (calendar) / past (analytics)** — the surviving engine
+  feeds read-only views; the hard rule holds (projection must never feed an
+  index-shape query).
+- **The `delete` verb**, distinct from close/cancel (likely a core lifecycle concern,
+  not caldav-specific).
+- **Minor, noted in passing:** the RDF path emits a Plan's `external_id`
+  (`hasExternalScheduleId`) but the JSON-LD path does not — a pre-existing
+  RDF/JSON-LD asymmetry, not addressed here.
