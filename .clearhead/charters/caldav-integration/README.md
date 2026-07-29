@@ -731,3 +731,73 @@ the `clearhead-graphd` batch was left uncommitted for review.
 - **Minor, noted in passing:** the RDF path emits a Plan's `external_id`
   (`hasExternalScheduleId`) but the JSON-LD path does not — a pre-existing
   RDF/JSON-LD asymmetry, not addressed here.
+
+## Design notes (2026-07-28): archival crystallizes — flat UUID facts, structure in the file
+
+The charter's final section. It settles what happens to a charter's artifacts
+when it closes, and reframes `archive/` from a relocation target into the
+**fact-store** the ontology (2026-07-26) has been pointing at: `archive/` is
+where continuants crystallize into durable occurrents. That reframing changes
+archival's *mechanism*.
+
+**The reframing: archival is a phase transition, not a move.** A live charter is
+a continuant — path-structured, human-navigated, mutable, addressed by a human
+name. A closed charter is a *fact* — self-contained, content-structured,
+immutable, addressed by identity. Archival is the crystallization between them,
+so the archived form is optimized for the fact-store's consumer (graphd
+projecting history over live + archived facts; analytics), not for a human who no
+longer edits it. This is *permission* to make the archive an append-only store of
+immutable data instead of a live place where humans and tools are expected to be
+living.
+
+**The read side is currently free.** Nothing reads `archive/` by filename —
+discovery actively excludes the region, and there is no archive reader anywhere
+in `store/` (the "reference resolution can look into archive/" the earlier
+archive charter promised was never built). The archive is *write-only* today. So
+changing the on-disk naming breaks nothing; we are shaping the substrate ahead of
+its reader, deliberately.
+
+**Decision — flat, UUID-stemmed, self-contained.**
+- Every archived charter's quartet — `<uuid>.md`, `<uuid>.actions`,
+  `<uuid>.completed.actions`, `.<uuid>.json` sidecar — shares the charter's
+  **UUID as stem**, dropped flat into `archive/`. The UUID is the only honest key
+  for an immutable fact: names collide over time and are mutable; keying a fact by
+  a name is a category error. Flat UUID stems are also what finally makes
+  flattening *safe* — two charters' `next.actions` collided in a flat dir before
+  (why the old code kept subdirs); distinct UUIDs disambiguate.
+- **Structure lives in content, not path.** Charter hierarchy reconstructs from
+  `parent:` in frontmatter, never from directory nesting. The archive is a forest
+  whose parent pointers may aim into the live space (a child archived while its
+  parent stays active) — correct and expected; it was never going to be a closed
+  tree.
+- **Supporting files carry the owner:** `<charter-uuid>.inventory.md` — flat,
+  owned, keeping a no-UUID note tied to its charter.
+
+**Decision — normalize outbound alias refs to UUID at archive time.** This is the
+shift that *ends* archival's "verbatim move" identity. If we UUID-name the file
+for immutability but leave `parent: <alias>` in the frontmatter, the *structural
+edge* still rides a mutable, collision-prone name — the same category error one
+level down. So at archival, resolve every outbound alias reference against the
+live workspace and rewrite it as a UUID. `parent:` is the obvious instance;
+`objectives:` is the same shape (a charter points at objective files by alias).
+Handle the class, not the case. This is the invoice-snapshots-the-price-at-sale
+principle applied to a charter's edges: the archived node records who it pointed
+at *at crystallization*, immune to later alias churn.
+
+**What does NOT change: still plaintext.** Normalization rewrites *field values
+inside* the `.actions`/`.md` plaintext; it is not a format change. The 2026-07-17
+"no Turtle, no JSON-LD on archive; RDF regenerates on read" decision holds
+untouched. The word that moves is *verbatim*, not *plaintext* —
+`archive_charter.rs` goes from a byte-faithful relocator to a crystallization
+pass (read → normalize → write).
+
+**Scope guard.** "Better for analytics" is bought by **self-containment** —
+rename + ref-normalization — full stop. It is *not* license to denormalize
+fields, flatten hierarchy into rows, or add analytics-shaped structure to
+archived files. The analytics consumer does its own shaping over clean,
+self-contained nodes; the archived file stays a faithful `.actions`/`.md`. Hold
+that line or this becomes a far larger project.
+
+**Explicitly out of scope.** The existing name-addressed archive on disk is inert
+(nothing reads it), so it is *not* migrated as part of this — a cosmetic one-time
+rename script is trivial, separable, and deferred.
