@@ -6,6 +6,43 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 35: Source Trust Is a Capability
+
+Decision 6 permits Tree-sitter to recover a useful syntax tree from a live,
+partially-written buffer. That recovery is for diagnostics and editing support;
+it is not proof that fields, hierarchy, or UUIDs remain attached to the action
+the author intended. A real incomplete `[[link` demonstrated the distinction:
+generic recovery crossed into the next action and attached its UUID to the
+preceding action. Formatting the recovered `ActionList` then destroyed history.
+
+Core therefore exposes two capabilities. `ParsedDocument` is recoverable input:
+the linter and LSP may inspect it, report every parser issue, and offer surgical
+code actions. `TrustedDocument` is obtainable only when no `ERROR`, `MISSING`,
+or named recovery issue exists. Any operation that rewrites existing source or
+lowers it into semantic workspace state must require the trusted capability.
+Recovered action files are quarantined from the domain model rather than
+risking false identity or relationships; their diagnostics remain visible.
+
+The formatter does not depend on lint policy. Parser integrity issues are shared
+facts: the linter explains them, while the formatter only accepts/refuses the
+capability. Semantic lints that cannot cause source loss do not block formatting.
+Formatting stdout is still a rewrite boundary because users can pipe it over a
+file. LSP formatting returns no edit for untrusted source. Serialization of
+new, already-typed domain values remains valid without a source capability.
+
+The governing rule is: **parse broadly, interpret cautiously, rewrite only with
+proof**. Grammar-specific recovery and code actions can improve over time
+without weakening this boundary.
+
+For wiki links, keep valid `link` nodes in the grammar because Tree-sitter
+highlight queries use their label/URL children for concealment. Recovery is
+made structural rather than line-based: link content may span whitespace and
+newlines, but an unescaped `[` is a synchronization point. A missing `]]` then
+produces a bounded Tree-sitter `MISSING` token before the next `[state]` action,
+so the next action and UUID remain independently attached. The LSP offers a
+surgical “Close incomplete link” insertion at that exact missing-token range;
+it still returns no formatting edit until the repair lands.
+
 ## Adding Optional Charter UUID to Actions file 
 
 After wrestling with the issue for a long time ive decided the best thing to do about dangling references is allow for an optional frontmatter field of some kind that will allow action files to represent a parent thing at the start or end of the file.
@@ -42,7 +79,9 @@ Extract **`read_workspace`**: a pure, non-mutating, fault-tolerant reader that
 never refuses the workspace. Per-file failures — unparseable `.actions`, corrupt
 sidecar JSON, syntax errors dropping actions — become **findings** (plain data:
 code, severity, path, message, mirroring `LintDiagnostic`) returned alongside
-whatever loaded. Then:
+whatever loaded with clean parser integrity. Decision 35 later tightened this
+boundary: a file requiring parser recovery remains available for diagnostics
+but is quarantined from semantic workspace state. Then:
 
 - `load_workspace` = `recover_pending` + `read_workspace` + surface the
   findings as warnings. Behavior for existing callers is unchanged.
