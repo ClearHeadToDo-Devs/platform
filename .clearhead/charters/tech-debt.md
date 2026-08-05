@@ -68,3 +68,48 @@ stale `build.rs` still generates an unused `mybin.1` from a dummy Clap command,
 forcing duplicate build-only `clap` and `clap_mangen` dependencies. That cleanup
 belongs under the existing dependency-audit action rather than this complexity
 work.
+
+## Dependency ownership review — 2026-08-05
+
+A dependency is a capability and obligation imposed on every downstream
+computer, not merely a line in a manifest. The audit therefore asks which layer
+owns each capability, whether it is needed in normal operation or only by
+maintainers/tests, and which transitive code that choice forces on consumers.
+
+### Findings and changes
+
+- **Core:** `cargo machete` found no unused direct dependency. The apparent
+  `tempfile` candidate is production-owned by the atomic durability writer, not
+  test scaffolding. Calendar, configuration, parser, formatting, telemetry, and
+  persistence dependencies all have production call sites consistent with
+  Core's adopted boundary.
+- **CLI:** neither the CLI nor graphd directly depends on Tokio. The stale
+  `build.rs` generated an unused `mybin.1`; it and its duplicate build-only Clap
+  dependencies were removed. The real manpage skeleton generator is maintainer
+  tooling, so it moved from an automatically installed binary to an example and
+  `clap_mangen` moved from normal to dev dependencies. End-user installations
+  now build and install only the `clearhead` binary.
+- **graphd:** graphd uses only Oxigraph's in-memory `Store::new`, but Oxigraph's
+  default feature compiled RocksDB, bindgen, Clang discovery, and a native C++
+  build. Disabling that default removed RocksDB and 11 other lockfile package
+  entries. Direct `serde` and the duplicate dev-only `chrono` declaration were
+  also unnecessary and removed.
+- **LSP:** the LSP is the correct owner of an async runtime, but Tokio's `full`
+  feature falsely claimed network, process, signal, filesystem, timer, and
+  parking-lot capabilities. Restricting it to stdio, macros, multithreaded task
+  execution, and synchronization removed `mio`, `parking_lot`,
+  `signal-hook-registry`, and `socket2` from its lockfile.
+- **Client Chrono use:** CLI, graphd, and LSP use Chrono values but do not
+  serialize their own date types. Their direct dependencies no longer request
+  Chrono's Serde feature; Core remains its legitimate owner for persisted domain
+  data.
+
+### Remaining boundary
+
+Core's canonical formatter is the one unresolved dependency seam. Topiary is
+used only by the formatting adapter, but brings Tokio's runtime and macro crates
+through Core into every consumer. CLI and LSP need formatting; read-only graphd
+does not. This is now tracked as an explicit capability-boundary action rather
+than solved by casually moving code or disabling a required dependency. The
+end state must let graphd build without Topiary or Tokio while preserving one
+canonical formatter for clients that opt into it.
