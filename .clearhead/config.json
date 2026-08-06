@@ -3,8 +3,11 @@
   "additional_workspaces": [
     "../clearhead-core",
     "../clearhead-cli",
+    "../clearhead-graphd",
+    "../clearhead-lsp",
     "../clearhead.nvim",
     "../ontology",
-    "../specifications"
+    "../specifications",
+    "../tree-sitter-actions"
   ]
 }
