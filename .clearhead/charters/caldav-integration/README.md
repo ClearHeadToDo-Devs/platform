@@ -13,13 +13,15 @@ While the VEVENT is fine for integration, the true next-steps for us will be abo
 
 while we got the sync mechanism down for a single column we have a few functionality and non-functional goals for this charter
 
-## Bidrectional sync
+## Bidirectional sync
+
 the first goal is that both layers can both read and edit. changes in actions should flow to the calendar, changes in the events should flow to actions
 
 this includes:
+
 - start date
 - due date
-- state 
+- state
 - title
 - description
 
@@ -154,6 +156,7 @@ values surface as conflicts. Keeping the current code and model clean is more
 important than preserving obsolete sync bookkeeping.
 
 **Code shape:**
+
 - `plan_sync` takes an explicit `base_map`, symmetric with the vdir values.
 - `scheduled_at_sync`/`due_date_sync` stay off `Action` and `ActionMeta`.
 - `apply_sync` atomically stages the one plans sync store with `.actions`
@@ -162,6 +165,7 @@ important than preserving obsolete sync bookkeeping.
   a CalDAV server integration.
 
 **Two moves, not one:**
+
 1. Keep the decoupled implementation in `clearhead-core::workspace::calendar`
    while VTODO bidirectional behavior settles.
 2. If extraction later pays for itself, lift the vdir projection into a crate
@@ -213,9 +217,10 @@ already hold):
   not silently reinterpret it as a reschedule of the series.
 
   ### thought experiment: datedness
+
   one other thought that was explored is the concept of having the actions with dates flip to have the ics own our actions file but this was decided against because it would break the flow of the line by having new actions "vanish" from the file to be replaced by a projection.
 
-  dated actions are synced to plans but they are still the primary owner 
+  dated actions are synced to plans but they are still the primary owner
 
   this ensures that wherever possible we are still using the standard methods of file editing and only using projections when necessary such has handling rrule recurrence.
 
@@ -241,6 +246,7 @@ side is edited; the slot accounting only ever existed to police that drift.
 Projection dissolves it: one master, occurrences always freshly rendered.
 
 Consequences:
+
 - `<charter>.upcoming.actions` stops existing, and `expansion_primary_instances`
   retires with it.
 - The window is a **single per-plan instance count** — `expansion_total_instances`,
@@ -387,6 +393,7 @@ Nothing about recurrence forces that straddle; removing it dissolves the
 complexity.
 
 **Two disjoint lanes, selected by whether an occurrence accumulates state.**
+
 - **Stateless occurrence → project.** A bare recurring plan (no template) is
   fully described by `master + slot`; its only state is done/skip/move. It
   renders on the fly, deviation-backed. Unchanged from the atomic model above.
@@ -418,6 +425,7 @@ fresh ids under it. Consequently a templated master's `SUMMARY` is only the
 stamped instance's title, structure, and identity all come from the template.
 
 **Reuses existing machinery; adds one bounded function.**
+
 - Stamp = `instantiate_template` (already remaps ids, preserves hierarchy),
   passed the occurrence UUIDv5 as the *root* id instead of a random `now_v7`,
   with no parent override (it is a root).
@@ -536,6 +544,7 @@ ergonomic to trade away; projection-in-the-load-path quietly traded it away.
 
 **Tense is ontological status.** The continuant/occurrent split maps onto time,
 and that mapping decides where each occurrence lives:
+
 - **Present** — the current due occurrence is the only *actionable, stateful*
   instance (a live continuant). It **materializes**: a real action on disk,
   identical to a dated action. One per plan, because only one instance is "now."
@@ -718,6 +727,7 @@ the `clearhead-graphd` batch was left uncommitted for review.
   `token → cco:prescribed_by → plan` with its occurrence key.
 
 **Remaining (for the next agent):**
+
 - **Snapshot plan-lineage onto the archived instance at completion** — the *archived*
   half of lineage, the counterpart to the live hydration above. Snapshot the semantic
   edge (realizes plan-M at position T + a human label) at crystallization; do not
@@ -758,6 +768,7 @@ changing the on-disk naming breaks nothing; we are shaping the substrate ahead o
 its reader, deliberately.
 
 **Decision — flat, UUID-stemmed, self-contained.**
+
 - Every archived charter's quartet — `<uuid>.md`, `<uuid>.actions`,
   `<uuid>.completed.actions`, `.<uuid>.json` sidecar — shares the charter's
   **UUID as stem**, dropped flat into `archive/`. The UUID is the only honest key
@@ -801,3 +812,175 @@ that line or this becomes a far larger project.
 **Explicitly out of scope.** The existing name-addressed archive on disk is inert
 (nothing reads it), so it is *not* migrated as part of this — a cosmetic one-time
 rename script is trivial, separable, and deferred.
+
+## Design direction (2026-08-09): recurring Actions, orthogonal hierarchy, projected occurrences
+
+Live acceptance against Radicale through vdirsyncer, Thunderbird, DAVx5, and
+JTX Board exposed a simpler standards-aligned model than the current
+Plan-to-materialized-token bridge. This section records the new direction and
+supersedes the earlier decisions that RRULE is exclusively Plan semantics and
+that the present occurrence must always be stamped into `.actions`. The shipped
+implementation remains as documented above until this migration is designed and
+landed.
+
+### Evidence from real clients
+
+The integration boundary itself held:
+
+- standalone VTODOs round-tripped title, description, dates, priority,
+  categories, and completion;
+- Thunderbird expanded an unbounded recurring VTODO years into the future,
+  correctly treating RRULE as a recurrence set rather than ClearHead's
+  one-active-token policy;
+- clients recorded occurrence state as same-UID `RECURRENCE-ID` overrides,
+  including completed Weekly Review occurrences and an in-process recurrence
+  test occurrence;
+- JTX Board created subtasks as separate, non-recurring VTODO resources carrying
+  `RELATED-TO;RELTYPE=PARENT:<recurring-master-uid>`; completing or changing a
+  parent occurrence did not clone or reset those children;
+- ClearHead preserved the relationship properties in the ICS resources but
+  imported the children as flat root Actions because the current model cannot
+  resolve Action parentage through a recurring Plan UID.
+
+The important conclusion is that RFC 5545 hierarchy and recurrence are
+orthogonal. `RELATED-TO` relates components; it does not grant recurrence,
+inherit schedules, identify a particular recurrence instance, or define
+completion roll-up. Client behavior confirms that separation.
+
+### Canonical conceptual model
+
+Every Action may independently carry zero or one RFC 5545 recurrence rule. An
+Action's parent edge and recurrence rule answer different questions:
+
+- `RELATED-TO;RELTYPE=PARENT` says which Action series owns or contains it;
+- `RRULE` says whether that Action series recurs and on what cadence.
+
+All four combinations are valid:
+
+| Parent | Child | Meaning |
+|---|---|---|
+| non-recurring | non-recurring | ordinary Action hierarchy |
+| recurring | non-recurring | one persistent child related to a recurring parent series, matching JTX |
+| non-recurring | recurring | a recurring responsibility under a persistent parent |
+| recurring | recurring | two related recurring series |
+
+Indentation alone MUST NOT imply recurrence inheritance. ClearHead may later
+offer explicit authoring sugar such as an inherit marker, but the effective
+recurrence must be unambiguous and every emitted recurring child VTODO must
+carry its own explicit RRULE. This keeps foreign clients independent of
+ClearHead's authoring conveniences.
+
+A recurring checklist such as Weekly Review is therefore a hierarchy of
+independently recurring Action series when every step needs fresh occurrence
+state. Each series has its own UID, RRULE, and deviations. ClearHead lifts the
+series-level hierarchy across aligned recurrence slots to render an occurrence
+hierarchy. If parent and child schedules do not align, only the series-level
+hierarchy is asserted; no artificial one-to-one occurrence edge is invented.
+
+### Source definitions and interoperable VTODOs
+
+Restore RRULE support to the Action DSL so the human-editable file expresses the
+intended Action series directly. The historical shape is a useful starting
+point:
+
+```actions
+[ ] Weekly Review @2026-08-09T10:00 R:FREQ=WEEKLY #<series-uuid>
+```
+
+The restored contract should have one component recurrence set anchored by
+`DTSTART`; it must not revive independent do-date and due-date recurrence
+rules. `DUE`, when present, moves with the occurrence by its offset from
+`DTSTART`.
+
+Every Action projects to a standalone VTODO resource regardless of whether it
+has a date or RRULE. RRULE no longer classifies a VTODO as a separate Plan
+domain entity. Parentage projects explicitly on the child:
+
+```ics
+RELATED-TO;RELTYPE=PARENT:<parent-uid>
+```
+
+Unscheduled VTODOs are valid and remain first-class. Unknown properties,
+alarms, transport-selected resource paths, arbitrary external UIDs, and the
+existing independent field merge behavior remain preserved.
+
+### Occurrences are projections; deviations are sparse state
+
+An ordinary occurrence is identified by `(series UID, canonical recurrence
+key)` and is computed, not filed. The recurring source line is the mutable
+series master. Sparse RFC 5545 deviations carry occurrence state:
+
+- complete -> same-UID `RECURRENCE-ID` VTODO with `STATUS:COMPLETED` and
+  `COMPLETED`;
+- reschedule -> same-UID `RECURRENCE-ID` override with changed temporal fields;
+- skip -> `EXDATE` or an explicitly cancelled occurrence where client behavior
+  requires it;
+- foreign roll-forward -> normalize to the same canonical deviation model.
+
+Changing the checkbox state of a recurring source line changes or retires the
+series; it does not mean "complete today's occurrence." Occurrence operations
+must target an occurrence handle and write a deviation. Navigation may return
+to the master line, while Active, Upcoming, Calendar, and History views project
+different bounded surfaces from the same master plus deviations:
+
+- Active selects the currently relevant unresolved occurrence per series;
+- Upcoming projects a bounded planning horizon;
+- Calendar may expose the recurrence set according to calendar-client policy;
+- History reads terminal deviations and archived occurrence facts.
+
+Projection must remain pure. Repeated reads never create Actions, telemetry, or
+files. Future instances are never eagerly materialized merely to make them
+editable.
+
+### Authority and history boundary
+
+The intended authority is composite plaintext, not telemetry or a hidden
+database:
+
+- `.actions` owns human-authored Action definitions, hierarchy, and
+  ClearHead-only workflow semantics;
+- standards-native ICS resources carry the live recurrence master projection,
+  sparse deviations, foreign properties, and peer edits;
+- shared master fields, including RRULE and RELATED-TO, reconcile
+  bidirectionally through explicit merge bases;
+- terminal occurrence facts may crystallize into `archive/` with series UID,
+  recurrence key, terminal state/time, and a human label so history survives
+  later master edits or deletion;
+- observability records how a committed transition happened, but is never
+  required to reconstruct recurrence state.
+
+One issue remains deliberately open: if ICS is the only durable home of live
+recurrence deviations, the configured vdir is not a disposable projection. The
+implementation plan must either make that plaintext recurrence ledger an
+explicit backed-up part of the workspace or define an equally durable canonical
+deviation representation. Machine-local telemetry and vdirsyncer status are not
+acceptable substitutes.
+
+### Migration plan and gates
+
+Before replacing the shipped model:
+
+1. revise the Action DSL and grammar specifications to restore one explicit
+   RRULE on an Action definition;
+2. model recurring Actions without classifying RRULE-bearing VTODOs as a
+   separate Plan kind;
+3. import and export `RELATED-TO;RELTYPE=PARENT`, resolving arbitrary calendar
+   UIDs without flattening hierarchy;
+4. mirror every Action, including unscheduled and recurring Actions, while
+   preserving unknown calendar data;
+5. project occurrences and lift hierarchy only across aligned canonical slots;
+6. route complete, skip, reschedule, and series edits to the correct master or
+   sparse deviation;
+7. settle and implement the durable deviation/archive boundary before removing
+   the current lineage machinery;
+8. migrate existing Plan VTODOs, template-backed Weekly Review state, stamped
+   tokens, and sync-store lineage without duplicating visible work;
+9. regression-test the interoperability profile against raw RFC resources and
+   live client shapes observed from Thunderbird and JTX/DAVx5.
+
+The acceptance standard is graceful degradation: clients that understand
+recurrence and hierarchy render both; clients that understand recurrence but
+not hierarchy may show related series flat; clients that understand only basic
+VTODO fields still preserve independently editable tasks. ClearHead must not
+optimize its canonical wire representation around one client's presentation,
+and no client is required to implement ClearHead's Active filtering policy.
