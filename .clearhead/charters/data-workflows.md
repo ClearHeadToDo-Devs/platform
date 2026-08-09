@@ -21,15 +21,21 @@ This charter joins those existing seams without creating another data model or
 protocol:
 
 ```text
+clearhead query index unscheduled --format ids
+        ↓ one canonical reference per line
+existing identity-addressed verbs or another consumer
+
 clearhead query index unscheduled --format json
-        ↓ select canonical IDs with jq or another client
+        ↓ transform structured rows with jq or another client
 clearhead transact < request.json
         ↓ one validated semantic batch
 clearhead query index unscheduled --format json
 ```
 
-The query result is ordinary data. A consumer may pass one selected ID directly
-to an existing CLI verb or transform several rows into a transaction request.
+The query result is ordinary data. Simple identity handoff must not require a
+JSON parser: every index view supports an `ids` projection containing one
+canonical reference per line. Structured JSON remains available when a consumer
+needs row fields or must construct heterogeneous transaction operations.
 
 ## What already works
 
@@ -74,6 +80,13 @@ validate, or reserialize graphd output, and it must not absorb Oxigraph, SPARQL,
 or graph-family logic. Schema conformance for query output is tested where the
 bytes are produced: in graphd.
 
+The `ids` format is likewise a graphd-owned projection of the existing index
+family contract, which already requires every row to carry `id`. It is not a
+ClearHead-specific command stream: the view owns membership and ordering,
+graphd emits canonical references, and each consumer independently decides what
+to do with them. This aligns with `clearhead read … --format ids` without
+coupling the two implementations.
+
 This narrowly supersedes the closed graphd charter's decision to remove the CLI
 facade. It does not reverse the graph extraction or make the CLI the query
 implementation.
@@ -89,9 +102,11 @@ Use JSON Schema Draft 2020-12 for three small contracts:
 3. **transaction result** — either a compact commit/dry-run receipt or a typed
    failure
 
-The schemas describe intentional wire bytes before Rust types make them harder
-to change. They do not introduce a universal response envelope, workspace
-revision, JSON Patch dialect, or editable JSON-LD document.
+The schemas describe intentional JSON wire bytes before Rust types make them
+harder to change. They do not introduce a universal response envelope,
+workspace revision, JSON Patch dialect, or editable JSON-LD document. The
+line-oriented `ids` projection is a separate, deliberately smaller interface
+and does not need a JSON envelope or schema.
 
 The first transaction operation set stays deliberately small: action update,
 complete, and cancel. That is enough to prove in-place edits and active-to-
@@ -109,9 +124,19 @@ clearhead query index unscheduled --format json |
   clearhead transact -
 ```
 
-Single-item work should continue to use the ordinary verbs. Transactions exist
-for batches that must validate together and commit together, not to replace the
-rest of the CLI.
+Single-item work should continue to use the ordinary verbs. An ID stream may
+also feed ordinary Unix consumers without knowledge of graphd's JSON shape:
+
+```bash
+clearhead query index unscheduled --format ids |
+  xargs -r -n1 clearhead show action
+```
+
+Transactions exist for batches that must validate together and commit together,
+not to replace the rest of the CLI. If homogeneous atomic batches later justify
+consumer-side sugar such as `clearhead transact --op complete-action
+--targets-from -`, that command should build the same transaction request inside
+the consuming CLI; graphd must not learn mutation semantics.
 
 ## Transaction path
 
@@ -141,6 +166,8 @@ can be added later if real stale-update failures demonstrate the need.
 - plans, charters, move, delete, or arbitrary JSON Patch in the first operation
   set
 - routing all existing mutation commands through the transaction engine
+- graphd emitting commands or learning the argument syntax of mutation clients
+- consumer-side stdin transaction sugar before a demonstrated need
 - snapshot revisions, reader isolation, distributed transactions, undo, MCP, or
   a resident daemon
 
@@ -148,8 +175,8 @@ can be added later if real stale-update failures demonstrate the need.
 
 1. publish schemas and fixtures for the existing index JSON, minimal transaction
    request, and transaction result
-2. restore the transparent `clearhead query` facade with current graphd command
-   and format coverage
+2. add the generic index `ids` projection and restore the transparent
+   `clearhead query` facade with current graphd command and format coverage
 3. implement the small action transaction planner and commit it through one
    existing `PendingBatch`
 4. expose `clearhead transact`, then prove and document the complete shell loop
@@ -161,7 +188,9 @@ This charter is complete when:
 - graphd's real index JSON validates against the published schema
 - `clearhead query index unscheduled --format json` is byte-for-byte graphd's
   output with the same stdio behavior and exit status
-- an emitted canonical query ID works directly with existing CLI verbs
+- every index view can emit one canonical reference per line with `--format ids`
+- an emitted canonical query ID works directly with existing CLI verbs without
+  parsing JSON
 - a schema-valid request can update, complete, or cancel multiple actions in one
   transaction
 - any invalid operation rejects the whole batch before a write
