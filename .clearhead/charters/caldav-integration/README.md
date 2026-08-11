@@ -742,6 +742,53 @@ the `clearhead-graphd` batch was left uncommitted for review.
   (`hasExternalScheduleId`) but the JSON-LD path does not — a pre-existing
   RDF/JSON-LD asymmetry, not addressed here.
 
+## Design notes (2026-08-10): VTODO remains the action surface; clients complete roots, editor owns focus
+
+The VEVENT temptation is real because calendar clients understand schedules better
+than todo clients understand rich recurring process. The boundary we want is still
+not "ClearHead actions become events." If a thing does not need completion, it is
+calendar context, not an Action. ClearHead-authored intended work remains VTODO:
+VTODO is the interoperability shape for actionable state, while VEVENT is reserved
+for external happenings / attendance / availability context that may constrain work
+but is not itself ClearHead work.
+
+**Recurring VTODO masters are prescriptions; stamped roots are the mobile-safe
+completion surface.** Existing clients are not expected to understand occurrence-
+scoped subaction trees, RFC9253 relationships, or ClearHead's full DSL metadata.
+That is acceptable. The portable mobile affordance is smaller and valuable:
+complete/reschedule/cancel the **root** current occurrence. Completing that root
+round-trips to the recurring master as the completed slot deviation and advances the
+single active token. The editor remains the place to *focus* the action, work the
+child hierarchy, manage blockers/predecessors, and preserve ClearHead-specific
+structure.
+
+**Do not make subactions recurring masters by default.** A subaction with its own
+RRULE is its own scheduled prescription, not automatically "the child of this
+parent's occurrence." Generic clients may relate the series with `RELATED-TO`, but
+there is no portable guarantee that they will group each expanded child occurrence
+under the corresponding expanded parent occurrence, especially after skips,
+reschedules, offsets, or client-side cleanup. Therefore the default stays: one
+recurring VTODO master per plan; one materialized present root in `.actions`; any
+step forest is editor-owned structure grafted under that root, not independent
+recurring child series. Future ClearHead-aware clients may use richer VTODO/RFC9253
+metadata, but that is an enhanced profile, not the baseline sync contract.
+
+**Client cleanup is a display optimization, not history.** Some todo clients offer to
+hide or remove closed instances of recurring VTODOs. That is fine for their view and
+terrible as the source of history. ClearHead must snapshot completion into its own
+archive/fact timeline as soon as it observes the root completion. Remote deletion or
+compaction of a completed occurrence is not interpreted as deleting history unless
+the user deliberately invokes ClearHead's delete/retraction semantics.
+
+**Surface decision: stamp the present, project the future.** We should not always
+project into the ClearHead action view: projected entries have no line and clutter the
+editing surface. We should also not stamp a future window: future materialized lines
+drift from the RRULE and recreate expand's slot-accounting problem. The standing rule
+is therefore reaffirmed: stamp exactly the current actionable occurrence into the
+file, and keep future occurrences as read-only calendar/planning projection. This
+preserves the mobile VTODO root-completion path, keeps the editor/qflist honest, and
+avoids treating the todo client as a full ClearHead process editor.
+
 ## Design notes (2026-07-28): archival crystallizes — flat UUID facts, structure in the file
 
 The charter's final section. It settles what happens to a charter's artifacts
