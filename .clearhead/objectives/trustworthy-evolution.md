@@ -16,16 +16,18 @@ Trust is not equivalent to a high test count or coverage percentage. It comes fr
 - Plaintext, iCalendar, JSON, JSON-LD, RDF, and protocol representations agree at their specified boundaries without requiring one implementation to absorb another's responsibilities.
 - The exact pinned platform composition can be validated reproducibly, while each component remains independently testable.
 - Failures are typed, diagnosable, and regression-locked rather than becoming silent drift.
+- Defects that escape prevention can be detected and recovered from without silently rebinding identity or losing durable state.
 - Assurance remains economical enough that new behavior normally arrives with evidence instead of accumulating a separate testing backlog.
 
 ## Principles
 
-1. **Protect invariants, not percentages.** Coverage locates unexercised code; mutation testing probes assertion strength; neither is the outcome by itself.
-2. **Test at the owning boundary.** Producers validate their wire formats, Core validates semantic transitions and durability, and clients validate orchestration rather than duplicating domain policy.
-3. **Prefer semantic assertions.** Reload and compare durable meaning instead of relying only on output fragments or implementation details.
-4. **Use the cheapest adequate technique.** Examples, tables, snapshots, properties, conformance fixtures, mutation tests, and end-to-end tests each have different jobs.
-5. **Keep expensive assurance proportional.** Fast deterministic checks belong on every change; broad property, mutation, and composition checks may run on a schedule or release gate.
-6. **Explain residual risk.** Equivalent, low-value, or intentionally deferred mutants and uncovered paths should be classified rather than hidden behind an aggregate score.
+1. **Simplify before adding machinery.** Prefer removing unnecessary states, paths, and abstractions over constructing assurance systems to manage their complexity.
+2. **Protect invariants, not percentages.** Coverage locates unexercised code; mutation testing probes assertion strength; neither is the outcome by itself.
+3. **Test at the owning boundary.** Producers validate their wire formats, Core validates semantic transitions and durability, and clients validate orchestration rather than duplicating domain policy.
+4. **Prefer semantic assertions.** Reload and compare durable meaning instead of relying only on output fragments or implementation details.
+5. **Use the cheapest adequate technique.** Examples, tables, snapshots, properties, conformance fixtures, mutation tests, and end-to-end tests each have different jobs.
+6. **Keep expensive assurance proportional.** Fast deterministic checks belong on every change; broad property, mutation, and composition checks may run on a schedule or release gate.
+7. **Explain residual risk proportionally.** Record why a consequential finding remains unresolved without requiring a taxonomy or reporting system when a short rationale is enough.
 
 ## Evidence of progress
 

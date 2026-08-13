@@ -8,60 +8,54 @@ state: Active
 ---
 # Establish Executable Assurance
 
-ClearHead already has substantial fast unit, integration, protocol, conformance, and end-to-end coverage. The remaining trust gap is not simply a shortage of tests: assurance is unevenly distributed, some frequently executed behavior is weakly asserted, and several important seams have no executable contract.
+ClearHead already has substantial unit, integration, protocol, conformance, and end-to-end coverage. The present trust gap is narrower: several high-consequence behaviors are either unexecuted or weakly asserted, especially reference routing, template targeting, and durable lifecycle mutations.
 
-Initial measurements in `clearhead-cli` made that distinction visible. Subprocess-aware LLVM coverage reports about 63% line coverage overall, while reference routing and template application are wholly unexecuted and charter lifecycle behavior is sparse. A partial mutation run caught roughly half of attempted viable mutants, but meaningful changes to action fields, update predicates, configuration defaults, and public rendering survived. These numbers are diagnostic inputs, not delivery targets.
-
-This charter establishes the smallest reusable assurance system that protects the platform's important invariants without turning coverage work into an indefinite parallel project.
+Coverage and mutation analysis made those gaps visible, but they are diagnostic tools rather than outcomes or permanent workstreams. This charter protects a fixed set of currently known critical seams, keeps only the support that proves useful while doing so, and then closes.
 
 ## Outcomes
 
-1. Coverage and mutation reports are reproducible and interpreted consistently.
-2. Current high-risk identity and mutation gaps have compact semantic contracts.
-3. Test workspaces and conformance cases can be reused without coupling repository release cycles.
-4. Property testing protects a small initial set of genuine domain invariants.
-5. One command can validate the exact pinned platform composition at an appropriate depth.
-6. Future feature charters have a clear pattern for selecting and recording their own evidence.
+1. The known critical identity, targeting, and lifecycle gaps have compact semantic regression coverage.
+2. Reusable test support is retained only where it makes real tests clearer or serves more than one genuine consumer.
+3. The exact pinned platform composition has one practical validation entry point.
+4. Useful techniques, unresolved risks, and follow-up triggers are recorded from experience rather than designed in advance.
 
-## Scope
+## Fixed scope
 
-The initial implementation focuses on behavior where a defect can change durable meaning or route work incorrectly:
+The remediation inventory for this charter is limited to:
 
-- canonical reference resolution across actions, plans, charters, and workspaces;
-- action, charter, and plan lifecycle mutations, including dry-run and failure atomicity;
+- canonical reference routing across actions, plans, charters, and workspaces;
 - template instantiation and target selection;
-- configuration values that cross into Core behavior;
-- public machine and human rendering contracts where downstream consumers depend on exact shape;
-- parser/formatter, mutation-locality, identity, recurrence, and durability invariants;
-- agreement among specification fixtures, producers, and consumers.
+- the highest-risk action, charter, and plan lifecycle mutations revealed by the existing coverage and mutation investigation, including dry-run and failure atomicity;
+- configuration or rendering behavior only when it directly participates in one of those paths;
+- one validation of the exact submodule composition pinned by the platform repository.
 
-The current CLI measurements provide the first prioritized inventory, but shared mechanisms should live at the narrowest owning layer and serve other repositories when a real contract crosses their boundary.
+Newly discovered defects may be fixed when they are small and directly adjacent. Larger or unrelated gaps are recorded for their owning feature or maintenance charter instead of expanding this charter indefinitely.
 
-## Assurance layers
+## Working approach
 
-- **Per change:** formatting, linting, unit tests, focused integration tests, and changed-contract conformance checks.
-- **Scheduled:** broader property runs, mutation sampling, fixture-drift checks, and platform composition validation.
-- **Release:** pinned cross-repository workflow, schema/protocol conformance, and explicit review of unresolved critical findings.
+- First ask whether the behavior, state space, or ownership boundary can be simplified.
+- Prefer reload-and-compare semantic contracts over assertions about incidental implementation details.
+- Use coverage, mutation, properties, fixtures, and end-to-end tests only where each is the cheapest adequate technique.
+- Tolerate local test duplication until a stable shared semantic abstraction makes at least two real consumers clearer.
+- Do not refactor production code solely to improve a metric or accommodate a generalized test framework.
+- Record a brief rationale when a consequential finding is deliberately left unresolved; introduce more structure only if the volume of findings makes it necessary.
 
 ## Non-goals
 
-- maximizing a global coverage percentage;
+- defining a comprehensive assurance taxonomy or governance process;
+- maximizing coverage or mutation scores;
 - killing every generated mutant;
-- replacing named regressions and readable examples with generated cases;
-- centralizing every repository's tests in the platform repository;
-- introducing shared test infrastructure before at least two consumers need it;
-- refactoring large modules merely to improve test metrics;
-- blocking feature delivery on low-risk display, debug, or defensive branches.
+- building generalized property generators, fixture frameworks, or shared test packages without demonstrated demand;
+- centralizing repository-owned tests in the platform repository;
+- creating elaborate reporting, artifact-retention, or validation-depth machinery;
+- turning newly discovered low-risk gaps into an indefinite testing backlog.
 
 ## Done gate
 
 This charter may close when:
 
-- subprocess-aware coverage and focused mutation commands are documented and reproducible;
-- surviving mutants are classifiable by criticality and disposition rather than presented as an undifferentiated count;
-- resolver, template, and the highest-risk action/charter/plan mutation paths have semantic regression coverage;
-- one reusable workspace builder or fixture pattern demonstrably reduces setup duplication;
-- a canonical conformance case is exercised by at least two owning layers without making either repository depend on a sibling checkout at runtime;
-- an initial set of Core properties protects round-trip, mutation-locality, identity, recurrence, or durability invariants;
-- the pinned platform has one validation entry point with documented fast, scheduled, and release depths;
-- the approach and residual risks are documented well enough for later feature charters to apply it without reopening this charter.
+- the fixed reference-routing, template-targeting, and lifecycle inventory has focused semantic protection or an explicit residual-risk note;
+- commands that materially helped find weak contracts are reproducible enough to run again, without requiring a permanent reporting system;
+- any retained builder, property, or conformance fixture has demonstrated its value in the tests that use it;
+- one command validates the pinned platform composition at a practical depth;
+- remaining risks and concrete promotion triggers for future work are documented.
