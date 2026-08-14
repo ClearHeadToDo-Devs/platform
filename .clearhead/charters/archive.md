@@ -1,9 +1,9 @@
 ---
 id: 019fab49-d2de-70d3-be3f-2ae7fcb3630a
 ---
-# Archival 
-A charter going over the work that needs to be done for the archival process
+# Archival
 
+A charter going over the work that needs to be done for the archival process
 
 ## Design notes (2026-07-28): archival crystallizes — flat UUID facts, structure in the file
 
@@ -31,6 +31,7 @@ changing the on-disk naming breaks nothing; we are shaping the substrate ahead o
 its reader, deliberately.
 
 **Decision — flat, UUID-stemmed, self-contained.**
+
 - Every archived charter's quartet — `<uuid>.md`, `<uuid>.actions`,
   `<uuid>.completed.actions`, `.<uuid>.json` sidecar — shares the charter's
   **UUID as stem**, dropped flat into `archive/`. The UUID is the only honest key
@@ -125,6 +126,7 @@ self-contained nodes; the archived file stays a faithful `.actions`/`.md`. Hold
 that line or this becomes a far larger project.
 
 **Explicitly out of scope.**
+
 - **Action-level alias refs.** A `.actions` line's `<predecessor` is the same
   category error one level down, but normalization here is scoped to *charter
   frontmatter edges* (`parent:`). Action-ref normalization is deliberately not
