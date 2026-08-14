@@ -1,14 +1,17 @@
 # The ClearHead Platform
+
 This is my attempt to create a free, open personal data platform that is:
-- local-first, relying on local storage and computation where possible 
+
+- local-first, relying on local storage and computation where possible
 - human-centric, which is why the source of truth is the actions format that will remain human-readable and editable
 - FAIR data: meaning this data is Findable, Accessible, Interoperable, and Reusable
 - Ontologically grounded, meaning that data is structured according to well-defined ontologies to ensure semantic clarity and interoperability
 
 ## Context
+
 This is my attempt at a higher-order repository, or in other words, a repository meant to maintain other repositories.
 
-As the clearhead platform grows, I find myself wanting to separate out orthogonal concerns into their own repositories. 
+As the clearhead platform grows, I find myself wanting to separate out orthogonal concerns into their own repositories.
 
 On the one hand, these are different tools with their own toolschains and lifecycles. On the other hand, as a platform, they are deeply coupled and a change in one repository often cascades into changes in other repositories.
 
@@ -26,19 +29,34 @@ user-facing Rust binaries: `clearhead`, `clearhead-lsp`, and
 rebuilds and replaces the installed binaries. Cargo's bin directory (normally
 `~/.cargo/bin`) must be on `PATH`.
 
+To validate the exact submodule revisions pinned by the platform, run:
+
+```sh
+scripts/validate-pinned
+```
+
+The command first rejects uninitialized, dirty, or gitlink-mismatched submodules,
+then runs each repository's own pre-push gate. It deliberately adds no second test
+framework; `specifications` currently has no executable repository gate.
+
 ### Working with Submodules
+
 Git submodules are notoriously tricky to work with, so we have laid out documentation in [Submodules](./SUBMODULES.md) to help you get started. including:
+
 - Day-to-day workflows
 - Cloning the repository
 - Updating submodules
 
 ### Working with Git Worktrees
+
 For branch-per-task development (including multiple parallel agent branches), see [Worktrees](./WORKTREES.md).
 
 ### Tracking Decisions
+
 we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
 
 ### User-Facing Documentation
+
 we leverage [mdbook](https://rust-lang.github.io/mdBook/index.html) to maintain a user-facing overview of this work such that we can start working through individual structures in each repository
 
 you can see the contents at [the summary](src/summary.md) and the [index](src/index.md)
@@ -54,7 +72,7 @@ Please review product-specific documentation for more details on each repository
 - [Ontology](./ontology/README.md): The ontologies that provide the semantic backbone for the platform, ensuring that data is structured and interpreted consistently across different tools and repositories
   - Aligned with the CCO ontology, which itself is a BFO-aligned ontology format.
   - Creates the semantic backbone that enables interoperability and data integration across the platform
-  - tools like the CLI use it to do semantic reasoning and validation on the data ingested 
+  - tools like the CLI use it to do semantic reasoning and validation on the data ingested
 - [Action File Parser](./tree-sitter-actions/README.md) a parser for the action file format, built using tree-sitter
   - used by the CLI and other tools to parse and validate action files
 - [Core Library](./clearhead-core/README.md) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools

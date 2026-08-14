@@ -1,0 +1,45 @@
+#!/bin/sh
+# Validate the exact submodule revisions staged by the platform repository by
+# delegating to each repository's own pre-push gate.
+set -eu
+
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+
+status=$(git submodule status --recursive)
+if printf '%s\n' "$status" | grep -Eq '^[+-U]'; then
+    echo "validate-pinned > submodules do not match the platform gitlinks:" >&2
+    printf '%s\n' "$status" >&2
+    exit 1
+fi
+
+for repo in tree-sitter-actions clearhead-core clearhead-cli clearhead-graphd \
+    clearhead-lsp clearhead.nvim ontology specifications
+do
+    if test -n "$(git -C "$repo" status --porcelain)"; then
+        echo "validate-pinned > $repo has uncommitted changes" >&2
+        exit 1
+    fi
+done
+
+echo "validate-pinned > submodules are clean and match the platform gitlinks"
+
+run_gate() {
+    repo=$1
+    echo "validate-pinned > $repo"
+    (
+        cd "$root/$repo"
+        ./.githooks/pre-push </dev/null
+    )
+}
+
+run_gate tree-sitter-actions
+run_gate clearhead-core
+run_gate clearhead-cli
+run_gate clearhead-graphd
+run_gate clearhead-lsp
+run_gate clearhead.nvim
+run_gate ontology
+
+echo "validate-pinned > specifications has no executable repository gate"
+echo "validate-pinned > all repository-owned checks passed"
