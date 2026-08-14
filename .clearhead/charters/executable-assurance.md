@@ -46,57 +46,16 @@ Newly discovered defects may be fixed when they are small and directly adjacent.
 - Those subtree properties replaced five narrow lifecycle examples while preserving stronger assertions over membership, order, source immutability, root detachment, descendant hierarchy, and both terminal states.
 - Mutation analysis left no known surviving mutant in the exercised lifecycle and parser/formatter slices; two infinite-loop mutations were rejected by timeout.
 - Generated combinations exposed and repaired omitted creation-date rendering, malformed-link preservation in non-link fields, and an escaped terminal-backslash ambiguity. Exact parser fixtures remain for the byte-level compatibility boundary.
-- A separate reference generator declares expected targets, ambiguity, rejection,
-  and scoped projections directly from construction metadata rather than traversing
-  the model as an oracle. It reduced the full reference module's mutation result
-  from 18 missed mutants to none and exposed that plan projection retained
-  unrelated actions despite its documented contract. Resolution failures now
-  expose stable typed categories while retaining contextual human diagnostics.
-- The template generator declares each source-to-instance identity and parent
-  relationship during construction. Across 256 cases it protects root-only parent
-  overrides, internal hierarchy remapping, external-parent preservation, every
-  Action field, and source immutability; a second property covers charter-local
-  precedence, global fallback, and missing templates. The targeted template module
-  mutation baseline was already discriminating and remained 5 caught / 0 missed,
-  so no production change or generalized template fixture was warranted.
-- The durable Action/Charter inventory began at 118 mutants: 79 caught, 20
-  missed, and 19 unviable. Exact state-transition and dry-run tests, plus removal
-  of redundant existence guards, brought the final inventory to 118 mutants:
-  92 caught, 3 missed, and 23 unviable. The tests exposed and fixed three adjacent
-  defects: post-lock Action re-identification could fall back to non-unique mutable
-  names/aliases, charter dry-run could write a lock and replay a pending batch,
-  and lexical source-path validation admitted parent-directory traversal.
-- The targeted Plan lifecycle inventory covers occurrence deviation writes,
-  master roll-forwards, operation routing, token staging, active-token ownership,
-  and imported VTODO field mapping. It moved from 37 mutants with 13 missed to a
-  final 36 caught / 0 missed after adding exact multi-Plan, unrelated-action,
-  import, and tally contracts and removing a redundant pre-check.
-- The retention review kept all generators repository-local and found no shared
-  fixture framework to justify. Existing exact template unit tests remain because
-  they produced the already-clean baseline and localize simple failures; the new
-  generator adds the distinct mixed hierarchy, external-parent, field, and source
-  immutability state space. Parser conformance fixtures remain only for byte-level
-  escaping/recovery contracts, while durable lifecycle coverage uses direct state
-  transitions and crash points instead of a generalized generator.
-- `scripts/validate-pinned` first rejects uninitialized, dirty, or
-  gitlink-mismatched submodules, then invokes the existing pre-push gates owned
-  by tree-sitter-actions, Core, CLI, graphd, LSP, Neovim, and ontology.
-  Specifications currently owns no executable gate. The command passed against
-  the exact eight staged gitlinks without introducing a second validation layer.
+- A separate reference generator declares expected targets, ambiguity, rejection, and scoped projections directly from construction metadata rather than traversing the model as an oracle. It reduced the full reference module's mutation result from 18 missed mutants to none and exposed that plan projection retained unrelated actions despite its documented contract. Resolution failures now expose stable typed categories while retaining contextual human diagnostics.
+- The template generator declares each source-to-instance identity and parent relationship during construction. Across 256 cases it protects root-only parent overrides, internal hierarchy remapping, external-parent preservation, every Action field, and source immutability; a second property covers charter-local precedence, global fallback, and missing templates. The targeted template module mutation baseline was already discriminating and remained 5 caught / 0 missed, so no production change or generalized template fixture was warranted.
+- The durable Action/Charter inventory began at 118 mutants: 79 caught, 20 missed, and 19 unviable. Exact state-transition and dry-run tests, plus removal of redundant existence guards, brought the final inventory to 118 mutants: 92 caught, 3 missed, and 23 unviable. The tests exposed and fixed three adjacent defects: post-lock Action re-identification could fall back to non-unique mutable names/aliases, charter dry-run could write a lock and replay a pending batch, and lexical source-path validation admitted parent-directory traversal.
+- The targeted Plan lifecycle inventory covers occurrence deviation writes, master roll-forwards, operation routing, token staging, active-token ownership, and imported VTODO field mapping. It moved from 37 mutants with 13 missed to a final 36 caught / 0 missed after adding exact multi-Plan, unrelated-action, import, and tally contracts and removing a redundant pre-check.
+- The retention review kept all generators repository-local and found no shared fixture framework to justify. Existing exact template unit tests remain because they produced the already-clean baseline and localize simple failures; the new generator adds the distinct mixed hierarchy, external-parent, field, and source immutability state space. Parser conformance fixtures remain only for byte-level escaping/recovery contracts, while durable lifecycle coverage uses direct state transitions and crash points instead of a generalized generator.
+- `scripts/validate-pinned` first rejects uninitialized, dirty, or gitlink-mismatched submodules, then invokes the existing pre-push gates owned by tree-sitter-actions, Core, CLI, graphd, LSP, Neovim, and ontology. Specifications currently owns no executable gate. The command passed against the exact eight staged gitlinks without introducing a second validation layer.
 
 ## Consequential residual risks
 
-Three durability mutants remain deliberately unresolved. Replacing directory
-`fsync` with a no-op changes only power-loss persistence, which an ordinary
-in-process test cannot discriminate honestly; existing deterministic crash-point
-and recovery tests protect the logical journal protocol, and the `fsync` remains.
-Deleting the explicit lock `unlock` is behaviorally equivalent because dropping
-the owned file releases the advisory lock; the explicit call documents intended
-release at scope exit. Treating every lock error as `WouldBlock` requires an injected
-non-contention OS lock failure that the current concrete filesystem boundary cannot
-portably produce; real contention and release are tested, while other errors are
-propagated directly by inspection. Promote either OS boundary to an injectable test
-seam only after an observed platform failure or a second consumer needs it.
+Three durability mutants remain deliberately unresolved. Replacing directory `fsync` with a no-op changes only power-loss persistence, which an ordinary in-process test cannot discriminate honestly; existing deterministic crash-point and recovery tests protect the logical journal protocol, and the `fsync` remains. Deleting the explicit lock `unlock` is behaviorally equivalent because dropping the owned file releases the advisory lock; the explicit call documents intended release at scope exit. Treating every lock error as `WouldBlock` requires an injected non-contention OS lock failure that the current concrete filesystem boundary cannot portably produce; real contention and release are tested, while other errors are propagated directly by inspection. Promote either OS boundary to an injectable test seam only after an observed platform failure or a second consumer needs it.
 
 ## Closeout lessons and promotion triggers
 
@@ -113,30 +72,15 @@ cd ..
 scripts/validate-pinned
 ```
 
-Focused mutation filters are useful for a narrow hypothesis, but the filter can
-also match mutation diff context; always inspect the listed mutants and final
-outcomes rather than trusting only the aggregate count. Establishing the baseline
-before adding tests distinguishes a newly protected contract from an already
-adequate suite. Fresh review is especially valuable when a test appears to kill a
-mutant by legitimizing unsafe behavior: that review caught the initial non-unique
-Action selector fallback and led to an unambiguous compatibility path instead.
+Focused mutation filters are useful for a narrow hypothesis, but the filter can also match mutation diff context; always inspect the listed mutants and final outcomes rather than trusting only the aggregate count. Establishing the baseline before adding tests distinguishes a newly protected contract from an already adequate suite. Fresh review is especially valuable when a test appears to kill a mutant by legitimizing unsafe behavior: that review caught the initial non-unique Action selector fallback and led to an unambiguous compatibility path instead.
 
-Do not reopen this charter for aggregate coverage movement or isolated low-risk
-mutants. Create a new bounded assurance action or charter when one of these concrete
-triggers appears:
+Do not reopen this charter for aggregate coverage movement or isolated low-risk mutants. Create a new bounded assurance action or charter when one of these concrete triggers appears:
 
-- a new identity or ownership path bypasses the canonical reference, template, or
-  charter-collection boundaries;
-- a production defect escapes in parsing bytes, durable recovery, dry-run purity,
-  occurrence routing, or cross-repository composition;
-- the journal, lock, filesystem, or calendar write boundary is replaced, gains a
-  second backend, or exposes a real platform-specific failure that warrants an
-  injectable seam;
-- a second real consumer makes a repository-local generator or fixture abstraction
-  materially clearer; or
-- focused mutation analysis finds a surviving mutant that represents a
-  consequential user-visible semantic failure rather than an equivalent or
-  unobservable implementation change.
+- a new identity or ownership path bypasses the canonical reference, template, or charter-collection boundaries;
+- a production defect escapes in parsing bytes, durable recovery, dry-run purity, occurrence routing, or cross-repository composition;
+- the journal, lock, filesystem, or calendar write boundary is replaced, gains a second backend, or exposes a real platform-specific failure that warrants an injectable seam;
+- a second real consumer makes a repository-local generator or fixture abstraction materially clearer; or
+- focused mutation analysis finds a surviving mutant that represents a consequential user-visible semantic failure rather than an equivalent or unobservable implementation change.
 
 ## Non-goals
 

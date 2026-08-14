@@ -23,11 +23,7 @@ With Git and Rust installed, bootstrap a checkout from the repository root:
 scripts/startup
 ```
 
-The script initializes the pinned submodules, then builds and installs the main
-user-facing Rust binaries: `clearhead`, `clearhead-lsp`, and
-`clearhead-graphd`. It is safe to rerun after pulling platform changes; Cargo
-rebuilds and replaces the installed binaries. Cargo's bin directory (normally
-`~/.cargo/bin`) must be on `PATH`.
+The script initializes the pinned submodules, then builds and installs the main user-facing Rust binaries: `clearhead`, `clearhead-lsp`, and `clearhead-graphd`. It is safe to rerun after pulling platform changes; Cargo rebuilds and replaces the installed binaries. Cargo's bin directory (normally `~/.cargo/bin`) must be on `PATH`.
 
 To validate the exact submodule revisions pinned by the platform, run:
 
@@ -35,9 +31,7 @@ To validate the exact submodule revisions pinned by the platform, run:
 scripts/validate-pinned
 ```
 
-The command first rejects uninitialized, dirty, or gitlink-mismatched submodules,
-then runs each repository's own pre-push gate. It deliberately adds no second test
-framework; `specifications` currently has no executable repository gate.
+The command first rejects uninitialized, dirty, or gitlink-mismatched submodules, then runs each repository's own pre-push gate. It deliberately adds no second test framework; `specifications` currently has no executable repository gate.
 
 ### Working with Submodules
 

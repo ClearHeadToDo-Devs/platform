@@ -1,47 +1,21 @@
 # Architectural Decisions
 
-**Last Updated:** July 4th 2026
-**Status:** Living Document
+**Last Updated:** July 4th 2026 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
 ## Decision 35: Source Trust Is a Capability
 
-Decision 6 permits Tree-sitter to recover a useful syntax tree from a live,
-partially-written buffer. That recovery is for diagnostics and editing support;
-it is not proof that fields, hierarchy, or UUIDs remain attached to the action
-the author intended. A real incomplete `[[link` demonstrated the distinction:
-generic recovery crossed into the next action and attached its UUID to the
-preceding action. Formatting the recovered `ActionList` then destroyed history.
+Decision 6 permits Tree-sitter to recover a useful syntax tree from a live, partially-written buffer. That recovery is for diagnostics and editing support; it is not proof that fields, hierarchy, or UUIDs remain attached to the action the author intended. A real incomplete `[[link` demonstrated the distinction: generic recovery crossed into the next action and attached its UUID to the preceding action. Formatting the recovered `ActionList` then destroyed history.
 
-Core therefore exposes two capabilities. `ParsedDocument` is recoverable input:
-the linter and LSP may inspect it, report every parser issue, and offer surgical
-code actions. `TrustedDocument` is obtainable only when no `ERROR`, `MISSING`,
-or named recovery issue exists. Any operation that rewrites existing source or
-lowers it into semantic workspace state must require the trusted capability.
-Recovered action files are quarantined from the domain model rather than
-risking false identity or relationships; their diagnostics remain visible.
+Core therefore exposes two capabilities. `ParsedDocument` is recoverable input: the linter and LSP may inspect it, report every parser issue, and offer surgical code actions. `TrustedDocument` is obtainable only when no `ERROR`, `MISSING`, or named recovery issue exists. Any operation that rewrites existing source or lowers it into semantic workspace state must require the trusted capability. Recovered action files are quarantined from the domain model rather than risking false identity or relationships; their diagnostics remain visible.
 
-The formatter does not depend on lint policy. Parser integrity issues are shared
-facts: the linter explains them, while the formatter only accepts/refuses the
-capability. Semantic lints that cannot cause source loss do not block formatting.
-Formatting stdout is still a rewrite boundary because users can pipe it over a
-file. LSP formatting returns no edit for untrusted source. Serialization of
-new, already-typed domain values remains valid without a source capability.
+The formatter does not depend on lint policy. Parser integrity issues are shared facts: the linter explains them, while the formatter only accepts/refuses the capability. Semantic lints that cannot cause source loss do not block formatting. Formatting stdout is still a rewrite boundary because users can pipe it over a file. LSP formatting returns no edit for untrusted source. Serialization of new, already-typed domain values remains valid without a source capability.
 
-The governing rule is: **parse broadly, interpret cautiously, rewrite only with
-proof**. Grammar-specific recovery and code actions can improve over time
-without weakening this boundary.
+The governing rule is: **parse broadly, interpret cautiously, rewrite only with proof**. Grammar-specific recovery and code actions can improve over time without weakening this boundary.
 
-For wiki links, keep valid `link` nodes in the grammar because Tree-sitter
-highlight queries use their label/URL children for concealment. Recovery is
-made structural rather than line-based: link content may span whitespace and
-newlines, but an unescaped `[` is a synchronization point. A missing `]]` then
-produces a bounded Tree-sitter `MISSING` token before the next `[state]` action,
-so the next action and UUID remain independently attached. The LSP offers a
-surgical “Close incomplete link” insertion at that exact missing-token range;
-it still returns no formatting edit until the repair lands.
+For wiki links, keep valid `link` nodes in the grammar because Tree-sitter highlight queries use their label/URL children for concealment. Recovery is made structural rather than line-based: link content may span whitespace and newlines, but an unescaped `[` is a synchronization point. A missing `]]` then produces a bounded Tree-sitter `MISSING` token before the next `[state]` action, so the next action and UUID remain independently attached. The LSP offers a surgical “Close incomplete link” insertion at that exact missing-token range; it still returns no formatting edit until the repair lands.
 
 ## Adding Optional Charter UUID to Actions file 
 
@@ -64,130 +38,58 @@ this also means we will likely have highlight rules to hide the uuid at a filter
 Still this all should make tracking down changes in the structure of the data model much easier since we can do this automatically using cli commands or even during the lsp creation so that we ensure the workspace is up to a good standard without allot of hand-cleaning
 ## Decision 34: Relaxed Reader, Strict Doctor
 
-Designing `clearhead doctor` (the trust charter's workspace fsck) surfaced that
-`load_workspace` currently entangles three roles: it **reads**, it **heals**
-(`recover_pending` replays interrupted write journals before reading anything),
-and it **judges** — but badly, hard-failing the entire workspace on one corrupt
-sidecar (`read_sidecar(...)?`) while burying real problems in `eprintln`
-warnings that `--json` consumers never see. A read-only doctor cannot be built
-on that function: calling it mutates the workspace before checking it, and it
-aborts on exactly the workspaces that need diagnosing.
+Designing `clearhead doctor` (the trust charter's workspace fsck) surfaced that `load_workspace` currently entangles three roles: it **reads**, it **heals** (`recover_pending` replays interrupted write journals before reading anything), and it **judges** — but badly, hard-failing the entire workspace on one corrupt sidecar (`read_sidecar(...)?`) while burying real problems in `eprintln` warnings that `--json` consumers never see. A read-only doctor cannot be built on that function: calling it mutates the workspace before checking it, and it aborts on exactly the workspaces that need diagnosing.
 
 ### The split
 
-Extract **`read_workspace`**: a pure, non-mutating, fault-tolerant reader that
-never refuses the workspace. Per-file failures — unparseable `.actions`, corrupt
-sidecar JSON, syntax errors dropping actions — become **findings** (plain data:
-code, severity, path, message, mirroring `LintDiagnostic`) returned alongside
-whatever loaded with clean parser integrity. Decision 35 later tightened this
-boundary: a file requiring parser recovery remains available for diagnostics
-but is quarantined from semantic workspace state. Then:
+Extract **`read_workspace`**: a pure, non-mutating, fault-tolerant reader that never refuses the workspace. Per-file failures — unparseable `.actions`, corrupt sidecar JSON, syntax errors dropping actions — become **findings** (plain data: code, severity, path, message, mirroring `LintDiagnostic`) returned alongside whatever loaded with clean parser integrity. Decision 35 later tightened this boundary: a file requiring parser recovery remains available for diagnostics but is quarantined from semantic workspace state. Then:
 
-- `load_workspace` = `recover_pending` + `read_workspace` + surface the
-  findings as warnings. Behavior for existing callers is unchanged.
-- `doctor` = `read_workspace` + the cross-file checks, rendered human-readable
-  or `--json`, exit codes distinguishing clean / warnings / violations.
+- `load_workspace` = `recover_pending` + `read_workspace` + surface the findings as warnings. Behavior for existing callers is unchanged.
+- `doctor` = `read_workspace` + the cross-file checks, rendered human-readable or `--json`, exit codes distinguishing clean / warnings / violations.
 
-This is Decision 6 (relaxed parser, strict linter) lifted from the file level
-to the workspace level: the reader is liberal and reports what it saw; the
-doctor is the strict judge. Same shape, one level up.
+This is Decision 6 (relaxed parser, strict linter) lifted from the file level to the workspace level: the reader is liberal and reports what it saw; the doctor is the strict judge. Same shape, one level up.
 
 ### The line between recovery and cleanup
 
-Journal replay stays a `load_workspace` side effect deliberately: replaying a
-`.pending` journal *completes an already-committed write* — without it, reads
-see torn multi-file state. That is crash recovery, and recovery-to-consistency
-is a legitimate obligation of loading.
+Journal replay stays a `load_workspace` side effect deliberately: replaying a `.pending` journal *completes an already-committed write* — without it, reads see torn multi-file state. That is crash recovery, and recovery-to-consistency is a legitimate obligation of loading.
 
-Everything else — orphaned `.tmp.*` staging files, sidecar entries whose action
-is gone — is **tidying**, and tidying is never a side effect of reading or
-diagnosing. Cleanup belongs to explicit, idempotent commands owned by each file
-surface. A future `doctor --fix` is sugar that *invokes those commands*; it does
-not grow fixing logic of its own. Doctor itself reads, always.
+Everything else — orphaned `.tmp.*` staging files, sidecar entries whose action is gone — is **tidying**, and tidying is never a side effect of reading or diagnosing. Cleanup belongs to explicit, idempotent commands owned by each file surface. A future `doctor --fix` is sugar that *invokes those commands*; it does not grow fixing logic of its own. Doctor itself reads, always.
 
 ### The check inventory (initial)
 
-Grounded in the 2026-07-04 survey of the workspace layer; the linter keeps
-intra-file validity, doctor owns cross-file coherence:
+Grounded in the 2026-07-04 survey of the workspace layer; the linter keeps intra-file validity, doctor owns cross-file coherence:
 
-- **Load integrity** — files that fail to parse or lose actions to syntax
-  errors (today: stderr warning only; the query-system charter file dropped out
-  silently until 2026-07-02)
-- **UUIDs** — duplicates within and across files (copy-pasted lines; the load
-  path currently masks cross-file duplicates)
-- **References** — dangling predecessors (explicit UUID refs, unlike parents
-  which cannot dangle by construction, Decision 33); unresolvable charter
-  `parent:` aliases
+- **Load integrity** — files that fail to parse or lose actions to syntax errors (today: stderr warning only; the query-system charter file dropped out silently until 2026-07-02)
+- **UUIDs** — duplicates within and across files (copy-pasted lines; the load path currently masks cross-file duplicates)
+- **References** — dangling predecessors (explicit UUID refs, unlike parents which cannot dangle by construction, Decision 33); unresolvable charter `parent:` aliases
 - **Aliases** — collisions (`name_to_alias` is last-writer-wins today)
-- **Sidecar ↔ actions** — orphaned sidecar entries; unparseable sidecar JSON;
-  `external_schedule_id` pointing at a recurring Plan UID absent from `plans/`
-- **Calendar** — `plans/<slug>/` directories matching no charter (load
-  currently invents an implicit charter instead of reporting)
-- **Durability residue** — a `.pending` journal present (report, do not
-  replay); orphaned `.tmp.*` staging files
+- **Sidecar ↔ actions** — orphaned sidecar entries; unparseable sidecar JSON; `external_schedule_id` pointing at a recurring Plan UID absent from `plans/`
+- **Calendar** — `plans/<slug>/` directories matching no charter (load currently invents an implicit charter instead of reporting)
+- **Durability residue** — a `.pending` journal present (report, do not replay); orphaned `.tmp.*` staging files
 
 ---
 ## Decision 33: Round-Trip Fidelity Lives at the Text Boundary
 
-Decision 9 committed us to a *lossless* round-trip between the `.actions` text and
-the domain structs. This decision records *where* that contract is actually at
-risk and how we enforce it — because a design conversation about "add round-trip
-property tests" surfaced that most of the surface is better protected by more
-static tools, and only a narrow residue is a genuine test target.
+Decision 9 committed us to a *lossless* round-trip between the `.actions` text and the domain structs. This decision records *where* that contract is actually at risk and how we enforce it — because a design conversation about "add round-trip property tests" surfaced that most of the surface is better protected by more static tools, and only a narrow residue is a genuine test target.
 
 ### The type system owns the model; the test owns the crossing
 
-The type system already guarantees an `Action` is well-formed *in memory*. It
-guarantees nothing about `parse(format(x)) == x`, because `format` and `parse`
-are hand-written string manipulation over three independently-maintained
-artifacts — the formatter (`fmt_content`), the tree-sitter grammar, and the
-Topiary query — that must agree on one wire protocol. No type relates three
-programs. So the round-trip contract's real job is *not* "is the model valid"
-(types and tree structure cover that); it is "do those three artifacts agree,"
-and that is the only thing that needs a round-trip check.
+The type system already guarantees an `Action` is well-formed *in memory*. It guarantees nothing about `parse(format(x)) == x`, because `format` and `parse` are hand-written string manipulation over three independently-maintained artifacts — the formatter (`fmt_content`), the tree-sitter grammar, and the Topiary query — that must agree on one wire protocol. No type relates three programs. So the round-trip contract's real job is *not* "is the model valid" (types and tree structure cover that); it is "do those three artifacts agree," and that is the only thing that needs a round-trip check.
 
 Consequently, most candidate invariants get pushed to a more static layer:
 
-- **Referential coherence** (parent exists, no cycles) — free by construction:
-  the parser builds `parent_id` from `>` nesting, so it *cannot* emit a dangling
-  parent. A generator would produce trees, not flat lists, for the same reason.
-- **Datetime precision** — a *type* concern, not a test concern. Make the type's
-  expressiveness match the format's (or vice versa) so there is nothing to lose.
+- **Referential coherence** (parent exists, no cycles) — free by construction: the parser builds `parent_id` from `>` nesting, so it *cannot* emit a dangling parent. A generator would produce trees, not flat lists, for the same reason.
+- **Datetime precision** — a *type* concern, not a test concern. Make the type's expressiveness match the format's (or vice versa) so there is nothing to lose.
 - **Horizontal spacing** — already fixed and guarded by a regression test.
-- **Ambiguity of human intent** (`#42` — id, or literal, or half-typed?) — a
-  *lint* concern, never a test. The file is a live buffer that passes through
-  many not-yet-valid states while editing; hard validation fights that. This is
-  Decision 6 (relaxed parser, strict linter) applied to the text boundary.
+- **Ambiguity of human intent** (`#42` — id, or literal, or half-typed?) — a *lint* concern, never a test. The file is a live buffer that passes through many not-yet-valid states while editing; hard validation fights that. This is Decision 6 (relaxed parser, strict linter) applied to the text boundary.
 
-Net: a full property-test *generator* over arbitrary `ActionList`s is
-over-scoped. The right-sized tool is targeted round-trip tests aimed squarely
-at the artifact-agreement residue, plus pinned regressions for real bugs.
+Net: a full property-test *generator* over arbitrary `ActionList`s is over-scoped. The right-sized tool is targeted round-trip tests aimed squarely at the artifact-agreement residue, plus pinned regressions for real bugs.
 
 ### Two concrete rulings
 
-**1. Context tags: comma is canonical; the parser recovers space form losslessly.**
-The formatter and grammar use the comma form (`+work,meeting,client`); the spec
-documented the space form (`+work +meeting +client`). Space form parses as
-separate context nodes, and the parser was *assigning* per node — silently
-keeping only the last tag (the multi-tag data-loss bug found by dogfooding
-2026-07-02). Resolution: the formatter continues to emit the comma form as
-canonical, and the parser *collects* every context node rather than overwriting,
-so a spec-following hand-authored file is recovered without loss rather than
-corrupted. Be liberal in what you accept. (Implemented: parser append +
-regression test; spec aligned.)
+**1. Context tags: comma is canonical; the parser recovers space form losslessly.** The formatter and grammar use the comma form (`+work,meeting,client`); the spec documented the space form (`+work +meeting +client`). Space form parses as separate context nodes, and the parser was *assigning* per node — silently keeping only the last tag (the multi-tag data-loss bug found by dogfooding 2026-07-02). Resolution: the formatter continues to emit the comma form as canonical, and the parser *collects* every context node rather than overwriting, so a spec-following hand-authored file is recovered without loss rather than corrupted. Be liberal in what you accept. (Implemented: parser append + regression test; spec aligned.)
 
-**2. Reserved characters in freeform fields require explicit escaping.**
-`$ # + < *` etc. carry syntactic meaning. If a title genuinely needs one
-(`save $500`, `PR #42`), the human escapes it, and the *formatter* is obligated
-to escape on write so its own output always round-trips — escaping is a
-write-side discipline, never a read-side heuristic that guesses intent. An
-*unescaped* reserved char in hand-authored text is a **lint warning**, not a
-parse error and not a test failure (again: live buffer, Decision 6). Status:
-**decided, not yet implemented** — escaping is currently absent from all three
-layers (formatter writes names raw, parser does not unescape, grammar has no
-escape rule). This spawns a coordinated grammar + parser + formatter action; the
-targeted round-trip tests land with it, since escape/unescape survival through
-Topiary is precisely the artifact-agreement residue worth testing.
+**2. Reserved characters in freeform fields require explicit escaping.** `$ # + < *` etc. carry syntactic meaning. If a title genuinely needs one (`save $500`, `PR #42`), the human escapes it, and the *formatter* is obligated to escape on write so its own output always round-trips — escaping is a write-side discipline, never a read-side heuristic that guesses intent. An *unescaped* reserved char in hand-authored text is a **lint warning**, not a parse error and not a test failure (again: live buffer, Decision 6). Status: **decided, not yet implemented** — escaping is currently absent from all three layers (formatter writes names raw, parser does not unescape, grammar has no escape rule). This spawns a coordinated grammar + parser + formatter action; the targeted round-trip tests land with it, since escape/unescape survival through Topiary is precisely the artifact-agreement residue worth testing.
 
 ---
 ## Decision 32: Single Semantic Output Contract
@@ -214,16 +116,9 @@ Consumers pay a slightly heavier default payload and a longer `jq` path in excha
 ---
 ## Decision 31: Plans-vdir synchronization boundary
 
-ClearHead integrates with one configured iCalendar vdir (`plan_path`). The
-filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing,
-Git, mounted storage, or no transport may sit behind it; core and the CLI have
-no account, server, href, ETag, or vendor-property concepts.
+ClearHead integrates with one configured iCalendar vdir (`plan_path`). The filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing, Git, mounted storage, or no transport may sit behind it; core and the CLI have no account, server, href, ETag, or vendor-property concepts.
 
-ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters
-and standalone VTODOs project Actions. Other iCalendar component types are
-outside the ClearHead projection. There is no legacy Plan compatibility,
-alternate import, or migration command; during pre-release development,
-existing files are fixed directly.
+ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters and standalone VTODOs project Actions. Other iCalendar component types are outside the ClearHead projection. There is no legacy Plan compatibility, alternate import, or migration command; during pre-release development, existing files are fixed directly.
 
 Standalone fields synchronize independently with a three-way merge:
 
@@ -231,16 +126,9 @@ Standalone fields synchronize independently with a three-way merge:
 - **B** — last agreed value in `.clearhead/sync/plans.json`
 - **C** — current standalone VTODO value
 
-Comparing A and C independently against B respects edits from either side
-without relying on timestamps. Identical edits converge; divergent edits
-conflict. One field conflict does not block safe changes in another. The merge
-bases are local projection history, never Action fields or charter sidecars.
+Comparing A and C independently against B respects edits from either side without relying on timestamps. Identical edits converge; divergent edits conflict. One field conflict does not block safe changes in another. The merge bases are local projection history, never Action fields or charter sidecars.
 
-Calendar-created standalone VTODOs become root Actions in the charter selected
-by their vdir directory. Missing resources are recreated and have no lifecycle
-meaning; only VTODO STATUS changes Action state. PRIORITY and CATEGORIES use
-their standard RFC 5545 properties directly. Existing resources retain unknown
-properties, alarms, original UID, and transport-selected path.
+Calendar-created standalone VTODOs become root Actions in the charter selected by their vdir directory. Missing resources are recreated and have no lifecycle meaning; only VTODO STATUS changes Action state. PRIORITY and CATEGORIES use their standard RFC 5545 properties directly. Existing resources retain unknown properties, alarms, original UID, and transport-selected path.
 
 ## Decision 30: Workspaces as first-class entities in new application ontology
 after pondering the work for awhile we have be working through many workspace-specific problems that have made two needs clear:
@@ -318,8 +206,7 @@ the main thing that i want to distinguish here is the workflow around the struct
 
 we first EXPAND the instances so that all upcoming instances and primary instances are there.
 
-Next, we finish either primary or upcoming actions and then ARCHIVE them like we are normally doing but archive should also now handle upcoming actions so that we can allow people to move stuff
-    specifically, this mean completed/cancelled actions in upcoming get swept to .completed.actions the same way primary ones do
+Next, we finish either primary or upcoming actions and then ARCHIVE them like we are normally doing but archive should also now handle upcoming actions so that we can allow people to move stuff specifically, this mean completed/cancelled actions in upcoming get swept to .completed.actions the same way primary ones do
 
 Finally, people can easily MOVE actions from the upcoming to the primary file based on if there are existing actions (open or closed) that are part of the recursion
 
@@ -661,10 +548,8 @@ We want to go over what breaking changes this will entail:
 
  ### Sync Implications
 
-By keeping all data (plans AND processes) in the CRDT, we mainain a single sync mechanism. 
-  Oxigraph is rebuilt locally from the CRDT/IR, so we don't need to solve RDF sync. This eliminates events.db as a separate store 
-  - ActionProcesses now live in the CRDT alongisde ActionPlans.
-  Flow:
+By keeping all data (plans AND processes) in the CRDT, we mainain a single sync mechanism.  Oxigraph is rebuilt locally from the CRDT/IR, so we don't need to solve RDF sync. This eliminates events.db as a separate store
+  - ActionProcesses now live in the CRDT alongisde ActionPlans. Flow:
   - CRDT → IR → Oxigraph (query cache)
   - CRDT → IR → DSL (human interface)
 
@@ -691,9 +576,7 @@ One feature i want to support is the idea of tag subtypes. the idea being that s
 
 These can be defined within a single config option in the core config file and will only be a list of values, with the ability to put certain tags under others. 
 
-This allows one to make one tag implicitly include other tags. for example:
-Grocery store is a subtype of driving
-so if I tag something as grocery store it will also be tagged as driving.
+This allows one to make one tag implicitly include other tags. for example: Grocery store is a subtype of driving so if I tag something as grocery store it will also be tagged as driving.
 
 neovim is a subset of terminal so if I tag something as neovim it will also be tagged as terminal which itself will be a subset of computer so tagging something as neovim will also tag it as computer
 ## Decision 7: Decreasing Formatter Responsibility
@@ -797,5 +680,4 @@ We will NOT be generating code from the ontology directly, but rather using it a
 In addition, we have been doing a deeper focus on aligning around the CLI and making the editor extensions a first-class citizen
 
 
-**Version:** 1.0
-**Authors:** Clearhead Platform Team
+**Version:** 1.0 **Authors:** Clearhead Platform Team
