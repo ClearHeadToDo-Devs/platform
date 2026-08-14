@@ -39,6 +39,22 @@ boundary. A user may put vdirsyncer and CalDAV, Syncthing, Git, a mounted
 filesystem, or nothing at all behind it; core and the CLI neither know nor
 care. Configuring the plans path is the only integration configuration.
 
+## Design note (2026-08-13): collections belong to constructed charters
+
+Plans are not a parallel identity system. Workspace construction calculates one
+relative collection path for every charter from its canonical file anchor,
+even when no directory or `.ics` resource exists. The optional configured
+`plan_path` changes only the physical vdir root. Calendar loading and sync join
+resources to charters by exact collection path; they never reconstruct
+ownership from aliases, titles, or an arbitrary `next.actions` basename.
+
+A new resource inside a known collection remains an expected calendar-created
+Action or Plan. A collection directory with no charter owner is quarantined and
+reported as `unowned-plans-collection`, not adopted as an implicit charter.
+`clearhead doctor --fix` is the explicit removal path and warns that vdirsyncer
+may propagate the deletion. The calculated collection path is workspace state
+in memory, not data written into charter Markdown or sidecars.
+
 ## Design notes (2026-07-12)
 
 Grounded in the existing code (`clearhead-core/src/workspace/calendar/{ics,reconcile}.rs`), not just the abstract goal:
