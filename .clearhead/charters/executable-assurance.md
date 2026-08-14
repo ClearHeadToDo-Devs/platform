@@ -53,6 +53,19 @@ Newly discovered defects may be fixed when they are small and directly adjacent.
   unrelated actions despite its documented contract. Resolution failures now
   expose stable typed categories while retaining contextual human diagnostics.
 
+## Next implementation slice
+
+Protect template targeting with a repository-local generator whose expected
+identity mapping and parent relationships are declared during construction. Cover
+local-over-global resolution, missing templates, root-only parent overrides,
+internal hierarchy remapping, external-parent preservation, field preservation,
+and source immutability. Establish the mutation baseline first and use the final
+mutation result to judge the slice.
+
+After templates, inspect the remaining high-risk durable lifecycle mutations. Prefer
+explicit crash-point and state-transition tests where they communicate atomicity more
+clearly than generated properties.
+
 ## Non-goals
 
 - defining a comprehensive assurance taxonomy or governance process;
