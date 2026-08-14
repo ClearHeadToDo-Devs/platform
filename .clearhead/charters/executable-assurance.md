@@ -40,6 +40,13 @@ Newly discovered defects may be fixed when they are small and directly adjacent.
 - Do not refactor production code solely to improve a metric or accommodate a generalized test framework.
 - Record a brief rationale when a consequential finding is deliberately left unresolved; introduce more structure only if the volume of findings makes it necessary.
 
+## Evidence landed
+
+- The first focused generator constructs valid Action forests with unique identities, bounded hierarchy, coherent timestamps, references, links, and every DSL-backed optional field. Five properties exercise 256 generated cases each for semantic round trips, formatter idempotence, link/literal boundaries, and subtree-closing locality.
+- Those subtree properties replaced five narrow lifecycle examples while preserving stronger assertions over membership, order, source immutability, root detachment, descendant hierarchy, and both terminal states.
+- Mutation analysis left no known surviving mutant in the exercised lifecycle and parser/formatter slices; two infinite-loop mutations were rejected by timeout.
+- Generated combinations exposed and repaired omitted creation-date rendering, malformed-link preservation in non-link fields, and an escaped terminal-backslash ambiguity. Exact parser fixtures remain for the byte-level compatibility boundary.
+
 ## Non-goals
 
 - defining a comprehensive assurance taxonomy or governance process;
