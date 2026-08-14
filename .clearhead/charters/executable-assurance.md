@@ -46,6 +46,11 @@ Newly discovered defects may be fixed when they are small and directly adjacent.
 - Those subtree properties replaced five narrow lifecycle examples while preserving stronger assertions over membership, order, source immutability, root detachment, descendant hierarchy, and both terminal states.
 - Mutation analysis left no known surviving mutant in the exercised lifecycle and parser/formatter slices; two infinite-loop mutations were rejected by timeout.
 - Generated combinations exposed and repaired omitted creation-date rendering, malformed-link preservation in non-link fields, and an escaped terminal-backslash ambiguity. Exact parser fixtures remain for the byte-level compatibility boundary.
+- A separate reference generator declares expected targets, ambiguity, rejection,
+  and scoped projections directly from construction metadata rather than traversing
+  the model as an oracle. It reduced the full reference module's mutation result
+  from 18 missed mutants to none and exposed that plan projection retained
+  unrelated actions despite its documented contract.
 
 ## Non-goals
 
