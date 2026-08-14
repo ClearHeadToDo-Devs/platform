@@ -50,7 +50,8 @@ Newly discovered defects may be fixed when they are small and directly adjacent.
   and scoped projections directly from construction metadata rather than traversing
   the model as an oracle. It reduced the full reference module's mutation result
   from 18 missed mutants to none and exposed that plan projection retained
-  unrelated actions despite its documented contract.
+  unrelated actions despite its documented contract. Resolution failures now
+  expose stable typed categories while retaining contextual human diagnostics.
 
 ## Non-goals
 
