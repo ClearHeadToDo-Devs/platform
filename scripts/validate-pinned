@@ -42,11 +42,18 @@ run_gate clearhead.nvim
 run_gate ontology
 
 # Specifications owns no runnable gate of its own — it is inert oracle data.
-# Conformance is the implementations' responsibility, so it is checked here, in
-# the pinned composition: the spec's own example must satisfy its schema, and
-# the pinned CLI must project a real workspace to JSON that satisfies it too.
-# Uses the sourcemeta `jsonschema` validator.
-echo "validate-pinned > specifications conformance"
+# Conformance is the implementations' responsibility, so it is checked here in
+# the pinned composition. Core consumes the semantic corpus through its opt-in
+# feature; the schema also validates both the spec's canonical JSON example and
+# the pinned CLI's projection of a real workspace.
+echo "validate-pinned > Core DSL conformance"
+(
+    cd "$root/clearhead-core"
+    CLEARHEAD_SPEC_DIR="$root/specifications" \
+        cargo test --features spec-conformance --test spec_conformance
+)
+
+echo "validate-pinned > specifications schema conformance"
 if ! command -v jsonschema >/dev/null 2>&1; then
     echo "validate-pinned > jsonschema CLI not found; install the sourcemeta jsonschema validator" >&2
     exit 1
