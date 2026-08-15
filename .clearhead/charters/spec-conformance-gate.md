@@ -5,50 +5,52 @@ parent: platform
 objectives:
   - trustworthy-evolution
 ---
-# Specifications Executable Gate
+# The DSL Spec as Single Authority
 
-The closed [[executable-assurance]] charter built `scripts/validate-pinned`, which runs every submodule's pre-push gate against the exact pinned composition — but it ends with a placeholder: `specifications has no executable repository gate`. Specifications is the only submodule without one, and it is the load-bearing contract two implementations (Core in Rust, the nvim pure-Lua slice per [[clearhead-client-coupling-via-spec]]) must agree with. This charter gives `specifications/` a real gate and wires it into `validate-pinned`, then closes.
+`specifications/` is the authority for the `.actions` DSL. The grammar (tree-sitter-actions) and Core are **peer implementations** that conform to it — swap tree-sitter for a hand-written parser and the spec does not move, which is the test for who owns the contract. Core links the grammar to *do the parse* (tree-sitter/topiary): a **functionality dependency, not a spec dependency**. Each implementation takes only the parts of the spec it needs, validates against it where necessary, and holds no competing copy. The spec itself stays inert — it is data (schema, corpus, formatting forms, lint codes, prose), never a program, and nothing in `specifications/` executes.
 
-## What is actually missing (investigated 2026-08-14)
+## Why now: the duplication is real and drifting
 
-Most conformance tooling already exists — this is smaller than it first looked:
+- Two `actions.schema.json` exist — the grammar *generates* one (`scripts/generate-schema.js`, empty patterns, `priority min 0`), the spec holds a hand-enriched copy (real patterns, `priority 1–9`) that even carries the grammar's `$id`. `diff` confirms they have drifted; improvements landed on the copy and would be erased by regeneration.
+- The `.actions` example corpus is duplicated across the grammar and the spec (`conformance_test.actions`, `laundry_workflow.actions`, …), plus Core keeps its own fixtures. Three divergent corpora for one language. The jq/sql query examples are likewise duplicated (`examples/queries/` in both grammar and spec).
+- `conformance_test.actions` labels cases `(E012)`/`(E013)`; the linter and `linting.md` agree on `W002`/`W003` warnings, and no E012/E013 exists. The labels are stale.
 
-- **Roundtrip** is `clearhead format file` (parse → canonical text; compare to source).
-- **Diagnostics** is `clearhead lint file`, which already emits codes with `line:col` (e.g. `:16:1: WARN: ... [W002]`).
-- **Schema shape** is a plain JSON-Schema validation of the static `examples/` against `schemas/*.schema.json` — an external validator in the gate script, no Core change.
+## Ownership model
 
-The one genuine Core gap: **there is no parse-to-schema-JSON entrypoint.** `export` only emits iCalendar plans; `OutputMode` is `Table`/`JsonLd`/`Ids`; and Core's `Action` has no serde mapping to the `sample.json` shape (`doDate`/`completedDate`). So `schemas/actions.schema.json` + `sample.json` describe a serialization **no code emits** — a declared contract without an emitter.
+| Layer | Authority | Consumers |
+| --- | --- | --- |
+| DSL: surface syntax, `actions.schema.json`, canonical formatted forms, lint codes, example corpus, prose | **specifications** | grammar + Core |
+| Concrete syntax tree (S-expression) shape | grammar (implementation detail, below the domain model) | grammar only |
+| Parse/format *functionality* (tree-sitter, topiary) | grammar | Core links as a library |
+| Domain model construction + linting | Core | — |
 
-## Discovered drift (the gate justifying itself)
+The one genuinely parser-specific artifact is the CST S-expression shape (`test/corpus/*.txt`): the spec says "an Action has a priority," not what the tree node is called. Its existence confirms the boundary rather than dents it. Everything above it points at the spec.
 
-`examples/actions/conformance_test.actions` names its cases `(E012 error)` / `(E013 nudge)`, but `clearhead lint file` emits **`W002` / `W003` warnings**. The oracle-in-prose already disagrees with the implementation, and it is not yet knowable from here whether `linting.md` blesses the E-codes (linter under-implements) or the fixture is stale. **Reconcile this against `specifications/linting.md` before any oracle is authored** — building expected-outputs on unreconciled codes is building on sand.
+## What each implementation does (validate where necessary — no more)
 
-## Outcomes
+- **Grammar** stops shipping a competing authoritative schema. `generate-schema.js` is **deleted**: it derives the schema from `patterns.js` to keep it in sync with the parser, but it isn't even delivering that (it emits empty patterns), and no consumer needs the schema *generated* — only a correct one to exist, which the spec provides. Its package `./schema` export and docs reference the spec's schema instead; `schema_validation_test.js` and formatting tests repoint at the spec's schema and `examples/formatting/`. The generator's intent — that the grammar parses what the schema calls valid — is preserved more cheaply by the grammar parsing the spec's valid corpus (accept the valid, reject the invalid). It keeps only its CST corpus.
+- **Core** conforms at the semantic layer over the spec corpus: structure → validate serialized `ActionList` against the spec's `actions.schema.json` (net-new; adds a `jsonschema` dev-dep; aligns Core's serde shape to the schema); formatting → idempotence + roundtrip (already landed in `generated_invariants.rs`); linting → planted-condition properties (extend the reference/template generator pattern). Core does the lint layer because the grammar cannot.
+- **Same corpus, different purposes:** one set of `.actions` examples in the spec; the grammar reads it with a syntactic/format oracle, Core with a semantic oracle.
 
-1. `specifications/` owns an executable gate (`.githooks/pre-push`) invoked by `validate-pinned` as an eighth `run_gate`, replacing the placeholder echo.
-2. The `.actions` example corpus is checked by the gate at the tiers the existing CLI already supports: roundtrip (`format`) and diagnostics (`lint`), plus JSON-Schema validation of the static examples.
-3. Diagnostic codes are reconciled between the fixtures, the linter, and `linting.md`, with one canonical source.
-4. The conformance corpus is restructured so each scenario is testable as a unit.
+## Simplicity guardrails
 
-## Fixed scope
+Duplication is the disease being treated — do not replace it with parallel test frameworks. One corpus, in the spec. Delete the grammar's and Core's overlapping copies rather than syncing them. Prefer the cheapest adequate oracle at each layer (idempotence/roundtrip over structural compare; planted-condition over model-traversal). Generator properties cover positive-space breadth; a *small* set of hand-authored fixtures covers the named negatives (`E001`–`E007`) and byte-level escaping edges the generator won't reach — kept minimal, not exhaustive.
 
-- `examples/conformance/{parse,diagnostics,archive}/`, one scenario + one oracle per fixture, directory = assertion type. Splitting `conformance_test.actions` is mandatory: it mixes valid parses with error cases, so no single expected-output is expressible over it.
-- Oracles are **hand-authored from the spec, never dumped from Core** — a generated `expected.json` makes Core the answer key and inverts the spec→implementation dependency. Diagnostics oracle pins **code + node span, not message text** (wording churns).
-- The schema-shaped `expected.json` structural tier is **deferred, not required**: it depends on the missing Core emitter (recorded below). Roundtrip + diagnostics + schema-validation are sufficient for a first honest gate.
+## Independence
 
-## Sidequest recorded (blocks only the structural tier)
-
-Core needs a parse-to-schema-JSON entrypoint that serializes an `ActionList` to the `actions.schema.json` shape (or the shape must be declared unsupported and `sample.json`/the schema retired). Until then the structural `expected.json` comparison cannot run. Promote this from deferred to active only if roundtrip + diagnostics prove too weak to catch a real composition defect.
+To test Core: clone Core beside its direct siblings — never the `platform` meta-repo. The grammar is a mandatory *functionality* dependency (path-dep, an existing standalone-build gap tracked separately). The spec is an *optional, test-only data* dependency: conformance sits behind a `spec-conformance` cargo feature that also gates the `jsonschema` dev-dep, with the spec located via `CLEARHEAD_SPEC_DIR` (default `../specifications`). Default `cargo test` needs no spec and stays green; the feature fails loudly only when enabled without the spec present. `scripts/validate-pinned` (which already gates the pinned composition) is unchanged; the spec never gets a runnable gate.
 
 ## Non-goals
 
-- A schema-JSON emitter for its own sake, absent a conformance consumer that needs it.
-- Centralizing the corpus in the platform repo — the gate is spec-owned so both implementations kneel to it.
-- Pinning human-readable diagnostic message text.
+- Any runnable gate inside `specifications/`, or a spec check that invokes an implementation.
+- A second/third example corpus, or syncing copies instead of deleting them.
+- A CLI `export json` command — Core's harness has direct type access and compares in-process.
+- Pinning human-readable diagnostic message text (pin code + node span).
+- Fixing the grammar's mandatory-path-dep standalone gap here (separate concern).
 
 ## Done gate
 
-- `validate-pinned` runs a real `specifications` gate instead of the placeholder;
-- the example corpus passes roundtrip + diagnostics + schema validation, restructured per scenario;
-- the E-vs-W code drift is reconciled to one canonical source;
-- the parse-to-schema-JSON gap is recorded with an explicit promotion trigger.
+- `specifications/` is the sole `actions.schema.json` and the sole `.actions` example corpus; the grammar's and Core's duplicates are gone.
+- The grammar validates its parsing/formatting against the spec (schema + formatting forms); `generate-schema.js` is removed and the grammar references the spec's schema.
+- Core proves structure/format/lint conformance against the spec corpus behind the `spec-conformance` feature; its serde shape matches the spec schema.
+- The stale `W`-code labels are corrected; the spec stays inert and `validate-pinned` unchanged.
