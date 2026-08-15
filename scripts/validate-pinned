@@ -41,5 +41,29 @@ run_gate clearhead-lsp
 run_gate clearhead.nvim
 run_gate ontology
 
-echo "validate-pinned > specifications has no executable repository gate"
+# Specifications owns no runnable gate of its own — it is inert oracle data.
+# Conformance is the implementations' responsibility, so it is checked here, in
+# the pinned composition: the spec's own example must satisfy its schema, and
+# the pinned CLI must project a real workspace to JSON that satisfies it too.
+# Uses the sourcemeta `jsonschema` validator.
+echo "validate-pinned > specifications conformance"
+if ! command -v jsonschema >/dev/null 2>&1; then
+    echo "validate-pinned > jsonschema CLI not found; install the sourcemeta jsonschema validator" >&2
+    exit 1
+fi
+
+schema="$root/specifications/schemas/actions.schema.json"
+
+# 1. Spec self-consistency: the canonical example conforms to the schema.
+jsonschema validate "$schema" "$root/specifications/examples/actions/sample.json"
+
+# 2. Implementation conformance: the pinned CLI's canonical projection
+#    (`read actions --format json`) of a real workspace — this repo — conforms.
+cargo build -q --manifest-path "$root/clearhead-cli/Cargo.toml"
+projection=$(mktemp)
+trap 'rm -f "$projection"' EXIT
+(cd "$root" && "$root/clearhead-cli/target/debug/clearhead" read actions --format json) \
+    >"$projection" 2>/dev/null
+jsonschema validate "$schema" "$projection"
+
 echo "validate-pinned > all repository-owned checks passed"
