@@ -53,6 +53,15 @@ echo "validate-pinned > Core DSL conformance"
         cargo test --features spec-conformance --test spec_conformance
 )
 
+# graphd owns query output, so index-JSON schema conformance is proven at its
+# producer boundary against the spec's published index_query_result schema.
+echo "validate-pinned > graphd query-output conformance"
+(
+    cd "$root/clearhead-graphd"
+    CLEARHEAD_SPEC_DIR="$root/specifications" \
+        cargo test --features spec-conformance --test spec_conformance
+)
+
 echo "validate-pinned > specifications schema conformance"
 if ! command -v jsonschema >/dev/null 2>&1; then
     echo "validate-pinned > jsonschema CLI not found; install the sourcemeta jsonschema validator" >&2

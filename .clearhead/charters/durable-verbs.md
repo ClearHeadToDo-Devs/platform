@@ -1,0 +1,151 @@
+---
+id: 01a006d9-5ab8-7312-8473-783b3d9fca73
+alias: durable-verbs
+parent: platform
+objectives:
+  - trustworthy-evolution
+state: Active
+---
+# Durable Verb Boundary
+
+The CLI action verbs already encode the right mutation seam in two places and then quietly abandon it in three.
+
+`complete`/`cancel` and `archive` go through a **locked, journaled core mutation**: acquire the workspace lock, recover pending intent, read trusted state, plan, stage a re-rendered output, commit one `PendingBatch`.
+
+`add`, `update`, and `delete` do a raw read-modify-write in the CLI adapter using `super::save_file` — no lock, no journal recovery, no durability batch.
+
+The payoff is real but narrower than close/archive's.
+
+`close`/`archive` move a subtree **across two files** (active ↔ completed); a crash between the writes loses or duplicates actions.
+That is data-loss prevention, and [[durable-action-close]] is specifically about that cross-file invariant.
+`add`/`update`/`delete` are **single-file** mutations; the only second file they touch is the **sidecar**, which is derived and doctor-repairable.
+So extending the boundary to them buys **concurrency safety** (CLI↔LSP↔graphd on the same file) and **sidecar atomicity** (no stale `.json` after a crash between the actions write and the sidecar write) — worth doing, but on those merits, not on a claim of data-loss parity with close.
+
+A second smell lives alongside it: `ActionUpdate`, `apply_updates`, `CharterUpdate`, and `apply_charter_update` live in `clearhead_cli/mutations.rs`. Those are domain field semantics ("how an Action's fields change, including the `completed_at` stamp on Completed"), not CLI orchestration.
+
+LSP and graphd cannot reuse them, and they sit in the wrong crate next to `domain::close_subtree`
+and `collect_subtree_ids`.
+
+## The keystone: one seam, many plans
+
+The cleanliness risk is *not* where the verbs live — it is that `close_action_subtree` and `archive_actions` already **duplicate** the lock → `recover_pending` → read → plan → stage → `PendingBatch::commit` envelope.
+Naively adding three more verbs that each "mirror `close_action_subtree`" produces five copies of the same boilerplate, which is the cosmetic split [[tech-debt]]'s complexity review explicitly warns against.
+
+The proper boundary is therefore **one locked-mutation seam in core, many pure
+plans**:
+
+1. Extract the duplicated envelope into one core helper —
+   `with_locked_mutation(workspace_root, |trusted_state| -> Plan) -> Result` —
+   that does lock + recover + read + apply-plan + stage + commit.
+2. Re-express `close_action_subtree` and `archive_actions` on it with **no
+   behavior change** (less code, same semantics).
+3. Each verb — `close`, `archive`, `add`, `update`, `delete` — then supplies
+   only a **pure plan function** (`plan_action_archive` is already half this
+   pattern).
+4. Dry-run falls out for free: unlocked-read + pure plan = preview; locked-read +
+   the same pure plan + batch = commit. The CLI stops re-deriving
+   `collect_subtree_ids` just to print "Would X action Y and Z child(ren)".
+
+This makes the relocated `ActionUpdate` and the pure plan functions the real
+reusable assets; the verbs become thin.
+
+## The selector needs real design
+
+`CloseActionSelector` is active-file only.
+
+`delete` targets **both** active and `.completed.actions`, so the selector must span both.
+The CLI's fuzzy `find_best_match` runs *before* the lock and core re-confirms canonically *under* the lock via `unique_selector_match`; re-identification can disagree with the pre-lock fuzzy match, and that disagreement must be a **typed result** (not-found-under-lock, state-changed-under-lock) analogous to close's `already_closed`.
+The clean move is a small, general selector plus a typed outcome enum that `close_action_subtree` *also* migrates onto, so the [[durable-action-close]] re-identification rule applies uniformly to close, update, and delete — not three verbs each bolting onto `CloseActionSelector`.
+
+## What already works
+
+Core already owns every building block this charter consumes, none of it new:
+
+- `WorkspaceLock::try_acquire` and `recover_pending` — the mandatory
+  lock + recovery before any read
+- `PendingBatch` — stage every output, commit once, recover an interrupted commit
+- `close_action_subtree` / `archive_actions` — the locked read-plan-apply
+  precedent, which this charter *consolidates* rather than copies
+- `CloseActionSelector` + `unique_selector_match` — canonical identity
+  resolution *inside* the lock, where a fresh in-memory UUID can be re-identified
+  safely
+- `plan_action_archive` — a **pure** plan function that powers the archive
+  dry-run; the same shape the other verbs adopt
+
+## Ownership
+
+- **Core owns the mutation.** One `with_locked_mutation` seam plus one pure plan
+  per verb; core also owns the generalized selector and the
+  `ActionUpdate`/`CharterUpdate` field appliers.
+- **The CLI owns the adapter.** Flag-to-field wiring, `--scheduled-at` RFC3339
+  parsing, dry-run prose, the lenient name-contains fallback layered on top of
+  core's canonical `select_reference_where`, the materialized-vs-projected
+  occurrence branch decision, and all output rendering (table, JSON, JSON-LD,
+  DSL, tree, `VerbOutcome`). Nothing here moves to core.
+- **The fuzzy fallback stays in the CLI.** `find_best_match` and its tests are
+  load-bearing: a UUID-shaped query that matches no id must return not-found,
+  never degrade to a name-contains write. Core owns canonical resolution; the
+  CLI owns the human escape hatch. This charter does not merge them.
+
+## Relationship to [[data-workflows]]
+
+[[data-workflows]] is building a separate, batched `clearhead transact` path with published JSON Schemas, whose first operation set is `update-action`, `complete-action`, `cancel-action`. Its charter explicitly lists "routing all existing mutation commands through the transaction engine" as a **non-goal**.
+
+This charter is the complementary, smaller move on the *existing single verbs*.
+The two share a core insight (resolve against trusted state under the lock, commit once) but differ on purpose:
+
+- `transact` is a new schema-driven batch surface for machine composition.
+- This charter closes a concurrency/sidecar-atomicity gap in the verbs humans and agents already use every time they type `clearhead add`, `update`, or
+  `delete`.
+
+When the transaction planner lands, `update` is the one verb where reuse is a live design question (a single-operation `transact` and a single `update` are nearly the same plan).
+The action that introduces core `update_action` records that decision explicitly rather than silently duplicating the planner.
+
+`add` and `delete` are outside the first transaction operation set and have no such overlap.
+
+## Scope
+
+In scope:
+
+1. Relocate `ActionUpdate` / `apply_updates` / `CharterUpdate` /
+   `apply_charter_update` from `clearhead_cli/mutations.rs` to core's domain
+   layer. Pure, no behavior change.
+2. Extract the locked-mutation envelope into one core `with_locked_mutation`
+   helper and re-express `close_action_subtree` / `archive_actions` on it with
+   no behavior change. This is the keystone — it must land before the three
+   verbs so they supply plans, not copies of the envelope.
+3. Generalize `CloseActionSelector` to span active and `.completed.actions` and
+   carry typed under-lock outcomes; migrate `close_action_subtree` onto it with
+   no behavior change.
+4. Add pure core plan functions (`plan_insert_action`, `plan_update_action`,
+   `plan_delete_action_subtree`) in the `plan_action_archive` precedent.
+5. Reroute `add`, `update`, and `delete` through `with_locked_mutation` + their
+   plan functions; move `completed_at` stamping and the in-place terminal-state
+   guard to core; keep the CLI responsible for value assembly, dry-run prose,
+   and rendering.
+6. Crash-point recovery tests plus the existing acceptance and fuzzy-fallback
+   suites, then close.
+
+Out of scope:
+
+- routing all existing verbs through the `transact` transaction engine
+- adding `add`/`delete` to the transaction operation set
+- changing the CLI's fuzzy-fallback contract or its tests
+- changing output formats, `VerbOutcome`, or TTY behaviour
+- redesigning reference resolution (core already owns it)
+- the `close`/`archive` verbs' semantics (only their *implementation* is
+  re-expressed on the shared envelope)
+
+## Done gate
+
+This charter is complete when:
+
+- `add`, `update`, and `delete` each acquire the workspace lock and recover pending intent before reading, and commit their actions file plus sidecar through one `PendingBatch`
+- an interrupted `add`/`update`/`delete` recovers through `recover_pending` with no lost or duplicated bytes, proved by a crash-point test in the style of the durable-lifecycle coverage
+- `close_action_subtree` and `archive_actions` are re-expressed on `with_locked_mutation` with no behavior change, and the three new verbs supply only pure plan functions — no fifth copy of the envelope
+- `ActionUpdate`/`apply_updates` and the charter equivalents live in core and are consumed by the CLI without a `clearhead_cli::mutations` module
+- the generalized selector spans active and `.completed.actions`, carries typed under-lock outcomes, and `close` migrates onto it with no behavior change, so the [[durable-action-close]] re-identification rule applies uniformly to close, update, and delete
+- the three verbs' dry-runs use a pure core plan function on an unlocked read for counts/affected ids, and the CLI owns only the prose
+- `update`'s relationship to the `transact` planner is recorded as an explicit decision (reuse, share, or keep separate) rather than left implicit
+- existing CLI acceptance tests pass unchanged; the fuzzy-fallback `resolution_tests` pass unchanged; `scripts/validate-pinned` passes the
+  exact pinned composition
