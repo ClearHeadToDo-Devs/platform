@@ -1,1 +1,1 @@
-[ ] Prove interrupted verbs recover and close the charter =durable-verbs-close $Add crash-point tests proving interrupted add/update/delete recover through recover_pending with no lost or duplicated bytes. Rerun the CLI acceptance suite and the fuzzy-fallback resolution_tests unchanged, then scripts/validate-pinned against the exact pinned composition. Review the done gate and close.$ !2 +architecture ^2026-08-15T12:24 <durable-delete #01a006e1-d69b-7181-8117-66e0b45bd942
+
