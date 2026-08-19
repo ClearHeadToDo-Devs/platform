@@ -1,10 +1,34 @@
 # Architectural Decisions
 
-**Last Updated:** July 4th 2026 **Status:** Living Document
+**Last Updated:** August 18th 2026 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 36: RDF Is Publication, Not a Backend
+
+The extraction of `clearhead-graphd` left one query runtime looking like the platform's graph backend, entangling several distinct concerns behind a single subprocess: the canonical DomainModel-to-RDF mapping, a *second* hand-built JSON-LD serializer, an ephemeral Oxigraph store, saved-query families, shape validation, and terminal/DOT rendering. This decision draws the boundary the [RDF publication charter](./.clearhead/charters/rdf-publication.md) needs before any code moves.
+
+### The dataset is the contract; the engine is optional
+
+The plaintext workspace remains the only canonical write model. RDF is a **deterministic, replaceable snapshot** of the validated domain model along a one-way read path (`plaintext -> DomainModel -> RDF dataset`). Missing triples are not deletions, external graph mutations do not sync back, and there is no generic RDF import, endpoint proxy, or round-trip that recovers workspace *source* from RDF.
+
+The canonical dataset is defined **engine-neutral**: named-graph identity (`urn:clearhead:workspace:<uuid>`), entity IRIs, the term cross-reference, datatypes, and determinism hold whether or not a SPARQL engine is installed. A single projection owns every ClearHead RDF statement, and **JSON-LD is a serialization of that one dataset**, not a parallel export path — this kills the drifting second serializer, the same anti-pattern Decision 32 rejected for CLI output. Local SPARQL is an *optional evaluator* over exactly that dataset: an in-memory, one-shot store, never a persistence, federation, or backend layer. A minimal build compiles no query engine.
+
+### Scope migrates faithfully; it does not expand
+
+The projection covers Charter, Plan, Action, Context, and Workspace. `Objective` is declared in the ontology-out seam (`ontology/v4/ONTOLOGY_OUT_CONTRACT.md`) but currently emits no triples; rather than silently omit it or grow new mapping mid-migration, it is recorded as **reserved-but-not-projected** — a tracked gap. The migration proves the existing surface moves faithfully before anything new is added.
+
+### One authority for terms
+
+`ontology/v4/*` is the canonical source for vocabulary, schema, context, and shapes. Any `*.v4.*` files vendored inside an implementation (e.g. a graph module's `resources/`) are copies for offline stability, to be verified against the ontology repo and never forked from it. This keeps Decision 1's "loosely couple the ontology" posture: implementations *consume* the contract, they do not become a second one.
+
+### Consequences
+
+- `specifications/ontology.md` now separates the normative **Canonical RDF Dataset** from the non-normative **Optional Local SPARQL Evaluation**; the old "RDF Graph Layer" framing (which described the Oxigraph runtime as the reference) is retired.
+- Client presentation (index/tree families, terminal tables, DOT, custom NDJSON) is not part of canonical publication and survives only where a demonstrated client still needs it.
+- graphd's retirement is a *consequence* of these replacements landing and being proven, not the first step.
+
 ## Decision 35: Source Trust Is a Capability
 
 Decision 6 permits Tree-sitter to recover a useful syntax tree from a live, partially-written buffer. That recovery is for diagnostics and editing support; it is not proof that fields, hierarchy, or UUIDs remain attached to the action the author intended. A real incomplete `[[link` demonstrated the distinction: generic recovery crossed into the next action and attached its UUID to the preceding action. Formatting the recovered `ActionList` then destroyed history.
