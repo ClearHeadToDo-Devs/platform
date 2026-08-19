@@ -1,0 +1,27 @@
+# Local development override for the ClearHead Rust crates.
+#
+# Cargo dependencies in clearhead-core, clearhead-lsp, and clearhead-graphd
+# resolve to their canonical Git repositories so a standalone clone of any one
+# crate builds without sibling checkouts. When developing inside this platform
+# workspace, these patches redirect those Git dependencies to the adjacent
+# submodule checkouts, so local edits propagate and `scripts/validate-pinned`
+# verifies the exact pinned submodule composition rather than a fetched
+# revision.
+#
+# Cargo discovers this file by walking up from the working directory, so it is
+# active for any cargo invocation inside the platform tree and inert for a
+# standalone clone of an individual crate (which then builds from Git).
+#
+# `[patch]` paths in a .cargo/config.toml are resolved relative to the directory
+# that contains .cargo (this platform root), so they name the submodule
+# directories directly.
+#
+# Promote these rev pins to version tags (e.g. tag = "v0.2.0") as a follow-up
+# release step; the pins only matter to standalone consumers, since the
+# platform layout patches them out.
+
+[patch."https://github.com/ClearHeadToDo-Devs/clearhead-core.git"]
+clearhead_core = { path = "clearhead-core" }
+
+[patch."https://github.com/ClearHeadToDo-Devs/tree-sitter-actions.git"]
+tree-sitter-actions = { path = "tree-sitter-actions" }
