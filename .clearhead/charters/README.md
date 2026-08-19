@@ -13,22 +13,22 @@ My dream is to build the ClearHead platform out of composable, open, data-driven
 
 We are working through the individual structures such that we are going to be able to make a full platform just by handling individual structures
 
-## Charter Map & Prioritization (2026-08-15)
+## Charter Map & Prioritization (2026-08-19)
 
 Choose the highest-priority open action whose `<` predecessors are closed. Finish bounded active work before promoting another charter. `someday/` charters remain bets rather than backlog; promote one only when its recorded trigger is evidenced.
 
 ### Work streams, in priority order
 
-1. **[[data-workflows]]** — the active platform stream. Start with `index-json-contract`, then publish transaction schemas, restore transparent graphd forwarding, implement the bounded Core transaction, and prove the query → jq → transact loop. This is the stable data/mutation seam later agent surfaces should reuse.
+1. **LSP runtime maintenance** — finish the bounded active repository charter: make the repository standalone, add independent release hygiene, handle workspace-folder lifecycle, and settle the telemetry-adapter decision.
 2. **CalDAV recurring-action interoperability** — repair `RELATED-TO;RELTYPE=PARENT` hierarchy import ahead of broad calendar projection only when the live JTX/Thunderbird defect is affecting use. Re-charter the residual rather than extending the historical integration charter indefinitely.
 3. **Objective integration** — first repair objective and charter metadata and define durable identity/resolution semantics; then implement load → charter linkage → graph projection → objective-actions view.
-4. **[[deployment]]** — the specification authority gate is now satisfied, but release work should follow the data-workflow seam unless a standalone or edge consumer creates immediate pressure.
+4. **[[deployment]]** — the specification authority and data-workflow gates are satisfied; promote release work when a standalone or edge consumer creates immediate pressure.
 
 ### Settled prerequisites
 
-- The durability/core seam and bounded executable-assurance uplift are shipped.
+- The durability/core seam, durable verb boundary, bounded executable-assurance uplift, and validated query → transaction → query workflow are shipped. Their completed charters are archived as immutable UUID facts.
 - `[[spec-conformance-gate]]` established `specifications/` as the sole DSL schema and example authority. Grammar, Core, and CLI consume its inert corpus at their own test boundaries; the exact pinned composition runs those conformance checks.
-- `[[agent-surface]]` remains parked until `[[data-workflows]]` gives it stable query and mutation contracts, even though its original write-path trigger has fired.
+- `[[agent-surface]]` now has its stable query and mutation prerequisites, but remains a `someday/` bet until an actual agent workflow justifies promotion.
 
 ### Housekeeping notes
 
