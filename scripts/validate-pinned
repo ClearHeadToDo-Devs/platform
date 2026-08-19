@@ -63,15 +63,34 @@ echo "validate-pinned > graphd query-output conformance"
 )
 
 echo "validate-pinned > specifications schema conformance"
-if ! command -v jsonschema >/dev/null 2>&1; then
-    echo "validate-pinned > jsonschema CLI not found; install the sourcemeta jsonschema validator" >&2
+if command -v jsonschema >/dev/null 2>&1; then
+    schema_validator=jsonschema
+    schema_validator_kind=sourcemeta
+elif command -v jv >/dev/null 2>&1; then
+    schema_validator=jv
+    schema_validator_kind=jv
+elif test -x "$HOME/go/bin/jv"; then
+    schema_validator="$HOME/go/bin/jv"
+    schema_validator_kind=jv
+else
+    echo "validate-pinned > no JSON Schema CLI found; install SourceMeta jsonschema or santhosh-tekuri jv" >&2
     exit 1
 fi
+
+validate_schema() {
+    schema=$1
+    instance=$2
+    if test "$schema_validator_kind" = sourcemeta; then
+        "$schema_validator" validate "$schema" "$instance"
+    else
+        "$schema_validator" "$schema" "$instance"
+    fi
+}
 
 schema="$root/specifications/schemas/actions.schema.json"
 
 # 1. Spec self-consistency: the canonical example conforms to the schema.
-jsonschema validate "$schema" "$root/specifications/examples/actions/sample.json"
+validate_schema "$schema" "$root/specifications/examples/actions/sample.json"
 
 # 2. Implementation conformance: the pinned CLI's canonical projection
 #    (`read actions --format json`) of a real workspace — this repo — conforms.
@@ -80,6 +99,6 @@ projection=$(mktemp)
 trap 'rm -f "$projection"' EXIT
 (cd "$root" && "$root/clearhead-cli/target/debug/clearhead" read actions --format json) \
     >"$projection" 2>/dev/null
-jsonschema validate "$schema" "$projection"
+validate_schema "$schema" "$projection"
 
 echo "validate-pinned > all repository-owned checks passed"
