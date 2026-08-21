@@ -203,7 +203,8 @@ cost; building the framework now would fix an abstraction we cannot yet design.
 - building a persistent or on-disk read index before a host measurably needs one
 - folding `clearhead-lsp` back into the CLI as a feature flag
 - building a pluggable codec framework or a second file format in this charter
-- allowing any host adapter to hold layout, format, or mutation opinions
+- allowing adapters to redefine codecs or domain mutation semantics; the native
+  adapter owns only the archive, vdir, and other filesystem conventions named above
 - making Core asynchronous to accommodate a host's async I/O
 - designing or publishing a general-purpose transactional-filesystem framework
 - replacing the proven lock/journal/recovery implementation merely because a
@@ -231,6 +232,37 @@ mismatch returns a typed conflict for reload and recomputation. Atomic staging
 without this stale-state protection is insufficient because it can atomically
 commit a lost update.
 
+## Implementation handoff — 2026-08-21
+
+Completed and pushed:
+
+- host-neutral logical paths, inventories, snapshots, revisions, read plans,
+  preconditions, effects, prepared mutations, and typed delivery outcomes
+- `clearhead-workspace-fs` crate and the ordered transaction vertical slice
+- action insert/update/delete/close/archive preparation in Core with native
+  delivery, sidecar pruning, locking, recovery, and tests in the adapter
+- native config precedence/XDG/path expansion, NDJSON telemetry delivery,
+  workspace detection, archived-fact discovery, and manifest I/O moved out of Core
+- Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
+- no-default Core build check, spec-conformance, strict workspace Clippy, and full
+  pre-push workspace tests green at Core `6b074f7` / platform `f846152`
+
+Next coherent slice:
+
+1. Define explicit workspace and optional external-plans mount inputs.
+2. Move native workspace discovery/loading and byte reads to
+   `clearhead-workspace-fs`; keep assembly, quarantine, findings, codecs, and
+   semantic diagnosis pure in Core.
+3. Move action/sidecar file wrappers, template discovery, doctor native evidence,
+   and charter archival orchestration/tests with that loading cluster.
+4. Then move vdir/calendar persistence and sync-store I/O.
+5. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
+   dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
+
+Do not flatten an external plans mount into workspace-relative paths, duplicate
+native loader ownership, restore VEVENT support, or move codecs/reconciliation
+semantics into the filesystem adapter.
+
 ## Done gate
 
 This charter is complete when:
@@ -249,7 +281,8 @@ This charter is complete when:
   mutations such as crystallization prove necessary
 - `clearhead-workspace-fs` is a separate native package shared by CLI and LSP,
   contains the extracted and regression-protected lock/journal/recovery machinery,
-  and holds no layout, codec, format, or mutation opinion
+  owns the named native archive/vdir/filesystem conventions, and holds no codec
+  or domain-mutation opinion
 - native writes preserve stale-state safety by holding the lock across
   recover -> snapshot -> prepare -> commit, or by validating equivalent
   preconditions under the lock before touching any target
