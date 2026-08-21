@@ -283,20 +283,29 @@ Completed and pushed:
   updates in one stale-protected mixed-mount `PendingBatch`; dry-run remains
   observational and filesystem-shaped Core `apply_sync` has been deleted
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
+- materialized-occurrence resolution moved to `clearhead-workspace-fs` as pure
+  `prepare_materialized_occurrence_resolution` plus native locked/recovered/inventoried
+  delivery, with archived occurrence lineage crystallization as host-supplied evidence;
+  all obsolete Core calendar I/O APIs (`apply_sync`, `resolve_materialized_occurrence`,
+  `commit_actions_and_store`, archived-occurrence staging, legacy token stamping,
+  `sync_master_rollforwards`, `read_vtodo_actions`, `read_ics_dates`, `parse_ics_file`,
+  `write_occurrence_deviation`, `write_master_rollforward`, `parse_vtodo_actions`,
+  `apply_occurrence_op`, `collect_plan_files` family, `plans_sync_store_path`,
+  `read_plans_sync_store`, and `hydrate_occurrence_links`) deleted — Core calendar
+  modules now carry only pure byte transforms, reconciliation policy, recurrence,
+  RFC 5545 codecs, and pure preparation
+- Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `e2202e4`
+  pre-push workspace tests green at Core `51f54d9`
 
 Next coherent slice (tracked as sequential child actions):
 
 1. `migrate-calendar-sync` is complete at Core `e2202e4`.
-2. `remove-core-calendar-io` is in progress: migrate materialized-occurrence
-   resolution and the remaining root-based calendar/store loader callers, then
-   remove obsolete Core
-   calendar I/O APIs while retaining recurrence, reconciliation, and codecs in Core.
-3. `extract-native-durability`: move locks, journaling, staging, fsync, recovery,
-   and remaining host dependencies into `clearhead-workspace-fs`; remove
-   `fs2`/`tempfile` from Core, run native/no-default/WASM dependency gates, and
-   reconcile ownership docs, specifications, decision history, and pinned checks.
+2. `remove-core-calendar-io` is complete at Core `51f54d9`.
+3. `extract-native-durability` is in progress: move locks, journaling, staging,
+   fsync, recovery, and remaining host dependencies into `clearhead-workspace-fs`;
+   remove `fs2`/`tempfile` from Core, run native/no-default/WASM dependency gates,
+   and reconcile ownership docs, specifications, decision history, and pinned checks.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
 native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
