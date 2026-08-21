@@ -77,6 +77,8 @@ This is Decision 6 (relaxed parser, strict linter) lifted from the file level to
 
 Journal replay stays a `load_workspace` side effect deliberately: replaying a `.pending` journal *completes an already-committed write* — without it, reads see torn multi-file state. That is crash recovery, and recovery-to-consistency is a legitimate obligation of loading.
 
+> **Amended (pure-core-split charter, 2026-08-21):** recovery-to-consistency is still a real obligation, but it is the *host's*, not Core's. When durability moved to `clearhead-workspace-fs`, `recover_pending` left Core with it, so Core's `load_workspace`/`read_workspace` became equally pure readers that never mutate — both now observe pre-crash bytes as-is. The native adapter runs `recover_pending` under the workspace lock *before* handing bytes to Core, preserving the recover → snapshot → prepare → commit ordering this decision relied on; the obligation simply lives on the correct side of the WASM line. A weaker host that cannot recover forward reports partial state honestly instead.
+
 Everything else — orphaned `.tmp.*` staging files, sidecar entries whose action is gone — is **tidying**, and tidying is never a side effect of reading or diagnosing. Cleanup belongs to explicit, idempotent commands owned by each file surface. A future `doctor --fix` is sugar that *invokes those commands*; it does not grow fixing logic of its own. Doctor itself reads, always.
 
 ### The check inventory (initial)

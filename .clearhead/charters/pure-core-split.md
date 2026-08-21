@@ -302,10 +302,28 @@ Next coherent slice (tracked as sequential child actions):
 
 1. `migrate-calendar-sync` is complete at Core `e2202e4`.
 2. `remove-core-calendar-io` is complete at Core `51f54d9`.
-3. `extract-native-durability` is in progress: move locks, journaling, staging,
-   fsync, recovery, and remaining host dependencies into `clearhead-workspace-fs`;
-   remove `fs2`/`tempfile` from Core, run native/no-default/WASM dependency gates,
-   and reconcile ownership docs, specifications, decision history, and pinned checks.
+3. `extract-native-durability` is complete: `durability.rs` (atomic write, the
+   `PendingBatch` lock/journal/staging/fsync/recover-forward machinery, and
+   `WorkspaceLock`) moved intact into `clearhead-workspace-fs`, tests and all;
+   every native/CLI caller repoints to `clearhead_workspace_fs::durability`.
+   Core's orphaned pre-EffectBatch write path was garbage-collected with it —
+   `save_domain_model`, the duplicated sidecar/action write wrappers, and their
+   tests are gone; `render_sidecar` keeps the pure schema-stamping the deleted
+   `write_sidecar` used to own. `recover_pending` left Core's loader (Decision 34
+   amended: recovery is the adapter's obligation now, run under the lock before
+   Core reads), so `load`/`read` are equally pure readers. `fs2` is removed and
+   `tempfile` is dev-only. A `wasm32-unknown-unknown` dependency gate
+   (`scripts/wasm-dependency-gate.sh`, wired into the pre-push hook and CI) proves
+   Core's portable graph carries no native-only crate; `getrandom` is pinned to
+   its `wasm_js` backend for UUID minting. Native, no-default, strict Clippy, and
+   full workspace tests are green.
+
+   Remaining toward the charter's *compile-level* WASM done gate (separate,
+   parser-portability concern, not durability): the tree-sitter grammar's C
+   parser needs a wasm libc sysroot — `wasm32-unknown-unknown` has none, so a
+   true `cargo build` still fails at `stdlib.h`. Resolving it (wasi-sdk sysroot,
+   `wasm32-wasip1`, or a tree-sitter wasm build mode) belongs to the portability
+   gate action, not here.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
 native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
