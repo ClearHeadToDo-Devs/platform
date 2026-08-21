@@ -254,22 +254,23 @@ Completed and pushed:
 - native action/sidecar read-write wrappers and template probing moved to
   `clearhead-workspace-fs`; Core retains codecs, metadata stamping policy, path
   conventions, and template instantiation
+- host-neutral doctor byte/revision evidence, pure diagnosis, and typed repairs in
+  Core; completed/archive/sidecar/manifest/durability observation plus locked
+  recover-revalidate-execute repair delivery in `clearhead-workspace-fs`, including
+  stale sidecar and external-vdir collection rejection
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `b5a82b9`
+  pre-push workspace tests green at Core `8ac7100`
 
 Next coherent slice:
 
-1. Define host-neutral doctor evidence and typed repairs; move completed/archive,
-   sidecar, manifest, and durability-residue observation into
-   `clearhead-workspace-fs` while keeping diagnosis policy pure in Core.
-2. Move charter archival locking, discovery, supporting-file ownership execution,
+1. Move charter archival locking, discovery, supporting-file ownership execution,
    moves, cleanup, and integration tests into the native adapter; retain pure
    lifecycle/reference/frontmatter decisions in Core and use it to prove durable
    `Move` effects.
-3. Then move vdir/calendar persistence and sync-store I/O, eliminating the remaining
+2. Then move vdir/calendar persistence and sync-store I/O, eliminating the remaining
    internal Core root-based loader callers rather than maintaining a second loader.
-4. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
+3. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
    dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
