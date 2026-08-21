@@ -122,6 +122,25 @@ The single litmus test for every line moved remains: **does it touch the host,
 or does it decide something?** Touching goes to an adapter; deciding goes to
 Core.
 
+### Charter archival is a native workspace convention
+
+Archival does not create a second Charter domain category beyond the existing
+closed/cancelled lifecycle state. Core owns the pure Charter and Action codecs,
+semantic/reference helpers, and lifecycle decisions. Archive discovery,
+crystallization workflow, archive naming and layout, supporting-file ownership,
+file moves, cleanup, locking, recovery, and durable delivery belong to
+`clearhead-workspace-fs` as conventions of the native plaintext workspace.
+
+### Plans are domain schedules; vdir storage is native delivery
+
+Core owns Plan semantics, recurrence, calendar codecs, and pure reconciliation
+decisions. It does not own vdir discovery, collection or physical-path
+ownership, file reads and writes, external plan-path mounts, sync-store
+persistence, or filesystem-shaped calendar orchestration. Those concerns belong
+to `clearhead-workspace-fs`, which presents workspace and external plans mounts
+as distinct host inventories rather than flattening physical paths. This does
+not restore legacy VEVENT support: ClearHead-owned Plans remain VTODO+RRULE.
+
 ### The WASM host reuses Core's brain over a different pair of hands
 
 A browser host links Core (translation, assembly, mutation, the whole brain) and
@@ -169,6 +188,8 @@ cost; building the framework now would fix an abstraction we cannot yet design.
 | Logical paths, inventory/read planning, snapshot assembly | Core (pure) |
 | `prepare(state, cmd) -> Result<PreparedMutation, DomainError>` | Core (pure) |
 | Resource discovery/reads, lock, journal, recovery, durable commit | `clearhead-workspace-fs` |
+| Charter archive discovery, crystallization, naming, moves, and cleanup | `clearhead-workspace-fs` |
+| Vdir mounts/discovery, collection paths, calendar I/O, sync-store persistence | `clearhead-workspace-fs` |
 | Unsaved editor-buffer overlay and `WorkspaceEdit` responses | `clearhead-lsp` |
 | Vault-side execution of the same EffectBatch | WASM host adapter |
 | CLI argument parsing, invocation, I/O wiring | `clearhead-cli` |
