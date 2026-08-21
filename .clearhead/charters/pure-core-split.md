@@ -256,21 +256,25 @@ Completed and pushed:
   conventions, and template instantiation
 - host-neutral doctor byte/revision evidence, pure diagnosis, and typed repairs in
   Core; completed/archive/sidecar/manifest/durability observation plus locked
-  recover-revalidate-execute repair delivery in `clearhead-workspace-fs`, including
-  stale sidecar and external-vdir collection rejection
+  recover-revalidate-execute repair delivery in `clearhead-workspace-fs`,
+  including stale sidecar and external-vdir collection rejection
+- charter archival selection fallback, locking/recovery, UUID-flat naming,
+  supporting-file ownership, cleanup, and path-bearing results moved to
+  `clearhead-workspace-fs`; Core retains pure lifecycle, hierarchy, reference,
+  and surgical frontmatter policy
+- archival now emits revision-guarded `Move` effects for verbatim resources and
+  atomic `Write` plus recover-forward `Remove` effects for crystallized files;
+  journaled tombstones make removal crash-recoverable, while missing sources,
+  stale revisions, existing destinations, and duplicate flat names are rejected
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `8ac7100`
+  pre-push workspace tests green at Core `a6bc144`
 
 Next coherent slice:
 
-1. Move charter archival locking, discovery, supporting-file ownership execution,
-   moves, cleanup, and integration tests into the native adapter; retain pure
-   lifecycle/reference/frontmatter decisions in Core and use it to prove durable
-   `Move` effects.
-2. Then move vdir/calendar persistence and sync-store I/O, eliminating the remaining
+1. Move vdir/calendar persistence and sync-store I/O, eliminating the remaining
    internal Core root-based loader callers rather than maintaining a second loader.
-3. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
+2. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
    dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
