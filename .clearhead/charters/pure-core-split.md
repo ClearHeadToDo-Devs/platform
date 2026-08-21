@@ -94,9 +94,12 @@ PreparedMutation {
 ```
 
 The host may adopt `next_state` only after executing the effects successfully.
-A failed or conflicting execution leaves the prior state authoritative. The
-`EffectBatch` describes opaque resource writes, removals, and any proven move or
-atomic-group semantics; it does not describe `std::fs` calls.
+A conflict or failure before durable intent leaves the prior state authoritative.
+Once native durable intent exists, an error is reported as recovery-required:
+the batch's state is indeterminate until forward recovery converges it. A weaker
+host that cannot recover forward reports partial execution explicitly. The
+`EffectBatch` describes opaque resource writes, removals, and proven move
+semantics as one semantic atomic group; it does not describe `std::fs` calls.
 
 ### A shared native workspace adapter owns filesystem execution
 
@@ -125,10 +128,10 @@ A browser host links Core (translation, assembly, mutation, the whole brain) and
 supplies its own adapter against the vault API. It executes the *same*
 `EffectBatch` Core produces and reuses the *same* Core codecs, so no host
 reimplements the `.actions`/`.ics`/`.md` formats and no drift is introduced.
-The adapter must report its execution outcome honestly. Native delivery offers
-the charter's durable transaction guarantee; a vault host may provide weaker
-atomicity and must expose that capability and any partial failure rather than
-letting Core treat speculative state as committed.
+The adapter must report its execution outcome honestly: applied, conflict,
+not-applied, recovery-required, or partial. Native delivery offers recover-forward
+atomic convergence; a vault host may provide weaker atomicity and must expose
+partial failure rather than letting Core treat speculative state as committed.
 
 ### Hosts are separated by operating model, not by domain
 
