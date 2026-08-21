@@ -281,19 +281,24 @@ Completed and pushed:
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
   pre-push workspace tests green at Core `bb93bef`
 
-Next coherent slice:
+Next coherent slice (tracked as sequential child actions):
 
-1. Replace filesystem-shaped Core `apply_sync` with reconciliation recomputed under
-   the native lock and pure preparation of Action/calendar/sync-store effects in
-   one stale-protected mixed-mount batch.
-2. Migrate materialized-occurrence resolution and the remaining root-based
-   calendar/store loader callers, then remove obsolete Core calendar I/O APIs.
-3. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
-   dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
+1. `migrate-calendar-sync`: replace filesystem-shaped Core `apply_sync` with
+   reconciliation recomputed from fresh evidence under the native lock and pure
+   preparation of Action/calendar/sync-store effects in one stale-protected
+   mixed-mount batch. Recovery precedes mutable reads; dry-run remains observational.
+2. `remove-core-calendar-io`: migrate materialized-occurrence resolution and the
+   remaining root-based calendar/store loader callers, then remove obsolete Core
+   calendar I/O APIs while retaining recurrence, reconciliation, and codecs in Core.
+3. `extract-native-durability`: move locks, journaling, staging, fsync, recovery,
+   and remaining host dependencies into `clearhead-workspace-fs`; remove
+   `fs2`/`tempfile` from Core, run native/no-default/WASM dependency gates, and
+   reconcile ownership docs, specifications, decision history, and pinned checks.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
-native loader ownership, restore VEVENT support, or move codecs/reconciliation
-semantics into the filesystem adapter.
+native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
+into the filesystem adapter, compute sync from a pre-lock report, or split one logical
+sync across independently durable commits.
 
 ## Done gate
 
