@@ -1,9 +1,6 @@
 [submodule "tree-sitter-actions"]
 	path = tree-sitter-actions
 	url = https://github.com/ClearHeadToDo-Devs/tree-sitter-actions.git
-[submodule "clearhead-cli"]
-	path = clearhead-cli
-	url = https://github.com/ClearHeadToDo-Devs/clearhead-cli
 [submodule "ontology"]
 	path = ontology
 	url = https://github.com/ClearHeadToDo-Devs/ontology
@@ -16,9 +13,3 @@
 [submodule "clearhead-core"]
 	path = clearhead-core
 	url = https://github.com/ClearHeadToDo-Devs/clearhead-core.git
-[submodule "clearhead-graphd"]
-	path = clearhead-graphd
-	url = https://github.com/ClearHeadToDo-Devs/clearhead-graphd.git
-[submodule "clearhead-lsp"]
-	path = clearhead-lsp
-	url = https://github.com/ClearHeadToDo-Devs/clearhead-lsp.git

@@ -13,8 +13,8 @@ if printf '%s\n' "$status" | grep -Eq '^[+-U]'; then
     exit 1
 fi
 
-for repo in tree-sitter-actions clearhead-core clearhead-cli clearhead-graphd \
-    clearhead-lsp clearhead.nvim ontology specifications
+for repo in tree-sitter-actions clearhead-core \
+    clearhead.nvim ontology specifications
 do
     if test -n "$(git -C "$repo" status --porcelain)"; then
         echo "validate-pinned > $repo has uncommitted changes" >&2
@@ -33,11 +33,10 @@ run_gate() {
     )
 }
 
+# clearhead-core is one Cargo workspace: its pre-push gate covers the core,
+# CLI, LSP, and graphd crates together.
 run_gate tree-sitter-actions
 run_gate clearhead-core
-run_gate clearhead-cli
-run_gate clearhead-graphd
-run_gate clearhead-lsp
 run_gate clearhead.nvim
 run_gate ontology
 
@@ -57,7 +56,7 @@ echo "validate-pinned > Core DSL conformance"
 # producer boundary against the spec's published index_query_result schema.
 echo "validate-pinned > graphd query-output conformance"
 (
-    cd "$root/clearhead-graphd"
+    cd "$root/clearhead-core/crates/clearhead-graphd"
     CLEARHEAD_SPEC_DIR="$root/specifications" \
         cargo test --features spec-conformance --test spec_conformance
 )
@@ -94,10 +93,10 @@ validate_schema "$schema" "$root/specifications/examples/actions/sample.json"
 
 # 2. Implementation conformance: the pinned CLI's canonical projection
 #    (`read actions --format json`) of a real workspace — this repo — conforms.
-cargo build -q --manifest-path "$root/clearhead-cli/Cargo.toml"
+cargo build -q --manifest-path "$root/clearhead-core/crates/clearhead-cli/Cargo.toml"
 projection=$(mktemp)
 trap 'rm -f "$projection"' EXIT
-(cd "$root" && "$root/clearhead-cli/target/debug/clearhead" read actions --format json) \
+(cd "$root" && "$root/clearhead-core/target/debug/clearhead" read actions --format json) \
     >"$projection" 2>/dev/null
 validate_schema "$schema" "$projection"
 

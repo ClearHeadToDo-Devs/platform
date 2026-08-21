@@ -4,7 +4,7 @@ This repository uses git submodules to bring together all ClearHead projects int
 
 ## What Are Submodules?
 
-Think of submodules as **bookmarks**. The platform repo doesn't contain the actual code from `clearhead-cli`, `ontology`, etc. Instead, it records:
+Think of submodules as **bookmarks**. The platform repo doesn't contain the actual code from `tree-sitter-actions`, `ontology`, etc. Instead, it records:
 - Which repositories to include
 - Which specific commit from each repository to use
 
@@ -63,9 +63,9 @@ git push
 To update just one submodule:
 
 ```bash
-git submodule update --remote --merge clearhead-cli
-git add clearhead-cli
-git commit -m "Update clearhead-cli to latest"
+git submodule update --remote --merge ontology
+git add ontology
+git commit -m "Update ontology to latest"
 git push
 ```
 
@@ -74,7 +74,7 @@ git push
 **Important:** When you `cd` into a submodule directory, you're entering a completely separate git repository.
 
 ```bash
-cd clearhead-cli
+cd ontology
 
 # By default, submodules are in "detached HEAD" state
 # Always check out a branch before making changes:
@@ -89,8 +89,8 @@ git push
 
 # Now update the parent repo to reference this new commit:
 cd ..
-git add clearhead-cli
-git commit -m "Update clearhead-cli to include new feature"
+git add ontology
+git commit -m "Update ontology to include new feature"
 git push
 ```
 
@@ -129,7 +129,7 @@ git config --global push.recurseSubmodules check
 Then push submodules first:
 
 ```bash
-cd clearhead-cli
+cd ontology
 git push  # push submodule first
 cd ..
 git push  # now the parent push will succeed
@@ -143,7 +143,7 @@ git push  # now the parent push will succeed
 
 ```bash
 git submodule status  # see what changed
-git diff clearhead-cli  # see the commit difference
+git diff ontology  # see the commit difference
 ```
 
 ### Pitfall 4: Merge Conflicts in Submodule References

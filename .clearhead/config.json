@@ -2,9 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/master/schemas/config.schema.json",
   "additional_workspaces": [
     "../clearhead-core",
-    "../clearhead-cli",
-    "../clearhead-graphd",
-    "../clearhead-lsp",
+    "../clearhead-core/crates/clearhead-cli",
+    "../clearhead-core/crates/clearhead-graphd",
+    "../clearhead-core/crates/clearhead-lsp",
     "../clearhead.nvim",
     "../ontology",
     "../specifications",

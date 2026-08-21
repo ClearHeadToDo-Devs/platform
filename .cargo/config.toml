@@ -1,27 +1,28 @@
-# Local development override for the ClearHead Rust crates.
+# Local development override for the ClearHead tree-sitter grammar.
 #
-# Cargo dependencies in clearhead-core, clearhead-lsp, and clearhead-graphd
-# resolve to their canonical Git repositories so a standalone clone of any one
-# crate builds without sibling checkouts. When developing inside this platform
-# workspace, these patches redirect those Git dependencies to the adjacent
-# submodule checkouts, so local edits propagate and `scripts/validate-pinned`
-# verifies the exact pinned submodule composition rather than a fetched
-# revision.
+# clearhead-core, clearhead-lsp, and clearhead-cli depend on the grammar crate
+# from its canonical Git repository (pinned to a revision) so any checkout of
+# the Rust workspace builds standalone. When developing inside this platform
+# workspace, this patch redirects that Git dependency to the adjacent
+# submodule checkout, so local grammar edits propagate and
+# `scripts/validate-pinned` verifies the exact pinned submodule composition
+# rather than a fetched revision.
+#
+# The Rust crates themselves (core, CLI, LSP, graphd) are members of one
+# Cargo workspace in the clearhead-core repository and need no patching:
+# they use ordinary sibling path dependencies.
 #
 # Cargo discovers this file by walking up from the working directory, so it is
 # active for any cargo invocation inside the platform tree and inert for a
-# standalone clone of an individual crate (which then builds from Git).
+# standalone clone of the Rust workspace (which then builds from Git).
 #
 # `[patch]` paths in a .cargo/config.toml are resolved relative to the directory
 # that contains .cargo (this platform root), so they name the submodule
 # directories directly.
 #
-# Promote these rev pins to version tags (e.g. tag = "v0.2.0") as a follow-up
-# release step; the pins only matter to standalone consumers, since the
-# platform layout patches them out.
-
-[patch."https://github.com/ClearHeadToDo-Devs/clearhead-core.git"]
-clearhead_core = { path = "clearhead-core" }
+# Promote the rev pin to a version tag (e.g. tag = "v0.10.0") as a follow-up
+# release step; the pin only matters to standalone consumers, since the
+# platform layout patches it out.
 
 [patch."https://github.com/ClearHeadToDo-Devs/tree-sitter-actions.git"]
 tree-sitter-actions = { path = "tree-sitter-actions" }

@@ -34,9 +34,9 @@ install_rust_binary() {
     cargo install --locked --force --path "$repo_root/$project"
 }
 
-install_rust_binary clearhead-cli clearhead
-install_rust_binary clearhead-lsp clearhead-lsp
-install_rust_binary clearhead-graphd clearhead-graphd
+install_rust_binary clearhead-core/crates/clearhead-cli clearhead
+install_rust_binary clearhead-core/crates/clearhead-lsp clearhead-lsp
+install_rust_binary clearhead-core/crates/clearhead-graphd clearhead-graphd
 
 printf '%s\n' '' '==> ClearHead is ready'
 printf '%s\n' 'Installed: clearhead, clearhead-lsp, clearhead-graphd'

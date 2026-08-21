@@ -10,13 +10,13 @@ baseline, not a commitment to retain every current presentation feature.
 
 These responsibilities move to the always-available Core RDF module:
 
-- `clearhead-graphd/src/graph/insert.rs`: the current DomainModel-to-RDF map,
+- `clearhead-core/crates/clearhead-graphd/src/graph/insert.rs`: the current DomainModel-to-RDF map,
   stable entity IRIs, workspace named graphs, domain relationships, context
   hierarchy, sequential-chain edges, datatypes, and workspace/source metadata.
-- `clearhead-graphd/src/graph/jsonld.rs`: the compact JSON-LD contract and its
+- `clearhead-core/crates/clearhead-graphd/src/graph/jsonld.rs`: the compact JSON-LD contract and its
   deterministic ordering tests. This is currently a second hand-built mapping;
   it must become a serialization of the canonical dataset.
-- `clearhead-graphd/src/resources/`: pinned context, schema, and example
+- `clearhead-core/crates/clearhead-graphd/src/resources/`: pinned context, schema, and example
   fixtures. Their authority belongs in `ontology/v4`; implementations should
   consume or verify that source rather than silently fork it.
 - The bounded publication checks currently named
@@ -77,15 +77,14 @@ Deletion still requires a tracked-reference search and replacement proof.
 
 ### CLI
 
-`clearhead-cli/src/graph_backend.rs` has two hard process dependencies:
+`clearhead-core/crates/clearhead-cli/src/graph_backend.rs` has two hard process dependencies:
 
 1. `clearhead query` forwards inherited stdio and exit status to graphd.
 2. Action, Charter, and Plan `--format json-ld` serialize a filtered
    `DomainModel` to JSON, invoke `graphd export-jsonld`, and return its UTF-8
    output.
 
-`CLEARHEAD_GRAPHD` selects the executable. CLI CI independently checks out and
-builds graphd, and its facade tests require byte-identical stdout and exact exit
+`CLEARHEAD_GRAPHD` selects the executable. The workspace CI builds graphd alongside the CLI, and the facade tests require byte-identical stdout and exact exit
 status. Removing only the query facade would still break ordinary JSON-LD
 reads.
 
@@ -115,9 +114,9 @@ and tree-sitter-actions contain no direct graphd process dependency.
 - `specifications/schemas/index_query_result.schema.json` covers only index JSON
   rows, not index JSON-LD, tree JSON, DOT, unrestricted SPARQL, or domain
   JSON-LD.
-- `clearhead-graphd/docs/query_contract.md` defines the wider family and output
+- `clearhead-core/crates/clearhead-graphd/docs/query_contract.md` defines the wider family and output
   conventions.
-- `clearhead-graphd/docs/jsonld_export_contract.md` is materially stale: it
+- `clearhead-core/crates/clearhead-graphd/docs/jsonld_export_contract.md` is materially stale: it
   names the wrong owning repository and differs from actual compact keys and
   `_meta` behavior.
 
@@ -155,17 +154,17 @@ cd clearhead-cli && \
 The migration gate is:
 
 ```sh
-cargo fmt --manifest-path clearhead-graphd/Cargo.toml --check
-cargo clippy --manifest-path clearhead-graphd/Cargo.toml \
+cargo fmt --manifest-path clearhead-core/crates/clearhead-graphd/Cargo.toml --check
+cargo clippy --manifest-path clearhead-core/crates/clearhead-graphd/Cargo.toml \
   --all-targets --no-deps --locked -- -D warnings
-cargo test --manifest-path clearhead-graphd/Cargo.toml --locked
+cargo test --manifest-path clearhead-core/crates/clearhead-graphd/Cargo.toml --locked
 
 CLEARHEAD_SPEC_DIR="$PWD/specifications" cargo test \
-  --manifest-path clearhead-graphd/Cargo.toml --locked \
+  --manifest-path clearhead-core/crates/clearhead-graphd/Cargo.toml --locked \
   --features spec-conformance --test spec_conformance
 
-CLEARHEAD_GRAPHD="$PWD/clearhead-graphd/target/debug/clearhead-graphd" \
-  cargo test --manifest-path clearhead-cli/Cargo.toml --locked
+CLEARHEAD_GRAPHD="$PWD/clearhead-core/target/debug/clearhead-graphd" \
+  cargo test --manifest-path clearhead-core/crates/clearhead-cli/Cargo.toml --locked
 
 scripts/validate-pinned
 ```
