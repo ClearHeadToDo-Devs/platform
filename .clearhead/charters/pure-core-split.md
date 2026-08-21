@@ -243,20 +243,33 @@ Completed and pushed:
   delivery, sidecar pruning, locking, recovery, and tests in the adapter
 - native config precedence/XDG/path expansion, NDJSON telemetry delivery,
   workspace detection, archived-fact discovery, and manifest I/O moved out of Core
+- explicit workspace and optional external-plans mount namespaces, collection
+  inventories, bounded read plans, immutable read evidence, and mount-aware findings
+- pure Core workspace assembly over supplied bytes, preserving project/user naming,
+  parser quarantine, global sidecar hydration, exact collection ownership, parent and
+  predecessor resolution, and live occurrence linkage
+- one native mount inventory/read facade shared by CLI, graphd, and LSP; external vdirs
+  remain a separate namespace and reads detect inventory races without refusing an
+  otherwise relaxed workspace read
+- native action/sidecar read-write wrappers and template probing moved to
+  `clearhead-workspace-fs`; Core retains codecs, metadata stamping policy, path
+  conventions, and template instantiation
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `6b074f7` / platform `f846152`
+  pre-push workspace tests green at Core `b5a82b9`
 
 Next coherent slice:
 
-1. Define explicit workspace and optional external-plans mount inputs.
-2. Move native workspace discovery/loading and byte reads to
-   `clearhead-workspace-fs`; keep assembly, quarantine, findings, codecs, and
-   semantic diagnosis pure in Core.
-3. Move action/sidecar file wrappers, template discovery, doctor native evidence,
-   and charter archival orchestration/tests with that loading cluster.
-4. Then move vdir/calendar persistence and sync-store I/O.
-5. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
+1. Define host-neutral doctor evidence and typed repairs; move completed/archive,
+   sidecar, manifest, and durability-residue observation into
+   `clearhead-workspace-fs` while keeping diagnosis policy pure in Core.
+2. Move charter archival locking, discovery, supporting-file ownership execution,
+   moves, cleanup, and integration tests into the native adapter; retain pure
+   lifecycle/reference/frontmatter decisions in Core and use it to prove durable
+   `Move` effects.
+3. Then move vdir/calendar persistence and sync-store I/O, eliminating the remaining
+   internal Core root-based loader callers rather than maintaining a second loader.
+4. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
    dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
