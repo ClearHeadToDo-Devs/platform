@@ -277,18 +277,21 @@ Completed and pushed:
   Plan updates preserve alarms, vendor properties, and calendar metadata
 - Core retains byte-level RFC 5545 parsing/rendering, including pure Plan,
   occurrence-deviation, master-roll-forward, and Action-mirror transformations
+- non-dry-run calendar sync now recomputes reconciliation from fresh evidence under
+  the native lock and commits Action imports/pulls, surgical calendar pushes,
+  materialized tokens/templates, recurring-master roll-forwards, and sync-store
+  updates in one stale-protected mixed-mount `PendingBatch`; dry-run remains
+  observational and filesystem-shaped Core `apply_sync` has been deleted
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `bb93bef`
+  pre-push workspace tests green at Core `e2202e4`
 
 Next coherent slice (tracked as sequential child actions):
 
-1. `migrate-calendar-sync`: replace filesystem-shaped Core `apply_sync` with
-   reconciliation recomputed from fresh evidence under the native lock and pure
-   preparation of Action/calendar/sync-store effects in one stale-protected
-   mixed-mount batch. Recovery precedes mutable reads; dry-run remains observational.
-2. `remove-core-calendar-io`: migrate materialized-occurrence resolution and the
-   remaining root-based calendar/store loader callers, then remove obsolete Core
+1. `migrate-calendar-sync` is complete at Core `e2202e4`.
+2. `remove-core-calendar-io` is in progress: migrate materialized-occurrence
+   resolution and the remaining root-based calendar/store loader callers, then
+   remove obsolete Core
    calendar I/O APIs while retaining recurrence, reconciliation, and codecs in Core.
 3. `extract-native-durability`: move locks, journaling, staging, fsync, recovery,
    and remaining host dependencies into `clearhead-workspace-fs`; remove
