@@ -266,15 +266,29 @@ Completed and pushed:
   atomic `Write` plus recover-forward `Remove` effects for crystallized files;
   journaled tombstones make removal crash-recoverable, while missing sources,
   stale revisions, existing destinations, and duplicate flat names are rejected
+- canonical effects and preconditions now carry `ResourceLocation`, so one native
+  journal can deliver mixed workspace and external-plans `Write`/`Move`/`Remove`
+  effects without flattening mount identity
+- effective-vdir discovery/immutable reads and sync-store reads moved to
+  `clearhead-workspace-fs`; CLI Plan reads use the same native mount inventory
+- Plan add/update/delete, projected-occurrence deviations, and recurring-master
+  roll-forward persistence moved to stale-guarded native batches; loose `--file`
+  preserves its exact ad-hoc path without imposing vdir hierarchy, and existing
+  Plan updates preserve alarms, vendor properties, and calendar metadata
+- Core retains byte-level RFC 5545 parsing/rendering, including pure Plan,
+  occurrence-deviation, master-roll-forward, and Action-mirror transformations
 - Core direct dependencies on `config`, `dirs`, `shellexpand`, and `tracing` removed
 - no-default Core build check, spec-conformance, strict workspace Clippy, and full
-  pre-push workspace tests green at Core `a6bc144`
+  pre-push workspace tests green at Core `bb93bef`
 
 Next coherent slice:
 
-1. Move vdir/calendar persistence and sync-store I/O, eliminating the remaining
-   internal Core root-based loader callers rather than maintaining a second loader.
-2. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
+1. Replace filesystem-shaped Core `apply_sync` with reconciliation recomputed under
+   the native lock and pure preparation of Action/calendar/sync-store effects in
+   one stale-protected mixed-mount batch.
+2. Migrate materialized-occurrence resolution and the remaining root-based
+   calendar/store loader callers, then remove obsolete Core calendar I/O APIs.
+3. Finally move durability itself, remove `fs2`/`tempfile` and remaining host
    dependencies from Core, run the WASM/dependency gate, and reconcile docs/specs.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
