@@ -327,6 +327,20 @@ Next coherent slice (tracked as sequential child actions):
    parsing to the host) — only the toolchain sub-choice is deferred to when the
    browser host is built. This belongs to the portability-gate action, not here.
 
+4. `extract-native-durability` emptied Core's *write* path; the next slice is the
+   **read-path evacuation** (the still-open "Cleave the workspace module along the
+   host/decision seam" milestone). Core still does `std::fs` reads: live ones
+   called directly via `clearhead_core::` (`list_action_files`,
+   `collect_workspace_manifest`, `template_candidates`, sidecar/action readers) and
+   the production-dead-but-test-live `store/load.rs` loader (superseded by
+   `clearhead_workspace_fs::load_*`; only a legacy parity test and four Core
+   integration-test files still reach it). Evacuating means moving those
+   loader-based integration tests to the adapter and having Core assemble from
+   supplied bytes via the pure `assemble_workspace`, after which Core reaches
+   "no host I/O" and the portability gate can graduate from a dependency check to a
+   compile check. This is a real slice, not cleanup: the dependency gate stays
+   green throughout, so nothing forces it.
+
 Do not flatten an external plans mount into workspace-relative paths, duplicate
 native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
 into the filesystem adapter, compute sync from a pre-lock report, or split one logical
