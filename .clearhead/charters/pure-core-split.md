@@ -327,19 +327,38 @@ Next coherent slice (tracked as sequential child actions):
    parsing to the host) — only the toolchain sub-choice is deferred to when the
    browser host is built. This belongs to the portability-gate action, not here.
 
-4. `extract-native-durability` emptied Core's *write* path; the next slice is the
-   **read-path evacuation** (the still-open "Cleave the workspace module along the
-   host/decision seam" milestone). Core still does `std::fs` reads: live ones
-   called directly via `clearhead_core::` (`list_action_files`,
-   `collect_workspace_manifest`, `template_candidates`, sidecar/action readers) and
-   the production-dead-but-test-live `store/load.rs` loader (superseded by
-   `clearhead_workspace_fs::load_*`; only a legacy parity test and four Core
-   integration-test files still reach it). Evacuating means moving those
-   loader-based integration tests to the adapter and having Core assemble from
-   supplied bytes via the pure `assemble_workspace`, after which Core reaches
-   "no host I/O" and the portability gate can graduate from a dependency check to a
-   compile check. This is a real slice, not cleanup: the dependency gate stays
-   green throughout, so nothing forces it.
+4. `read-path-evacuation` is complete. Core no longer performs any filesystem
+   byte reads or file-existence probes for actions, sidecars, workspace manifests,
+   or templates. The production-live discovery engine (`store/discovery.rs`),
+   `list_action_files`, and `collect_workspace_manifest` (with its
+   `WorkspaceManifestEntry`/`ManifestSourceType` types) moved to a new
+   `clearhead-workspace-fs::discovery`; CLI call-sites repoint to the adapter,
+   which already had a native mount-based `list_action_files`. The production-dead
+   `store/load.rs` fs loader, `store/manifest.rs`, `action_files::read_actions`/
+   `read_action_file`, `sidecar::read_sidecar`/fs-`collect_sidecar_actions`,
+   `manifest::read`, and Core's `resolve_template` were deleted; Core keeps the pure
+   `Workspace`/`WorkspaceRead` envelope, all codecs, `template_candidates`, and the
+   pure `assemble_workspace` production hosts already load through. The four
+   loader-based integration files plus the legacy parity test moved to the adapter
+   (one-arg loader shims delegate to the two-arg native loaders; fixtures stay in
+   Core, referenced in place to avoid corpus duplication); fs-semantics unit tests
+   moved with them, parse-shaped tests were rewritten pure and kept in Core. Two
+   pure path inferers and a new `project_root_charter` accessor were made `pub` so
+   the adapter infers names identically without exposing `WorkspaceLayout`.
+   `Workspace::effective_name` dropped its `canonicalize()` fs call for a pure
+   basename. One reader test correctly flipped: driving the adapter loader,
+   `load_workspace`/`load_domain_model` now replay the pending journal under the
+   lock (Decision 34's recovering half) while relaxed `read_workspace` still does
+   not. 706 workspace tests, strict Clippy, no-default Core build, spec-conformance,
+   and the wasm dependency gate are green.
+
+   The only remaining Core host tap is `resolve_workspace_layout`'s single `is_dir()`
+   layout-detection probe, which backs the pure `charter_root`/`plans_root`/
+   `project_root_charter` path wrappers the adapter consumes. Removing it means the
+   host supplies layout in the inventory rather than Core probing for `.clearhead/` —
+   a distinct slice the inventory contracts already anticipate, not part of this one.
+   The compile-level WASM gate remains blocked only on the tree-sitter C parser's
+   libc sysroot (Decision 37), unchanged and orthogonal to host I/O.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
 native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
