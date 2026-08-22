@@ -5,6 +5,29 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+## Decision 37: Bundle Tree-sitter for WASM, Don't Replace the Parser
+
+The pure-core-split charter requires Core to compile for a WebAssembly host. Extracting durability cleared the native-only *crates* from Core's portable graph (a green `wasm32` dependency gate), but a real `cargo build --target wasm32-*` still fails: the `tree-sitter-actions` grammar is C, and `wasm32-unknown-unknown` ships no libc sysroot, so `parser.c`'s `#include <stdlib.h>` cannot resolve. This decides how Core's parser reaches WASM.
+
+### One grammar is a capability multiplier, not a parser dependency
+
+A single `grammar.js` currently yields, across the whole platform: parsing, incremental reparsing (the LSP's in-RAM model), **formatting** (topiary is tree-sitter-native — `topiary-tree-sitter-facade`, formatting from the grammar plus a query file), the relaxed error-recovery/quarantine model ([Decision 6](#decision-6-relaxed-parser-strict-linter), [Decision 34](#decision-34-relaxed-reader-strict-doctor)), and syntax highlighting for nvim and any tree-sitter editor. The WASM C-build problem is a narrow tax on *one* consumer of that shared asset, not a reason to give the asset up.
+
+### Decision: keep the single generated grammar and bundle it into the WASM artifact
+
+Core's WASM build compiles the tree-sitter C parser against a WASM libc so the parser ships *inside* the artifact — the module is the codec, ready on load, needing nothing assembled by the host. This honors the reason Core is a compiled library at all: capabilities come pre-linked, not wired together at runtime. The specific toolchain — `wasm32-wasip1` plus a browser WASI shim, or a wasi-sdk sysroot on `wasm32-unknown-unknown` — is build configuration that touches **zero** Core source and is chosen when the browser host is actually built (the deferred WASM-host milestone). Current lean: `wasip1` as the path of least resistance. tree-sitter needs only headers and an allocator, and its allocator is overridable via `ts_set_allocator`, so the sysroot supplies the small surface cleanly.
+
+### Alternatives rejected — each pays in drift
+
+- **Host provides the parser** (e.g. Obsidian's web-tree-sitter): splits the codec across the language boundary — CST-walking logic runs in JS per host, or trees are serialized across — reintroducing exactly the format drift this charter exists to kill.
+- **A second, pure-Rust parser in Core** (tree-sitter kept only for editors): two implementations of an evolving grammar that tree-sitter *cannot* co-generate in Rust. The divergence that bites is error/recovery behavior — the least conformance-testable surface and the most user-visible (editor recovers-and-quarantines a file the CLI hard-rejects).
+- **Replace tree-sitter with a PEG/parser-combinator grammar**: makes WASM trivial but is strictly worse than the above — the same two-parser drift *plus* re-eating topiary formatting, and, taken to its only drift-free end (rip tree-sitter out everywhere), throwing away incremental parsing and editor highlighting too.
+
+### Trade-offs
+
+The cost is a bounded, one-time build-infra tax on the WASM host, versus an unbounded, ongoing correctness/maintenance cost concentrated in the least-testable place. That asymmetry is the whole decision. Nothing here blocks today: Core is already dependency-portable, and the tax comes due only when a browser host is built.
+
+---
 ## Decision 36: RDF Is Publication, Not a Backend
 
 The extraction of `clearhead-graphd` left one query runtime looking like the platform's graph backend, entangling several distinct concerns behind a single subprocess: the canonical DomainModel-to-RDF mapping, a *second* hand-built JSON-LD serializer, an ephemeral Oxigraph store, saved-query families, shape validation, and terminal/DOT rendering. This decision draws the boundary the [RDF publication charter](./.clearhead/charters/rdf-publication.md) needs before any code moves.

@@ -321,9 +321,11 @@ Next coherent slice (tracked as sequential child actions):
    Remaining toward the charter's *compile-level* WASM done gate (separate,
    parser-portability concern, not durability): the tree-sitter grammar's C
    parser needs a wasm libc sysroot — `wasm32-unknown-unknown` has none, so a
-   true `cargo build` still fails at `stdlib.h`. Resolving it (wasi-sdk sysroot,
-   `wasm32-wasip1`, or a tree-sitter wasm build mode) belongs to the portability
-   gate action, not here.
+   true `cargo build` still fails at `stdlib.h`. The approach is settled in
+   Decision 37 (bundle the single tree-sitter grammar into the WASM artifact via
+   `wasm32-wasip1` or a wasi-sdk sysroot; do not add a second parser or offload
+   parsing to the host) — only the toolchain sub-choice is deferred to when the
+   browser host is built. This belongs to the portability-gate action, not here.
 
 Do not flatten an external plans mount into workspace-relative paths, duplicate
 native loader ownership, restore VEVENT support, move codecs/reconciliation semantics
