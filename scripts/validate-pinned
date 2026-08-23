@@ -49,7 +49,7 @@ echo "validate-pinned > Core DSL conformance"
 (
     cd "$root/clearhead-core"
     CLEARHEAD_SPEC_DIR="$root/specifications" \
-        cargo test --features spec-conformance --test spec_conformance
+        cargo test -p clearhead_core --features spec-conformance --test spec_conformance
 )
 
 # The index family moved into the CLI's in-process sparql layer when graphd was
