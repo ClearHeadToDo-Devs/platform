@@ -8,9 +8,9 @@
 # `scripts/validate-pinned` verifies the exact pinned submodule composition
 # rather than a fetched revision.
 #
-# The Rust crates themselves (core, CLI, LSP, graphd) are members of one
-# Cargo workspace in the clearhead-core repository and need no patching:
-# they use ordinary sibling path dependencies.
+# The Rust crates themselves (core, the workspace-fs adapter, CLI, LSP) are
+# members of one Cargo workspace in the clearhead-core repository and need no
+# patching: they use ordinary sibling path dependencies.
 #
 # Cargo discovers this file by walking up from the working directory, so it is
 # active for any cargo invocation inside the platform tree and inert for a

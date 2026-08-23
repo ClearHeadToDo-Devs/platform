@@ -49,14 +49,6 @@ For branch-per-task development (including multiple parallel agent branches), se
 
 we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
 
-### User-Facing Documentation
-
-we leverage [mdbook](https://rust-lang.github.io/mdBook/index.html) to maintain a user-facing overview of this work such that we can start working through individual structures in each repository
-
-you can see the contents at [the summary](src/summary.md) and the [index](src/index.md)
-
-you can also just view the output HTML at [the book](book/index.html)
-
 ## Index of Repositories
 
 Please review product-specific documentation for more details on each repository
@@ -69,8 +61,12 @@ Please review product-specific documentation for more details on each repository
   - tools like the CLI use it to do semantic reasoning and validation on the data ingested
 - [Action File Parser](./tree-sitter-actions/README.md) a parser for the action file format, built using tree-sitter
   - used by the CLI and other tools to parse and validate action files
-- [Core Library](./clearhead-core/README.md) the main rust library that provides the core functionality of the platform in such a way that can be leveraged by other downstream tools
-  - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
+- [Core Library](./clearhead-core/README.md) the pure Rust domain library at the heart of the platform: it owns the model and the algorithms and *decides* mutations, but performs no I/O
+  - shared by every downstream host (CLI, LSP, and any future native or WebAssembly client) so they agree on one domain model without coordinating implementations
+  - reading and durably writing files is delegated to a delivery adapter (below), which is what keeps Core portable
+- [Workspace FS Adapter](./clearhead-core/crates/clearhead-workspace-fs/README.md) the native filesystem delivery adapter — the I/O half of the seam
+  - turns Core's logical decisions into durable filesystem reads and writes (locking, journaling, atomic rename, calendar sync)
+  - the CLI and LSP compose it with clearhead-core; a non-filesystem host would supply its own adapter instead
 - [CLI](./clearhead-core/crates/clearhead-cli/README.md) the synchronous command client for the specifications outlined
   - handles terminal workflows and durable workspace mutations through clearhead-core
   - evaluates SPARQL and the saved query families in-process (default `sparql` feature)
