@@ -52,11 +52,15 @@ echo "validate-pinned > Core DSL conformance"
         cargo test --features spec-conformance --test spec_conformance
 )
 
-# TODO(rdf-publication): index-query output moved in-process to the CLI's
-# `sparql` layer when graphd was retired. Its schema conformance against the
-# spec's index_query_result schema is not yet gated here directly; the CLI's
-# index/tree tests currently pin byte-parity against the frozen graphd-era
-# fixtures. Add a CLI spec-conformance test and re-add a gate at this boundary.
+# The index family moved into the CLI's in-process sparql layer when graphd was
+# retired, so its index_query_result schema conformance is proven at the new
+# producer boundary: the CLI's own spec-conformance test.
+echo "validate-pinned > CLI index query-output conformance"
+(
+    cd "$root/clearhead-core/crates/clearhead-cli"
+    CLEARHEAD_SPEC_DIR="$root/specifications" \
+        cargo test --features spec-conformance --test spec_conformance
+)
 
 echo "validate-pinned > specifications schema conformance"
 if command -v jsonschema >/dev/null 2>&1; then
