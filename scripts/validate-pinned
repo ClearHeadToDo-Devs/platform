@@ -62,6 +62,19 @@ echo "validate-pinned > CLI index query-output conformance"
         cargo test --features spec-conformance --test spec_conformance
 )
 
+# Engine-independence (rdf-publication external-rdf-proof): export the fixture
+# workspace with the real binary and answer the CLI's saved .sparql in rdflib, a
+# wholly independent SPARQL engine. Proves the publication is standard RDF, not
+# an Oxigraph-shaped artifact. rdflib rides in the ontology venv the ontology
+# gate already provisions; this needs the pinned CLI built, so it runs after it.
+echo "validate-pinned > RDF publication is engine-independent"
+if test -x "$root/ontology/.venv/bin/python"; then
+    proof_python="$root/ontology/.venv/bin/python"
+else
+    proof_python=python3
+fi
+"$proof_python" "$root/scripts/rdf-interop/proof.py"
+
 echo "validate-pinned > specifications schema conformance"
 if command -v jsonschema >/dev/null 2>&1; then
     schema_validator=jsonschema
