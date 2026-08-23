@@ -147,7 +147,7 @@ def main() -> int:
 
     # These execute cleanly in rdflib; their rows are fixture-incidental, so we
     # assert the deterministic counts to prove standard evaluation, not content.
-    p.check(len(rows(ds, "open-plans")) == 4, "open-plans (open-actions backlog): 4 open actions")
+    p.check(len(rows(ds, "open-actions")) == 4, "open-actions (backlog): 4 open actions")
     p.check(rows(ds, "completion-velocity") == [], "completion-velocity: runs (no dated completions)")
     p.check(rows(ds, "plans-with-contexts") == [], "plans-with-contexts: runs (fixture plan has no context)")
 
