@@ -1,3 +1,5 @@
 book/*
 *.log
 .pi/
+node_modules
+.clearhead/.clearhead.lock
