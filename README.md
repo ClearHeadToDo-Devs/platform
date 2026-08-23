@@ -23,7 +23,7 @@ With Git and Rust installed, bootstrap a checkout from the repository root:
 scripts/startup
 ```
 
-The script initializes the pinned submodules, then builds and installs the main user-facing Rust binaries: `clearhead`, `clearhead-lsp`, and `clearhead-graphd`. It is safe to rerun after pulling platform changes; Cargo rebuilds and replaces the installed binaries. Cargo's bin directory (normally `~/.cargo/bin`) must be on `PATH`.
+The script initializes the pinned submodules, then builds and installs the main user-facing Rust binaries: `clearhead` and `clearhead-lsp`. It is safe to rerun after pulling platform changes; Cargo rebuilds and replaces the installed binaries. Cargo's bin directory (normally `~/.cargo/bin`) must be on `PATH`.
 
 To validate the exact submodule revisions pinned by the platform, run:
 
@@ -73,7 +73,7 @@ Please review product-specific documentation for more details on each repository
   - currently, only supporting the CLI but the boundary has been established in such a way that the other downstream tools can leverage it as well
 - [CLI](./clearhead-core/crates/clearhead-cli/README.md) the synchronous command client for the specifications outlined
   - handles terminal workflows and durable workspace mutations through clearhead-core
-  - leaves graph-shaped query execution to direct consumers of clearhead-graphd
+  - evaluates SPARQL and the saved query families in-process (default `sparql` feature)
   - parses action files with the above tree-sitter parser
 - [LSP](./clearhead-core/crates/clearhead-lsp/README.md) the standalone editor protocol runtime
   - owns Tokio, Tower LSP, open-document state, diagnostics, providers, and stdio lifecycle

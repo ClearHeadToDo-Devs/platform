@@ -44,7 +44,7 @@ we use views to surface our work via both the cli and nvim plugin for your purpo
 - unscheduled
 - weekly
 
-so something like `clearhead-graphd -w . query index unscheduled`
+so something like `clearhead -w . query index unscheduled`
 
 this gives you your NEXT ACTIONS where if nothing else, you can look and start running the work in order of priority
 

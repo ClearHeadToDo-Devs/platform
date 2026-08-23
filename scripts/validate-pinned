@@ -34,7 +34,7 @@ run_gate() {
 }
 
 # clearhead-core is one Cargo workspace: its pre-push gate covers the core,
-# CLI, LSP, and graphd crates together.
+# CLI, and LSP crates together.
 run_gate tree-sitter-actions
 run_gate clearhead-core
 run_gate clearhead.nvim
@@ -52,14 +52,11 @@ echo "validate-pinned > Core DSL conformance"
         cargo test --features spec-conformance --test spec_conformance
 )
 
-# graphd owns query output, so index-JSON schema conformance is proven at its
-# producer boundary against the spec's published index_query_result schema.
-echo "validate-pinned > graphd query-output conformance"
-(
-    cd "$root/clearhead-core/crates/clearhead-graphd"
-    CLEARHEAD_SPEC_DIR="$root/specifications" \
-        cargo test --features spec-conformance --test spec_conformance
-)
+# TODO(rdf-publication): index-query output moved in-process to the CLI's
+# `sparql` layer when graphd was retired. Its schema conformance against the
+# spec's index_query_result schema is not yet gated here directly; the CLI's
+# index/tree tests currently pin byte-parity against the frozen graphd-era
+# fixtures. Add a CLI spec-conformance test and re-add a gate at this boundary.
 
 echo "validate-pinned > specifications schema conformance"
 if command -v jsonschema >/dev/null 2>&1; then
