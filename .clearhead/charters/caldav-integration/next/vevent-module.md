@@ -19,6 +19,7 @@ A calendar resource should instead represent a **Plan**: the scheduling relation
 - Calendar-created Plan resources create scheduled, not-started Actions in their owning charter.
 - Calendar-side rescheduling updates the corresponding Action instance. Action-side rescheduling updates the Plan master or occurrence override.
 - Recurring instances are addressed by Plan UID plus canonical recurrence key; one-off Plans realize exactly one Action.
+- The Action sidecar carries the durable Plan link (`plan_uid` plus an optional recurrence key). ClearHead-authored one-off Plans still use the Action UUID as component UID and filename; calendar-authored Plans retain their foreign UID while the Action receives an independent native UUID.
 - Action state remains authoritative in `.actions` even when VTODO is selected and could carry STATUS.
 
 ## Codec contract
