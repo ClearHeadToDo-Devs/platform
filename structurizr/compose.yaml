@@ -1,0 +1,11 @@
+services:
+  structurizr:
+    image: structurizr/structurizr:2026.06.28
+    command: ["local"]
+    init: true
+    # Keep Structurizr private on the host; Tailscale Serve terminates HTTPS and
+    # proxies tailnet traffic to this loopback listener.
+    ports:
+      - "127.0.0.1:${STRUCTURIZR_PORT:-8080}:8080"
+    volumes:
+      - ./:/usr/local/structurizr

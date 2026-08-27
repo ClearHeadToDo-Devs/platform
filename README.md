@@ -45,6 +45,10 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 
 For branch-per-task development (including multiple parallel agent branches), see [Worktrees](./WORKTREES.md).
 
+### Architecture
+
+See the [Structurizr architecture workspace](./structurizr/README.md) for structural dependencies and clean-architecture boundaries. Runtime event order is documented separately in the [Mermaid workflow diagrams](./docs/workflows.md).
+
 ### Tracking Decisions
 
 we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
