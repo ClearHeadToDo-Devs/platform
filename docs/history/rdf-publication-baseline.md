@@ -1,8 +1,15 @@
 # RDF publication migration baseline
 
-This inventory freezes the active `clearhead-graphd` responsibilities and
-consumer contracts before the RDF publication path moves. It is a migration
-baseline, not a commitment to retain every current presentation feature.
+> **Historical artifact — captured 2026-08-18.** The migration completed on
+> 2026-08-22 and `clearhead-graphd` was retired. Paths, commands, and present-tense
+> statements below intentionally preserve the pre-migration evidence and are not
+> current operational guidance. Current structure lives in
+> [`structurizr/workspace.dsl`](../../structurizr/workspace.dsl); current query
+> usage lives in the [CLI README](../../clearhead-core/crates/clearhead-cli/README.md).
+
+This inventory froze the then-active `clearhead-graphd` responsibilities and
+consumer contracts before the RDF publication path moved. It remains evidence
+of migration scope, not a description of the current platform.
 
 ## Classification
 

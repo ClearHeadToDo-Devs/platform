@@ -5,6 +5,44 @@
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 38: Core Decides; Adapters Observe and Deliver
+
+The pure-Core split established one host-neutral semantic implementation for
+native and future WebAssembly clients. `clearhead_core` owns the domain model,
+representation codecs, reference and reconciliation policy, RDF publication,
+and prepared mutation decisions. It receives explicit inventories, snapshots,
+revisions, workspace scope, and typed requests; it never discovers files,
+checks path existence, reads configuration sources, acquires locks, recovers
+journals, or writes effects.
+
+Host adapters own observation and delivery. The native
+`clearhead-workspace-fs` adapter resolves project/user layouts, maps logical
+resources to OS paths, reads bytes, resolves configuration sources, validates
+preconditions, and performs locking, journaling, recovery, fsync, and atomic
+writes. CLI and LSP are drivers that compose Core with that adapter; Core does
+not depend on either host. A path value may cross Core as inert source-location
+or representation data, but probing that path is a host capability.
+
+This supersedes Decision 17's proposed `WorkspaceStore` trait and optional
+filesystem implementation inside Core, and the storage/query ownership portions
+of Decision 12. It preserves their underlying intent—one shared semantic
+implementation without coupling consumers to CLI presentation—through a
+snapshot/effect protocol rather than a persistence abstraction. Decision 34's
+recovery amendment and Decision 36's database-free RDF publication boundary
+remain complementary.
+
+The boundary is enforced rather than documented as an aspiration:
+
+- `scripts/pure-core-source-gate.sh` rejects filesystem observation or delivery
+  APIs in Core production source;
+- `scripts/wasm-dependency-gate.sh` rejects native-only dependencies;
+- Core's minimal feature profile builds independently of native delivery;
+- `scripts/validate-pinned` delegates to the Core workspace gate, so the exact
+  platform composition proves the same boundary.
+
+---
+
 ## Decision 37: Bundle Tree-sitter for WASM, Don't Replace the Parser
 
 The pure-core-split charter requires Core to compile for a WebAssembly host. Extracting durability cleared the native-only *crates* from Core's portable graph (a green `wasm32` dependency gate), but a real `cargo build --target wasm32-*` still fails: the `tree-sitter-actions` grammar is C, and `wasm32-unknown-unknown` ships no libc sysroot, so `parser.c`'s `#include <stdlib.h>` cannot resolve. This decides how Core's parser reaches WASM.
@@ -28,6 +66,7 @@ Core's WASM build compiles the tree-sitter C parser against a WASM libc so the p
 The cost is a bounded, one-time build-infra tax on the WASM host, versus an unbounded, ongoing correctness/maintenance cost concentrated in the least-testable place. That asymmetry is the whole decision. Nothing here blocks today: Core is already dependency-portable, and the tax comes due only when a browser host is built.
 
 ---
+
 ## Decision 36: RDF Is Publication, Not a Backend
 
 The extraction of `clearhead-graphd` left one query runtime looking like the platform's graph backend, entangling several distinct concerns behind a single subprocess: the canonical DomainModel-to-RDF mapping, a *second* hand-built JSON-LD serializer, an ephemeral Oxigraph store, saved-query families, shape validation, and terminal/DOT rendering. This decision draws the boundary the [RDF publication charter](./.clearhead/charters/rdf-publication.md) needs before any code moves.
@@ -64,7 +103,7 @@ The governing rule is: **parse broadly, interpret cautiously, rewrite only with 
 
 For wiki links, keep valid `link` nodes in the grammar because Tree-sitter highlight queries use their label/URL children for concealment. Recovery is made structural rather than line-based: link content may span whitespace and newlines, but an unescaped `[` is a synchronization point. A missing `]]` then produces a bounded Tree-sitter `MISSING` token before the next `[state]` action, so the next action and UUID remain independently attached. The LSP offers a surgical “Close incomplete link” insertion at that exact missing-token range; it still returns no formatting edit until the repair lands.
 
-## Adding Optional Charter UUID to Actions file 
+## Adding Optional Charter UUID to Actions file
 
 After wrestling with the issue for a long time ive decided the best thing to do about dangling references is allow for an optional frontmatter field of some kind that will allow action files to represent a parent thing at the start or end of the file.
 
@@ -83,6 +122,7 @@ We already keep the link between the charter and actions in the sidecar but this
 this also means we will likely have highlight rules to hide the uuid at a filter level.
 
 Still this all should make tracking down changes in the structure of the data model much easier since we can do this automatically using cli commands or even during the lsp creation so that we ensure the workspace is up to a good standard without allot of hand-cleaning
+
 ## Decision 34: Relaxed Reader, Strict Doctor
 
 Designing `clearhead doctor` (the trust charter's workspace fsck) surfaced that `load_workspace` currently entangles three roles: it **reads**, it **heals** (`recover_pending` replays interrupted write journals before reading anything), and it **judges** — but badly, hard-failing the entire workspace on one corrupt sidecar (`read_sidecar(...)?`) while burying real problems in `eprintln` warnings that `--json` consumers never see. A read-only doctor cannot be built on that function: calling it mutates the workspace before checking it, and it aborts on exactly the workspaces that need diagnosing.
@@ -117,6 +157,7 @@ Grounded in the 2026-07-04 survey of the workspace layer; the linter keeps intra
 - **Durability residue** — a `.pending` journal present (report, do not replay); orphaned `.tmp.*` staging files
 
 ---
+
 ## Decision 33: Round-Trip Fidelity Lives at the Text Boundary
 
 Decision 9 committed us to a *lossless* round-trip between the `.actions` text and the domain structs. This decision records *where* that contract is actually at risk and how we enforce it — because a design conversation about "add round-trip property tests" surfaced that most of the surface is better protected by more static tools, and only a narrow residue is a genuine test target.
@@ -141,6 +182,7 @@ Net: a full property-test *generator* over arbitrary `ActionList`s is over-scope
 **2. Reserved characters in freeform fields require explicit escaping.** `$ # + < *` etc. carry syntactic meaning. If a title genuinely needs one (`save $500`, `PR #42`), the human escapes it, and the *formatter* is obligated to escape on write so its own output always round-trips — escaping is a write-side discipline, never a read-side heuristic that guesses intent. An *unescaped* reserved char in hand-authored text is a **lint warning**, not a parse error and not a test failure (again: live buffer, Decision 6). Status: **decided, not yet implemented** — escaping is currently absent from all three layers (formatter writes names raw, parser does not unescape, grammar has no escape rule). This spawns a coordinated grammar + parser + formatter action; the targeted round-trip tests land with it, since escape/unescape survival through Topiary is precisely the artifact-agreement residue worth testing.
 
 ---
+
 ## Decision 32: Single Semantic Output Contract
 
 Refines Decision 29 (TTY-aware output). `read actions` and its siblings emit exactly **one** JSON shape: the JSON-LD document (`@context` + `@graph`). The `json` flag value is kept as an alias for `json-ld` purely for `jq` muscle-memory — it resolves to the same one format.
@@ -156,13 +198,14 @@ A JSON-LD document is already valid JSON, so `jq` and every JSON parser handle i
 
 ### Alternate shapes are views, not copies
 
-The legitimate need behind "raw JSON":  the `@context` block is verbose and `.["@graph"][]` is clunkier than `.[]`. When that friction actually shows up, the answer is a **config view on the one pipeline** — e.g. a `--flatten` / `--no-context` flag that drops the envelope and emits the bare `@graph` node array. Same serializer, same vocab names, less envelope. This is deferred (YAGNI) 
+The legitimate need behind "raw JSON":  the `@context` block is verbose and `.["@graph"][]` is clunkier than `.[]`. When that friction actually shows up, the answer is a **config view on the one pipeline** — e.g. a `--flatten` / `--no-context` flag that drops the envelope and emits the bare `@graph` node array. Same serializer, same vocab names, less envelope. This is deferred (YAGNI)
 
 ### Trade-off
 
 Consumers pay a slightly heavier default payload and a longer `jq` path in exchange for a stable, semantic, single-sourced contract.
 
 ---
+
 ## Decision 31: Plans-vdir synchronization boundary
 
 ClearHead integrates with one configured iCalendar vdir (`plan_path`). The filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing, Git, mounted storage, or no transport may sit behind it; core and the CLI have no account, server, href, ETag, or vendor-property concepts.
@@ -180,12 +223,15 @@ Comparing A and C independently against B respects edits from either side withou
 Calendar-created standalone VTODOs become root Actions in the charter selected by their vdir directory. Missing resources are recreated and have no lifecycle meaning; only VTODO STATUS changes Action state. PRIORITY and CATEGORIES use their standard RFC 5545 properties directly. Existing resources retain unknown properties, alarms, original UID, and transport-selected path.
 
 ## Decision 30: Workspaces as first-class entities in new application ontology
+
 after pondering the work for awhile we have be working through many workspace-specific problems that have made two needs clear:
+
 - there needs to be separate application level ontology that extends the existing ontology of the domain to include workspace specific properties
 - workspaces should be a first class entity within the system so they can be understood
 - like all the other entities we will have a sidecar json to capture the work that we dont want to capture in the prose we may introduce
 
 this makes the workspace itself more coherent and makes it so that we can define types around them rather than needing to have them be only in application code
+
 ## Decision 29: TTY-Aware Output and CLI Composability
 
 The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingly. No flag is needed for the common cases — context decides.
@@ -198,6 +244,7 @@ The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingl
 | `--ids` | One UUID per line (always, regardless of context) |
 
 **Native format** means the format the entity actually lives in on disk:
+
 - Actions → `.actions` DSL
 - Charters → Markdown + YAML frontmatter
 - Plans → vdir/iCal
@@ -205,28 +252,35 @@ The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingl
 This makes `>` redirection trivially correct — piping to a file produces a valid, parseable workspace file. It also enables clearhead-to-clearhead pipelines where mutations accept native format on stdin.
 
 **IDs** (`--ids`) output one UUID per line for xargs-style reference piping:
+
 ```
 clearhead read actions --charter lsp --ids | xargs -I{} clearhead update action {} --state in-progress
 ```
 
 Explicit flag overrides always take priority over TTY detection.
+
 ## Decisions 28: Separate Graphs for separate workspaces
+
 this repo itself has brought up the difficult question of how different workspaces relate to one another and i think i know how we want to do this.
 
-RDF has an existing concept of named graphs so we are going to leverage that to ensure the domain models remain portable while still having the ability to query acrossed workspaces if people do so choose. by doing this, we are going to allow as much sophistication as we want in terms of bringing graphs from different places (or even people?) together while still maintaining the ability to keep them separate when we want to. 
+RDF has an existing concept of named graphs so we are going to leverage that to ensure the domain models remain portable while still having the ability to query acrossed workspaces if people do so choose. by doing this, we are going to allow as much sophistication as we want in terms of bringing graphs from different places (or even people?) together while still maintaining the ability to keep them separate when we want to.
 
 from a filesystem perspective this allows us to pull multiple workspaces and have the ability to query across them or query a single workspace without worrying about how the structure are going to coalesce.
 
 but basically there will be a 1-1 relationship between workspaces and their graphs with the ability to move between the workspaces as needed and with the ability to actually do this work using sparql queries entirely
+
 ## Decisions 27: Upcoming Actions
+
 In orde to make structure of time easier to see in the files we want to support the introduction of `<charter>.upcoming.actions` files that can be used to denote actions that are upcoming but not yet active.
 
 this is primarily intended for long-running, recurring actions that are going to be active in the future. Now, we already have limits for generation but we will be adding some more complexity here
 
 ### Configuration
-we will add a new option to be able to configure how many _instances_ of a recurring action will live in the _primary_ action file with the assumption that ALL remaining actions generated will actually go to the upcoming actions file, this way we can have a clear distinction between what is active and what is upcoming without needing to rely on the dates themselves for that distinction.
+
+we will add a new option to be able to configure how many *instances* of a recurring action will live in the *primary* action file with the assumption that ALL remaining actions generated will actually go to the upcoming actions file, this way we can have a clear distinction between what is active and what is upcoming without needing to rely on the dates themselves for that distinction.
 
 now its important to note that we have two config options now:
+
 - number of intances generated TOTAL
 - number of instances kept in the primary file
 
@@ -237,6 +291,7 @@ if the number of upcoming instances is not designated, then they will default to
 while the default TOTAL instances is 10
 
 #### per-schedule configuration
+
 individual events will be able to override this global configuration with a per-schedule configuration that can be used to designate how many instances of that schedule should be generated in the primary action file, this way we can have some schedules that are more active and have more instances generated in the primary file while other schedules that are less active or less important can have fewer instances generated in the primary file and more instances generated in the upcoming file
 
 this will be done in the same manner as templates with the `upcoming:` key in the config file follow by the integers we want to remain in the primary file
@@ -244,11 +299,15 @@ this will be done in the same manner as templates with the `upcoming:` key in th
 now they can also update the total with the `total:` key so here we have something like this.
 
 #### handling upcoming actions
+
 users are able to still update these upcoming actions and be affected
+
 - if an action is completed/cancelled that is upcoming it will not be brought to the main file and will be archived like any other action
 
 #### workflow
+
 the main thing that i want to distinguish here is the workflow around the structure of the 3 stages:
+
 - expansion
 - archival
 - movement
@@ -264,14 +323,17 @@ so the assumption is that if you want to remove actions you will archive them an
 if people want to automate that they can but these commands are our primary method of editing
 
 so the worflow is:
+
 1. user creates schedule
 2. expand is run to generate the instances
-3. user completes some actions 
+3. user completes some actions
 4. actions are archived
 5. user runs move command to move upcoming actions to primary file
 
 do note, the move command can break and warn the use that expand must be run
+
 ## Decisions 26: Plans as their own folder
+
 After a deeper study of how various vdir applications work i figured out that things will likely work better if all the calendars are in one single folder rather than having them as a sidecar to the charters themselves
 
 in addition, they need to be only a single level as many applications assume all calendars are within a single folder so we are going to need to handle the depth as well.
@@ -279,8 +341,11 @@ in addition, they need to be only a single level as many applications assume all
 to do this, we will extend the reference syntax to allow an alternative for the `/` delimiter which may be something like `-` so that we can have the syntax represented within the structure itself rather than needing to make an explicit sidecar since we want to just conform to convention
 
 ### Breaking Changes
+
 This means we will be going back on the placement decision from earlier and we are going to start working that into the various layers so that we are doing what is necessary to get this all working
+
 ## Decision 25: Replacing Planned Act with Action
+
 We have been struggling with this distinction for awhile and ontologically the problem is that planned acts MUST have a plan as they are instance of that plan. by contrast our actions may have a single due date, or no due date at all, meaning they have no plan associated with them.
 
 to handle this ontologicaly confusion we are going to replace planned act with the action which will serve as a SIBLING to the other objects under the ontology rather than being an occurant as planned act it.
@@ -288,13 +353,16 @@ to handle this ontologicaly confusion we are going to replace planned act with t
 the distinction is that actions CAN have plans, but they dont HAVE to have plans, making them more indpenedent and more aligned with how we think about this low layer
 
 this continues to process of making the onotlogy an extension of CCO rather than using it wholesale but i feel that we have struggled with this distinction long enough that i dont want to break the commitments of the object and make it hard to integrate with the work
+
 ### Details
-  - Plans exist only for recurrence — not for single dates.
-  - Single dates are adorned on Action directly, not expressed via a Plan object
-  - Standalone VTODOs project single-date or unscheduled Actions; only RRULE-bearing VTODOs instantiate Plans
-  - we are keeping the per charter distinction as we cant use categories within google calender to denote charters and we want to be able to have multiple charters in the same calendar if we want to, so this is a good way to keep that distinction without needing to rely on the calendar semantics for it
-  - cco:PlannedAct is retired as a standing type — Actions fulfill that role relationally when prescribed by a recurring Plan
-    - CCO has no natural class for committed-but-not-yet-executed tasks; Action fills a genuine domain gap rather than inheriting from Plan or PlannedAct
+
+- Plans exist only for recurrence — not for single dates.
+- Single dates are adorned on Action directly, not expressed via a Plan object
+- Standalone VTODOs project single-date or unscheduled Actions; only RRULE-bearing VTODOs instantiate Plans
+- we are keeping the per charter distinction as we cant use categories within google calender to denote charters and we want to be able to have multiple charters in the same calendar if we want to, so this is a good way to keep that distinction without needing to rely on the calendar semantics for it
+- cco:PlannedAct is retired as a standing type — Actions fulfill that role relationally when prescribed by a recurring Plan
+  - CCO has no natural class for committed-but-not-yet-executed tasks; Action fills a genuine domain gap rather than inheriting from Plan or PlannedAct
+
 ## Decision 24: json sidecar
 
 while i was pondering the linkage between actions and ics files i realized the best way to handle this problem of linkage is the introduction of a json sidecare for each charter (optional) that can be used for various purposes of adding data that we dont want to bother the humans with we might even make these hidden files to make that even more explicit
@@ -302,7 +370,9 @@ while i was pondering the linkage between actions and ics files i realized the b
 it will be something like `.<charter>.json` within the same folder of the core action file so that we can retain machine-managed metadata such as the recurring Plan UID and occurrence key without cluttering the Action DSL
 
 this will all be captured into the domain model as just normal properties and in the graph as links but for our day to day this will allow us to keep working without cluttering the workspace or the files with the data we dont want to bother with
+
 ## Decision 23: Moving charters to a subfolder
+
 in order to make the process of making parsing trivial for implementors, i have decided the best structure to adopt is putting the actions, charters, and plans in a dedicated "charters" subfolder within the workspace
 
 this means our "inbox.actions" file will now be "charters/inbox.actions" and our "work.md" charter file will now be "charters/work.md"
@@ -310,6 +380,7 @@ this means our "inbox.actions" file will now be "charters/inbox.actions" and our
 this also makes it easier to do things like "clearhead_cli read --charters" to read all the charters in the workspace without needing to worry about other files that might be in the workspace and it also makes it easier to do things like "clearhead_cli read --charters work.md" to read a specific charter file without needing to worry about other files in the workspace
 
 this refers to BOTH the structure of the project-local and user-scoped workspaces and will alter how we search for things
+
 ## Decision 22: Keep ontology source-agnostic; map ICS through neutral external identity fields
 
 As we move plans/schedules into `.ics` and keep `.actions` focused on actions, we need schedule linkage for deterministic generation without hard-coding calendar semantics into the core ontology.
@@ -332,7 +403,6 @@ As we move plans/schedules into `.ics` and keep `.actions` focused on actions, w
 - Preserves deterministic regeneration and traceability.
 - Avoids coupling core semantics to RFC 5545 object terminology.
 
-
 ### Consequences
 
 - Specifications must distinguish core ontology language from ICS integration language.
@@ -354,16 +424,19 @@ planned acts will still utilize the uuid v5 but will now use the calendar id as 
 this means that the ttl will now be used for nothing but the central archive which is where it excels as a data format
 
 ### Template support
-while normally we will support the calendar event itself becoming an action, in order to make this easier we will also support the idea of having template files in the `templates` directory of the workspace that can be leveraged to create complex process chains in a recurring manner based on the calendar events 
+
+while normally we will support the calendar event itself becoming an action, in order to make this easier we will also support the idea of having template files in the `templates` directory of the workspace that can be leveraged to create complex process chains in a recurring manner based on the calendar events
 
 In addition, the templates can then be used for other usecases like starting a charter off with a known set of planned acts and customizing them from there to make things easier to understand
 
 ### Small wrinkle: vdir, not just ics
-so from doing more research ive determined that the protocol for storing the ics files _on disk_ is this [vdir format](https://vdirsyncer.pimutils.org/en/stable/vdir.html)
+
+so from doing more research ive determined that the protocol for storing the ics files *on disk* is this [vdir format](https://vdirsyncer.pimutils.org/en/stable/vdir.html)
 
 this is the stable way that we keep things syncable to external calendars so we are going to follow this standard so that calendar apps like khal can just be pointed at the plans folder of that given charter.
 
 then, when more sync is required we can then properly leverage calDAV to actually sync this to external calendars since vdir was designed to be easily translated to calDAV and other calendar protocols
+
 ## Decision 20: Provisional project local scope
 
 After much considerations, im undoing decision 5, the user-level storage only decision, and instead going with a provisional project local scope.
@@ -387,6 +460,7 @@ Another thing people will be able to do is designate a config option for adding 
 Now, this also means we are going to have different RDF graphs for each workspace without extra work and maybe we consider a format where we can look at different graphs but that isnt the end of the world honestly and again it might be helpful for people to have many smaller graphs with the ability to aggregate them later with a strong query engine rather than forcing people to put everything in one place
 
 still, this allows git to be a first-class citizen and opens the possibility of managing a project entirely within the repo which i honestly think is table stakes for what we are building here since this is meant to be something developer friendly is tremendously important that we meet people where they are rather than building for a customer im not sure exists
+
 ## Decision 19: CRDT Sync as Feature not Root
 
 After reflecting, we are going to add an update to decision 2.
@@ -399,7 +473,8 @@ This does a few things:
 - The CRDT will operate on the on-disk files as a secondary source of truth when enabled, but the files should be able to live on their own
 - the CRDT server will need to be able to read the workspace files but that seems fine overall and it makes things easier to structure our work
 
-So we are going to take some work of simplifying the CLI and LSP to make that experience really tight, with plans for the sync server to be something that we do in JS later 
+So we are going to take some work of simplifying the CLI and LSP to make that experience really tight, with plans for the sync server to be something that we do in JS later
+
 ## Decision 18: RDF Store
 
 In line with the work outlined below on the CRDT layer, we will also be decoupling the RDF store from the core hotpath.
@@ -407,21 +482,31 @@ In line with the work outlined below on the CRDT layer, we will also be decoupli
 Before, we were kinda keeping this all in sync, but now, instead we will do something where CLI commands using queries will just load the current state into oxigraph from the files themselves, assuming that if there are changes from the CRDT, they have already been projected to the workspace, so that we can answer questions.
 
 We will largely avoid RDF queries in the LSP since it must be really used carefully to avoid perfomance issues and if we do have something running then we want to be careful
+
 ## Decision 17: WorkspaceStore Trait
 
+> **Superseded by Decision 38.** The persistence-shaped trait and optional
+> filesystem implementation inside Core were not adopted. Shared semantics now
+> consume host-supplied snapshots and emit effects; native storage lives in
+> `clearhead-workspace-fs`.
+
 ### Context
+
 The LSP/sync server decoupling decision (below) raises a question: where does workspace management live? Currently, loading/saving domain objects (plans, charters) and discovering workspace contents is spread across both clearhead-core (crdt.rs has `Workspace`, `CrdtStorage`, `ActionRepository` with `std::fs` calls) and clearhead-cli (workspace.rs for file/charter discovery, its own crdt.rs for XDG resolution and schema migration).
 
 Both the CLI and the future sync server need these operations. A database or mobile app would need them too — but shouldn't be forced into filesystem assumptions.
 
 ### Decision
+
 Define a `WorkspaceStore` trait in clearhead-core that abstracts "load/save domain objects by key." The trait covers:
+
 - Listing objectives in the workspace
 - Loading/saving `DomainModel` for an objective
 - Loading/saving `Charter` for an objective
 - Discovering all charters in the workspace
 
 Storage backends implement this trait:
+
 - **Filesystem** (`.actions` + `.md` files) — behind an optional feature flag in core
 - **Database** (SQLite, etc.) — consumers implement as needed
 - **In-memory** — always available, ships with core for testing
@@ -429,12 +514,14 @@ Storage backends implement this trait:
 The CRDT sync layer sits *above* this trait. A sync server uses a `WorkspaceStore` to project CRDT state outward, but the store has no knowledge of CRDTs or synchronization. When the LSP is connected, it controls projection timing (gating). When no editor is running, the sync server projects through the store directly.
 
 ### Rationale
+
 - **Multiple consumers:** CLI, LSP, sync server all need workspace operations
 - **Multiple backends:** Filesystem is one option, not the only one
 - **Testability:** `InMemoryStore` eliminates temp directory gymnastics in tests
 - **Clean CRDT boundary:** Store doesn't know about sync, CRDT doesn't know about storage format
 
 ### Alternatives Considered
+
 1. **Pure path mapping in core:** Core returns paths, consumers do I/O
    - Rejected: Dishonest about the abstraction — it's not "give me paths," it's "load/save domain objects"
 2. **Separate `clearhead-workspace` crate:** Shared crate for filesystem operations
@@ -443,11 +530,13 @@ The CRDT sync layer sits *above* this trait. A sync server uses a `WorkspaceStor
    - Rejected: CLI has interactive/display concerns that don't belong in a sync daemon
 
 ### Implementation
+
 - `clearhead-core/src/store.rs` — trait definition, `ObjectiveRef`, `DiscoveredCharter`, `InMemoryStore`
 - Phase 2 (future): `FsWorkspaceStore` behind `fs` feature flag
 - Phase 3 (future): CLI refactored to use trait instead of direct filesystem calls
 
 ## Decision 16: Decoupling LSP from CRDT Sync
+
 Ive been building up the work and i realize now that having the LSP server directly manipulate the CRDT document is causing some issues around the fact that we want to be able to have the LSP server be a more general tool for working with the DSL files rather than being tightly coupled to the CRDT syncing and merging.
 
 Instead, the future sync server that will be handling automerge will also be the primary tool responsible for manipulating the CRDT documents based on requests for changes it recieves
@@ -455,16 +544,19 @@ Instead, the future sync server that will be handling automerge will also be the
 Instead, the LSP will just check a UNIX domain socket to see if the sync server is running, if so, it pushes changes to the sync server after its modifiications, and recieves edits over that same socket.
 
 If not, if moves on as it normally would, just modifying the file and letting the formatter and linter do their thing without worrying about the CRDT document at all. this way those who dont want to leverage the CRDT syncing can still use the LSP server for the other features without needing to worry about the syncing piece at all.
-##  Decision 15: Semantic Patch + Projection Gating for Multi-Device Sync
+
+## Decision 15: Semantic Patch + Projection Gating for Multi-Device Sync
 
 **Date:** February 2026  
 
 ### Context
+
 ClearHead is local-first and editor-centric. Multi-device sync introduces a failure mode where remote updates can cause confusing or "funky" merges if we treat the DSL file as the merge surface or if we rewrite projections while a user is actively editing.
 
 The sync architecture already establishes the CRDT as the source of truth and the DSL as a projection. This decision clarifies *how* we bridge editor saves, CRDT updates, and multi-device synchronization without relying on text merge semantics.
 
 ### Decision
+
 1. **Semantic changes are represented as patches over stable domain identifiers.**
    - The fundamental unit of change is a domain-level patch (e.g., "set priority", "rename", "add context tag"), addressed by stable UUIDs.
    - These patches are applied to the CRDT, not to DSL text.
@@ -482,12 +574,14 @@ The sync architecture already establishes the CRDT as the source of truth and th
    - Cross-device state sharing remains solely a CRDT concern.
 
 ### Rationale
+
 - **Editor respect:** Avoids rewriting files "under the user's feet".
 - **Merge stability:** UUID-addressed patches reduce dependence on fragile text diffs and ordering.
 - **Local-first consistency:** Each device can remain fully functional offline; sync is incremental.
 - **Debuggability:** Observability bridges the gap between CRDT operational history and human-meaningful change history.
 
 ### Alternatives Considered
+
 1. **Sync the DSL files directly (file-level replication):**
    - Rejected: turns sync into text-merge conflict management and defeats projection architecture.
 
@@ -498,25 +592,31 @@ The sync architecture already establishes the CRDT as the source of truth and th
    - Rejected: duplicates CRDT coordination with another ordering/deduplication system.
 
 ### Trade-offs
+
 **Pros:**
+
 - Stable merges (domain patches over UUIDs)
 - Predictable editor experience (projection gating)
 - Easier sync debugging (semantic telemetry)
 - Keeps sync concerns in CRDT layer
 
 **Cons:**
+
 - Requires defining a patch vocabulary (domain operations)
 - Requires tracking a "base" view for clean patch derivation from saved text
 - Some remote updates will not be visible until the next intentional apply
 
 ### Specification Implications (High Level)
+
 - Sync spec should explicitly describe *semantic patching* and *projection gating* as core strategies for multi-device stability.
 - Observability spec should include events that explain patch derivation/application and sync sessions, while remaining non-authoritative.
 
 ## Decision 14: Archiving Actions
+
 In order to support the archival of plans (actions) and their planned acts, we are going to implement a simple mechanism for archiving actions.
 
 The core mechanism is described in [the process specification](./specifications/process.md) but the key points are:
+
 - we have <charter>.archive.actions files that live alongside the main action plan files
 - when an action is archived, it is moved from the main action plan file to the archive
 - archived actions are read-only and cannot be modified
@@ -529,16 +629,26 @@ this is separate from the logging mechanism which simply logs what happened, ins
 open questions are whether or not we should allow the export of data to other formats or even supporting a retention period mechanism where stuff gets automatically removed from the archive after a certain period of time to ensure the archive doesnt grow indefinitely but these are things we can explore later
 
 For now, this is another piece of functionality that will be something a user can turn on or off depending on preference but i think this will be important for making it so people dont need to manage the movement of closed actions manually
+
 ## Decision 13: Splitting the CLI from Core
+
 The core functionality of the platform has been growing for awhile and with the latest additions to the LSP we are going to split the clearhead cli from the core platform functionality.
 
 This will enable the two to grow independently and is already yielding benefits around readability and proper boundary definition.
 
 Implementors are free to either integrate with the cli or to build their own tools on top of the core platform functionality as a core library, or even at a data level if the intergration needs to be really loose.
+
 ## Decision 12: Reworking the Ontology and CLI
+
+> **Partially superseded by Decisions 36 and 38.** Core still owns the domain
+> model and pure representation mappings, but SPARQL evaluation is an optional
+> CLI capability, filesystem/configuration delivery lives in
+> `clearhead-workspace-fs`, and the LSP is a standalone host.
+
 After allot of pondering, im very happy to say the v4 of the ontology is prepared and ready to go.
 
 I realized that CCO offers the mass majority of what we need for the entire thing to work and I really like the idea of our core entities:
+
 - Objectives (akin to projects in other frameworks)
 - Plans (the templates for what we call actions)
 - Planned Act (the execution of a plan, what we call action processes)
@@ -548,9 +658,10 @@ we have everything we need to represent the domain, now to make it cleaner, we a
 
 In this way, we arent using the ontology generatively we are just going to make it so that the ontology is driving the design of the CLI
 
-The parser will still be the same as those are about the syntax that we use to represent the data 
+The parser will still be the same as those are about the syntax that we use to represent the data
 
 Core will cover:
+
 - Core structures that represent the domain objects
 - Conversions to and from the various formats
   - DSL
@@ -562,15 +673,19 @@ Core will cover:
 - SPARQL querying
 
 Leaving the CLI to cover:
+
 - Command Line Parsing
 - Layered Configuration Management
 - File System Interactions
 - Network Calls
 - LSP Server implementation (this is the part with the runtime)
+
 ## Decision 11: Oxigraph as Query Layer
+
 After doing allot of research on the various options for a query engine, I have decided to give [Oxigraph](https://github.com/oxigraph/oxigraph?tab=readme-ov-file) a try as the core query engine for the platform.
 
 This is for a few reasons:
+
 - As we can see from the [Ontology](./ontology/README.md) we have put in allot of work to make sure we have strong ontological underpinnings from the BFO/CCO alignment so having a strong RDF query engine is important to make sure we can leverage SPARQL queries to do reasoning over the data.
 - Oxigraph is written in Rust which makes it a great fit for our existing Rust codebase especially since it tries to be a fully compliant SPARQL 1.1 engine.
 - It has support for persistent storage which means we can use it as a cache layer for the data we have.
@@ -581,54 +696,63 @@ The oxigraph will NOT be the persistence layer, this and syncing will still be h
 
 The DSL is still going to be the primary human interface we are NOT replacing the actions file format with RDF.
 
-What this DOES do however is supercharge our ability to do complex queries over the data and to do reasoning over the data in a way that is performant and scalable. 
+What this DOES do however is supercharge our ability to do complex queries over the data and to do reasoning over the data in a way that is performant and scalable.
 
 This is amazing for:
+
 - Linting: Through SHACL shapes and ontology reasoning we can do much more complex linting of the data
 - Reporting: we can now do complex queries over the data and even over time
-- Integration: with the ontology entities being first-class citizens rather than just being implicit in the data structures we can now more easily integrate with other systems that also use RDF and ontologies. 
-
+- Integration: with the ontology entities being first-class citizens rather than just being implicit in the data structures we can now more easily integrate with other systems that also use RDF and ontologies.
 
 ### Changes
 
 We want to go over what breaking changes this will entail:
+
 - Removing the sql queries. we dont want to maintain multiple query engines so we will be removing the existing sql queries and replacing them with SPARQL queries and oxigraph as the query engine.
 - Alignment between Structs and Ontology Domain Objects. Now, this is where we are ALIGNING the structs more closely with the ontology domain objects so that we can have a lossless mapping between the two. This means that we will need to make sure that the structs are designed in a way that they can be easily converted to and from data that conforms to our ontology and this will be REPRESENTED in the structs themselves, which makes the introduction to oxigraph much more seamless.
 
- ### Sync Implications
+### Sync Implications
 
 By keeping all data (plans AND processes) in the CRDT, we mainain a single sync mechanism.  Oxigraph is rebuilt locally from the CRDT/IR, so we don't need to solve RDF sync. This eliminates events.db as a separate store
-  - ActionProcesses now live in the CRDT alongisde ActionPlans. Flow:
-  - CRDT → IR → Oxigraph (query cache)
-  - CRDT → IR → DSL (human interface)
+
+- ActionProcesses now live in the CRDT alongisde ActionPlans. Flow:
+- CRDT → IR → Oxigraph (query cache)
+- CRDT → IR → DSL (human interface)
 
   Sync happens at CRDT layer only
 
 ## Decision 10: Expanding Reference Styles
+
 In order to make the reference styles more flexible we are going to expand the existing reference styles to include some new ones:
 
 - Short UUID: The first 8 characters of the UUID can be used as a short "good enough" reference for actions, good for when we want to be sure but ALSO keep the id short enough to be human friendly.
-- Alias: We want to add syntax to define shorthands for actions so that we can have things like "get project documentation done" to "documentation" this way, the alias will still be the same and easier to read _even if we change the name or description_
+- Alias: We want to add syntax to define shorthands for actions so that we can have things like "get project documentation done" to "documentation" this way, the alias will still be the same and easier to read *even if we change the name or description*
 - Defining sequential action plans: to make it easier to have multiple actions that are inherently sequential, we will support a syntax for designating a set of actions as being sequentially dependent on one another. this will make it easier to have things like "step 1", "step 2", "step 3" without needing to have complex dependencies defined.
 
 By default, we want to still assume that actions are independent unless otherwise specified but this will make it easier to have more complex workflows defined in the action plan DSL and where we want to simply use the order to denote dependencies rather than needing to have complex dependency graphs defined.
+
 ## Decision 9: Action Plan Hierarchies
+
 Another hierarchy we have specced out in the file format but have yet to represent in the data is the idea that one action plan can have child action plans.
 
 we will need some sort of syntax to represent this so that we can have two subprojects with the name "cli" that are different things.
 
 this will make some things easier like having a project for "work" and a project for "personal" and being able to have actions that are scoped to those projects.
 
-This means we need a way to denote child projects within the file format as well as the data structures because as we have noted its important that we actually have a _lossless_ representation of the file format in the data structures so that we can roundtrip without losing information.
+This means we need a way to denote child projects within the file format as well as the data structures because as we have noted its important that we actually have a *lossless* representation of the file format in the data structures so that we can roundtrip without losing information.
+
 ## Decision 8 Tag Hierarchies
+
 One feature i want to support is the idea of tag subtypes. the idea being that some contexts are of a precise type of another context.
 
-These can be defined within a single config option in the core config file and will only be a list of values, with the ability to put certain tags under others. 
+These can be defined within a single config option in the core config file and will only be a list of values, with the ability to put certain tags under others.
 
 This allows one to make one tag implicitly include other tags. for example: Grocery store is a subtype of driving so if I tag something as grocery store it will also be tagged as driving.
 
 neovim is a subset of terminal so if I tag something as neovim it will also be tagged as terminal which itself will be a subset of computer so tagging something as neovim will also tag it as computer
+
 ## Decision 7: Decreasing Formatter Responsibility
+
 After reflecting on the role of the formatter in the overall architecture, I have decided to reduce its responsibilities significantly.
 
 In particular, a core design philosphy is that we dont really care about whitespace in the action plan dsl.
@@ -640,34 +764,42 @@ this will primarily be used on "on save" actions in the LSP server to ensure tha
 the "indent" queries in the treesitter parser will be used to ensure that children are indented properly but beyond that we wont be worrying about it.
 
 this makes it so that formatting is primarily handled by the parser, while the cli owns linting which happens AFTER parsing .
+
 ## Decision 6: Relaxed Parser, Strict Linter
-In tree-sitter, it is less reliable and more brittle to do error reporting from the tree itself. 
+
+In tree-sitter, it is less reliable and more brittle to do error reporting from the tree itself.
 
 Instead, we want to have a relatively relaxed parser that can parse most things into a tree structure, and then have the linter be the place where we do the strict checking of the document to ensure that it is valid.
 
 this was brought to my attention when i realized that we were getting invalid trees from small issues like tags with no content and instead of making people figure out why the tree isnt valid i would rather say thats a valid tree but you have a linter error that says "tags must have content" or something like that.
 
 This goes along with modern tools like typescript where the parser is very relaxed and the typechecker is where the strictness comes in.
+
 ## Decision 5: User-Level Storage Only (Superceded by 20)
+
 After working through the architecture problems for a few weeks ive decided that the best path forward is to focus on keeping actions in the user-stored directories and to forget about doing the file-search for other projects that just so happen to have action plans in them.
 
 This is because the complexity of doing this is high including:
+
 - Recursively searching directories can be really bad for performance
 - It becomes strange to know when we want "everything" and when we want just the user-level stuff
 - Syncing and conflicts become a nightmare when you have multiple projects with different action plans
 - we dont want to lock projects into having to have action plans if they dont want them
 
-This, along with our core usecase of individual intentions keeps our vision clean, and more able to actually implement the core features that we want to implement to make the _individual_ experience great rather than trying to be everything to everyone.
+This, along with our core usecase of individual intentions keeps our vision clean, and more able to actually implement the core features that we want to implement to make the *individual* experience great rather than trying to be everything to everyone.
 
+## Decision 4: Recurrence Instances
 
-## Decision 4: Recurrence Instances.
 To avoid the problem of needing to check the instances for an action we are only going to track the most upcoming few instances of a recurring action maybe like 3 months but we can configure this but i dont want this to be something where we are constantly scanning the list whenever an action is changed to ensure that the structure is still there right for the rrule so if someone changes shit we just work through that rather than doing some stupid bullshit
+
 ## Decision 3: Discipline Around the Linter
+
 After reviewing the existing implementation, i realized that we need to be really carefuly and disciplined about what the linter checks and what it cant check and how to works in the larger system.
 
 while the linter is wonderful for helping with immediate diagnostics, there is a fine line between helpful and annoying.
 
 In particular, we want it to be configurable and especially where we are providing diagnostics rather than error reporting we want to make that clear so here we have:
+
 - Errors: Literally invalid syntax that prevents parsing
   - this is where the actual parser errors and tips around them go
 - Warnings: Valid trees, but there is something wrong with the document that will block lots of functionality
@@ -678,6 +810,7 @@ In particular, we want it to be configurable and especially where we are providi
   The fact this matches the LSP diagnostic levels is intentional so that we can leverage the LSP features fully and so that we can have a consistent experience across editors.
 
 By contrast, the formatter tries to go with a more gofmt approach of just fixing everything it can including:
+
 - adding whitespace for children
 - putting properties in a specific order
 - normalizing line endings
@@ -685,7 +818,9 @@ By contrast, the formatter tries to go with a more gofmt approach of just fixing
 Again, the lsp leverages this to provide "on save" formatting that makes sure everything is in the right place but is mediated through the server rather than asking each editor to do its own thing.
 
 These tools make the processing and working with the DSL, even with the below CRDT changes possible as the tooling will ensure synced documents are of valid state
+
 ## Decision 2: CRDT is New Source of Truth (superceeded by 19)
+
 As i have grappled with several architectures i realize that the primary way that we move forward is by leveraging the CRDT data structures as the shared source of truth for the application state.
 
 This changes things significantly because the filetype is now a projected view FROM the CRDT and is not the primary source of truth anymore.
@@ -709,6 +844,7 @@ but what DOESNT change is that the struct is the hub that moves data from one fo
 In this way, we arent changing the overall architecture but rather changing the source of truth and how we interact with it.
 
 ### Semantic Event Logging
+
 One of the other approaches that i was working on was a small event sourcing piece that created semantic events for the domain language that made it easier to make the current state.
 
 However, with the CRDT as the source of truth, this becomes less necessary as the CRDT document itself is the source of truth and we can always derive events from it if needed.
@@ -718,15 +854,17 @@ By contrast, the events db is more for analytics, aggregating data on the same c
 what this DB DOES own however is the recurrence problem and tracking atleast the most upcoming recurring action instance so that when we edit the template file in the DSL we will keep it closed while still noting that in our events db we have the upcoming instance that is open and have closed/cancelled an instance
 
 ## ... When the sync server is running
+
 to simplify the architecture, this is true for the sync server, which will only watch the structure of the work, and update the files as needed, but for users that dont want to use the sync server, they should be able to edit the structure such that they can work through the introductions
 
 so while CRDT WILL own the sync story, it will not own the local edit story, or more precisely, will not be NECESSARY for functioning of the core workspace model so that users can still edit the files
+
 ## Decision 1: Loosly couple the ontology and move forward
+
 Instead of relying on generation as before, we are instead using the ontology like any other piece where the cli will leverage it by translating the work into data and then running the validation shapes.
 
 We will NOT be generating code from the ontology directly, but rather using it as a source of truth for semantic validation and reasoning.
 
 In addition, we have been doing a deeper focus on aligning around the CLI and making the editor extensions a first-class citizen
-
 
 **Version:** 1.0 **Authors:** Clearhead Platform Team

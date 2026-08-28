@@ -33,8 +33,10 @@ run_gate() {
     )
 }
 
-# clearhead-core is one Cargo workspace: its pre-push gate covers the core,
-# CLI, and LSP crates together.
+# clearhead-core is one Cargo workspace: its pre-push gate covers the Core,
+# native adapter, CLI, and LSP together. That repository-owned gate also proves
+# the pure boundary with its source-capability and wasm dependency checks; do
+# not duplicate weaker path greps here.
 run_gate tree-sitter-actions
 run_gate clearhead-core
 run_gate clearhead.nvim

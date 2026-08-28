@@ -3,7 +3,7 @@
 This is my attempt to create a free, open personal data platform that is:
 
 - local-first, relying on local storage and computation where possible
-- human-centric, which is why the source of truth is the actions format that will remain human-readable and editable
+- human-centric, which is why the authoritative workspace remains human-readable plaintext: `.actions`, charter Markdown, and their explicit metadata
 - FAIR data: meaning this data is Findable, Accessible, Interoperable, and Reusable
 - Ontologically grounded, meaning that data is structured according to well-defined ontologies to ensure semantic clarity and interoperability
 
@@ -47,7 +47,15 @@ For branch-per-task development (including multiple parallel agent branches), se
 
 ### Architecture
 
-See the [Structurizr architecture workspace](./structurizr/README.md) for structural dependencies and clean-architecture boundaries. Runtime event order is documented separately in the [Mermaid workflow diagrams](./docs/workflows.md).
+Documentation has one owner per question:
+
+- [Specifications](./specifications/README.md) define normative, implementation-independent behavior.
+- The [Structurizr workspace](./structurizr/README.md) records current platform structure and dependency awareness.
+- [Workflow diagrams](./docs/workflows.md) record runtime event order and information flow.
+- [`clearhead_core` architecture](./clearhead-core/docs/ARCHITECTURE.md) describes only Core's internal boundary and organization.
+- [Decisions](./DECISIONS.md) preserve rationale, rejected alternatives, and supersession history.
+
+Clickable source entries in Structurizr are reading starting points, not a second exhaustive source map.
 
 ### Tracking Decisions
 
@@ -57,7 +65,7 @@ we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architect
 
 Please review product-specific documentation for more details on each repository
 
-- [Specifications](./specifications/README.md): The source of truth for the platform, written in human-readable formats like markdown. This covers guidance on evertying from the file format, to file and naming conventions, to example files and data schemas
+- [Specifications](./specifications/README.md): The normative platform contracts, written in human-readable formats such as Markdown, examples, and data schemas
   - all downstream dependencies rely on this repository, but usually not directly, we vendor examples so that downstream repositories can be more self-contained, and where possible the products may simply conform to the specifications without needing to reference them directly
 - [Ontology](./ontology/README.md): The ontologies that provide the semantic backbone for the platform, ensuring that data is structured and interpreted consistently across different tools and repositories
   - Aligned with the CCO ontology, which itself is a BFO-aligned ontology format.
