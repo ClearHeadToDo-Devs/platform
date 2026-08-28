@@ -3,6 +3,9 @@ services:
     image: structurizr/structurizr:2026.06.28
     command: ["local"]
     init: true
+    # Structurizr Local writes UI state beside workspace.dsl. Match the host
+    # caller so the bind-mounted project directory remains writable.
+    user: "${STRUCTURIZR_UID:-1000}:${STRUCTURIZR_GID:-1000}"
     # Keep Structurizr private on the host; Tailscale Serve terminates HTTPS and
     # proxies tailnet traffic to this loopback listener.
     ports:

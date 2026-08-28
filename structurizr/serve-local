@@ -5,6 +5,8 @@ set -eu
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 compose="$root/structurizr/compose.yaml"
 port=${STRUCTURIZR_PORT:-8080}
+export STRUCTURIZR_UID=${STRUCTURIZR_UID:-$(id -u)}
+export STRUCTURIZR_GID=${STRUCTURIZR_GID:-$(id -g)}
 
 if ! command -v docker >/dev/null 2>&1; then
     echo "error: docker is required but is not installed" >&2
