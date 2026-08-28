@@ -32,6 +32,16 @@ executable because they are linked libraries, not independently deployed
 services. The detailed Core view uses the CLI as the reference composition; the
 LSP view collapses that same library to keep the server boundary legible.
 
+First-party components in the detailed CLI, Core, and LSP views carry a
+clickable URL to one **primary source entry**. The links live together in
+[`source-entries.dsl`](source-entries.dsl), leaving the structural definitions
+legible. Each answers “where should I start reading?”; it is deliberately
+neither an exhaustive file inventory nor a claim that every implementation
+detail lives under that path. Entries target stable module roots where possible
+and a representative file where the responsibility has no narrower source root.
+They use GitHub because the diagram is served remotely: a browser `file://` URL
+would address the viewing desktop's filesystem, not the server checkout.
+
 ## Serve on a headless Tailscale node
 
 The Compose service binds only to loopback; it is not exposed to the LAN or the

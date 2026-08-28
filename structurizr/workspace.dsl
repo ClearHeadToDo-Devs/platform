@@ -134,6 +134,8 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         lspProviders -> lspParser "Uses tolerant open-document syntax trees"
         lspFs -> workspaceFiles "Reads native workspace resources"
         lspFs -> lspCore "Implements linked Core workspace contracts"
+
+        !include source-entries.dsl
     }
 
     views {
