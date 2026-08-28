@@ -76,17 +76,31 @@ STRUCTURIZR_PORT=9090 structurizr/serve-tailscale
 The image is pinned rather than using `latest`; update the image and validate
 the workspace together when upgrading Structurizr.
 
-## Run without Tailscale
+## Run locally on a desktop
 
-For local troubleshooting on the server:
+Use the local launcher when the browser and Structurizr are on the same machine:
 
 ```sh
-docker compose -f structurizr/compose.yaml up
-curl -I http://127.0.0.1:8080
+structurizr/serve-local
 ```
 
-The loopback binding means `http://<server-LAN-IP>:8080` is intentionally not
-available.
+It starts the container in the background, waits until it is ready, and prints
+the browser URL (normally <http://localhost:8080/>). It does not require or
+configure Tailscale. The loopback binding keeps Structurizr unavailable from
+other machines on the LAN.
+
+To use another local port:
+
+```sh
+STRUCTURIZR_PORT=9090 structurizr/serve-local
+```
+
+If Docker reports a socket permission error, add the desktop user to the Docker
+group and then sign out and back in so the new group membership takes effect:
+
+```sh
+sudo usermod -aG docker "$USER"
+```
 
 ## Validate the model
 
