@@ -48,18 +48,18 @@ semantically correct implementation does not silently empty the working queue.
 
 ## Log
 
-- **2026-08-28 — Candidate range semantics for Action dates.** Reframe
-  `scheduled_at` / `@` as the lower bound and `due_at` / `:` as the upper bound
-  of an Action's feasible execution range. A descendant's effective range is the
-  intersection of its local range with every ancestor range: latest start and
-  earliest due date. Missing child bounds therefore inherit naturally; explicit
-  child bounds may narrow the containing range. A local bound outside its
-  ancestor range remains visible and receives a coherence warning, while an
-  empty intersection is a semantic violation. Queries operate on the effective
-  range, but tools never write derived bounds back into source without an
-  explicit materializing fix. This is a design finding, not yet a normative
-  decision; it would sharpen the current meaning of `@` and must be specified in
-  the Action format and process rather than hidden in agenda SPARQL.
+- **2026-08-29 — Adopted range semantics for Action dates.** `scheduled_at` /
+  `@` is the lower bound and `due_at` / `:` is the upper bound of an Action's
+  feasible execution range. A descendant's effective range is the intersection
+  of its local range with every ancestor range: latest start and earliest due
+  date. Missing child bounds therefore inherit naturally; explicit child bounds
+  may narrow the containing range. A local bound outside its ancestor range
+  remains visible and receives a coherence warning, while an empty intersection
+  is a semantic violation. Queries operate on the effective range, but tools
+  never write derived bounds back into source without an explicit materializing
+  fix. The normative local and composition semantics now live in
+  `specifications/action_file_format.md` and `specifications/process.md`, rather
+  than being hidden in agenda SPARQL.
 - **2026-08-28 — Open priority constraint question.** Explore whether priority
   should compose down Action ancestry similarly. The promising algebra is the
   minimum numeric priority over self and ancestors: a priority-1 parent makes
