@@ -34,7 +34,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-import rdflib
+import rdflib  # pyright: ignore[reportMissingImports] -- supplied by ontology/.venv
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
@@ -127,11 +127,12 @@ def main() -> int:
     p.check(names(hi) == {"Alpha task"}, "high-priority: only the prioritized action")
     p.check(any(r.get("priority") == "1" for r in hi), "high-priority: priority value travels")
 
-    nxt = names(rows(ds, "next-actions"))
-    # The GTD payoff: Step two is blocked by the open Step one, Done is complete.
+    nxt = names(rows(ds, "index/unscheduled"))
+    # Step two is blocked by open Step one, Done is complete, and Chain parent
+    # is a container while its executable child remains open.
     p.check(
-        nxt == {"Chain parent", "Step one", "Alpha task"},
-        "next-actions: blocked/completed correctly excluded (dependency logic)",
+        nxt == {"Step one", "Alpha task"},
+        "unscheduled: dependencies, completion, and containers are governed",
     )
 
     dep = rows(ds, "dependency-chain")
