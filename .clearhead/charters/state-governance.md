@@ -48,6 +48,17 @@ semantically correct implementation does not silently empty the working queue.
 
 ## Log
 
+- **2026-08-29 — Migrated Charter states and dogfooded governed selection.**
+  Activated the platform root Charter so its already-Active children
+  (state-governance, caldav-integration, vevent-module, pure-core-split,
+  rdf-publication) are admitted; every other root Charter remains `New` and its
+  work is correctly strand-hidden by the gated views. The ten pre-migration
+  doctor warnings were all root-ancestry contradictions and are now resolved —
+  doctor reports the platform workspace clean. `unscheduled` returns 13 admitted
+  rows ranked InProgress-first; `agenda` is empty (nothing dated); `work-map` is
+  8 roots / 63 acyclic nodes across the multi-workspace graph. Intentional empty
+  Active Charters (platform, rdf-publication) produce no warning, per the
+  semantic contract.
 - **2026-08-29 — Adopted range semantics for Action dates.** `scheduled_at` /
   `@` is the lower bound and `due_at` / `:` is the upper bound of an Action's
   feasible execution range. A descendant's effective range is the intersection

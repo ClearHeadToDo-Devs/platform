@@ -1,6 +1,7 @@
 ---
 id: 019c4f48-6441-75dd-b285-33718b9be996
 alias: platform
+state: Active
 ---
 # Build the ClearHead Platform
 
