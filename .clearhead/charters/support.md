@@ -1,6 +1,7 @@
 ---
 id: 01a030a9-2c09-78a1-a9e1-7f2e99563193
 alias: support
+state: Active
 ---
 # Support Ergonomics
 
@@ -67,3 +68,8 @@ thing to avoid. The verb is *selective*: a distilled thing worth keeping. Prefer
 
 See also [[collaboration-centaur-config]], [[clearhead-philosophy]],
 [[feedback_use_clearhead_cli_for_actions_files]].
+
+## Log
+
+- 2026-08-31T22:07 — charter subsystem: .md name-inference doesn't mirror charter_stem's next.actions special-case, so a derived next.md becomes a phantom colliding charter (jot guards against it; close/update share the latent bug)
+- 2026-08-31T22:07 — charter writes (jot/close/update) bypass the locked+journaled workspace-fs seam and go straight through atomic_write; unlike .actions mutations
