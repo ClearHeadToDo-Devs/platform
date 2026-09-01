@@ -1,5 +1,3 @@
 [ ] Add a capture verb (jot/capture) appending a timestamped finding to the current charter's \#\# Log $frictionless in-flow capture; NOT 'log' (firehose connotation); the human-ergonomics half$ ^2026-08-23T15:07 #01a030aa-2e84-7a91-8050-53fedd325831
 [ ] Make query output consistent across named/index and add-charter $query named emits raw SPARQL-JSON, query index NDJSON; add charter prints a bare UUID vs structured JSON elsewhere$ ^2026-08-23T15:07 #01a030aa-2e92-79c1-b4dc-a0ad2e058ff8
-[ ] Order tree/work-map children deterministically $children return unordered (SPARQL result order); bad for a human work-map$ ^2026-08-23T15:07 #01a030aa-2ea1-7023-a80a-ede7c95df12a
-[ ] Fix stale help text (--parent accepts aliases; init leaks global --workspace) ^2026-08-23T15:07 #01a030aa-2eae-7e12-9217-811ee365caea
 [ ] Explore ClearHead as an agent task substrate for ambient capture $the only capture that survives hard work for agents is ambient/in-loop; let an agent's todo loop write to ClearHead$ ^2026-08-23T15:07 #01a030aa-2ebb-7b92-8e8a-645c5db58f3c

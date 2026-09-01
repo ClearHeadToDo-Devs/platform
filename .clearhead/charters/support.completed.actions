@@ -1,2 +1,4 @@
 [x] Reconcile next-actions into unscheduled (or fix it) $next-actions leaks the parent container and drops in-progress work; unscheduled is correct. Two disagreeing built-ins trap new users$ !1 ^2026-08-23T15:07 %2026-08-31T21:27 #01a030aa-2e75-7a23-8c4a-3049ffa0f7d2
 [x] Add a reopen path for completed actions $update/complete on a completed action returns already-closed; blocks recovery from a mistaken completion and retroactive description stamping$ !1 ^2026-08-23T15:07 %2026-08-31T21:42 #01a030aa-2e64-7af0-9832-7e9b7ea40507
+[x] Fix stale help text (--parent accepts aliases; init leaks global --workspace) ^2026-08-23T15:07 %2026-08-31T21:50 #01a030aa-2eae-7e12-9217-811ee365caea
+[x] Order tree/work-map children deterministically $children return unordered (SPARQL result order); bad for a human work-map$ ^2026-08-23T15:07 %2026-08-31T21:50 #01a030aa-2ea1-7023-a80a-ede7c95df12a
