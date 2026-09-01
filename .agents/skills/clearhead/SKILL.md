@@ -7,6 +7,7 @@ description: Clearhead workspace navigation and task management. Use when workin
 One of the exciting part of the clearhead platform is we are trying to make things easy to capture and update whether that be through cli commands, lsp, or even raw-edits to the files.
 
 However, some formats are better than others so the order of preference is:
+
 1. CLI commands
 2. LSP Hooks
 3. Hand edits to files.
@@ -20,7 +21,8 @@ you can assume that the `clearhead` cli command is available and that you are in
 run an initial check with `clearhead read charters` to see the full list of charters and `clearhead read actions` for further structure individual actions
 
 `clearhead --help` gives the full list of commands
-## LSP 
+
+## LSP
 
 We also have an LSP server and while this is primarily intended for humans, you can also use this through the neovim MCP server which will automatically do the required plumbing when you edit the various item types and having their downstream implications known
 
@@ -29,6 +31,7 @@ We also have an LSP server and while this is primarily intended for humans, you 
 Finally we dont disallow you from editing the files by hand, that is a core benefit, however, care should be taken that this way involves significantly more fiddling because it means you are also responsible for maintaining the data model through things like giving the sidecar the proper data and adding things like the uuid which the cli and lsp do automatically for you so more like work smarter not harder
 
 ### Risks of Hand Edits
+
 We have a strong process around what should happen when actions are created, updated, or closed and that work is built into the other tools for you automatically so when you hand edit you leave the option open for the data model to drift.
 
 in an ideal world, we would have an easy way to sync new information and we largely do, still, it is easier for everyone if we are able to input data properly up-front rather than needing to fix it later
@@ -37,14 +40,14 @@ in an ideal world, we would have an easy way to sync new information and we larg
 
 For questions on the workspace, file formats, and even data model please always review [the specs](./../../../specifications)
 
-
 ## The views
 
 we use views to surface our work via both the cli and nvim plugin for your purpose you can work from
+
 - unscheduled
 - weekly
 
-so something like `clearhead -w . query index unscheduled`
+so something like `clearhead query index unscheduled`
 
 this gives you your NEXT ACTIONS where if nothing else, you can look and start running the work in order of priority
 
@@ -53,6 +56,7 @@ this gives you your NEXT ACTIONS where if nothing else, you can look and start r
 Unless told otherwise, you are intended to use the views (`unscheduled` and `agenda` are great ones to start with) to answer "what should i be doing next?"
 
 then the workflow arises:
+
 1. check the view
 2. pick view action to focus on
 3. implement changes

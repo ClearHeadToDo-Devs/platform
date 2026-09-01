@@ -2,7 +2,7 @@
 id: 01a0200b-24a2-7762-9176-8e47a2b4baf1
 alias: pure-core-split
 parent: platform
-state: Active
+state: New
 ---
 # Pure Domain Core and the Delivery Boundary
 
