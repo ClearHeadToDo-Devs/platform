@@ -3,3 +3,4 @@
 [x] Fix stale help text (--parent accepts aliases; init leaks global --workspace) ^2026-08-23T15:07 %2026-08-31T21:50 #01a030aa-2eae-7e12-9217-811ee365caea
 [x] Order tree/work-map children deterministically $children return unordered (SPARQL result order); bad for a human work-map$ ^2026-08-23T15:07 %2026-08-31T21:50 #01a030aa-2ea1-7023-a80a-ede7c95df12a
 [x] Add a capture verb (jot/capture) appending a timestamped finding to the current charter's \#\# Log $frictionless in-flow capture; NOT 'log' (firehose connotation); the human-ergonomics half$ ^2026-08-23T15:07 %2026-08-31T22:07 #01a030aa-2e84-7a91-8050-53fedd325831
+[x] Mirror charter_stem's next.actions special-case in .md/.ics name-inference so primary charters pair (fixes jot/close phantom-charter on the root) !2 ^2026-08-31T22:07 %2026-09-09T17:50 #01a05b5d-62a7-70f0-8b8e-a3a51603c650
