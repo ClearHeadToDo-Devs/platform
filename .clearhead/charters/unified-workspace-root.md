@@ -51,3 +51,33 @@ reinterpret existing roots.
   reconciliation.
 - The platform workspace is migrated through that supported path after the
   implementation and conformance suite are green.
+
+## Log
+
+### 2026-09-10
+
+Landed the keystone read-side fix (commit `06dfe7f`):
+`NativeWorkspaceMounts::resolve` now derives the project root-charter name from
+the persisted `workspace.json` `workspace_name`, falling back to the cwd basename
+only when no manifest exists, then to `"workspace"`. This kills the "runtime
+recomputes the name from cwd" defect that produced the original `unresolvable-parent`
+doctor failure. (The recursion trap: `resolve()` must read `.clearhead/workspace.json`
+directly, never via `read_workspace_manifest`, which re-enters `resolve()`.)
+
+Full workspace suite green. NOT yet done, in rough order:
+
+- **A test that actually proves the fix.** Every current test runs where the
+  cwd basename already equals the persisted name, so none exercises divergence.
+  Add: init in dir `A`, then load from a renamed/copied dir, assert the root name
+  and child-parent resolution stay `A`. Until this exists the fix is unguarded.
+- init should also write `README.md` (root prose anchor); it currently only
+  writes `next.actions` + sidecar + `workspace.json`. (#3)
+- User-workspace root is still shapeless — no persisted name, no root charter —
+  so the project-vs-user branch in `resolve()` remains. (#3, #4)
+- Optional `clearhead init --name` so the initial name is a deliberate choice,
+  not hostage to the directory. (#2)
+- `doctor` should detect the `file_name()` fallback (a workspace with no persisted
+  name) and offer to mint + persist it, instead of limping silently. (#5)
+- The `next` root sentinel is still duplicated across charter/plans/reconcile;
+  consolidate to one constant. (#6)
+- Re-amend the specs for the `next.actions` decision (#1 was reopened).
