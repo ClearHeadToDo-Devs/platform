@@ -182,3 +182,24 @@ changes is the *handshake* across the core→driver arrow — not the arrows.
 - `flock` / `WorkspaceLock` is removed; a rapid-write (Syncthing-style) scenario
   produces no lock or journal artifacts.
 - All existing CLI commands and LSP tests pass green.
+
+## Reflections & Known Follow-ups (retro, charter Closed 2026-09-13)
+
+- **The safety invariant is now convention + test, not a guarantee.** The journal
+  *enforced* multi-file atomicity; the additive-ordering rule is upheld only by
+  Core emitting the destination-gaining write first, guarded by tests. The
+  hazard is the close/reopen pair: **identical write code, opposite safety** —
+  the only thing stopping a future editor from "tidying" reopen into a data-loss
+  bug is a comment. A type that made "this write is the destination" structural
+  would be safer; we chose simplicity. Watch this if the effect-emission code is
+  ever refactored.
+- **Calendar `reconcile.rs` is still the intricate part.** This charter
+  simplified the mutation *seam*, not that subsystem. A silver lining: its tests
+  used to reach into the speculative `next_state`; they now assert on the
+  *emitted effects* — more honest — but the domain complexity is untouched and
+  is the biggest remaining room.
+- **Deferred, non-required:** retire `DurabilityResidueKind::PendingJournal` in
+  Core once no workspace still carries a legacy `.pending`. `doctor` keeps the
+  read-only detection as a migration aid until then.
+- Dogfooding notes on the tooling (agent-workspace granularity, ClearHead's
+  planner-vs-execution asymmetry) live in [[support]]'s `## Log`, not here.
