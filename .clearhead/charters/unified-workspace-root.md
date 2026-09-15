@@ -81,3 +81,40 @@ Full workspace suite green. NOT yet done, in rough order:
 - The `next` root sentinel is still duplicated across charter/plans/reconcile;
   consolidate to one constant. (#6)
 - Re-amend the specs for the `next.actions` decision (#1 was reopened).
+
+### 2026-09-15
+
+Specified and implemented most of the charter in one session (specifications
+43f409a, 33c4147, 0bf4979; clearhead-core 186dc29, 110d7e1 and the doctor
+slice).
+
+- Root charter identity is `charters/README.md` frontmatter (`id` + `alias`),
+  like every charter; the sidecar only mirrors it. Workspace identity stays in
+  `<data_root>/workspace.json` for both scopes; `workspace_name` only seeds the
+  root alias at init.
+- `clearhead init --user` and `--name`: Core plans the bootstrap from a
+  snapshot of the four root files and delivers one guarded EffectBatch. Root id
+  rule: README > sidecar > mint, never minting over an existing identity. The
+  old init minted sidecar ids without reading the README — the source of the
+  platform root's two ids.
+- Loading: `WorkspaceScope` removed. The root name is the README alias, then
+  `workspace_name`, then `"workspace"`, never the directory. Every workspace
+  assembles exactly one root (materialized when no root files exist); a
+  README-less root loads `Active` so it never gates engagement. Archival no
+  longer crystallizes a fileless parent's derived id.
+- Doctor: `root-identity-conflict` (auto-fix mirrors the README id only when
+  the replaced id is unreferenced, otherwise a violation), `root-readme-without-id`,
+  `legacy-root-document` (`next.md`), `unnamed-root-charter`.
+- The `next` sentinel now lives in `ROOT_ANCHOR_STEM` / `PRIMARY_ACTIONS_FILE` /
+  `PRIMARY_DOCUMENT_FILE`.
+- `plans/next/` stays the stable collection key; readable calendar names belong
+  in vdir `displayname` metadata (support action), not in renamed folders.
+- Platform migrated through the supported path: `doctor --fix` mirrored the
+  README id `019c4f48…` over the orphaned sidecar id `01a00884…`; doctor clean.
+
+Still open:
+
+- The project root's completed history is named after the project directory
+  (`charter_stem` → `<project>.completed.actions`), a remaining directory-derived
+  name; moving it to `next.completed.actions` needs a history-file migration.
+- LSP-level conformance coverage for the unified root.
