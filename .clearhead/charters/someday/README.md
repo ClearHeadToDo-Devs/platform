@@ -17,7 +17,6 @@ This folder holds charters that are **bets, not commitments**. Each one came out
 ## Current bets
 
 - [[graph-federation]] — the load-bearing bet: cross-application queries through the shared graph, proven by an importer over real data before any second app exists.
-- [[agent-surface]] — MCP server over the workspace; agents as the primary ad-hoc query interface.
 - [[review-analytics]] — a review surface over the data the platform already accumulates and nothing reads.
 - [[mobile-capture]] — inbound capture from the phone without abandoning local-first.
 - [[explainable-reasoning]] — a real reasoner, gated on evidence, with derivation transparency as a hard requirement.

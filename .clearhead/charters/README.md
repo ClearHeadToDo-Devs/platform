@@ -14,22 +14,27 @@ My dream is to build the ClearHead platform out of composable, open, data-driven
 
 We are working through the individual structures such that we are going to be able to make a full platform just by handling individual structures
 
-## Charter Map & Prioritization (2026-08-19)
+## Charter Map & Prioritization (2026-09-14)
 
 Choose the highest-priority open action whose `<` predecessors are closed. Finish bounded active work before promoting another charter. `someday/` charters remain bets rather than backlog; promote one only when its recorded trigger is evidenced.
 
 ### Work streams, in priority order
 
-1. **LSP runtime maintenance** — finish the bounded active repository charter: make the repository standalone, add independent release hygiene, handle workspace-folder lifecycle, and settle the telemetry-adapter decision.
-2. **CalDAV recurring-action interoperability** — repair `RELATED-TO;RELTYPE=PARENT` hierarchy import ahead of broad calendar projection only when the live JTX/Thunderbird defect is affecting use. Re-charter the residual rather than extending the historical integration charter indefinitely.
-3. **Objective integration** — first repair objective and charter metadata and define durable identity/resolution semantics; then implement load → charter linkage → graph projection → objective-actions view.
-4. **[[deployment]]** — the specification authority and data-workflow gates are satisfied; promote release work when a standalone or edge consumer creates immediate pressure.
+1. **[[unified-workspace-root]]** — one canonical root-charter layout for project and user workspaces; already specified and sequenced. A predecessor of agent-surface: `orient` projects whatever root shape this settles.
+2. **[[agent-surface]]** — a CLI `orient` command first, then a thin MCP wrapper over the CLI library, then a dogfood verdict on mid-task capture.
+3. **[[support]]** — CLI friction surfaced by real use: query output consistency, charter actions-file creation, ambiguous short ids, ambient capture.
+4. **Objective integration** — first repair objective and charter metadata and define durable identity/resolution semantics; then implement load → charter linkage → graph projection → objective-actions view.
+5. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37); resume when that is scheduled.
+6. **[[deployment]]** — the specification authority and data-workflow gates are satisfied; promote release work when a standalone or edge consumer creates immediate pressure.
 
 ### Settled prerequisites
 
 - The durability/core seam, durable verb boundary, bounded executable-assurance uplift, and validated query → transaction → query workflow are shipped. Their completed charters are archived as immutable UUID facts.
+- `[[direct-delivery]]` retired the journaling and typestate mutation protocol; mutations are plain `EffectBatch` delivery with additive ordering enforced in core.
+- Calendar: VEVENT is the default Plan codec. VTODO bidirectional sync was deprioritized because it lacked the intended feel, so its `RELATED-TO;RELTYPE=PARENT` hierarchy-import gap (JTX children import as flat root actions) is **parked, not fixed** — the archived `[x]` on that action records the charter closing, not a working round-trip.
+- LSP decoupling is closed and no live charter tracks further LSP runtime work; re-charter it if a concrete need appears.
 - `[[spec-conformance-gate]]` established `specifications/` as the sole DSL schema and example authority. Grammar, Core, and CLI consume its inert corpus at their own test boundaries; the exact pinned composition runs those conformance checks.
-- `[[agent-surface]]` now has its stable query and mutation prerequisites, but remains a `someday/` bet until an actual agent workflow justifies promotion.
+- `[[agent-surface]]` was promoted on 2026-09-14 once `[[direct-delivery]]` settled the write path; its topology is settled as CLI-first with a thin MCP wrapper, not an LSP endpoint.
 
 ### Housekeeping notes
 
