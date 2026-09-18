@@ -43,6 +43,7 @@ an invariant with no enforcer yet is a step in the plan below, not an aspiration
 | I9 | **stdout belongs to the protocol.** In `mcp` mode only the transport writes stdout. Command functions split `build()` (pure data) from `run()` (prints); MCP calls only `build()`. | test that runs the server and asserts stdout carries protocol frames only |
 | I10 | **The minimal build stays minimal.** `--no-default-features` pulls neither oxigraph nor rmcp; `mcp` implies `sparql`. | extend the existing oxigraph-leak check to rmcp |
 | I11 | **Additive ordering** (carried over from direct-delivery): mutations emit additive effects before removals. | existing, in core emission |
+| I12 | **Persisted identity is declared identity.** Nothing persists an ephemeral id. Archival names files `{id}.actions`, `{id}.md`, `{id}.completed.actions` and stamps the crystallized sidecar from the charter id, so archiving an id-less charter must refuse and point at `normalize`. Found 2026-09-18 by an LSP references query on `MarkdownCharter.id` (about 45 uses; archive is the heaviest consumer). | test: archive an id-less charter, assert an error and no files written |
 
 ## Order of work
 
@@ -81,7 +82,7 @@ predecessor is not merged and pushed.
    it is a separate decision and not needed for this).
 3. **Verbs edit text** — child 2 of the identity parent (I5, I6). After the
    merge so the edits are not rewritten after a move.
-4. **`normalize` stamps ids; lint text points at it** — child 3.
+4. **`normalize` stamps ids; lint text points at it** — child 3. Also land I12: archive refuses an id-less charter (own action, after child 1).
 5. **`mcp-scaffold`** — `clearhead mcp` as a subcommand behind an `mcp`
    feature implying `sparql` (I9, I10). Read-only tools first (`orient`,
    `show`, `query_named`) plus the three resources; `capture` and `transact`
