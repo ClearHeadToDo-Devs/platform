@@ -1,3 +1,11 @@
+---
+type: Runbook
+title: Git Worktree Workflow
+description: The practical workflow for working in this repo across multiple parallel branches/worktrees.
+status: stable
+generated: { by: human:dab, at: 2026-04-12 }
+---
+
 # Git Worktree Workflow
 
 This is the practical workflow for working in this repo with multiple parallel branches/worktrees.

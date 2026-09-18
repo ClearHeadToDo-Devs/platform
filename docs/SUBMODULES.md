@@ -1,3 +1,11 @@
+---
+type: Runbook
+title: Managing Git Submodules in the Platform Repo
+description: How to work with the platform repo's git submodules effectively.
+status: stable
+generated: { by: human:dab, at: 2026-01-10 }
+---
+
 # Managing Git Submodules in the Platform Repo
 
 This repository uses git submodules to bring together all ClearHead projects into one unified workspace. This guide will help you work with them effectively.

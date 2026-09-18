@@ -1,3 +1,11 @@
+---
+type: Fact
+title: RDF publication migration baseline
+description: Frozen inventory of clearhead-graphd's pre-migration responsibilities and consumer contracts. Historical evidence, not current guidance.
+status: deprecated
+generated: { by: human:dab, at: 2026-08-18 }
+---
+
 # RDF publication migration baseline
 
 > **Historical artifact — captured 2026-08-18.** The migration completed on

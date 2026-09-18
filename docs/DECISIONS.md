@@ -1,3 +1,11 @@
+---
+type: Fact
+title: Architectural Decisions
+description: Aggregate log of key architectural decisions for the ClearHead Platform, each with context, rationale, alternatives, and trade-offs.
+status: stable
+generated: { by: human:dab, at: 2025-11-01 }
+---
+
 # Architectural Decisions
 
 **Last Updated:** August 18th 2026 **Status:** Living Document
@@ -69,7 +77,7 @@ The cost is a bounded, one-time build-infra tax on the WASM host, versus an unbo
 
 ## Decision 36: RDF Is Publication, Not a Backend
 
-The extraction of `clearhead-graphd` left one query runtime looking like the platform's graph backend, entangling several distinct concerns behind a single subprocess: the canonical DomainModel-to-RDF mapping, a *second* hand-built JSON-LD serializer, an ephemeral Oxigraph store, saved-query families, shape validation, and terminal/DOT rendering. This decision draws the boundary the [RDF publication charter](./.clearhead/charters/rdf-publication.md) needs before any code moves.
+The extraction of `clearhead-graphd` left one query runtime looking like the platform's graph backend, entangling several distinct concerns behind a single subprocess: the canonical DomainModel-to-RDF mapping, a *second* hand-built JSON-LD serializer, an ephemeral Oxigraph store, saved-query families, shape validation, and terminal/DOT rendering. This decision draws the boundary the RDF publication charter needed before any code moved — closed and archived at [`.clearhead/archive/01a01833-3f9d-7b03-b0c7-8701aa1517df.md`](../.clearhead/archive/01a01833-3f9d-7b03-b0c7-8701aa1517df.md).
 
 ### The dataset is the contract; the engine is optional
 
