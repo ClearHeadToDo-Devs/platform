@@ -3,10 +3,8 @@ type: Fact
 title: Architectural Decisions
 description: Aggregate log of key architectural decisions for the ClearHead Platform, each with context, rationale, alternatives, and trade-offs.
 status: stable
-generated: { by: human:dab, at: 2025-11-01 }
+generated: { by: human:Darrion, at: 2025-11-01 }
 ---
-
-# Architectural Decisions
 
 **Last Updated:** September 18th 2026 **Status:** Living Document
 
@@ -298,7 +296,7 @@ this makes the workspace itself more coherent and makes it so that we can define
 The CLI detects whether stdout is a TTY (`isatty`) and adjusts output accordingly. No flag is needed for the common cases — context decides.
 
 | Context | Output |
-|---------|--------|
+| --------- | -------- |
 | Terminal (TTY) | Human-readable table/tree |
 | Pipe or redirect | Native file format |
 | `--jsonld` | JSON-LD (always, regardless of context) |

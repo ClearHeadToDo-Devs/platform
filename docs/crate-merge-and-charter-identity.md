@@ -54,8 +54,11 @@ predecessor is not merged and pushed.
    that declares no `id` is a reportable gap; a read never persists an
    identity; `normalize` is the stamping pass. The spec is the authority, so
    it leads. Needs the user's go-ahead to push the submodule.
-1. **Identity types** — child 1 of the identity parent action. Includes an
-   audit first: grep `clearhead-core/src` for `now_v7`, `new_v4`,
+1. **Identity types** — child 1 of the identity parent action, which now
+   follows the pure-core source gate action (`01a0b5d0-da21`: Decision 38 cites
+   `scripts/pure-core-source-gate.sh` but it does not exist, and it is the I1
+   enforcer). The gate action owns the audit below; child 1 lands I2 and I3.
+   The audit: grep `clearhead-core/src` for `now_v7`, `new_v4`,
    `SystemTime::now`, `Instant::now`, `Local::now` and `Utc::now`, classify
    each as test-only or portable-path, and commit the classified list as the
    I1 allowlist. Known portable-path suspects: `Workspace::from_parts`
