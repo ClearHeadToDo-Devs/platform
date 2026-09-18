@@ -3,7 +3,6 @@
   "additional_workspaces": [
     "../clearhead-core",
     "../clearhead-core/crates/clearhead-cli",
-    "../clearhead-core/crates/clearhead-graphd",
     "../clearhead-core/crates/clearhead-lsp",
     "../clearhead.nvim",
     "../ontology",
