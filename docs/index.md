@@ -17,6 +17,10 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 * [ClearHead runtime workflows](workflows.md) — event order and information flow (LSP, CLI, calendar sync)
 * [Architectural Decisions](DECISIONS.md) — the aggregate decision log
 
+## Runbooks
+
+* [Overnight worker — clearhead-core task list](overnight-worker-clearhead-core.md) — pre-decided, ordered task list for an unsupervised overnight agent (2026-09-18)
+
 ## History
 
 * [RDF publication migration baseline](history/rdf-publication-baseline.md) — archived, pre-migration evidence only
