@@ -2,7 +2,7 @@
 id: 01a08e88-fda6-7ea0-bc05-11b606e56295
 alias: unified-workspace-root
 parent: platform
-state: Active
+state: Closed
 ---
 # Unified Workspace Root
 
@@ -112,12 +112,12 @@ slice).
 - Platform migrated through the supported path: `doctor --fix` mirrored the
   README id `019c4f48…` over the orphaned sidecar id `01a00884…`; doctor clean.
 
-Still open:
+Still open at the time:
 
 - The project root's completed history is named after the project directory
   (`charter_stem` → `<project>.completed.actions`), a remaining directory-derived
   name; moving it to `next.completed.actions` needs a history-file migration.
-  Now tracked as its own action.
+  Resolved 2026-09-17, below.
 
 ### 2026-09-17
 
@@ -141,5 +141,18 @@ all nine done-gate areas against the actual test suite:
   — the invariant the unified-root model leans on now that every
   workspace's root files are named alike.
 
-Conformance-coverage action closed. Remaining: the directory-named
-completed-history rename, tracked as its own action.
+Conformance-coverage action closed.
+
+Closed the remaining directory-named history-file gap. `charter_stem`
+(`clearhead-core/src/workspace/action_files.rs`) special-cased the root
+anchor's completed-history name to the project directory instead of the
+reserved `next` stem, so writes had silently forked on the platform's own
+repo since 2026-07-11 between `next.completed.actions` and
+`platform.completed.actions`. Fixed the derivation, added a doctor warning
+(`legacy-root-completed-history`, reported for a human merge like
+`next.md`, never auto-fixed — it's real content) for any other install
+carrying the same split, and manually folded the platform's own split
+history back together (clearhead-core 5350c1a; platform 8bb256b). `doctor`
+reports clean.
+
+Every done-gate item is now satisfied. Closing this charter.
