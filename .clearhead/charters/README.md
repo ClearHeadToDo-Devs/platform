@@ -40,3 +40,7 @@ Choose the highest-priority open action whose `<` predecessors are closed. Finis
 
 - Platform-level charters own cross-repository work; submodule-local charters own repository-specific maintenance.
 - Keep charter states and action files executable: a designed charter without ordered actions does not belong in the active queue.
+
+## Log
+
+- 2026-09-17T23:24 — Task 6/7 of docs/overnight-worker-clearhead-core.md STOPPED by its own rule: 'generate the charter map from charter metadata' has no metadata to read. CharterFrontmatter has no description field (the model's description is parsed from the document body), so the frontmatter 'description:' lines that agent-surface and six someday/ bets carry are invisible to the tool — and any CLI charter write silently drops them (reproduced in a scratch workspace with update charter). Fixing that is a charter-data-model decision, so the action is marked blocked with the full analysis and the undecided calls recorded in its own description; no code was written and neither README was touched.
