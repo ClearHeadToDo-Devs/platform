@@ -118,6 +118,10 @@ Stop the step, write the question at the top of the action's description as a
 
 ## Working protocol
 
+Navigate code with the shared read-only language server ([Decision 41](DECISIONS.md)),
+not `sed` and `grep`: use the compact views, and grep only for text. Batch
+independent tool calls in one turn.
+
 Use the `clearhead` CLI for every action and charter mutation, never a raw
 edit. Write each resolution into the action's description before completing it
 (what was found, decided, changed, which commit). Record a belief in the agent

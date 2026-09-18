@@ -12,6 +12,39 @@ This document records key architectural decisions made for the Clearhead Platfor
 
 ---
 
+## Decision 41: Agents Navigate Code Through One Shared, Read-Only Language Server
+
+Structural questions about code ("who reads this field", "outline of this
+file", "where is this defined") are answered by a language server, not by
+`sed` and `grep`. An analysis of the 2026-09-18 overnight run found about 45% of
+the bytes the agent read were code viewed by range or pattern.
+
+Agents use one **headless neovim per worktree**, separate from the human's
+editor and shared by every agent working in that worktree. It runs rust-analyzer
+against the files on disk, which is what agents edit. Sharing is the right
+scope because rust-analyzer holds roughly 2GB for this workspace, so one
+instance per agent multiplies that for no gain. The human's editor is excluded
+because driving it would move their buffers and cursor, and its unsaved buffers
+show a world that is not on disk. The instance is **read-only**: agents query
+(`references`, `definition`, symbols) and edit files with their ordinary tools,
+never `lsp_apply_edit` or `rename` on the shared instance.
+
+Raw language-server output is too verbose to use directly: one file outline was
+about 20KB of JSON, larger than the file. Agents therefore read through compact
+views run with `exec_lua` (grouped by file, 1-based lines), which cut that
+outline to about 1.9KB.
+
+**Alternatives rejected:** a semantic vector index such as LEANN (answers fuzzy
+questions, not structural ones, and Rust is not among its AST-chunked
+languages); a static SCIP index (goes stale on every edit); loading code symbols
+into the RDF dataset (over-building). Semantic search of prose is a separate
+question, to be reopened only if `okf search` and `rg` measurably fail.
+
+**Not built yet:** the launcher script and the compact views are actions in the
+`support` charter.
+
+---
+
 ## Decision 40: Document Identity Is Optional, Domain Identity Is Required
 
 A charter file may simply not have had its id written yet, which is normal for a
