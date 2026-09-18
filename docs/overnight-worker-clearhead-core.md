@@ -18,15 +18,12 @@ sources:
 You are continuing tonight's work in `/home/dab/Products/platform`, a multi-repo
 ClearHead monorepo (git submodules). Everything in `platform` and
 `specifications` is already done and pushed. Your scope tonight is
-**`clearhead-core` only**, working through a pre-decided, ordered list — no
+**mostly `clearhead-core` with the others like `clearhead.nvim` done only if you have time**, working through a pre-decided, ordered list — no
 open design calls left in it on purpose. Do not expand scope beyond this list.
 
 ## Ground rules (non-negotiable)
 
-- **Repo scope: `clearhead-core` only**, plus bumping `platform`'s submodule
-  pointer after each `clearhead-core` push. Do not touch `clearhead.nvim`,
-  `tree-sitter-actions`, `ontology`, or anything in `platform`'s own
-  `docs/`/`.clearhead/` beyond the action-tracking calls this list requires.
+- **Repo scope: `clearhead-core` primarily**, plus bumping `platform`'s submodule
 - **Use the `clearhead` CLI for all action/charter mutations** — `clearhead
   update action`, `clearhead complete action`, etc. Never hand-edit
   `.actions`/`.md` files directly except where a task explicitly requires
@@ -106,7 +103,7 @@ truth.
 
 ## Optional, only if the list finishes with time to spare
 
-8. Check each `someday/` charter's promotion trigger against current
+1. Check each `someday/` charter's promotion trigger against current
    reality. If one has quietly become true, don't promote it yourself — note
    it in that charter's README and flag it for the user.
 
