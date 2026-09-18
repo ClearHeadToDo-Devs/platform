@@ -55,3 +55,18 @@ The problem this targets is the [[support]] verdict: ClearHead goes silent exact
 ## Promotion record
 
 Trigger: core write-path discipline lands, or a second AI client wants at the workspace. Met when [[direct-delivery]] closed on 2026-09-13 — the write path is now plain `EffectBatch` delivery with additive ordering enforced in core.
+
+## Log
+
+### 2026-09-17
+
+Shipped `orient` (clearhead-core `c1431b6`; closes the first action). Then designed the remaining shape with the user before scaffolding it, rather than while scaffolding it:
+
+- **Still five tools, no sixth.** `orient`/`show`/`query_named`/`capture`/`transact`. Named queries and the ontology stay resources, not tool calls — an agent shouldn't spend a round trip on discovery it could get by reading a resource.
+- **Concurrency safety was reviewed, not invented.** The user's condition going in: don't reintroduce the WAL/journaling `direct-delivery` retired. Checked before proposing anything: `EffectBatch::preconditions` + `validate_preconditions` + `DeliveryError::Conflict`/`ResourceConflict` already exist and are already enforced for action mutations — this is exactly the mechanism `direct-delivery` *kept*, not something to rebuild. Two real, narrow gaps instead, both now tracked in `support`:
+  - Charter markdown writes (`jot`/`close`/`update`) skip the precondition check entirely via direct `atomic_write` — the existing action to route them through `EffectBatch` (`01a05b5d`).
+  - Action mutations already detect a stale-write race but flatten it to a string (`clearhead-workspace-fs/src/lib.rs:492`) before it ever reaches `VerbError` — new action `01a0b2c2` threads the real `ResourceConflict` through instead.
+  - `capture`/`transact` (`01a0a25d-86cc`) now depends on both: multiple concurrent agents writing through MCP is exactly the scenario that turns a currently-theoretical race into a routine one.
+- **`capture`'s provenance line gets a concrete shape**: an optional `promoted_from` citing an agent-workspace claim id, closing the loop the README already names (a claim's `external_reference` already points *at* a charter; nothing currently points back).
+- **`transact` stays scoped to update/complete/cancel.** Not extended to add/delete for MCP's convenience — creation and destruction deserve their own friction.
+- **Found, not yet resolved:** `commands::*` is `mod commands;` privately in `clearhead-cli`'s `main.rs`, not `pub` from `lib.rs`. "A thin wrapper over the same library functions" isn't true yet. The scaffold action (`01a0a25d-86be`) now carries this — decide the boundary before writing the wrapper, not mid-write.
