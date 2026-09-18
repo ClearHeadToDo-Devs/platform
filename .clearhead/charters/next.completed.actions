@@ -1,34 +1,34 @@
-[x] make it easier to query individual objective actions  %2026-02-08T12:02#019c3508-a3cd-7471-92f4-d22aef3bf2ed
-[x] consider decoupling the lsp from the main cli? $ for our work, this whole thing of downloading a different LSP might actually be really nice to get it all working $ %2026-02-22T14:33#019c4f45-d737-7dd1-89a1-9998acf339df
-[x] Implement core reference resolver (alias/uuid) =core_ref_resolver %2026-03-20T11:32#019d0c7e-9c88-7112-8e4b-87c92038a57b
-[_] standup sync server in clojurescript ~#019c26b7-481d-7262-bc69-38b4bdc4b3e4
+[x] make it easier to query individual objective actions %2026-02-08T12:02 #019c3508-a3cd-7471-92f4-d22aef3bf2ed
+[x] consider decoupling the lsp from the main cli? $for our work, this whole thing of downloading a different LSP might actually be really nice to get it all working$ %2026-02-22T14:33 #019c4f45-d737-7dd1-89a1-9998acf339df
+[x] Implement core reference resolver (alias/uuid) =core_ref_resolver %2026-03-20T11:32 #019d0c7e-9c88-7112-8e4b-87c92038a57b
+[_] standup sync server in clojurescript ~ #019c26b7-481d-7262-bc69-38b4bdc4b3e4
     >[_] get the project starts #019c26b7-481d-7262-bc69-38ce2d1cd999
     >[_] pull in automerge repo #019c26b7-481d-7262-bc69-38dc4493c18a
-[x] Update reference syntax spec with prefixes =spec_ref_prefixes %2026-03-20T11:28#019d0c7e-a675-78e3-adca-799f6d3eed3f
-[x] Wire export calendar to reference resolver =cli_export_ref %2026-04-22T08:16#019d0c7e-a67a-7cd2-9254-cad8b9f8078a
-[x] add mcp server for neovim to agentic harnesses  %2026-04-22T08:16#019d177b-f14e-76c0-8adc-f38a13bf703b
-[x] Migrate plan storage from single .ics files to vdir (one VEVENT per file in plans/ directories) $ spec updated in naming_conventions.md and ics_schedule_spec.md. clearhead-core needs to read plans from <charter>/plans/ directories instead of <charter>.ics files. khal and vdirsyncer can then point directly at workspace plan directories. also need an import path that splits multi-event .ics exports into individual files $ %2026-05-09T22:52#019dc86c-7352-71a2-8a60-2f37c6e0c431
-[x] wire auto-expand into add plan $ expand_plans_into_acts now lives in core; add plan should call it by default with --skip-expansion to opt out $ %2026-05-09T22:52#019dd080-0001-7000-0000-000000000001
-[x] replace PlannedAct with Action in ontology  %2026-05-09T00:00#019de697-18a5-7d40-93a5-0e772336334a
-    >[x] introduce Action class under Prescriptive ICE as sibling to Plan (not subtype)  %2026-05-09T00:00#019de697-2fc9-7dc0-bf7e-fce7e02feb0d
-    >[x] move hasPriority, hasAlias, requiresContext, isSequential, dependsOn to target Action class  %2026-05-09T00:00#019de697-f8d0-7023-8429-be8ede75d9a7
-    >[x] retire PlannedAct as primary class - update SHACL shapes and vocabulary TTL  %2026-05-09T00:00#019de698-0260-7b22-bc68-e497c29bb57d
-[x] thread Config type through the platform $ tag_hierarchies live only in clearhead-cli; the graph layer and future workspace tooling need access to config to inject Context hierarchy into RDF and apply tag expansion at query time; requires Config type in core consumed by both CLI and nvim $ %2026-05-17T16:34#019df000-0030-7000-0000-000000000001
-    >[x] add Config type to clearhead-core (see core next.actions)  %2026-05-17T16:34#019df000-0031-7000-0000-000000000001
-    >[x] wire Context hierarchy into RDF graph on load (see core next.actions)  %2026-05-17T16:34#019df000-0032-7000-0000-000000000001
-    >[x] apply tag expansion in CLI context filters (see cli next.actions)  %2026-05-17T16:34#019df000-0033-7000-0000-000000000001
-    >[x] expose config tag_hierarchies to nvim plugin for context-aware queries  %2026-05-17T16:34#019df000-0034-7000-0000-000000000001
-[x] test crud dogfood action  %2026-05-22T13:35#019e5166-038d-7930-afdf-d18ba67734f5
+[x] Update reference syntax spec with prefixes =spec_ref_prefixes %2026-03-20T11:28 #019d0c7e-a675-78e3-adca-799f6d3eed3f
+[x] Wire export calendar to reference resolver =cli_export_ref %2026-04-22T08:16 #019d0c7e-a67a-7cd2-9254-cad8b9f8078a
+[x] add mcp server for neovim to agentic harnesses %2026-04-22T08:16 #019d177b-f14e-76c0-8adc-f38a13bf703b
+[x] Migrate plan storage from single .ics files to vdir (one VEVENT per file in plans/ directories) $spec updated in naming_conventions.md and ics_schedule_spec.md. clearhead-core needs to read plans from <charter>/plans/ directories instead of <charter>.ics files. khal and vdirsyncer can then point directly at workspace plan directories. also need an import path that splits multi-event .ics exports into individual files$ %2026-05-09T22:52 #019dc86c-7352-71a2-8a60-2f37c6e0c431
+[x] wire auto-expand into add plan $expand_plans_into_acts now lives in core; add plan should call it by default with --skip-expansion to opt out$ %2026-05-09T22:52 #019dd080-0001-7000-0000-000000000001
+[x] replace PlannedAct with Action in ontology %2026-05-09T00:00 #019de697-18a5-7d40-93a5-0e772336334a
+    >[x] introduce Action class under Prescriptive ICE as sibling to Plan (not subtype) %2026-05-09T00:00 #019de697-2fc9-7dc0-bf7e-fce7e02feb0d
+    >[x] move hasPriority, hasAlias, requiresContext, isSequential, dependsOn to target Action class %2026-05-09T00:00 #019de697-f8d0-7023-8429-be8ede75d9a7
+    >[x] retire PlannedAct as primary class - update SHACL shapes and vocabulary TTL %2026-05-09T00:00 #019de698-0260-7b22-bc68-e497c29bb57d
+[x] thread Config type through the platform $tag_hierarchies live only in clearhead-cli; the graph layer and future workspace tooling need access to config to inject Context hierarchy into RDF and apply tag expansion at query time; requires Config type in core consumed by both CLI and nvim$ %2026-05-17T16:34 #019df000-0030-7000-0000-000000000001
+    >[x] add Config type to clearhead-core (see core next.actions) %2026-05-17T16:34 #019df000-0031-7000-0000-000000000001
+    >[x] wire Context hierarchy into RDF graph on load (see core next.actions) %2026-05-17T16:34 #019df000-0032-7000-0000-000000000001
+    >[x] apply tag expansion in CLI context filters (see cli next.actions) %2026-05-17T16:34 #019df000-0033-7000-0000-000000000001
+    >[x] expose config tag_hierarchies to nvim plugin for context-aware queries %2026-05-17T16:34 #019df000-0034-7000-0000-000000000001
+[x] test crud dogfood action %2026-05-22T13:35 #019e5166-038d-7930-afdf-d18ba67734f5
 [_] test cancel path #019e5166-224d-7382-953d-46fe6d85c063
-[x] parent task $ testing cascade complete $ %2026-05-22T13:47#019e5171-1005-71b0-84a0-333baa48176d
-[x] child one  %2026-05-22T13:47#019e5171-1df7-7262-bd3a-4d86bbdbec0a
-[x] child two  %2026-05-22T13:47#019e5171-1e01-79e1-9f18-b91ee87ecea4
-[_] parent to cancel  %2026-05-22T13:50#019e5174-5ecc-71a0-9ddc-831b546150dd
-[_] child to cancel  %2026-05-22T13:50#019e5174-69ab-7db1-a9c7-dee93006c155
-[_] cancel test parent $ testing cascade cancel $ %2026-05-22T14:27#019e5195-aac6-7c90-a3d5-f67fc19395d7
-[_] cancel child one  %2026-05-22T14:27#019e5195-aacb-7130-a373-e949c26e7b21
-[_] cancel child two  %2026-05-22T14:27#019e5195-aad7-71d2-af34-0d8dc68feb4c
-[_] Review the platform-level semantic mutation charter and refine the initial action plan =review_platform_model!1+architecture #70c7a5aa-f1a7-4be3-9abb-82a4e12b00f5
+[x] parent task $testing cascade complete$ %2026-05-22T13:47 #019e5171-1005-71b0-84a0-333baa48176d
+[x] child one %2026-05-22T13:47 #019e5171-1df7-7262-bd3a-4d86bbdbec0a
+[x] child two %2026-05-22T13:47 #019e5171-1e01-79e1-9f18-b91ee87ecea4
+[_] parent to cancel %2026-05-22T13:50 #019e5174-5ecc-71a0-9ddc-831b546150dd
+[_] child to cancel %2026-05-22T13:50 #019e5174-69ab-7db1-a9c7-dee93006c155
+[_] cancel test parent $testing cascade cancel$ %2026-05-22T14:27 #019e5195-aac6-7c90-a3d5-f67fc19395d7
+[_] cancel child one %2026-05-22T14:27 #019e5195-aacb-7130-a373-e949c26e7b21
+[_] cancel child two %2026-05-22T14:27 #019e5195-aad7-71d2-af34-0d8dc68feb4c
+[_] Review the platform-level semantic mutation charter and refine the initial action plan =review_platform_model !1 +architecture #70c7a5aa-f1a7-4be3-9abb-82a4e12b00f5
 [x] retire the data-root default_file location\: default_file should resolve into charters/ so adds cannot recreate an invisible root actions file (inbox merge done 2026-07-11) !3 %2026-07-11T22:47 #019f54cf-f74b-7ee2-8391-db7aaf893426
 [x] migrate ontology repo actions into .clearhead/charters/ and current syntax\: file sits at data root AND fails to parse (line 22), so its three open actions are invisible to queries !3 %2026-07-12T09:37 #019f54cf-f694-7953-8406-d46888c5fe10
 [x] finalize and ship VTODO closeout changes $Handoff: substantial uncommitted changes span clearhead-core, clearhead-cli, specifications, ontology, DECISIONS.md, and archived caldav-integration charter. Implemented calendar-created VTODO imports (including implicit charter files), deterministic UUIDv5 adoption for arbitrary UIDs, UID retention in plans sync store, missing-resource recreation, two-way PRIORITY/CATEGORIES, direct priority range 1-9 across lint/spec/SHACL, explicit legacy VEVENT parser plus clearhead migrate plans-vtodo, and VTODO-only normal Plan loading. Full core, CLI, and ontology tests passed; clearhead doctor reported clean. Before commit: finish/review hand-authored clearhead-cli/man/clearhead.1 migration + sync-calendar documentation (some VTODO edits already applied), inspect diffs, rerun diff checks/tests if changed, commit/push each submodule then platform pointers. The caldav charter was completed, closed, and archived; extraction was cancelled as premature.$ !1 %2026-07-23T19:18 #019f91d4-b325-7551-bc8e-996fa9ac312e
@@ -39,3 +39,4 @@
 [x] Make recovered action source impossible to rewrite $DONE 2026-07-30. Added core TrustedDocument/IntegrityError capability; existing-source format APIs require trusted input and Topiary no longer tolerates recovery on typed serialization. Workspace loading quarantines malformed action files from semantic/domain state while retaining findings, doctor defers sidecar orphan pruning during quarantine, and calendar sync refuses partial models. CLI format/normalize reject recovered input even on stdout. LSP formatting returns no edit, didSave skips telemetry/sidecar writes from recovered trees, and a surgical Close incomplete link code action inserts the missing delimiter. Grammar keeps link nodes/concealment and permits multiline links, while an unescaped opening bracket synchronizes missing-close recovery before the next action marker. Historical regression proves two actions and UUID attachment remain separate. Full core, CLI, LSP, and graphd suites pass; real installed-binary dogfood confirms formatting fails with zero stdout and byte-stable source, reads quarantine it, and doctor reports syntax only without pruning provenance.$ !1 +bug %2026-07-30T00:46 #019fb1ed-ff3d-7823-a437-b1c63f93d860
 [x] archive charter moves every charter-local completed history file $DONE 2026-08-05. Verified the current UUID-flat supporting-file sweep moves alternate charter-local *.completed.actions histories in the same durable batch. Added an exact graph-views regression proving canonical and legacy histories receive UUID-owned archive names and no ghost active directory remains. Full Core formatting, strict Clippy, tests, doctests, LSP diagnostics, doctor, and diff checks pass.$ !2 +bug %2026-08-05T15:48 #019f7457-51fc-7e02-90bf-d2cdb11f2964
 [x] Add clickable source entries to architecture views $Attach lightweight primary-source links to first-party Structurizr components without adding a generated source map; keep mappings centralized in the authoritative model and fix local/Tailscale launcher ownership diagnostics discovered during acceptance.$ !2 ^2026-08-27T23:17 %2026-08-27T23:17 #01a04704-844c-7df2-a3a1-f4e43220160e
+[x] get docs folder up-to-date with knowledge structure $Migrated docs (DECISIONS/CONTRIBUTING/SUBMODULES/WORKTREES/workflows/history baseline) into docs/ as an OKF v0.2 bundle, but left them without frontmatter, unlinked from index.md, and index.md itself a bare stub. Fixed 2026-09-18: added frontmatter (type/status/generated with real git-history provenance dates) to all six, wrote a real index.md, fixed one genuinely dead link (DECISIONS.md pointed at an archived charter's old path). okf validate docs now reports is_conformant/gate_passed true, stale_count 0. Adopted the frontmatter convention only, not the okf CLI's mutating commands (okf update destructively wipes existing file bodies instead of retrofitting frontmatter - confirmed and avoided; use it for validate/search/show only, never create/update/relate on existing content without checking the diff first).$ !2 %2026-09-17T21:56 #01a0b274-1dfd-7ad0-9763-f611a6298838
