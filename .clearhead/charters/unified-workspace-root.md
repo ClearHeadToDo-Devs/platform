@@ -117,4 +117,29 @@ Still open:
 - The project root's completed history is named after the project directory
   (`charter_stem` → `<project>.completed.actions`), a remaining directory-derived
   name; moving it to `next.completed.actions` needs a history-file migration.
-- LSP-level conformance coverage for the unified root.
+  Now tracked as its own action.
+
+### 2026-09-17
+
+Closed the bundled action that conflated migration with conformance coverage:
+migration had already landed on 2026-09-15, but "add conformance coverage"
+had not, and its own LSP clause was unaddressed. Split it into a completed
+migration action and a reworded conformance-coverage action, then audited
+all nine done-gate areas against the actual test suite:
+
+- Fresh init, stable names across renames, hierarchy, collisions,
+  root-identity reconciliation, plans, and CLI already had coverage
+  (`clearhead-cli`'s `init.rs`/`charter.rs`/`plans.rs`,
+  `clearhead-workspace-fs`'s `doctor.rs`/`load.rs`).
+- LSP did not: `clearhead-lsp`'s only related test called
+  `workspace_diagnostics_for_uri` directly against a synthetic `root.md`
+  charter, never the real `README.md`/`next.actions` anchor, and never
+  through the actual stdio protocol or a multi-folder client.
+- Added `clearhead-core` a5450c6: the root anchor's `state` gates a child
+  charter through real `didOpen` diagnostics, and two workspace folders
+  sharing identical anchor filenames still route and stay isolated by path
+  — the invariant the unified-root model leans on now that every
+  workspace's root files are named alike.
+
+Conformance-coverage action closed. Remaining: the directory-named
+completed-history rename, tracked as its own action.
