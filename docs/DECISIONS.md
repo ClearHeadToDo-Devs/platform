@@ -8,9 +8,62 @@ generated: { by: human:dab, at: 2025-11-01 }
 
 # Architectural Decisions
 
-**Last Updated:** August 18th 2026 **Status:** Living Document
+**Last Updated:** September 18th 2026 **Status:** Living Document
 
 This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
+
+---
+
+## Decision 40: Document Identity Is Optional, Domain Identity Is Required
+
+A charter file may simply not have had its id written yet, which is normal for a
+hand-written file. So the file-level document type carries an *optional* id,
+and the domain `Charter` carries a *required* one; strictness increases at the
+single conversion between them. That conversion receives the id as an
+argument, supplied by the delivery shell, so `clearhead_core` never reads a
+clock or RNG. Resolution order is frontmatter `id`, then the sidecar's
+`charter.id`, then the shell-supplied ephemeral id.
+
+Reads never write. Only `normalize`, the deliberate "you may add stuff" pass,
+and the creation of a whole new document stamp an id, exactly as actions
+behave. The write verbs (`update`, `close`, `jot`) edit document text and hold
+no id, which also lets their new text and their revision check come from one
+read.
+
+**Alternatives rejected:** deriving the id from the title (a retitle silently
+changes identity, forbidden by the spec's Concept Identity rules); minting
+inside `parse_charter` with `Uuid::now_v7` (impure, and it made a read
+non-deterministic); stamping implicitly on every write (every verb gains a
+hidden second effect and the stamp shares a revision check with an unrelated
+edit).
+
+**Trade-off:** until `normalize` runs, an id-less charter has a different
+identity each load. That only affects identity consumers such as query IRIs;
+the `charter-document-without-id` finding keeps it visible, and the user chooses
+when to stamp. Implementation plan: [crate-merge-and-charter-identity](crate-merge-and-charter-identity.md).
+
+---
+
+## Decision 39: One Binary, Two Crates
+
+`clearhead_core` stays a separate crate because purity for native and
+WebAssembly hosts is the one boundary that does real work. Everything effectful
+(`clearhead-workspace-fs`, the CLI's commands, sparql and dataset, and the LSP
+and MCP frontends) becomes one crate shipping one `clearhead` binary, with
+`mcp` and later `lsp` as subcommands. `workspace-fs` had been split only to
+serve multiple binaries, and the split left the CLI's `commands` bin-private and
+unreachable by the other frontends.
+
+Orthogonality is kept as one-directional dependencies between modules and
+`pub(crate)` visibility, checked by a test, not as crate count. A solo
+maintainer and users both pay for every extra crate. Splitting a module back out
+is mechanical if the dependencies already point one way, so starting merged is
+the reversible direction.
+
+**Supersedes** the earlier "LSP stays its own binary" line of the pure-core
+split. **Costs to plan for:** the nvim plugin's LSP `cmd`, and sparql reading the
+on-disk dataset while an LSP answers from unsaved buffers.
+Implementation plan: [crate-merge-and-charter-identity](crate-merge-and-charter-identity.md).
 
 ---
 
