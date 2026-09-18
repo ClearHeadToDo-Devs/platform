@@ -35,7 +35,7 @@ The command first rejects uninitialized, dirty, or gitlink-mismatched submodules
 
 ### Working with Submodules
 
-Git submodules are notoriously tricky to work with, so we have laid out documentation in [Submodules](./SUBMODULES.md) to help you get started. including:
+Git submodules are notoriously tricky to work with, so we have laid out documentation in [Submodules](./docs/SUBMODULES.md) to help you get started. including:
 
 - Day-to-day workflows
 - Cloning the repository
@@ -43,7 +43,7 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 
 ### Working with Git Worktrees
 
-For branch-per-task development (including multiple parallel agent branches), see [Worktrees](./WORKTREES.md).
+For branch-per-task development (including multiple parallel agent branches), see [Worktrees](./docs/WORKTREES.md).
 
 ### Architecture
 
@@ -53,13 +53,13 @@ Documentation has one owner per question:
 - The [Structurizr workspace](./structurizr/README.md) records current platform structure and dependency awareness.
 - [Workflow diagrams](./docs/workflows.md) record runtime event order and information flow.
 - [`clearhead_core` architecture](./clearhead-core/docs/ARCHITECTURE.md) describes only Core's internal boundary and organization.
-- [Decisions](./DECISIONS.md) preserve rationale, rejected alternatives, and supersession history.
+- [Decisions](./docs/DECISIONS.md) preserve rationale, rejected alternatives, and supersession history.
 
 Clickable source entries in Structurizr are reading starting points, not a second exhaustive source map.
 
 ### Tracking Decisions
 
-we maintain the [DECISIONS.md](./DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
+we maintain the [DECISIONS.md](./docs/DECISIONS.md) file to track important architectural and design decisions made throughout the development of the platform. This helps provide context and reasoning behind certain choices, making it easier for contributors to understand the project's evolution.
 
 ## Index of Repositories
 
