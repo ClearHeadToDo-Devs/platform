@@ -379,3 +379,7 @@ This charter is complete when:
   bidirectional sync exists
 - specifications, decision history, and pinned-platform validation agree that
   Core is pure and the delivery boundary is where I/O begins
+
+## Log
+
+- 2026-09-18T11:03 — 2026-09-18: LSP fold-in filed as a later action (01a0b5b0-17df); mcp-scaffold now depends on the crate merge (01a0b5a4).
