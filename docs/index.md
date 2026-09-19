@@ -20,6 +20,7 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 ## Runbooks
 
 * [Crate merge and charter identity](crate-merge-and-charter-identity.md) — invariants, ordered steps, gates and stop conditions for the two-crate/one-binary merge and the charter identity split (2026-09-18)
+* [Overnight worker — crate merge and charter identity](overnight-worker-crate-merge-and-identity.md) — branch-isolated task list with a review step, a morning brief and a launch checklist (draft, 2026-09-18)
 * [Overnight worker — clearhead-core task list](overnight-worker-clearhead-core.md) — pre-decided, ordered task list for an unsupervised overnight agent (2026-09-18)
 
 ## History

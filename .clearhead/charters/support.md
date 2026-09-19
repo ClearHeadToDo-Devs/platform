@@ -7,7 +7,7 @@ state: Active
 
 How well does ClearHead *support real work* — not as a demo of itself, but as a
 companion while you're heads-down building something. Seeded by a from-scratch
-dogfooding session (2026-08-23, [[dogfooding-clearhead-quackboard-2026-08-23]]):
+dogfooding session (2026-08-23):
 a local-first DuckDB-Wasm dashboard driven end-to-end through the CLI.
 
 ## Verdict
@@ -66,9 +66,6 @@ thing to avoid. The verb is *selective*: a distilled thing worth keeping. Prefer
   part of the agent's own loop, not a command on offer. That's the direction
   worth chasing: ClearHead as the agent's task substrate.
 
-See also [[collaboration-centaur-config]], [[clearhead-philosophy]],
-[[feedback_use_clearhead_cli_for_actions_files]].
-
 ## Log
 
 - 2026-08-31T22:07 — charter subsystem: .md name-inference doesn't mirror charter_stem's next.actions special-case, so a derived next.md becomes a phantom colliding charter (jot guards against it; close/update share the latent bug)
@@ -83,3 +80,4 @@ See also [[collaboration-centaur-config]], [[clearhead-philosophy]],
 - 2026-09-17T23:19 — clearhead-core dd20473 (task 4/7): charter ids are no longer derived from titles. parse_charter mints an ephemeral id per load when a document declares none (Concept Identity forbids recomputing identity from mutable content), and the loader reports charter-document-without-id so doctor surfaces the gap; the root keeps its repair-aware root-readme-without-id. Real finding: 8 charters in this workspace declare no id (agent-surface + the seven someday/ charters) — doctor now warns there.
 - 2026-09-17T23:23 — clearhead-core c0e9542 (task 5/7): vdir displayname now written from the charter alias. write_collection_displaynames refreshes <plans_root>/<plans_dir>/displayname only when it differs, skips charters with no alias and collections that do not exist, honors plan_path, and is wired into 'sync calendar' (before the already-in-sync early return) and 'update charter --alias' (refresh on rename). Verified: renaming work -> labor rewrites the displayname while the collection path stays work.
 - 2026-09-18T11:03 — 2026-09-18 identity decision: charter document id is OPTIONAL, domain Charter id REQUIRED, shell injects the id at conversion (core stays pure), reads never stamp, normalize stamps, creation stamps, write verbs edit text and hold no id. Filed as parent 01a0b5b0 with three ordered children; supersedes dd20473's now_v7 in parse_charter.
+- 2026-09-18T22:04 — 2026-09-18 night-shift prep: gate.sh and the pure-core source gate committed locally on clearhead-core branch gate-scripts (unpushed, main untouched). The audit found 9 sites, not the 2 suspected: identity plus the actions parser, domain constructors, three wall-clock reads and telemetry. Dead wiki-links to private memory removed from this charter.
