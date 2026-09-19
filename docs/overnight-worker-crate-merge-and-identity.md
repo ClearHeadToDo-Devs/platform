@@ -58,11 +58,19 @@ work, and shipped one real gap that every gate passed. So:
   the steps. It must pass before every commit that you keep.
 - **Do not touch `specifications`, `clearhead.nvim` or the grammar.** The spec is
   deliberately unchanged (plan step 0); document behavior in the CLI docs.
-- **Review step.** After each task, start a fresh agent (a different model if you
-  have one) with only: the diff, `docs/crate-merge-and-charter-identity.md`, and
-  the instruction "report violations of I1–I12 and anything the tests would not
-  catch; do not fix". A finding blocks the next task: fix it, re-run the gate,
-  and re-review, or write `NEEDS DECISION` if it is a design question.
+- **Review step.** After each task, start a fresh *context* (a subagent, or a new
+  session of the same model) with only: `git diff main...HEAD` for the task, the
+  plan `docs/crate-merge-and-charter-identity.md`, and the instruction "report
+  violations of I1–I12 and anything the tests would not catch; do not fix". A
+  same-model reviewer shares your blind spots, so it is a cheap first pass, not the
+  independent review: that happens afterward, on the night branch, from the morning
+  brief. Lean on the invariant tests (I4–I6, I12) instead of on review. A finding
+  blocks the next task: fix it, re-run the gate, and re-review, or write
+  `NEEDS DECISION` if it is a design question.
+- **Provenance.** Nothing in git records who wrote a commit (last night's are
+  authored as the human). End every commit message with a trailer line
+  `Agent: <model>/night-<date>` so the run can be found with
+  `git log --grep '^Agent:'`. The branch and worktree already scope the rest.
 - **Batch and read narrowly.** Issue independent tool calls in one turn. Do not
   read whole files over about 200 lines: use `rg -n` and ranged reads. (The
   language-server helper is not built yet, so there is no other way.)
@@ -131,9 +139,6 @@ this entry alone.
       predecessor, so while it is open the queue hides task 1.
 - [ ] Rebuild and reinstall the CLI (`cargo install --path` in `clearhead-core`)
       so the installed `clearhead` matches the code, or rely on the debug binary.
-- [ ] Choose the model per task. Tasks 1, 4, 5 and 6 are mechanical; tasks 2 and
-      3 carry judgment, so use the strongest model available or add a review of
-      every commit.
 - [ ] Confirm the remaining pre-decided calls above (crate name, second binary, push policy).
 - [ ] Optionally stamp the 8 id-less charters first with `normalize`, once child 3
       of the identity action has landed. Until then the warnings are expected.
