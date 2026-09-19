@@ -34,20 +34,26 @@ work, and shipped one real gap that every gate passed. So:
 
 ## Setup (do this before any task)
 
+The human normally performs steps 1 to 3 and launches you inside the result. Verify
+with `git branch --show-current` (must be `night/<date>`, not `main`) and
+`pwd` (under `~/worktrees/platform/`), and do whichever step is missing.
+
 1. From `platform`, run `scripts/worktree-new night/<date>`. Work only in the
    worktree it creates under `~/worktrees/platform/`.
 2. In that worktree, branch the submodule you will change:
    `git -C clearhead-core switch -c night/<date>`. `worktree-new` branches only
    the superproject.
-3. **Confirm the gate scripts are present**: `clearhead-core/scripts/gate.sh` and
+3. Run `./scripts/install-hooks.sh`. `core.hooksPath` is per-clone, and a fresh
+   worktree's submodules do not have the pre-push hook until it runs.
+4. **Confirm the gate scripts are present**: `clearhead-core/scripts/gate.sh` and
    `scripts/pure-core-source-gate.sh` must exist. If not, stop: the human has not
    yet merged the `gate-scripts` branch.
-4. **Check the installed `clearhead` is current** (rebuilt 2026-09-18): `clearhead
+5. **Check the installed `clearhead` is current** (rebuilt 2026-09-18): `clearhead
    doctor` must report the 8 warnings below. If it says the workspace is clean,
    the install is stale and lying; rebuild it. To verify your *own* changes to the
    CLI, use the debug build of your branch (`cargo build -p clearhead_cli`,
    `target/debug/clearhead`), not the installed one.
-5. **Expect 8 `charter-document-without-id` warnings** from `doctor`
+6. **Expect 8 `charter-document-without-id` warnings** from `doctor`
    (`agent-surface` and seven `someday/` charters). They are known and are not a
    failure. Any *other* warning or a violation is.
 
