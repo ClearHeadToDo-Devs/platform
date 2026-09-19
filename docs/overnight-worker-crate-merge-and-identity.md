@@ -77,9 +77,10 @@ work, and shipped one real gap that every gate passed. So:
 - Module layout inside it (confirmed by the human 2026-09-18): three frontends,
   `cli`, `lsp` and `mcp`, and a shared `query` module (the sparql engine and
   dataset). `mcp` is created in the later mcp-scaffold task, not tonight. The
-  former `clearhead-workspace-fs` becomes `delivery`, a runtime module beside
-  `query`; **that name is the drafter's proposal, not yet confirmed**. Frontends
-  depend on `query` and `delivery`, never on each other (I8).
+  former `clearhead-workspace-fs` becomes `filesystem` (the native filesystem
+  adapter, a runtime module beside `query`; the human's name, chosen over
+  `delivery`, and not `durability`, which is already a submodule inside it).
+  Frontends depend on `query` and `filesystem`, never on each other (I8).
 - `clearhead-lsp` stays a second `[[bin]]` target of the merged crate.
 - I1 is a **ratchet, not a goal for tonight**: remove only the two charter sites
   from `scripts/pure-core-allowlist.txt`. The other seven have their own action.
@@ -135,6 +136,6 @@ this entry alone.
 - [ ] Choose the model per task. Tasks 1, 4, 5 and 6 are mechanical; tasks 2 and
       3 carry judgment, so use the strongest model available or add a review of
       every commit.
-- [ ] Confirm the pre-decided calls above.
+- [ ] Confirm the remaining pre-decided calls above (crate name, second binary, push policy).
 - [ ] Optionally stamp the 8 id-less charters first with `normalize`, once child 3
       of the identity action has landed. Until then the warnings are expected.

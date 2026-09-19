@@ -39,7 +39,7 @@ an invariant with no enforcer yet is a step in the plan below, not an aspiration
 | I5 | **Stamping is deliberate.** Only `normalize` and creation of a whole new document write a charter id. No other verb stamps as a side effect. | test: run each write verb on an id-less charter, assert no id appears |
 | I6 | **One read, one revision.** A verb's new text is derived from the same read that captured the revision its write is checked against. | test: a change landing between read and write yields a conflict for `update`, `close` and `jot` |
 | I7 | **Conflict is data.** A lost compare-and-swap surfaces as `VerbError::Conflict`, never a string. | existing (`2aea96a`) |
-| I8 | **Two crates.** `clearhead_core` never depends on the effectful crate. Inside the effectful crate there are three frontend modules (`cli`, `lsp`, `mcp`) and a runtime (`query`, plus the delivery adapter); frontends depend on the runtime, never on each other; internals are `pub(crate)` unless deliberately exported. | crate graph check plus an import-direction test |
+| I8 | **Two crates.** `clearhead_core` never depends on the effectful crate. Inside the effectful crate there are three frontend modules (`cli`, `lsp`, `mcp`) and a runtime (`query`, plus the `filesystem` adapter); frontends depend on the runtime, never on each other; internals are `pub(crate)` unless deliberately exported. | crate graph check plus an import-direction test |
 | I9 | **stdout belongs to the protocol.** In `mcp` mode only the transport writes stdout. Command functions split `build()` (pure data) from `run()` (prints); MCP calls only `build()`. | test that runs the server and asserts stdout carries protocol frames only |
 | I10 | **The minimal build stays minimal.** `--no-default-features` pulls neither oxigraph nor rmcp; `mcp` implies `sparql`. | extend the existing oxigraph-leak check to rmcp |
 | I11 | **Additive ordering** (carried over from direct-delivery): mutations emit additive effects before removals. | existing, in core emission |
@@ -66,7 +66,7 @@ predecessor is not merged and pushed.
    (`workspace/store/load.rs`) and `parse_charter`. Then land I2 and I3.
 2. **Crate merge** — the `pure-core-split` merge action, in three commits so
    each is reviewable and bisectable:
-   a. Move `clearhead-workspace-fs` into the CLI crate as the `delivery` module (name unconfirmed).
+   a. Move `clearhead-workspace-fs` into the CLI crate as the `filesystem` module.
    b. Move the LSP source in as the `lsp` module. **It must move in the same
       step**: `clearhead-lsp` depends on `workspace-fs` today, so merging the
       others first would make the LSP depend on the CLI crate, backwards.
