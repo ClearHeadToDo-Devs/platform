@@ -42,9 +42,11 @@ work, and shipped one real gap that every gate passed. So:
 3. **Confirm the gate scripts are present**: `clearhead-core/scripts/gate.sh` and
    `scripts/pure-core-source-gate.sh` must exist. If not, stop: the human has not
    yet merged the `gate-scripts` branch.
-4. **Use the freshly built binary**, `clearhead-core/target/debug/clearhead`
-   (`cargo build -p clearhead_cli`), never the installed `clearhead`, which
-   predates the identity work and reports a clean workspace that is not.
+4. **Check the installed `clearhead` is current** (rebuilt 2026-09-18): `clearhead
+   doctor` must report the 8 warnings below. If it says the workspace is clean,
+   the install is stale and lying; rebuild it. To verify your *own* changes to the
+   CLI, use the debug build of your branch (`cargo build -p clearhead_cli`,
+   `target/debug/clearhead`), not the installed one.
 5. **Expect 8 `charter-document-without-id` warnings** from `doctor`
    (`agent-surface` and seven `someday/` charters). They are known and are not a
    failure. Any *other* warning or a violation is.
@@ -137,8 +139,9 @@ this entry alone.
 - [ ] After merging `gate-scripts`, close the purity-gate action `01a0b5d0-da21-72bf-b418-0d2645335267`
       (and the older "run the gate script" action in `support`). Task 1 lists it as a
       predecessor, so while it is open the queue hides task 1.
-- [ ] Rebuild and reinstall the CLI (`cargo install --path` in `clearhead-core`)
-      so the installed `clearhead` matches the code, or rely on the debug binary.
-- [ ] Confirm the remaining pre-decided calls above (crate name, second binary, push policy).
+- [x] `clearhead-lsp` stays a second binary for now (confirmed).
+- [ ] Confirm the two remaining pre-decided calls above: the crate name
+      `clearhead_cli`, and the push policy (the worker may push its night branch,
+      never `main`).
 - [ ] Optionally stamp the 8 id-less charters first with `normalize`, once child 3
       of the identity action has landed. Until then the warnings are expected.
