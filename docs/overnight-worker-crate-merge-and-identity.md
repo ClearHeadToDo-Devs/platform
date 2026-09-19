@@ -134,9 +134,9 @@ this entry alone.
 
 ## Launch checklist (for the human, before starting the run)
 
-- [ ] Merge or push the `gate-scripts` branch in `clearhead-core` (the worker cannot
+- [x] Merge or push the `gate-scripts` branch in `clearhead-core` (the worker cannot
       use `gate.sh` otherwise). The commit is `bbfd87e`.
-- [ ] After merging `gate-scripts`, close the purity-gate action `01a0b5d0-da21-72bf-b418-0d2645335267`
+- [x] After merging `gate-scripts`, close the purity-gate action `01a0b5d0-da21-72bf-b418-0d2645335267`
       (and the older "run the gate script" action in `support`). Task 1 lists it as a
       predecessor, so while it is open the queue hides task 1.
 - [x] `clearhead-lsp` stays a second binary for now (confirmed).
