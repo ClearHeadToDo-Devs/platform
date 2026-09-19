@@ -32,15 +32,11 @@ open design calls left in it on purpose. Do not expand scope beyond this list.
   you complete it** — what you found, what you decided, what you changed,
   which commit. Specific, cites file paths and commit hashes, no vague
   "fixed it."
-- **Full pre-push gate before every push, not just at push time**: `cargo fmt
-  --all --check`, `cargo clippy --workspace --all-targets --no-deps -- -D
-  warnings`, `cargo test --workspace --quiet`, `cargo check -p clearhead_core
-  --no-default-features`, `cargo check -p clearhead_cli --no-default-features`,
-  the oxigraph-leak check (`cargo tree -p clearhead_cli --no-default-features
-  -e normal --prefix none | grep -q '^oxigraph '` must find nothing), and `sh
-  scripts/wasm-dependency-gate.sh`. The git hook re-runs this on push; running
-  it yourself first means you see failures before the commit ritual, not
-  after.
+- **Full pre-push gate before every push, not just at push time**: run
+  `sh scripts/gate.sh` from `clearhead-core`. It is the single definition of the
+  gate (fmt, clippy, tests, the no-default-features checks, the oxigraph-leak
+  check, the wasm dependency gate and the pure-core source gate); the git hook
+  calls the same file. Never re-type the steps by hand.
 - **One retry on a flaky-looking failure** (passes in isolation, fails under
   full-workspace parallelism) — otherwise **stop and report**, don't force a
   push through. Never bypass the hook (`--no-verify`).

@@ -74,9 +74,12 @@ work, and shipped one real gap that every gate passed. So:
 ## Pre-decided calls (the human may change these before launch)
 
 - The merged crate keeps the name `clearhead_cli` and the binary `clearhead`.
-- Module names inside it: the former `clearhead-workspace-fs` becomes
-  `crate::delivery`, the LSP becomes `crate::lsp`, `commands` and `sparql` keep
-  their names.
+- Module layout inside it (confirmed by the human 2026-09-18): three frontends,
+  `cli`, `lsp` and `mcp`, and a shared `query` module (the sparql engine and
+  dataset). `mcp` is created in the later mcp-scaffold task, not tonight. The
+  former `clearhead-workspace-fs` becomes `delivery`, a runtime module beside
+  `query`; **that name is the drafter's proposal, not yet confirmed**. Frontends
+  depend on `query` and `delivery`, never on each other (I8).
 - `clearhead-lsp` stays a second `[[bin]]` target of the merged crate.
 - I1 is a **ratchet, not a goal for tonight**: remove only the two charter sites
   from `scripts/pure-core-allowlist.txt`. The other seven have their own action.

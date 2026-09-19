@@ -39,7 +39,7 @@ an invariant with no enforcer yet is a step in the plan below, not an aspiration
 | I5 | **Stamping is deliberate.** Only `normalize` and creation of a whole new document write a charter id. No other verb stamps as a side effect. | test: run each write verb on an id-less charter, assert no id appears |
 | I6 | **One read, one revision.** A verb's new text is derived from the same read that captured the revision its write is checked against. | test: a change landing between read and write yields a conflict for `update`, `close` and `jot` |
 | I7 | **Conflict is data.** A lost compare-and-swap surfaces as `VerbError::Conflict`, never a string. | existing (`2aea96a`) |
-| I8 | **Two crates.** `clearhead_core` never depends on the effectful crate. Inside the effectful crate, frontends (cli, lsp, mcp) depend on the runtime, never on each other; internals are `pub(crate)` unless deliberately exported. | crate graph check plus an import-direction test |
+| I8 | **Two crates.** `clearhead_core` never depends on the effectful crate. Inside the effectful crate there are three frontend modules (`cli`, `lsp`, `mcp`) and a runtime (`query`, plus the delivery adapter); frontends depend on the runtime, never on each other; internals are `pub(crate)` unless deliberately exported. | crate graph check plus an import-direction test |
 | I9 | **stdout belongs to the protocol.** In `mcp` mode only the transport writes stdout. Command functions split `build()` (pure data) from `run()` (prints); MCP calls only `build()`. | test that runs the server and asserts stdout carries protocol frames only |
 | I10 | **The minimal build stays minimal.** `--no-default-features` pulls neither oxigraph nor rmcp; `mcp` implies `sparql`. | extend the existing oxigraph-leak check to rmcp |
 | I11 | **Additive ordering** (carried over from direct-delivery): mutations emit additive effects before removals. | existing, in core emission |
@@ -66,13 +66,14 @@ predecessor is not merged and pushed.
    (`workspace/store/load.rs`) and `parse_charter`. Then land I2 and I3.
 2. **Crate merge** — the `pure-core-split` merge action, in three commits so
    each is reviewable and bisectable:
-   a. Move `clearhead-workspace-fs` into the CLI crate as a module tree.
-   b. Move the LSP source in as a module tree. **It must move in the same
+   a. Move `clearhead-workspace-fs` into the CLI crate as the `delivery` module (name unconfirmed).
+   b. Move the LSP source in as the `lsp` module. **It must move in the same
       step**: `clearhead-lsp` depends on `workspace-fs` today, so merging the
       others first would make the LSP depend on the CLI crate, backwards.
       Keep `clearhead-lsp` as a second `[[bin]]` target of the same crate so
       the nvim plugin's `cmd` does not break yet.
-   c. Turn `mod commands` from bin-private into library modules behind
+   c. Turn `mod commands` from bin-private into the `cli` module and move
+      sparql and dataset into `query`, all library modules behind
       `pub(crate)`, leaving `main.rs` a thin dispatcher, then add the I8
       import-direction test.
    Also update every consumer of the old names: `.githooks/pre-push`,
@@ -95,13 +96,10 @@ predecessor is not merged and pushed.
 
 ## Gate (every step, before every push)
 
-The versioned gate script from the process-friction action once it exists;
-until then, the full sequence from the overnight runbook: `cargo fmt --all
---check`; `cargo clippy --workspace --all-targets --no-deps -- -D warnings`;
-`cargo test --workspace --quiet`; `cargo check` of both crates with
-`--no-default-features`; the oxigraph-leak check; `sh
-scripts/wasm-dependency-gate.sh`; then `clearhead doctor` in `platform`.
-Never `--no-verify`. One retry for a failure that passes in isolation, then stop.
+`sh scripts/gate.sh` from `clearhead-core`, the single definition the pre-push
+hook also calls, then `clearhead doctor` in `platform` using the freshly built
+binary. Never `--no-verify`. One retry for a failure that passes in isolation,
+then stop.
 
 ## Stop conditions
 
