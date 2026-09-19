@@ -50,11 +50,11 @@ an invariant with no enforcer yet is a step in the plan below, not an aspiration
 Each step ends on the gate below and a checkpoint. Do not start a step whose
 predecessor is not merged and pushed.
 
-0. **Spec first.** Add one implementation-agnostic paragraph to
-   `specifications/workspace.md` (Concept Identity, charter row): a document
-   that declares no `id` is a reportable gap; a read never persists an
-   identity; `normalize` is the stamping pass. The spec is the authority, so
-   it leads. Needs the user's go-ahead to push the submodule.
+0. **No spec change (withdrawn 2026-09-18).** A paragraph on ephemeral ids,
+   stamping and archive refusal was judged too implementation-specific for the
+   spec. The spec's existing Concept Identity text stands; this behavior is
+   documented with the commands that implement it, in the CLI docs, in the same
+   commit as each change (identity child 3 and the archive-refusal action).
 1. **Identity types** — child 1 of the identity parent action, which now
    follows the pure-core source gate action (`01a0b5d0-da21`: Decision 38 cites
    `scripts/pure-core-source-gate.sh` but it does not exist, and it is the I1

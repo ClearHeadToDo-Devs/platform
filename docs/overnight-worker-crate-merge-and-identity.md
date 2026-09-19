@@ -56,8 +56,8 @@ work, and shipped one real gap that every gate passed. So:
   work survives. Do not merge, and do not bump any `main` pointer.
 - **One gate command:** `sh scripts/gate.sh` from `clearhead-core`. Never re-type
   the steps. It must pass before every commit that you keep.
-- **Do not touch `specifications`.** The spec paragraph (plan step 0) awaits the
-  human. Do not touch `clearhead.nvim` or the grammar either.
+- **Do not touch `specifications`, `clearhead.nvim` or the grammar.** The spec is
+  deliberately unchanged (plan step 0); document behavior in the CLI docs.
 - **Review step.** After each task, start a fresh agent (a different model if you
   have one) with only: the diff, `docs/crate-merge-and-charter-identity.md`, and
   the instruction "report violations of I1–I12 and anything the tests would not
@@ -129,8 +129,6 @@ this entry alone.
 - [ ] After merging `gate-scripts`, close the purity-gate action `01a0b5d0-da21-72bf-b418-0d2645335267`
       (and the older "run the gate script" action in `support`). Task 1 lists it as a
       predecessor, so while it is open the queue hides task 1.
-- [ ] Decide the spec paragraph: commit it in `specifications`, or leave it out
-      (the worker does not touch it either way).
 - [ ] Rebuild and reinstall the CLI (`cargo install --path` in `clearhead-core`)
       so the installed `clearhead` matches the code, or rely on the debug binary.
 - [ ] Choose the model per task. Tasks 1, 4, 5 and 6 are mechanical; tasks 2 and
