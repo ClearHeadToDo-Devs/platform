@@ -17,6 +17,10 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 * [ClearHead runtime workflows](workflows.md) — event order and information flow (LSP, CLI, calendar sync)
 * [Architectural Decisions](DECISIONS.md) — the aggregate decision log
 
+## Proposals
+
+* [Consequence-Proportional Assurance](consequence-proportional-assurance.md) — concentrate executable assurance where failure can destroy trust without turning every change into permanent process work
+
 ## Runbooks
 
 * [Crate merge and charter identity](crate-merge-and-charter-identity.md) — invariants, ordered steps, gates and stop conditions for the two-crate/one-binary merge and the charter identity split (2026-09-18)
