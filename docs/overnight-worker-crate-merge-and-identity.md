@@ -81,7 +81,7 @@ work, and shipped one real gap that every gate passed. So:
 - **Stop on a `NEEDS DECISION`**: write the question as the *first line* of the
   action's description, then move to the next unblocked task.
 
-## Pre-decided calls (the human may change these before launch)
+## Pre-decided calls (all confirmed by the human, 2026-09-18)
 
 - The merged crate keeps the name `clearhead_cli` and the binary `clearhead`.
 - Module layout inside it (confirmed by the human 2026-09-18): three frontends,
@@ -140,8 +140,7 @@ this entry alone.
       (and the older "run the gate script" action in `support`). Task 1 lists it as a
       predecessor, so while it is open the queue hides task 1.
 - [x] `clearhead-lsp` stays a second binary for now (confirmed).
-- [ ] Confirm the two remaining pre-decided calls above: the crate name
-      `clearhead_cli`, and the push policy (the worker may push its night branch,
-      never `main`).
+- [x] The crate name stays `clearhead_cli` (confirmed).
+- [x] Push policy: the worker may push its own night branch, never `main` (confirmed).
 - [ ] Optionally stamp the 8 id-less charters first with `normalize`, once child 3
       of the identity action has landed. Until then the warnings are expected.
