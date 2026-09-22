@@ -29,7 +29,8 @@ work, and shipped one real gap that every gate passed. So:
 1. **Keep going.** When a task is done and reviewed, take the next unblocked one in
    order. Stop only for a `NEEDS DECISION` line or a gate that will not pass.
 2. **Isolate on branches.** Nothing goes to `main`, in any repo.
-3. **Review every task** with a fresh agent before starting the next.
+3. **Review every task** with a fresh agent — a different model when one is
+   available — before bumping the submodule pointer. A finding blocks the bump.
 4. **Leave a morning brief** so the human can evaluate the work without redoing it.
 
 ## Setup (do this before any task)
@@ -66,15 +67,15 @@ with `git branch --show-current` (must be `night/<date>`, not `main`) and
   the steps. It must pass before every commit that you keep.
 - **Do not touch `specifications`, `clearhead.nvim` or the grammar.** The spec is
   deliberately unchanged (plan step 0); document behavior in the CLI docs.
-- **Review step.** After each task, start a fresh *context* (a subagent, or a new
-  session of the same model) with only: `git diff main...HEAD` for the task, the
-  plan `docs/crate-merge-and-charter-identity.md`, and the instruction "report
-  violations of I1–I12 and anything the tests would not catch; do not fix". A
-  same-model reviewer shares your blind spots, so it is a cheap first pass, not the
-  independent review: that happens afterward, on the night branch, from the morning
-  brief. Lean on the invariant tests (I4–I6, I12) instead of on review. A finding
-  blocks the next task: fix it, re-run the gate, and re-review, or write
-  `NEEDS DECISION` if it is a design question.
+- **Review step — it gates the submodule bump.** Before bumping `platform`'s
+  submodule pointer, a *fresh agent* reviews `git diff main...HEAD` for the task
+  against the plan's invariants I1–I12 and reports findings; it must not fix
+  them. Prefer a **different model**; a same-model reviewer shares your blind
+  spots, so a fresh same-model context is a cheaper fallback, never a
+  substitute. **A finding blocks the bump**: fix it, re-run the gate, and
+  re-review, or write `NEEDS DECISION` if it is a design question. Only a clean
+  review is followed by the submodule bump. The invariant tests (I4–I6, I12) are
+  the mechanical floor, not the review.
 - **Provenance.** Nothing in git records who wrote a commit (last night's are
   authored as the human). End every commit message with a trailer line
   `Agent: <model>/night-<date>` so the run can be found with

@@ -42,6 +42,17 @@ open design calls left in it on purpose. Do not expand scope beyond this list.
   push through. Never bypass the hook (`--no-verify`).
 - **After every `clearhead-core` push**: bump `platform`'s submodule pointer,
   commit, push. Per task, not batched at the end.
+- **Independent review gates the submodule bump.** Before bumping
+  `platform`'s submodule pointer, a *fresh agent* — a different model when one
+  is available, otherwise a fresh context of this model — reviews
+  `git diff main...HEAD` for the task against the plan's invariants and reports
+  findings; it must not fix them. A same-model reviewer shares your blind
+  spots, so it is a weaker signal and never a substitute for a different model.
+  **A finding blocks the bump**: fix it, re-run the gate, and re-review, or
+  write a `NEEDS DECISION` line if it is a design question. The invariant tests
+  (no read verb writes, no write verb stamps an id, a change between read and
+  write is a conflict for every charter verb) are the mechanical floor, not the
+  review.
 - **Update agent-workspace** as you go: `workspace_record_belief` after each
   task citing the changed files, `workspace_checkpoint` after each completed
   task. If the goal shifts mid-run, update the intent.
