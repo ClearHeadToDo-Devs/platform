@@ -1,0 +1,162 @@
+#!/bin/sh
+# Manage one shared, read-only-by-policy Neovim LSP process per Git worktree.
+set -eu
+
+command_name=${1:-status}
+case "$command_name" in
+	start|stop|status|target) ;;
+	*) echo "usage: $0 {start|stop|status|target} [worktree]" >&2; exit 2 ;;
+esac
+
+requested_root=${2:-${AGENT_NVIM_ROOT:-$(pwd)}}
+if root=$(git -C "$requested_root" rev-parse --show-toplevel 2>/dev/null); then
+	:
+else
+	echo "agent-nvim: not inside a Git worktree: $requested_root" >&2
+	exit 2
+fi
+root=$(realpath "$root")
+
+nvim_bin=${NVIM_BIN:-nvim}
+state_dir=${AGENT_NVIM_STATE_DIR:-${XDG_RUNTIME_DIR:-/tmp}/clearhead-agent-nvim}
+key=$(printf '%s' "$root" | sha256sum | cut -c1-16)
+socket="$state_dir/$key.sock"
+pid_file="$state_dir/$key.pid"
+log_file="$state_dir/$key.log"
+
+mkdir -p "$state_dir"
+
+pid_value() {
+	[ -f "$pid_file" ] && cat "$pid_file" 2>/dev/null || true
+}
+
+pid_running() {
+	pid=$(pid_value)
+	[ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
+
+server_running() {
+	[ -S "$socket" ] && "$nvim_bin" --server "$socket" --remote-expr '1' >/dev/null 2>&1
+}
+
+cleanup_stale() {
+	if ! pid_running && ! server_running; then
+		rm -f "$pid_file" "$socket"
+	fi
+}
+
+lsp_count() {
+	"$nvim_bin" --server "$socket" --remote-expr \
+		'luaeval("#vim.lsp.get_clients({ name = \"rust_analyzer\" })")' 2>/dev/null || printf '0'
+}
+
+case "$command_name" in
+	target)
+		printf '%s\n' "$socket"
+		;;
+	start)
+		cleanup_stale
+		if server_running; then
+			printf 'already running\ntarget: %s\n' "$socket"
+			exit 0
+		fi
+
+		rust_file=$(find "$root" \( -path '*/target' -o -path '*/.git' \) -prune -o -type f -name '*.rs' -print -quit)
+		if [ -z "$rust_file" ]; then
+			echo "agent-nvim: no Rust file found under $root" >&2
+			exit 1
+		fi
+
+		rm -f "$socket"
+		if [ -n "${AGENT_NVIM_INIT:-}" ]; then
+			(
+				cd "$root"
+				nohup "$nvim_bin" --headless -u "$AGENT_NVIM_INIT" --listen "$socket" "$rust_file" >"$log_file" 2>&1 &
+				echo $! >"$pid_file"
+			)
+		else
+			(
+				cd "$root"
+				nohup "$nvim_bin" --headless --listen "$socket" "$rust_file" >"$log_file" 2>&1 &
+				echo $! >"$pid_file"
+			)
+		fi
+
+		wait_seconds=${AGENT_NVIM_WAIT_SECONDS:-30}
+		elapsed=0
+		while ! server_running; do
+			if ! pid_running; then
+				echo "agent-nvim: Neovim exited during startup; see $log_file" >&2
+				exit 1
+			fi
+			if [ "$elapsed" -ge "$wait_seconds" ]; then
+				echo "agent-nvim: timed out waiting for socket $socket; see $log_file" >&2
+				exit 1
+			fi
+			sleep 1
+			elapsed=$((elapsed + 1))
+		done
+
+		# Mark the dedicated process so configs and diagnostics can distinguish it
+		# from a human editor. Read-only is an agent policy: use query tools only.
+		"$nvim_bin" --server "$socket" --remote-expr \
+			'luaeval("(function() vim.g.clearhead_agent_nvim_read_only = true; return true end)()")' >/dev/null
+
+		if [ "${AGENT_NVIM_WAIT_LSP:-1}" = "1" ]; then
+			elapsed=0
+			while [ "$(lsp_count)" = "0" ] && [ "$elapsed" -lt "$wait_seconds" ]; do
+				sleep 1
+				elapsed=$((elapsed + 1))
+			done
+		fi
+
+		printf 'started\ntarget: %s\npid: %s\nrust_analyzer: %s\n' \
+			"$socket" "$(pid_value)" "$(lsp_count)"
+		;;
+	status)
+		cleanup_stale
+		if ! server_running; then
+			printf 'stopped\ntarget: %s\n' "$socket"
+			exit 1
+		fi
+		pid=$(pid_value)
+		# Sum Neovim and every descendant language-server process, not just the
+		# small editor parent. PID order is irrelevant: walk each process's
+		# recorded parent chain after reading the complete table.
+		rss_kib=$(ps -eo pid=,ppid=,rss= | awk -v root="$pid" '
+			{ parent[$1] = $2; rss[$1] = $3 }
+			END {
+				for (id in rss) {
+					current = id
+					while (current != "" && current != 0) {
+						if (current == root) { total += rss[id]; break }
+						current = parent[current]
+					}
+				}
+				print total + 0
+			}')
+		rss_mib=$(awk -v kib="${rss_kib:-0}" 'BEGIN { printf "%.1f", kib / 1024 }')
+		printf 'running\ntarget: %s\npid: %s\nmemory_mib: %s\nrust_analyzer: %s\n' \
+			"$socket" "$pid" "$rss_mib" "$(lsp_count)"
+		;;
+	stop)
+		cleanup_stale
+		if ! server_running; then
+			printf 'already stopped\ntarget: %s\n' "$socket"
+			exit 0
+		fi
+		pid=$(pid_value)
+		"$nvim_bin" --server "$socket" --remote-expr \
+			'luaeval("(function() vim.schedule(function() vim.cmd(\"qa!\") end); return true end)()")' >/dev/null 2>&1 || true
+		elapsed=0
+		while pid_running && [ "$elapsed" -lt 5 ]; do
+			sleep 1
+			elapsed=$((elapsed + 1))
+		done
+		if pid_running; then
+			kill "$pid" 2>/dev/null || true
+		fi
+		rm -f "$pid_file" "$socket"
+		printf 'stopped\ntarget: %s\n' "$socket"
+		;;
+esac
