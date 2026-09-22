@@ -89,6 +89,17 @@ with `git branch --show-current` (must be `night/<date>`, not `main`) and
   and ranged reads, or a compact view.
 - **Checkpoint per task** in agent-workspace, with a cited belief, not once at
   the end.
+- **Report at distinct levels; do not restate one analysis four times.** Each
+  artifact has exactly one job: the **action description** is the full
+  authoritative analysis (what was found, decided and changed, with commits);
+  the **charter log line** is one line naming the decision and the commit, never
+  a recap; the **per-task checkpoint** is machine-shaped — `{task id, commit,
+  status}` — not prose; the **final checkpoint** is an index of those task
+  checkpoints, not a narrative.
+- **File out-of-bounds findings as actions.** When the run surfaces a real
+  problem it is not allowed to fix, file it as an action in the owning charter
+  (`clearhead add action`) with the evidence, then move on. A finding must not
+  live only in chat or in agent-local memory.
 - **Stop on a `NEEDS DECISION`**: write the question as the *first line* of the
   action's description, then move to the next unblocked task.
 
