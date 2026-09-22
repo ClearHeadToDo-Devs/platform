@@ -80,9 +80,13 @@ with `git branch --show-current` (must be `night/<date>`, not `main`) and
   authored as the human). End every commit message with a trailer line
   `Agent: <model>/night-<date>` so the run can be found with
   `git log --grep '^Agent:'`. The branch and worktree already scope the rest.
-- **Batch and read narrowly.** Issue independent tool calls in one turn. Do not
-  read whole files over about 200 lines: use `rg -n` and ranged reads. (The
-  language-server helper is not built yet, so there is no other way.)
+- **Navigate with the shared language server; batch and read narrowly.** Use the
+  shared read-only Neovim (`scripts/agent-nvim/server`) and its compact views
+  (`exec_lua` → `compact.lua`) for structural questions — outline, references,
+  definition — and `rg`/`grep` only for text. Issue independent tool calls in one
+  turn: the 2026-09-18 export shows 287 of 320 turns made a single call, latency
+  spent for nothing. Do not read whole files over about 200 lines: use `rg -n`
+  and ranged reads, or a compact view.
 - **Checkpoint per task** in agent-workspace, with a cited belief, not once at
   the end.
 - **Stop on a `NEEDS DECISION`**: write the question as the *first line* of the

@@ -7,3 +7,4 @@
 
 ## 2026-09-22
 * **Update**: Both overnight runbooks now make the independent review a gate on the `platform` submodule bump rather than a soft per-task step: a fresh agent, a different model when one is available, reviews the diff against the plan's invariants and a finding blocks the bump. The same-model same-context pass is named as a weaker fallback, not the review. Invariant tests in `clearhead-core` now enforce I4 (reads never write), I5 (`jot` does not stamp an id) and I6 (a change between read and write is a conflict for `update`, `close` *and* `jot`).
+* **Update**: Both overnight runbooks now carry the Decision 41 navigation and batching rules: navigate with the shared read-only Neovim and its compact views, grep only for text, and batch independent tool calls in one turn (the 2026-09-18 export shows 287 of 320 turns made a single call). The successor's "batch and read narrowly" note no longer says the language-server helper is unbuilt.

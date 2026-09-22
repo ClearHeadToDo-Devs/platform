@@ -53,6 +53,13 @@ open design calls left in it on purpose. Do not expand scope beyond this list.
   (no read verb writes, no write verb stamps an id, a change between read and
   write is a conflict for every charter verb) are the mechanical floor, not the
   review.
+- **Navigate with the shared language server; batch and read narrowly.** Use the
+  shared read-only Neovim (`scripts/agent-nvim/server`) and its compact views
+  (`exec_lua` → `compact.lua`) for structural questions — outline, references,
+  definition — and `rg`/`grep` only for text. Issue independent tool calls in one
+  turn: the 2026-09-18 export shows 287 of 320 turns made a single call, latency
+  spent for nothing. Do not read whole files over about 200 lines: use `rg -n`
+  and ranged reads, or a compact view.
 - **Update agent-workspace** as you go: `workspace_record_belief` after each
   task citing the changed files, `workspace_checkpoint` after each completed
   task. If the goal shifts mid-run, update the intent.
