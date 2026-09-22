@@ -49,29 +49,26 @@ This is the central **Core decides; adapters deliver** round trip.
 sequenceDiagram
     actor Caller as Person / editor adapter / agent
     participant CLI as clearhead CLI
-    participant FS as clearhead-workspace-fs
+    participant FS as clearhead-cli filesystem
     participant Store as Workspace files
     participant Core as clearhead_core
 
     Caller->>CLI: Request mutation
     CLI->>FS: Invoke native workspace operation
-    FS->>FS: Acquire lock and recover pending journal
     FS->>Store: Inventory and read bytes
     Store-->>FS: Current resources
     FS->>Core: Supply snapshots and expected revisions
     Core->>Core: Parse, validate, and decide next state
-    Core-->>FS: PreparedMutation + EffectBatch
-    FS->>Store: Recheck resource preconditions
+    Core-->>FS: Typed outcome + EffectBatch
+    FS->>Store: Validate preconditions (per-resource compare-and-swap)
     alt Revisions still match
-        FS->>Store: Journal and atomically deliver effects
+        FS->>Store: Atomically deliver effects, additive order
         Store-->>FS: Delivery succeeded
-        FS->>Core: Adopt prepared outcome
-        Core-->>FS: Committed outcome
         FS-->>CLI: Mutation result
         CLI-->>Caller: Success
     else Concurrent change or delivery failure
         FS-->>CLI: Conflict or delivery error
-        CLI-->>Caller: Failure — speculative state discarded
+        CLI-->>Caller: Failure — caller reloads and recomputes
     end
 ```
 
@@ -114,7 +111,7 @@ optional in-memory query engine becomes authoritative.
 sequenceDiagram
     actor Caller as Person / agent
     participant CLI as clearhead CLI
-    participant FS as clearhead-workspace-fs
+    participant FS as clearhead-cli filesystem
     participant Workspace as Plaintext workspace
     participant Core as clearhead_core
     participant RDF as Core RDF projection

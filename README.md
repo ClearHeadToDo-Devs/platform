@@ -76,16 +76,10 @@ Please review product-specific documentation for more details on each repository
 - [Core Library](./clearhead-core/README.md) the pure Rust domain library at the heart of the platform: it owns the model and the algorithms and *decides* mutations, but performs no I/O
   - shared by every downstream host (CLI, LSP, and any future native or WebAssembly client) so they agree on one domain model without coordinating implementations
   - reading and durably writing files is delegated to a delivery adapter (below), which is what keeps Core portable
-- [Workspace FS Adapter](./clearhead-core/crates/clearhead-workspace-fs/README.md) the native filesystem delivery adapter — the I/O half of the seam
-  - turns Core's logical decisions into durable filesystem reads and writes (locking, journaling, atomic rename, calendar sync)
-  - the CLI and LSP compose it with clearhead-core; a non-filesystem host would supply its own adapter instead
-- [CLI](./clearhead-core/crates/clearhead-cli/README.md) the synchronous command client for the specifications outlined
-  - handles terminal workflows and durable workspace mutations through clearhead-core
-  - evaluates SPARQL and the saved query families in-process (default `sparql` feature)
-  - parses action files with the above tree-sitter parser
-- [LSP](./clearhead-core/crates/clearhead-lsp/README.md) the standalone editor protocol runtime
-  - owns Tokio, Tower LSP, open-document state, diagnostics, providers, and stdio lifecycle
-  - depends directly on clearhead-core rather than the CLI
+- [CLI](./clearhead-core/crates/clearhead-cli/README.md) the one effectful crate: the native filesystem delivery adapter, the synchronous command client, and the LSP module, built as two binaries, `clearhead` and `clearhead-lsp`
+  - the `filesystem` module turns Core's logical decisions into durable filesystem reads and writes (atomic per-file writes, additive effect ordering, calendar sync); a non-filesystem host would supply its own adapter instead
+  - `clearhead` handles terminal workflows and durable workspace mutations through clearhead-core, evaluates SPARQL and the saved query families in-process (default `sparql` feature), and parses action files with the above tree-sitter parser
+  - the `lsp` module owns Tokio, Tower LSP, open-document state, diagnostics, and providers, shipped as the standalone `clearhead-lsp` binary for the editor's stdio lifecycle
 - [Neovim App](./clearhead.nvim/README.md) a neovim plugin that uses the CLI for mutations and clearhead-lsp for editor analysis
   - provides syntax highlighting, linting, and validation for action files within neovim
   - launches `clearhead-lsp` directly for real-time feedback and assistance

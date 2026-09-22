@@ -12,14 +12,17 @@ order is documented separately with Mermaid sequence diagrams.
 The central implementation rule is **Core decides; adapters deliver**.
 `clearhead_core` owns the domain model, pure algorithms, RDF projection, and the
 host-neutral resource/effect protocol, but performs no filesystem or network
-I/O. The native `clearhead-workspace-fs` adapter inventories files and executes
-prepared effects with revision checks, locking, journaling, fsync, and atomic
-rename. Both native hosts compose these same libraries:
+I/O. The native filesystem adapter — the `filesystem` module of the
+`clearhead-cli` crate — inventories files and executes prepared effects with
+per-resource revision compare-and-swap, additive effect ordering, fsync, and
+atomic rename; there is no lock or journal. Both native binaries are built
+from that one crate:
 
 - `clearhead` owns synchronous terminal workflows, durable mutations, calendar
   reconciliation, RDF export, and optional ephemeral SPARQL.
 - `clearhead-lsp` owns open-document state and standard editor protocol
-  providers. It does not depend on the CLI.
+  providers, as a second binary target sharing no command-surface dependency
+  on `clearhead`.
 - `clearhead.nvim` owns Neovim orchestration and invokes the CLI when an editor
   workflow requires a durable mutation.
 

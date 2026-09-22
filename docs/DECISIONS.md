@@ -707,7 +707,7 @@ The sync architecture already establishes the CRDT as the source of truth and th
 
 In order to support the archival of plans (actions) and their planned acts, we are going to implement a simple mechanism for archiving actions.
 
-The core mechanism is described in [the process specification](./specifications/process.md) but the key points are:
+The core mechanism is described in [the process specification](../specifications/process.md) but the key points are:
 
 - we have <charter>.archive.actions files that live alongside the main action plan files
 - when an action is archived, it is moved from the main action plan file to the archive
@@ -778,7 +778,7 @@ After doing allot of research on the various options for a query engine, I have 
 
 This is for a few reasons:
 
-- As we can see from the [Ontology](./ontology/README.md) we have put in allot of work to make sure we have strong ontological underpinnings from the BFO/CCO alignment so having a strong RDF query engine is important to make sure we can leverage SPARQL queries to do reasoning over the data.
+- As we can see from the [Ontology](../ontology/README.md) we have put in allot of work to make sure we have strong ontological underpinnings from the BFO/CCO alignment so having a strong RDF query engine is important to make sure we can leverage SPARQL queries to do reasoning over the data.
 - Oxigraph is written in Rust which makes it a great fit for our existing Rust codebase especially since it tries to be a fully compliant SPARQL 1.1 engine.
 - It has support for persistent storage which means we can use it as a cache layer for the data we have.
 
