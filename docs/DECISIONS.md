@@ -8,7 +8,7 @@ generated: { by: human:Darrion, at: 2025-11-01 }
 
 **Last Updated:** September 18th 2026 **Status:** Living Document
 
-This document records key architectural decisions made for the Clearhead Platform. Each decision includes context, rationale, alternatives considered, and trade-offs.
+This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
 

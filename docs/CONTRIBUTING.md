@@ -35,7 +35,8 @@ already begun to disagree. The rule:
 
 | Knowledge | Lives in | Not in |
 | --- | --- | --- |
-| Architecture decisions | `DECISIONS.md` | actions, logs, runbooks |
+| Platform decisions | `DECISIONS.md` | actions, logs, runbooks |
+| Project decisions | that repo's `docs/DECISIONS.md` | the platform's `DECISIONS.md` |
 | Task state | ClearHead actions | docs, memory |
 | Dated run findings | the charter's `## Log` | `DECISIONS.md`, actions |
 | Agent beliefs | the agent workspace | the repo |
@@ -43,7 +44,16 @@ already begun to disagree. The rule:
 
 Consequences worth stating plainly:
 
-- **Decisions live only in [`DECISIONS.md`](DECISIONS.md).** An action *links* to
+- **A decision lives in the smallest repo that must change to honor it.** If
+  only one repo's code is bound by it, it goes in that repo's
+  `docs/DECISIONS.md`. The platform's [`DECISIONS.md`](DECISIONS.md) keeps what
+  binds more than one repo: the specification, repo topology, shared tooling.
+- **Repos follow the platform, never the reverse.** A repo's docs may cite the
+  platform's; the platform's docs (decisions, runbooks, anything else) never
+  cite a repo's decisions. A platform doc that needs to is mixing levels: split
+  it, keeping the cross-repo part in the platform and moving the repo-specific
+  part into that repo's own docs.
+- **Decisions live only in a `DECISIONS.md`.** An action *links* to
   a decision (by number or path) and holds the task state; it does not restate
   the decision text. A charter log entry names the decision and the commit in
   one line — it never recaps the analysis.
