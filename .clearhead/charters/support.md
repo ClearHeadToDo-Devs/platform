@@ -88,3 +88,5 @@ thing to avoid. The verb is *selective*: a distilled thing worth keeping. Prefer
 - 2026-09-22T23:20-07:00 — Jot now stamps ISO log times with UTC offsets (core 60061b3).
 - 2026-09-23T09:56-07:00 — Undeclared charter IDs are blank nodes in JSON-LD and absent from IDs; core cf1a516.
 - 2026-09-23T10:16-07:00 — Canonical charter JSON validates against the pinned schema: core 085ebef, platform 71c4460.
+- 2026-09-23T11:45-07:00 — Removed obsolete ontology documentation references without changing v4 entities (ontology 8f3367d).
+- 2026-09-23T15:55-07:00 — Legacy ontology HTML generator static diagnostics resolved separately in 66f3f07; no ontology semantics changed.
