@@ -84,3 +84,4 @@ thing to avoid. The verb is *selective*: a distilled thing worth keeping. Prefer
 - 2026-09-22T22:50 — Normalize owns charter id minting; core fb5fd5f passed gate and independent review.
 - 2026-09-22T22:52 — Charter identity split closed after normalize landed (core fb5fd5f; platform 0605d6f).
 - 2026-09-22T23:04 — W014 keeps decision headings in DECISIONS.md; core c843cfc, spec 97167d3, nvim d0da3bb.
+- 2026-09-22T23:10 — Structurizr now models merged crate binaries and current delivery semantics (platform 470c22a).
