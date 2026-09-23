@@ -13,16 +13,16 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         clearhead = softwareSystem "ClearHead" "Local-first intention management over an authoritative plaintext workspace." {
             nvimPlugin = container "clearhead.nvim" "Editor adapter that provides commands, views, syntax support, and save/mutate/reload orchestration." "Lua, Neovim plugin" "Driver"
 
-            cli = container "clearhead" "Synchronous command adapter for terminal workflows, durable mutations, calendar reconciliation, RDF export, and optional SPARQL." "Rust CLI" "Driver" {
+            cli = container "clearhead" "Synchronous command binary from clearhead-cli; composes its cli and query frontends with the shared filesystem adapter and pure Core." "Rust, clearhead-cli crate" "Driver" {
                 group "Drivers" {
                     cliCommands = component "Command interface" "Adapts terminal commands and machine-readable requests to application operations." "Rust, clap" "Driver"
                     cliQuery = component "Query host" "Composes workspace loading, RDF publication, presentation, and optional one-shot SPARQL." "Rust, optional Oxigraph" "Driver,Optional"
                 }
 
-                group "Native interface adapters — clearhead-workspace-fs" {
+                group "Native interface adapters — clearhead-cli/filesystem" {
                     cliGateway = component "Workspace gateway" "Composes native loading and delivery around Core's host-neutral contracts." "Rust" "Interface Adapter"
                     cliLoader = component "Mount and snapshot adapter" "Maps physical mounts and bytes to Core resource snapshots and revisions." "Rust" "Interface Adapter,IO"
-                    cliDurability = component "Durability adapter" "Maps Core effects to locking, journaling, recovery, fsync, and atomic filesystem operations." "Rust" "Interface Adapter,IO"
+                    cliDurability = component "Durability adapter" "Maps Core effects to precondition checks, additive delivery, fsync, and atomic single-file writes; interrupted batches remain recoverable without a journal." "Rust" "Interface Adapter,IO"
                     cliCalendarDelivery = component "Calendar filesystem adapter" "Maps VTODO vdir resources to Core calendar observations and prepared effects." "Rust" "Interface Adapter,IO"
                 }
 
@@ -54,10 +54,10 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
                 }
             }
 
-            lsp = container "clearhead-lsp" "Standard language server adapter over stdio; it serves any compatible client and does not depend on a particular editor or on the CLI." "Rust, Tokio, Tower LSP" "Driver" {
+            lsp = container "clearhead-lsp" "Separate stdio binary from clearhead-cli; shares the crate's filesystem adapter and Core dependency but does not call the CLI frontend or depend on an editor." "Rust, clearhead-cli crate, Tokio, Tower LSP" "Driver" {
                 lspProtocol = component "LSP protocol adapter" "Adapts standard JSON-RPC requests to editor analysis providers." "Rust, Tokio, Tower LSP" "Driver"
                 lspProviders = component "Editor use-case adapter" "Owns open-document state and composes diagnostics, formatting, navigation, completion, and semantic-token behavior." "Rust" "Interface Adapter"
-                lspFs = component "Workspace filesystem adapter" "Loads native workspace context required by providers." "clearhead-workspace-fs" "Interface Adapter,IO"
+                lspFs = component "Shared filesystem adapter" "Loads native workspace context through the clearhead-cli crate's filesystem module, shared with the command binary." "Rust, clearhead-cli/filesystem" "Interface Adapter,IO"
                 lspCore = component "Domain and workspace policy" "The linked clearhead_core application and domain behavior." "clearhead_core" "Application"
                 lspParser = component "Open-document syntax parser" "Maintains tolerant syntax trees for unsaved editor buffers." "tree-sitter-actions" "Framework"
             }

@@ -3,27 +3,27 @@
 
 // CLI composition and native delivery
 !element cliCommands {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-cli/src/commands"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-cli/src/cli"
 }
 
 !element cliQuery {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-cli/src/sparql"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-cli/src/query"
 }
 
 !element cliGateway {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-workspace-fs/src/lib.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/mod.rs"
 }
 
 !element cliLoader {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-workspace-fs/src/mounts.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/mounts.rs"
 }
 
 !element cliDurability {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-workspace-fs/src/durability.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/durability.rs"
 }
 
 !element cliCalendarDelivery {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-workspace-fs/src/calendar.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/calendar.rs"
 }
 
 // Core internals
@@ -73,15 +73,15 @@
 
 // Language server composition
 !element lspProtocol {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-lsp/src/lib.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/lsp/handlers.rs"
 }
 
 !element lspProviders {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-lsp/src/providers.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/lsp/providers.rs"
 }
 
 !element lspFs {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-workspace-fs/src/mounts.rs"
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/mounts.rs"
 }
 
 !element lspCore {
