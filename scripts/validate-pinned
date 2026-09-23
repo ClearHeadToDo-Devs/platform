@@ -116,9 +116,11 @@ trap 'rm -f "$projection"' EXIT
     >"$projection" 2>/dev/null
 validate_schema "$schema" "$projection"
 
-# 3. Charter schema self-consistency. The pinned CLI does not emit this shape
-#    yet, so its projection is not checked until it does.
-validate_schema "$root/specifications/schemas/charters.schema.json" \
-    "$root/specifications/examples/charters/sample.json"
+# 3. Charter schema self-consistency and pinned implementation projection.
+charter_schema="$root/specifications/schemas/charters.schema.json"
+validate_schema "$charter_schema" "$root/specifications/examples/charters/sample.json"
+(cd "$root" && "$root/clearhead-core/target/debug/clearhead" read charters --format json) \
+    >"$projection" 2>/dev/null
+validate_schema "$charter_schema" "$projection"
 
 echo "validate-pinned > all repository-owned checks passed"
