@@ -86,3 +86,4 @@ thing to avoid. The verb is *selective*: a distilled thing worth keeping. Prefer
 - 2026-09-22T23:04 — W014 keeps decision headings in DECISIONS.md; core c843cfc, spec 97167d3, nvim d0da3bb.
 - 2026-09-22T23:10 — Structurizr now models merged crate binaries and current delivery semantics (platform 470c22a).
 - 2026-09-22T23:20-07:00 — Jot now stamps ISO log times with UTC offsets (core 60061b3).
+- 2026-09-23T09:56-07:00 — Undeclared charter IDs are blank nodes in JSON-LD and absent from IDs; core cf1a516.
