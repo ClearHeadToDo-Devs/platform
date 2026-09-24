@@ -2,7 +2,7 @@
 type: Runbook
 title: Overnight worker — clearhead-core task list
 description: A pre-decided, ordered task list for an unsupervised overnight agent working clearhead-core only. Every judgment call in it was made in advance on 2026-09-18; the worker's job is disciplined execution, not design.
-status: draft
+status: deprecated
 generated: { by: agent/claude, at: 2026-09-18T06:00:00Z }
 sources:
   - id: agent-surface
@@ -14,6 +14,8 @@ sources:
 ---
 
 # Overnight worker — clearhead-core task list
+
+> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](overnight-runbook.md). This file records what the 2026-09-18 run was told.
 
 You are continuing tonight's work in `/home/dab/Products/platform`, a multi-repo
 ClearHead monorepo (git submodules). Everything in `platform` and

@@ -2,7 +2,7 @@
 type: Runbook
 title: Overnight worker — crate merge and charter identity
 description: An unattended, branch-isolated task list for the crate merge and the charter identity split, with a review step and a morning brief. Successor to the first overnight runbook. Drafted 2026-09-18.
-status: draft
+status: deprecated
 generated: { by: agent/claude, at: 2026-09-18T20:00:00Z }
 sources:
   - id: plan
@@ -14,6 +14,8 @@ sources:
 ---
 
 # Overnight worker — crate merge and charter identity
+
+> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](overnight-runbook.md). This file records what the 2026-09-18 run was told.
 
 Your job is disciplined execution of [the plan](crate-merge-and-charter-identity.md),
 not design. Its invariants **I1–I12 are your acceptance criteria**; its
