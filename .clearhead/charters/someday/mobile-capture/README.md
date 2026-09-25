@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62cd-7cc2-a8ea-4527b04367a0
 alias: mobile-capture
 state: New
 description: Inbound capture from the phone without abandoning local-first — append-only inbox plus file sync, letting existing tools do the hard part

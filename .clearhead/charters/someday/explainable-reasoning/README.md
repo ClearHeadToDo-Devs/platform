@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62bd-74b1-8bd1-0936a7271d6f
 alias: explainable-reasoning
 state: New
 description: A real RDFS/OWL-RL reasoner over the graph, gated on evidence of need, with derivation transparency as a hard requirement from day one
