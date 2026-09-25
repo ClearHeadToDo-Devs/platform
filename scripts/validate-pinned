@@ -78,7 +78,12 @@ fi
 "$proof_python" "$root/scripts/rdf-interop/proof.py"
 
 echo "validate-pinned > specifications schema conformance"
-if command -v jsonschema >/dev/null 2>&1; then
+# check-jsonschema comes first: a `jsonschema` on PATH may be python-jsonschema's
+# deprecated CLI, which shares SourceMeta's name but not its arguments.
+if command -v check-jsonschema >/dev/null 2>&1; then
+    schema_validator=check-jsonschema
+    schema_validator_kind=check
+elif command -v jsonschema >/dev/null 2>&1 && ! jsonschema --version 2>&1 | grep -q DeprecationWarning; then
     schema_validator=jsonschema
     schema_validator_kind=sourcemeta
 elif command -v jv >/dev/null 2>&1; then
@@ -88,14 +93,16 @@ elif test -x "$HOME/go/bin/jv"; then
     schema_validator="$HOME/go/bin/jv"
     schema_validator_kind=jv
 else
-    echo "validate-pinned > no JSON Schema CLI found; install SourceMeta jsonschema or santhosh-tekuri jv" >&2
+    echo "validate-pinned > no JSON Schema CLI found; install check-jsonschema, SourceMeta jsonschema or santhosh-tekuri jv" >&2
     exit 1
 fi
 
 validate_schema() {
     schema=$1
     instance=$2
-    if test "$schema_validator_kind" = sourcemeta; then
+    if test "$schema_validator_kind" = check; then
+        "$schema_validator" --schemafile "$schema" "$instance"
+    elif test "$schema_validator_kind" = sourcemeta; then
         "$schema_validator" validate "$schema" "$instance"
     else
         "$schema_validator" "$schema" "$instance"
