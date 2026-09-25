@@ -29,6 +29,15 @@ ClearHead is aware of everyone; nobody is aware of ClearHead. Charters and actio
 
 So the sandbox works on any repo with a root `Containerfile`, with or without a `.clearhead/`.
 
+## Flow
+
+The human's review time is the constraint, not the machine: every run produces work to review.
+
+- **At most two unreviewed runs.** Starting more only grows the queue.
+- **Parallel across separate areas, one at a time within one area.** Runs clone `main`, so runs over the same files conflict at landing, and a run built on unlanded work starts stale. One run per charter is a safe unit (`--charter`).
+- **While a run works, the orchestrator works on something that doesn't overlap with it**, never `agents/` while a run has it mounted.
+- The NUC fits about two runs at once (8 CPUs and 16 GB each; the shared build cache serializes compiles).
+
 ## Findings
 
 - 2026-09-25: headless sessions end when the agent replies. Tools that wait for a later turn (`ScheduleWakeup`, background jobs) silently lose the work, so they are disallowed.
