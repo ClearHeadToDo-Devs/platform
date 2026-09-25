@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62c5-7a63-8652-2759674964f9
 alias: graph-federation
 state: New
 description: Prove the cross-application graph vision with an importer over real data and one killer cross-domain query — then write the publishing convention that makes a second application possible

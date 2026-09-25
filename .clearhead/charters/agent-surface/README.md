@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-5016-7523-9e84-a3bfb0c585d7
 alias: agent-surface
 state: Active
 objectives: [query-interface, capture-workflow]

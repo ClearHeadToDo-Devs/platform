@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62ad-7222-9bf4-96305a327fd8
 alias: someday
 state: New
 description: Parked bets — future-facing charters with real vision behind them but no near-term commitment; each names the trigger that would promote it

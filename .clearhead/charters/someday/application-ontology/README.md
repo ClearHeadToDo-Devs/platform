@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62b5-79a2-92bf-0337d8e39fbc
 alias: application-ontology
 state: New
 description: A semantic layer above the domain ontology and below client widgets, for workspace-scoped operational facts and interface-facing projections without polluting the core ontology

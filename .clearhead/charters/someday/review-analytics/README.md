@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62d4-7772-88a3-911da5b647c3
 alias: review-analytics
 state: New
 description: A review surface over the data the platform already accumulates and nothing reads — completed actions, telemetry NDJSON — closing the motivational loop that keeps a task system alive

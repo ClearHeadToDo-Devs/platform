@@ -1,4 +1,5 @@
 ---
+id: 01a0daa5-62db-7f83-84a0-7a7eba68ca83
 alias: semantic-token-augmentation
 state: New
 description: LSP semantic tokens that augment tree-sitter with meaning the grammar can't compute — overdue dates, dangling references, blocked actions — projecting the linter's analysis into ambient colour rather than re-emitting syntax
