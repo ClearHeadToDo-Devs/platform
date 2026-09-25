@@ -68,3 +68,5 @@ then the workflow arises:
 This represents our tight "loop" where we are able to be self-sufficient without needing to "review" the list all day
 
 in an ideal world the entire workflow happens using the cli and never requires changes
+
+do note how that loop can continue. importantly, as you complete actions, the query may reveal NEW actions or there may have been some shifts in priority so you should re-run the query every time you complete an action or charter rather than trying to go through the actions all at once
