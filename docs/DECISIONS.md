@@ -300,7 +300,7 @@ Consumers pay a slightly heavier default payload and a longer `jq` path in excha
 
 ## Decision 31: Plans-vdir synchronization boundary
 
-ClearHead integrates with one configured iCalendar vdir (`plan_path`). The filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing, Git, mounted storage, or no transport may sit behind it; core and the CLI have no account, server, href, ETag, or vendor-property concepts.
+ClearHead integrates with one iCalendar vdir per workspace, at `<data_root>/plans/`; its location is not configurable (the `plan_path` setting was removed 2026-09-24 because a vdir shared across workspaces quarantines the other workspaces' collections). The filesystem is the complete boundary. A CalDAV server, vdirsyncer, Syncthing, Git, mounted storage, or no transport may sit behind it; core and the CLI have no account, server, href, ETag, or vendor-property concepts.
 
 ClearHead authors VTODO only: RRULE-bearing VTODOs are recurring Plan masters and standalone VTODOs project Actions. Other iCalendar component types are outside the ClearHead projection. There is no legacy Plan compatibility, alternate import, or migration command; during pre-release development, existing files are fixed directly.
 
