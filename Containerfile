@@ -3,7 +3,7 @@
 # Tools only: no platform code and no gate. Rebuild when a tool changes, not
 # when the code does. The package list mirrors what the repositories' gates
 # need (scripts/validate-pinned and each submodule's .githooks/pre-push).
-FROM docker.io/library/archlinux:latest
+FROM docker.io/library/archlinux@sha256:f3691b4dde62ba4c4b6f0ae2c1fbf28e8c0c8c4b9a35c7e06dc1f70e21aa29f6
 
 RUN pacman -Syu --noconfirm --needed \
         base-devel git jq ripgrep \
@@ -13,10 +13,9 @@ RUN pacman -Syu --noconfirm --needed \
         neovim lua51 luarocks \
     && pacman -Scc --noconfirm
 
-# npm skips Claude Code's postinstall here, which leaves a stub instead of the
-# native binary; run it explicitly.
-RUN npm install -g @anthropic-ai/claude-code \
-    && node /usr/lib/node_modules/@anthropic-ai/claude-code/install.cjs \
+# Claude Code's postinstall links its native binary. npm blocks dependency
+# lifecycle scripts by default, so approve only this package explicitly.
+RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code \
     && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.85.1 \
     && luarocks --lua-version=5.1 install busted \
     && luarocks --lua-version=5.1 install nlua
