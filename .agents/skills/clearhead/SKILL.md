@@ -62,7 +62,7 @@ then the workflow arises:
 3. implement changes
 4. update the actions/charters (using the cli!)
 5. commit changes (if in a git repo)
-6. push changes
+6. push changes, when you have credentials (a sandboxed run has none: it commits and never pushes; see [the agent runbook](../../../docs/overnight-runbook.md))
 7. go back to the beginning!
 
 This represents our tight "loop" where we are able to be self-sufficient without needing to "review" the list all day

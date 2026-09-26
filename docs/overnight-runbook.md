@@ -1,9 +1,10 @@
 ---
 type: Runbook
-title: Overnight runbook
-description: The standing procedure for an unattended overnight agent in the platform monorepo. Work comes from the unscheduled queue; this file holds the rules every run follows, so dated task lists no longer carry their own copies.
+title: Agent runbook
+description: The single procedure for sandboxed agent runs in the platform monorepo. A run's prompt carries only parameters, its kind and its target; every rule lives here, so the prompt and the procedure cannot contradict each other.
 status: stable
 generated: { by: agent/claude, at: 2026-09-24T04:00:00Z }
+updated: { by: agent/claude, at: 2026-09-25T00:00:00Z }
 sources:
   - id: first-run
     resource: overnight-worker-clearhead-core.md
@@ -11,109 +12,121 @@ sources:
   - id: second-run
     resource: overnight-worker-crate-merge-and-identity.md
     title: the 2026-09-18 successor that added branch isolation, the review gate and the morning brief
+  - id: sandbox
+    resource: ../.clearhead/charters/agent-sandbox.md
+    title: the agent-sandbox charter, whose runs on 2026-09-25 reshaped this into one procedure per run kind
 ---
 
-# Overnight runbook
+# Agent runbook
 
-Your job is disciplined execution of decided work, not design. The work is the
-unscheduled queue (`clearhead query index unscheduled`), taken in order. Read each
-action with `clearhead show action <id>` first: the action, not any list, is the
-source of truth, and its description holds the calls already decided for it.
+You are one headless session in a sandboxed run (`scripts/agent-run`). Your
+prompt names the run's **kind** and its **target**; this file is the whole
+procedure. Follow the rules for every run, then your kind's section.
 
-## Setup
+## Every run
 
-The human normally prepares the worktree and launches you inside it. Verify with
-`git branch --show-current` (must be `night/<date>`, never `main`) and `pwd`
-(under `~/worktrees/platform/`), and do whichever step is missing.
-
-1. From `platform`, run `scripts/worktree-new night/<date>`. Work only in that
-   worktree.
-2. Branch each submodule before changing it: `git -C <repo> switch -c
-   night/<date>`. `worktree-new` branches only the superproject.
-3. Run `./scripts/install-hooks.sh`; a fresh worktree's submodules have no
-   pre-push hook until it runs.
-4. Build the CLI from your branch and use `target/debug/clearhead` for every
-   ClearHead command. The installed binary may predate your branch, and an old
-   formatter can rewrite unrelated entries.
-5. Run `doctor` and note its known warnings. Any *new* warning or violation
-   after your change is a failure.
-
-## Working rules
-
-- **Keep going.** When a task is done and reviewed, take the next unblocked one.
-  Stop only for a `NEEDS DECISION` or a gate that will not pass. The launcher runs
-  you in a harness loop, but do not end a turn on a promise ("next I'll…"): do
-  the thing, or say you are stopping and why.
-- **Branches only.** Nothing goes to `main` in any repo. Push your night branches
-  (never `--force`) once a task passes its gate and review, so the work survives.
-- **One gate:** `sh scripts/gate.sh` in `clearhead-core`, before every commit you
-  keep. Check the gate's own exit code; a pipe such as `| tail` hides a failure.
-  One retry for a failure that looks flaky (passes alone, fails under the full
-  suite); otherwise stop and report. Never `--no-verify`.
+- **One session, then it ends.** Nothing resumes you after you reply. Run every
+  command, the gate included, in the foreground and wait for it; never leave
+  work in the background or end on a promise.
+- **Setup is done.** The clone at `/job/work` has every repo on this run's
+  `agent/<id>` branch, and `refs/agent/base` marks where each repo started.
+  `clearhead` on PATH is built from this branch; use it for every ClearHead
+  command, never an installed copy.
+- **Commit, never push.** There are no git credentials. The human fetches your
+  branches.
+- **No container builds.** podman is not available inside the sandbox.
+- **If two instructions conflict, stop at once** and report the conflict in
+  your closing message. Do not choose between them and do not work around them:
+  a conflict is a harness bug, and finding it in seconds is the point.
 - **Mutate ClearHead through its CLI** (`update`, `complete`, `add`, `jot`), not
   by hand-editing `.actions` or charter files.
+- **File out-of-bounds findings as actions** in the owning charter, with the
+  evidence. A finding must not live only in your closing message.
+- **Read narrowly.** Use `rg` for text and outline before reading; issue
+  independent tool calls together; do not read whole files over about 200 lines.
+- **Your closing message is the human's record of the session.** State the
+  outcome, and if not done, exactly why and what you would need.
+
+## Work run
+
+Target: one ClearHead action. Read it first with `clearhead show action <id>`:
+the action, not any list, is the source of truth, and its description holds the
+calls already decided for it. Your job is disciplined execution of decided work,
+not design.
+
+- **One gate:** `sh scripts/gate.sh` in `clearhead-core` before every commit you
+  keep. Check the gate's own exit code; a pipe such as `| tail` hides a failure.
+  One retry for a failure that looks flaky (passes alone, fails under the full
+  suite); otherwise stop. Never `--no-verify`. Run `clearhead doctor` before and
+  after: any *new* warning or violation is a failure.
 - **Prefer a vetted dependency over custom code.** Before writing a parser, a
   validator or a format handler, look for a crate that does it. That none is a
-  dependency *yet* is not a reason to avoid one: adding a pure-Rust library is a
-  normal step (for `clearhead-core`, confirm it with
-  `scripts/wasm-dependency-gate.sh`). Name every new dependency in the morning
-  brief. When a review finding would be fixed by one more special case in
-  hand-written parsing, switch to the library instead.
-- **Fix design concerns or escalate them; never explain them away.** A concern
-  about the design (a second read of data you already loaded, a workaround,
-  duplicated logic) is resolved by a fix or by a `NEEDS DECISION`, never by a
-  comment explaining why the workaround is acceptable.
-- **Stop on a judgment call** that the action does not already decide: make
-  `NEEDS DECISION: <question>` the *first line* of the action's description,
-  followed by the analysis and options, then move to the next task.
-- **File out-of-bounds findings as actions** in the owning charter, with the
-  evidence. A finding must not live only in chat or agent-local memory.
-- **Navigate with the shared language server; batch and read narrowly.** Use the
-  shared read-only Neovim (`scripts/agent-nvim/server`) and its compact views for
-  outline, references and definitions, and `rg` only for text. Issue independent
-  tool calls in one turn. Do not read whole files over about 200 lines.
-- **Provenance:** end every commit message with `Agent: <model>/night-<date>`.
+  dependency *yet* is not a reason to avoid one (for `clearhead-core`, confirm it
+  with `scripts/wasm-dependency-gate.sh`). Name every new dependency in your
+  closing message.
+- **Fix design concerns or escalate them; never explain them away.** A second
+  read of data already loaded, a workaround or duplicated logic is resolved by a
+  fix or by a `NEEDS DECISION`, never by a comment saying why it is acceptable.
+- **No review.** A worker never reviews itself; review is a separate run, by
+  another vendor, before landing. Do not spawn a reviewer, and its absence is
+  not a reason to stop.
+- If you change a Containerfile, say that the image build is unverified.
+- **Provenance:** end every commit message with `Agent: <model>/<run id>`.
 
-## Review gate
+### Stopping is a good outcome
 
-Review is its own run, never part of the work: after a work run and before it
-lands, a fresh agent reviews the run's diff (`refs/agent/base..agent/<id>`) and
-reports findings without fixing them; in the sandbox its checkout is read-only.
-A worker does not review itself. A finding blocks landing: a follow-up work run
-fixes it and is reviewed again, or it becomes a `NEEDS DECISION`.
+A clear account of why you stopped is worth as much as a finished action, and
+far more than a forced one. Stop when the work needs a decision the action does
+not make, grows beyond its description, or will not go green after a reasonable
+attempt. Every session ends in exactly one of:
 
-- **Use a reviewer from a different vendor**, not only a different model. Two
-  models from one provider share blind spots: on 2026-09-22 a GPT worker and a
-  GPT reviewer went through four or five rounds per task and never questioned
-  the hand-written parsing.
-- **The reviewer answers two questions.** Is it correct against the action and
-  the invariants? And is there a simpler design, or an existing tool or crate,
-  that would remove this code? An approach finding blocks like any other.
-- Tests are the mechanical floor, not the review.
+- **Done:** gate green, work committed, `clearhead complete action <id>`.
+- **Needs a decision:** `clearhead update action <id> --state blocked`, with
+  `NEEDS DECISION: <question>` as the first line of its description, then the
+  analysis and options; commit it. Do this the moment you reach the decision
+  point, before exploring further: a spend cap can end the session at any time,
+  and an unrecorded finding is lost.
+- **Stopped for another reason:** leave the action as it is, commit nothing
+  half-done, and explain.
 
-## Reporting
+Never weaken or delete a test, bypass the gate, or mark an action complete to
+make an outcome look finished.
 
-Each artifact has one job; do not restate one analysis four times.
+The **action description** holds the full analysis: what was found, decided and
+changed, with commits. Do not restate it elsewhere.
 
-- The **action description** is the full analysis: what was found, decided and
-  changed, with commits.
-- The **charter log line** (`jot`) is one line naming the decision and commit.
-- The **per-task checkpoint** in agent-workspace is `{task id, commit, status}`.
+## Review run
 
-## The morning brief
+Target: a finished work run's branch. The change in each repo is
+`refs/agent/base..agent/<id>`; list it with `git log` in `/job/work` and in each
+submodule. The checkout is read-only: report, never fix. Use
+`git --no-optional-locks` for every git command.
 
-Finish by appending one `jot` entry to the charter the night mostly served. Put
-the gate, `doctor` and `git log --oneline main..HEAD` results for each branched
-repo at the top, then, **per commit**: the hash, the task, the one file and line
-range to read first, and a risk rating with its reason. List every new
-dependency and every reviewer finding with its resolution. The human should be
-able to review the night in ten minutes from this entry alone.
+Answer two questions:
 
-## Launch checklist (for the human)
+1. **Is it correct** against the action's decision and the repository's
+   invariants? Look for missing behavior and for regressions.
+2. **Is there a simpler design**, or an existing function, crate or tool that
+   would remove code the change added? An approach finding counts like any other.
 
-- [ ] Start the run inside the harness's loop, so the run continues after a
-      turn ends while decision-free work remains in the unscheduled queue.
-- [ ] Configure the review subagent with a model from a different vendor than
-      the worker.
-- [ ] Make sure the queue's top items are decided: anything that needs a call
-      from you will come back as `NEEDS DECISION`.
+Tests are the mechanical floor, not the review. Report each finding with its
+severity (blocking, should-fix, nit), file and line, what is wrong and why. End
+with one verdict line: land, land after fixes, or do not land.
+
+## For the orchestrator
+
+Whoever launches runs, the human or an interactive agent, owns what the
+sessions do not:
+
+- **Review between work and landing.** Run a review with a different vendor
+  than the worker: two models from one provider share blind spots (on
+  2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
+  per task and never questioned the hand-written parsing). A blocking finding
+  goes to a follow-up work run or a `NEEDS DECISION`.
+- **Land bottom-up** with `scripts/agent-land <id>`, then push.
+- **Keep the queue decided.** Anything that needs your call comes back as
+  `NEEDS DECISION`.
+- **Respect the flow rule** in the agent-sandbox charter: review time is the
+  limit, so at most two unreviewed runs, in parallel only across separate areas.
+- **Harness changes are work too.** A change to this runbook, the prompt or the
+  scripts gets a review run like any other.
