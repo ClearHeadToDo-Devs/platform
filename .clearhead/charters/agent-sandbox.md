@@ -38,6 +38,22 @@ The human's review time is the constraint, not the machine: every run produces w
 - **While a run works, the orchestrator works on something that doesn't overlap with it**, never `agents/` while a run has it mounted.
 - The NUC fits about two runs at once (8 CPUs and 16 GB each; the shared build cache serializes compiles).
 
+## Handoff, 2026-09-25
+
+For the next agent picking this charter up. The queue holds the work; this is how to operate it.
+
+- **Start with `land-run-171333`** (priority 1): a Codex review said "land after fixes" (two should-fixes, recorded on the action). Fix them with a follow-up work run, or land and file them, then push.
+- **The loop:** `scripts/agent-run [action]` → `scripts/agent-status [id]` → `scripts/agent-harvest <id>` → a review by the *other* vendor → `scripts/agent-land <id>` → `git push`. Land one run before starting the next in the same area.
+- **Only `agent-run` starts Claude.** pi/Codex runs were started by hand today; the pi adapter (`sandbox-cross-vendor-review`) holds the lessons. **Harvest before landing:** `agent-land` now refuses to delete an unharvested run.
+- **Review runs** today used `pi -p --mode json --provider openai-codex --model gpt-5.6-sol` with the run directory mounted read-only. The sandbox's Codex login lives in the `agent-pi` volume.
+- **Gotchas:**
+  - `agent-land` needs `~/.local/bin` on PATH for `check-jsonschema`.
+  - Sandbox Claude runs use the subscription's default model (Sonnet), since none is set.
+  - Never edit `scripts/agent-run` or `agents/` while a run is using them.
+  - Pushing platform also pushes submodule `main` branches.
+  - `$6` per session is tight for a change that touches many files.
+- **Next in the queue:** `sandbox-dated-snapshot`, then the driver split with work and review runs, then telemetry and benchmarks, then `sandbox-extract`, porting to Rust or Babashka when it moves out.
+
 ## Findings
 
 - 2026-09-25: headless sessions end when the agent replies. Tools that wait for a later turn (`ScheduleWakeup`, background jobs) silently lose the work, so they are disallowed.
