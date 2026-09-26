@@ -76,9 +76,11 @@ The human normally prepares the worktree and launches you inside it. Verify with
 
 ## Review gate
 
-Before bumping a submodule pointer in `platform`, a fresh agent reviews the task's
-diff and reports findings without fixing them. A finding blocks the bump: fix it,
-re-run the gate and re-review, or write a `NEEDS DECISION`.
+Review is its own run, never part of the work: after a work run and before it
+lands, a fresh agent reviews the run's diff (`refs/agent/base..agent/<id>`) and
+reports findings without fixing them; in the sandbox its checkout is read-only.
+A worker does not review itself. A finding blocks landing: a follow-up work run
+fixes it and is reviewed again, or it becomes a `NEEDS DECISION`.
 
 - **Use a reviewer from a different vendor**, not only a different model. Two
   models from one provider share blind spots: on 2026-09-22 a GPT worker and a
