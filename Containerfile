@@ -5,7 +5,9 @@
 # need (scripts/validate-pinned and each submodule's .githooks/pre-push).
 FROM docker.io/library/archlinux@sha256:f3691b4dde62ba4c4b6f0ae2c1fbf28e8c0c8c4b9a35c7e06dc1f70e21aa29f6
 
-RUN pacman -Syu --noconfirm --needed \
+RUN printf '%s\n' 'Server=https://archive.archlinux.org/repos/2026/09/25/$repo/os/$arch' \
+        > /etc/pacman.d/mirrorlist \
+    && pacman -Syu --noconfirm --needed \
         base-devel git jq ripgrep \
         rust rust-wasm \
         nodejs npm tree-sitter-cli \
