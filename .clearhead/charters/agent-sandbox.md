@@ -38,9 +38,27 @@ The human's review time is the constraint, not the machine: every run produces w
 - **While a run works, the orchestrator works on something that doesn't overlap with it**, never `agents/` while a run has it mounted.
 - The NUC fits about two runs at once (8 CPUs and 16 GB each; the shared build cache serializes compiles).
 
-## Handoff, 2026-09-25
+## Current status, after run 20260925-215528
 
-For the next agent picking this charter up. The queue holds the work; this is how to operate it.
+- `sandbox-dated-snapshot`, `land-run-171333`, and `sandbox-quadlet-lifecycle`
+  are landed and pushed. `scripts/agent-run` starts Claude or Pi in a per-run
+  rootless Quadlet; systemd owns CPU, memory (including swap), tasks, wall-time
+  and stop grace. Model-dollar caps remain harness-side.
+- The review-and-land sequence remains: run → status → harvest → independent
+  cross-vendor review → land → push. Review runs are not first-class yet
+  (`sandbox-cross-vendor-review`).
+- If the foreground launcher dies, the Quadlet keeps running. `agent-status`
+  shows `RECONCILE` once it stops; `scripts/agent-reconcile <id>` finalizes it.
+  Automatic reconciliation is the next safety follow-up
+  (`sandbox-auto-reconcile`). Interactive model control is a separate design;
+  attaching to a Quadlet alone does not implement it.
+- Host verification exercised success, failure, timeout, manual stop, OOM,
+  and no-model end-to-end launcher cleanup. The run and reviews are under
+  `~/agent-runs/20260925-215528/`.
+
+## Historical handoff, 2026-09-25
+
+Retained as the record of the earlier queue; the current status and actions above supersede these instructions.
 
 - **Start with `land-run-171333`** (priority 1): a Codex review said "land after fixes" (two should-fixes, recorded on the action). Fix them with a follow-up work run, or land and file them, then push.
 - **The loop:** `scripts/agent-run [action]` → `scripts/agent-status [id]` → `scripts/agent-harvest <id>` → a review by the *other* vendor → `scripts/agent-land <id>` → `git push`. Land one run before starting the next in the same area.
