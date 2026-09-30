@@ -101,6 +101,44 @@ make an outcome look finished.
 The **action description** holds the full analysis: what was found, decided and
 changed, with commits. Do not restate it elsewhere.
 
+## Fix run
+
+Target: the review session named in the prompt. The prompt contains its verdict,
+findings as JSON, and an optional note carrying the human's or orchestrator's
+decisions and answers. No ClearHead action is required.
+
+- Address each finding in the prompt or state exactly why you declined it.
+  Stay inside those findings and the note; do not invent decisions the note
+  does not make. If a decision is missing, decline that finding with the
+  question and options needed to proceed.
+- Run `clearhead doctor` before and after when the repo has ClearHead data;
+  any new warning or violation is a failure. In this repo, run
+  `sh scripts/gate.sh` in `clearhead-core` before every commit you keep, checking
+  its own exit code. Allow one retry only for an apparently flaky failure;
+  otherwise stop. Never weaken tests or bypass the gate. Commit no half-done
+  work and never push.
+- Prefer a vetted dependency over a custom parser, validator or format handler;
+  confirm new core dependencies with `scripts/wasm-dependency-gate.sh`.
+  Resolve design concerns with a fix or decline the finding for a decision.
+- Do not spawn a reviewer. End every commit message with
+  `Agent: <model>/<run id>`. Name any new dependencies in the closing message;
+  if a Containerfile changed, state that the image build is unverified.
+- A fix does not reconcile a finding. The human does that after checking it;
+  do not change the review record or mark findings reconciled.
+
+End with a fenced `json` block, using each finding's exact `what` text and
+accounting for every finding in the prompt (including nits when supplied):
+
+```json
+{
+  "fixed": ["finding what"],
+  "declined": [{"what": "finding what", "why": "reason or decision needed"}]
+}
+```
+
+Use empty arrays when appropriate. Report note-only work and commits in the
+closing prose. If the gate fails, do not claim uncommitted fixes as fixed.
+
 ## Review run
 
 Target: a finished work run's branch. The change in each repo is
@@ -156,7 +194,11 @@ sessions do not:
   Run it with a different vendor than the worker: two models from one provider share blind spots (on
   2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
   per task and never questioned the hand-written parsing). A blocking finding
-  goes to a follow-up work run or a `NEEDS DECISION`.
+  goes to `scripts/agent-fix <workspace>[/<n>] [--harness claude|pi]
+  [--model id] [--note <file|text>] [--wait]`, or a `NEEDS DECISION`.
+  With no session number, `agent-fix` uses the latest read-only session with
+  a parsed review. It supplies blocking and should-fix findings (`--nits` also
+  includes nits); use `--note` for decisions and answers to `for_human` points.
 - **Land bottom-up**: `scripts/agent-harvest <workspace>`, then
   `scripts/agent-land <workspace>`, then push. `agent-land` merges into a
   candidate clone and runs `.sandbox/gate` on it in the sandbox image; no real
