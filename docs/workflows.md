@@ -1,6 +1,5 @@
 ---
 type: Runbook
-title: ClearHead runtime workflows
 description: Mermaid sequence diagrams describing event order and information flow across the ClearHead runtime (LSP, CLI, calendar sync).
 status: stable
 generated: { by: human:dab, at: 2026-08-27 }
