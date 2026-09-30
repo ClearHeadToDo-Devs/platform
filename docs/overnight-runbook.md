@@ -21,7 +21,9 @@ sources:
 
 You are one headless session in a sandboxed run (`scripts/agent-run`). Your
 prompt names the run's **kind** and its **target**; this file is the whole
-procedure. Follow the rules for every run, then your kind's section.
+procedure. Follow the rules for every run, then your kind's section. A prompt
+that names no kind is a plain task: the rules for every run apply, and the
+prompt is the whole task.
 
 ## Every run
 

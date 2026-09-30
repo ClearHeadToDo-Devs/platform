@@ -1,0 +1,5 @@
+# Sourced by the sandbox runner (agents/session) in the clone's root before
+# each session. Builds the clearhead CLI from this branch and puts it first on
+# PATH, so agents use the branch's CLI and never an installed copy.
+cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead_cli
+export PATH="$CARGO_TARGET_DIR/debug:$PATH"
