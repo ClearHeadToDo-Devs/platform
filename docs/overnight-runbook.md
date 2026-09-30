@@ -113,7 +113,31 @@ Answer two questions:
 
 Tests are the mechanical floor, not the review. Report each finding with its
 severity (blocking, should-fix, nit), file and line, what is wrong and why. End
-with one verdict line: land, land after fixes, or do not land.
+with a fenced `json` block (the host stores it as the session's `review`):
+
+```json
+{
+  "coverage": [{"check": "invariant or behavior checked", "how": "files, commands and evidence"}],
+  "findings": [{"severity": "blocking", "file": "repo/path", "line": 1, "what": "problem", "why": "impact"}],
+  "for_human": ["where human judgment is needed"],
+  "verdict": "land after fixes"
+}
+```
+
+Use empty arrays when appropriate. Severity is `blocking`, `should-fix` or
+`nit`; verdict is `land`, `land after fixes` or `do not land`. Coverage is your
+account of checks, including shell and diff reads. The host separately reports
+`opened_in_full: {read: [...], changed: N}`: a **lower bound** counting only
+changed files opened in full through successful structured `read`/`Read` tool
+results in the transcript, not a count of files reviewed. Partial, truncated,
+unknown-format, shell and diff reads do not count. Deleted files and changed
+submodule pins remain in the denominator. The changed-file set is captured
+before the session, so a later fixer cannot alter this evidence.
+
+A verdict informs landing, never gates it. `agent-land` prints unreconciled
+blocking findings; the human decides. Send blocking findings to a fixer
+session in the same workspace; a fix alone does not reconcile a finding.
+The human may record `reconciled: true` on a finding in the session record.
 
 ## For the orchestrator
 
