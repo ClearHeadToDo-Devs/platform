@@ -124,6 +124,21 @@ validate_schema() {
     fi
 }
 
+# 0. Every schema's $id names one release (README, Releases): a tag, never a
+#    branch. Core's stamped $schema URLs are held to these ids by its
+#    spec-conformance test.
+releases=$(for s in "$root"/specifications/schemas/*.json; do
+    jq -r '."$id" // ""' "$s" | sed -E \
+        -e 's#^https://raw\.githubusercontent\.com/ClearHeadToDo-Devs/specifications/(v[0-9]+\.[0-9]+\.[0-9]+)/schemas/[^/]+$#\1#' \
+        -e 't' -e "s#.*#not a release id in ${s##*/}#"
+done | sort -u)
+if [ "$(printf '%s\n' "$releases" | wc -l)" -ne 1 ] || ! printf '%s' "$releases" | grep -q '^v'; then
+    echo "validate-pinned > schema ids must all name one release:" >&2
+    printf '%s\n' "$releases" >&2
+    exit 1
+fi
+echo "validate-pinned > schema ids name release $releases"
+
 schema="$root/specifications/schemas/actions.schema.json"
 
 # 1. Spec self-consistency: the canonical example conforms to the schema.

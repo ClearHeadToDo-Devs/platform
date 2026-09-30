@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/master/schemas/config.schema.json",
+  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/config.schema.json",
   "additional_workspaces": [
     "../clearhead-core",
     "../clearhead-core/crates/clearhead-cli",
