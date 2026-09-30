@@ -51,4 +51,4 @@ RUN git config --global user.name "agent" \
     && git config --global user.email "agent@localhost" \
     && git config --global safe.directory '*'
 
-WORKDIR /job/work
+WORKDIR /job

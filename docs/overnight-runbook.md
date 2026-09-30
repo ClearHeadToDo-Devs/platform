@@ -30,7 +30,7 @@ prompt is the whole task.
 - **One session, then it ends.** Nothing resumes you after you reply. Run every
   command, the gate included, in the foreground and wait for it; never leave
   work in the background or end on a promise.
-- **Setup is done.** The clone at `/job/work` has every repo on this run's
+- **Setup is done.** The clone, your working directory (`/job/<workspace>/work`), has every repo on this run's
   `agent/<id>` branch, and `refs/agent/base` marks where each repo started.
   `clearhead` on PATH is built from this branch; use it for every ClearHead
   command, never an installed copy.
@@ -142,7 +142,7 @@ closing prose. If the gate fails, do not claim uncommitted fixes as fixed.
 ## Review run
 
 Target: a finished work run's branch. The change in each repo is
-`refs/agent/base..agent/<id>`; list it with `git log` in `/job/work` and in each
+`refs/agent/base..agent/<id>`; list it with `git log` in your working directory and in each
 submodule. The checkout is read-only: report, never fix. Use
 `git --no-optional-locks` for every git command.
 
