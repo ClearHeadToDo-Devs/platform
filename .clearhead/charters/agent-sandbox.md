@@ -31,34 +31,59 @@ So the sandbox works on any repo with a root `Containerfile`, with or without a 
 
 ## Flow
 
-The human's review time is the constraint, not the machine: every run produces work to review.
+The human's review time is the constraint, not the machine: every workspace produces work to review.
 
-- **At most two unreviewed runs.** Starting more only grows the queue.
-- **Parallel across separate areas, one at a time within one area.** Runs clone `main`, so runs over the same files conflict at landing, and a run built on unlanded work starts stale. One run per charter is a safe unit (`--charter`).
-- **While a run works, the orchestrator works on something that doesn't overlap with it**, never `agents/` while a run has it mounted.
-- The NUC fits about two runs at once (8 CPUs and 16 GB each; the shared build cache serializes compiles).
+- **At most two unreviewed workspaces.** Starting more only grows the queue.
+- **Parallel across separate areas, one at a time within one area.** A workspace clones `main`, so workspaces over the same files conflict at landing, and one built on unlanded work starts stale. Work that belongs together goes in one workspace, as sessions (`--in`).
+- **While a session works, the orchestrator works on something that doesn't overlap with it.** Editing `agents/` is safe: a workspace uses its own snapshot.
+- The NUC fits about two sessions at once (8 CPUs and 16 GB each; the shared build cache serializes compiles).
 
-## Current status, after run 20260925-215528
+## Current status, 2026-09-30 (handoff)
 
-- `sandbox-dated-snapshot`, `land-run-171333`, and `sandbox-quadlet-lifecycle`
-  are landed and pushed. `scripts/agent-run` starts Claude or Pi in a per-run
-  rootless Quadlet; systemd owns CPU, memory (including swap), tasks, wall-time
-  and stop grace. Model-dollar caps remain harness-side.
-- The review-and-land sequence remains: run → status → harvest → independent
-  cross-vendor review → land → push. Review runs are not first-class yet
-  (`sandbox-cross-vendor-review`).
-- If the foreground launcher dies, the Quadlet keeps running. `agent-status`
-  shows `RECONCILE` once it stops; `scripts/agent-reconcile <id>` finalizes it.
-  Automatic reconciliation is the next safety follow-up
-  (`sandbox-auto-reconcile`). Interactive model control is a separate design;
-  attaching to a Quadlet alone does not implement it.
-- Host verification exercised success, failure, timeout, manual stop, OOM,
-  and no-model end-to-end launcher cleanup. The run and reviews are under
-  `~/agent-runs/20260925-215528/`.
+**Where it stands.** The runner is harness-neutral and knows nothing about ClearHead. Workspaces, agents and sessions are separate (`scripts/lib/agent-runs.sh` states the model; the Log below has the decisions):
+
+| To | Run |
+| --- | --- |
+| start any task | `ref=$(scripts/agent-run --prompt <file\|text>)`, prints `<workspace>/<n>` and returns |
+| add a session to existing work | `scripts/agent-run --in <workspace> --prompt ... [--harness pi] [--model ...] [--read-only]` |
+| review with another vendor | the line above with `--harness pi --read-only` and a review prompt |
+| read a result (JSON) | `scripts/agent-result <workspace>[/<n>] --wait` |
+| work ClearHead actions | `scripts/clearhead-work [<action>]` (one workspace, a session per action) |
+| see everything | `scripts/agent-status [<workspace>]` |
+| bring work back | `scripts/agent-harvest <workspace>`, review, `scripts/agent-land <workspace>`, `git push` |
+
+The repo's own startup is `.sandbox/`: `setup` (sourced before each session), `prompt.md` (ahead of every prompt), `work-prompt.md` (the driver's template). Default models are in `agents/models.env`.
+
+**What to work on next, in order:**
+
+1. `sandbox-premerge-gate` (priority 1, decided, needs nothing from the human): `agent-land` still merges before the gate runs, so a red gate leaves `main` advanced locally. It is the safest thing for an unattended agent to pick up.
+2. `sandbox-auto-reconcile` (priority 1): partly overtaken on 2026-09-30, see the note at the end of its description. Narrow it before working it.
+3. `sandbox-extract` (priority 3, but the direction the human asked for next): its description lists the platform assumptions still in the runner, found by reading the code on 2026-09-30. **Blocked on two decisions that are the human's**, so ask before any code:
+   - **Language.** The earlier plan was to port to Rust or Babashka when the runner moves out; it is about 900 lines of POSIX sh today and works. Port, or move as is?
+   - **Where it lives and what it is called**: the repo's name, and whether platform uses it as a submodule or from PATH.
+
+**Verified on the host, 2026-09-30:** a Claude worker, a `gpt-6-sol` read-only reviewer and a Claude fixer as three sessions in one workspace (the reviewer saw the worker's commit and was refused a write by the mount); a second writer and a reader refused while a writer ran; two simultaneous launches; `.sandbox/setup` putting the branch's `clearhead` on PATH; `clearhead-work` on one missing action; harvest. `scripts/agent-runs.test.sh` and `scripts/agent-quadlet.test.sh` pass.
+
+**Not verified, so do not assume:**
+
+- `clearhead-work` over a real queue of several actions. Only the single-action path ran.
+- `agent-land` on a workspace made by the new scripts. The two landings on 2026-09-29 used the old runner; `agent-land` itself did not change.
+- A pi *work* session (read-write) through `agents/session`. Only a read-only pi session ran.
+- A stop (`agent-stop`), a timeout and an OOM under per-session units. The outcome mapping is unchanged and unit-tested, but the per-session wiring has only seen clean exits.
+
+**Known gaps:**
+
+- The two harness test files are not run by any gate; wire them into `scripts/validate-pinned`.
+- `agent-new` reads `~/.pi/agent/settings.json` unconditionally, so a host without pi cannot create a workspace even for a Claude session.
+- `sandbox-cross-vendor-review` stays open until a real work run has been reviewed by a read-only session from another vendor; the mechanism exists.
+- pi is pinned at 0.85.1, whose newest model is `gpt-6-sol`. `gpt-6.1-sol` needs 0.99+ (same `openai-codex` provider id, breaking changes in between): bump it with a smoke session, as part of the runner's own image layer.
+- Two writers at once in one workspace would need a worktree per session; nothing needs it yet.
+
+**Gotchas:** `agent-land` needs `~/.local/bin` on PATH for `check-jsonschema`. Pushing platform also pushes submodule `main` branches. The RDF proof in `validate-pinned` runs the `clearhead` on PATH, not the pinned build (platform action 01a0f109), so reinstall the CLI after core changes. Headless `nvim`/`busted` hang on an inherited open stdin; append `< /dev/null`.
 
 ## Historical handoff, 2026-09-25
 
-Retained as the record of the earlier queue; the current status and actions above supersede these instructions.
+Retained as the record of the earlier queue; the current status and actions above supersede these instructions. It describes the runner before 2026-09-30, when one `scripts/agent-run [action]` was one run in one container and `agents/loop` worked the queue inside it.
 
 - **Start with `land-run-171333`** (priority 1): a Codex review said "land after fixes" (two should-fixes, recorded on the action). Fix them with a follow-up work run, or land and file them, then push.
 - **The loop:** `scripts/agent-run [action]` → `scripts/agent-status [id]` → `scripts/agent-harvest <id>` → a review by the *other* vendor → `scripts/agent-land <id>` → `git push`. Land one run before starting the next in the same area.
