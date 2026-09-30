@@ -6,22 +6,22 @@ status: draft
 generated: { by: agent/claude, at: 2026-09-18T18:00:00Z }
 sources:
   - id: decisions
-    resource: DECISIONS.md
+    resource: ../DECISIONS.md
     title: Decisions 39 and 40 (the why)
   - id: merge-action
-    resource: ../.clearhead/charters/pure-core-split.actions
+    resource: ../../.clearhead/charters/pure-core-split.actions
     title: crate merge and LSP fold-in actions
   - id: identity-actions
-    resource: ../.clearhead/charters/support.actions
+    resource: ../../.clearhead/charters/support.actions
     title: charter identity parent action and its three children
   - id: spec
-    resource: ../specifications/workspace.md
+    resource: ../../specifications/workspace.md
     title: Concept Identity (the rule this implements)
 ---
 
 # Crate merge and charter identity
 
-The *why* lives in [Decisions 39 and 40](DECISIONS.md). This document is the
+The *why* lives in [Decisions 39 and 40](../DECISIONS.md). This document is the
 *how*: the invariants that must hold when each step lands, the order, and when
 to stop. Task state lives in the actions named in `sources`, not here.
 
@@ -116,7 +116,7 @@ Stop the step, write the question at the top of the action's description as a
 
 ## Working protocol
 
-Navigate code with the shared read-only language server ([Decision 41](DECISIONS.md)),
+Navigate code with the shared read-only language server ([Decision 41](../DECISIONS.md)),
 not `sed` and `grep`: use the compact views, and grep only for text. Batch
 independent tool calls in one turn.
 

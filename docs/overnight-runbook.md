@@ -7,10 +7,10 @@ generated: { by: agent/claude, at: 2026-09-24T04:00:00Z }
 updated: { by: agent/claude, at: 2026-09-25T00:00:00Z }
 sources:
   - id: first-run
-    resource: overnight-worker-clearhead-core.md
+    resource: history/overnight-worker-clearhead-core.md
     title: the 2026-09-18 task list whose ground rules seeded this runbook
   - id: second-run
-    resource: overnight-worker-crate-merge-and-identity.md
+    resource: history/overnight-worker-crate-merge-and-identity.md
     title: the 2026-09-18 successor that added branch isolation, the review gate and the morning brief
   - id: sandbox
     resource: ../.clearhead/charters/agent-sandbox.md

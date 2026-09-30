@@ -15,7 +15,7 @@ sources:
 
 # Overnight worker — crate merge and charter identity
 
-> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](overnight-runbook.md). This file records what the 2026-09-18 run was told.
+> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](../overnight-runbook.md). This file records what the 2026-09-18 run was told.
 
 Your job is disciplined execution of [the plan](crate-merge-and-charter-identity.md),
 not design. Its invariants **I1–I12 are your acceptance criteria**; its
