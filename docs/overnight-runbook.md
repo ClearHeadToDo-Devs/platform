@@ -58,8 +58,12 @@ not design.
 
 - **One gate:** `sh scripts/gate.sh` in `clearhead-core` before every commit you
   keep. Check the gate's own exit code; a pipe such as `| tail` hides a failure.
-  One retry for a failure that looks flaky (passes alone, fails under the full
-  suite); otherwise stop. Never `--no-verify`. Run `clearhead doctor` before and
+  A failure your change caused is part of the work: fix it and run the gate
+  again. One retry for a failure that looks flaky (passes alone, fails under the
+  full suite). Stop only when the failure is not yours to fix (the gate or the
+  environment is broken, or the fix would leave the task's scope), and then
+  keep your work: leave it in the working tree and say where you stopped,
+  never discard it. Never `--no-verify`. Run `clearhead doctor` before and
   after: any *new* warning or violation is a failure.
 - **Prefer a vetted dependency over custom code.** Before writing a parser, a
   validator or a format handler, look for a crate that does it. That none is a
