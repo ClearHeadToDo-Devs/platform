@@ -77,3 +77,7 @@ Retained as the record of the earlier queue; the current status and actions abov
 - 2026-09-25: headless sessions end when the agent replies. Tools that wait for a later turn (`ScheduleWakeup`, background jobs) silently lose the work, so they are disallowed.
 - 2026-09-25: "exit 0" is not an outcome. The driver judges the action's state, and every session's closing message reaches the human at harvest.
 - 2026-09-25: a spent budget ended a session before it recorded its finding. The prompt now says to record a decision point before exploring further.
+
+## Log
+
+- 2026-09-30T01:27-07:00 — driver-split step 1 of 3 landed: agent-run --prompt <file|text> starts one generic session (agents/session) and returns the run id on stdout at once; agent-result <id> --wait finalizes and prints the manifest, which now carries sessions {label, ok, cost_usd, closing, stop_reason, transcript} and commits per repo. agents/loop keeps the ClearHead queue for now and adds action and outcome (the action's real state) to the session it started. Run ids are claimed with mkdir so parallel launches cannot collide. Verified on the host with four real runs: string prompt with a commit, file prompt, two simultaneous launches, and the loop path on a missing action. Next: move the queue loop to a host orchestrator that calls --prompt, then the repo setup hook.
