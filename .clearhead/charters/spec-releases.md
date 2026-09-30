@@ -2,7 +2,7 @@
 id: 01a0f38e-7c54-724a-b6cb-5f0e348b56c0
 alias: spec-releases
 parent: platform
-state: Active
+state: Closed
 ---
 # Spec Releases
 
@@ -23,3 +23,7 @@ Found 2026-09-30: every workspace file Core writes stamps `$schema` to `specific
 - Core stamps the `v0.1.0` URLs, and the gate fails when Core and the pinned spec disagree.
 - No `$schema` in our repositories names a branch.
 - All six repositories use `main`, and `git push` from platform pushes the submodules again.
+
+## Log
+
+- 2026-09-30 — CLOSED the same day: v0.1.0 tagged and pushed, all eight ids resolve; Core stamps them and the gate holds it to the pinned ids; 47 $schema pointers swept; specifications, tree-sitter-actions and clearhead.nvim renamed to main, and one git push from platform now pushes every submodule.
