@@ -1,0 +1,1 @@
+[ ] Resume homelab calendar sync =resume-calendar-sync $Restart clearhead-sync.timer after migrate-user-inbox. Settle the single-writer question first: does reconcile rewrite .actions on every run, and does any normal CLI command trigger it?$ !3 ^2026-09-26T02:14 #01a0dcfe-3ad0-736f-ba71-6baa65f9c2cd
