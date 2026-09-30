@@ -4,12 +4,14 @@
 # Everything ClearHead-specific about sandboxed work lives here and in
 # .sandbox/; the runner (scripts/agent-*) only knows prompts.
 #
-#   scripts/clearhead-work             work the unscheduled queue
-#   scripts/clearhead-work <action>    work just that action
+#   scripts/clearhead-work                 work the unscheduled queue
+#   scripts/clearhead-work <action>...     work just those actions, in order
 #
 # One workspace, one session per action (.sandbox/work-prompt.md), so each
-# action builds on the ones before it and the queue lands as one branch. The
-# queue is re-read from the workspace's clone after every session, and each
+# action builds on the ones before it and the queue lands as one branch.
+# Naming actions is how an orchestrator hands over work it has checked is
+# decided, when the queue as a whole is not. The queue is re-read from the
+# workspace's clone after every session, and each
 # action is attempted at most once. Every outcome is acceptable: it is the
 # action's real state in the clone afterwards — completed, blocked (NEEDS
 # DECISION) or unfinished — whatever the session's own ending was. The runner's
@@ -71,7 +73,7 @@ finish() {
 }
 
 if [ $# -gt 0 ]; then
-    work "$1"
+    for action; do work "$action"; done
     finish "done"
 fi
 
