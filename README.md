@@ -41,9 +41,9 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 - Cloning the repository
 - Updating submodules
 
-### Working with Git Worktrees
+### Parallel Agent Work
 
-For branch-per-task development (including multiple parallel agent branches), see [Worktrees](./docs/WORKTREES.md).
+Use the [agent sandbox](./scripts/agent-sandbox.md) for isolated agent workspaces and the work, review and fix loop. For a human's own branch-per-task development, see [Worktrees](./docs/WORKTREES.md).
 
 ### Architecture
 

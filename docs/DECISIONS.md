@@ -71,7 +71,7 @@ edit).
 **Trade-off:** until `normalize` runs, an id-less charter has a different
 identity each load. That only affects identity consumers such as query IRIs;
 the `charter-document-without-id` finding keeps it visible, and the user chooses
-when to stamp. Implementation plan: [crate-merge-and-charter-identity](crate-merge-and-charter-identity.md).
+when to stamp. Implementation plan: [crate-merge-and-charter-identity](history/crate-merge-and-charter-identity.md).
 
 ---
 
@@ -94,7 +94,7 @@ the reversible direction.
 **Supersedes** the earlier "LSP stays its own binary" line of the pure-core
 split. **Costs to plan for:** the nvim plugin's LSP `cmd`, and sparql reading the
 on-disk dataset while an LSP answers from unsaved buffers.
-Implementation plan: [crate-merge-and-charter-identity](crate-merge-and-charter-identity.md).
+Implementation plan: [crate-merge-and-charter-identity](history/crate-merge-and-charter-identity.md).
 
 ---
 

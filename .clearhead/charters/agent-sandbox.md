@@ -40,19 +40,7 @@ The human's review time is the constraint, not the machine: every workspace prod
 
 ## Current status, 2026-09-30 (handoff, updated after the first gated landing)
 
-**Where it stands.** The runner is harness-neutral and knows nothing about ClearHead. Workspaces, agents and sessions are separate (`scripts/lib/agent-runs.sh` states the model; the Log below has the decisions):
-
-| To | Run |
-| --- | --- |
-| start any task | `ref=$(scripts/agent-run --prompt <file\|text>)`, prints `<workspace>/<n>` and returns |
-| add a session to existing work | `scripts/agent-run --in <workspace> --prompt ... [--harness pi] [--model ...] [--read-only]` |
-| review with another vendor | the line above with `--harness pi --read-only` and a review prompt |
-| read a result (JSON) | `scripts/agent-result <workspace>[/<n>] --wait` |
-| work ClearHead actions | `scripts/clearhead-work [<action>...]` (one workspace, a session per action) |
-| see everything | `scripts/agent-status [<workspace>]` |
-| bring work back | `scripts/agent-harvest <workspace>`, review, `scripts/agent-land <workspace>`, `git push` |
-
-The repo's own startup is `.sandbox/`: `setup` (sourced before each session and before the landing gate), `gate` (the landing gate), `prompt.md` (ahead of every prompt), `work-prompt.md` (the driver's template). Default models are in `agents/models.env`. `agent-land` merges into a candidate clone, gates it in the image and advances no real branch unless the gate passes.
+**Where it stands.** The runner is harness-neutral and knows nothing about ClearHead. Workspaces, agents and sessions are separate; the Log below records the decisions. The durable command reference, repository setup, review/fix loop and gotchas live in [the agent sandbox guide](../../scripts/agent-sandbox.md).
 
 **What to work on next, in order:**
 
@@ -78,23 +66,9 @@ The repo's own startup is `.sandbox/`: `setup` (sourced before each session and 
 - The landing gate re-downloads npm and uv dependencies on every landing; cache volumes would make it faster.
 - Two writers at once in one workspace would need a worktree per session; nothing needs it yet.
 
-**Gotchas:** Pushing platform also pushes submodule `main` branches. A system upgrade that re-executes the user systemd manager used to end `--wait` early (fixed 2026-09-30 in `agent_unit_active`). Headless `nvim`/`busted` hang on an inherited open stdin; append `< /dev/null`. Sourcing `scripts/lib/*.sh` into zsh breaks: a variable named `path` is zsh's PATH; use `sh -c`.
-
 ## Historical handoff, 2026-09-25
 
-Retained as the record of the earlier queue; the current status and actions above supersede these instructions. It describes the runner before 2026-09-30, when one `scripts/agent-run [action]` was one run in one container and `agents/loop` worked the queue inside it.
-
-- **Start with `land-run-171333`** (priority 1): a Codex review said "land after fixes" (two should-fixes, recorded on the action). Fix them with a follow-up work run, or land and file them, then push.
-- **The loop:** `scripts/agent-run [action]` → `scripts/agent-status [id]` → `scripts/agent-harvest <id>` → a review by the *other* vendor → `scripts/agent-land <id>` → `git push`. Land one run before starting the next in the same area.
-- **Only `agent-run` starts Claude.** pi/Codex runs were started by hand today; the pi adapter (`sandbox-cross-vendor-review`) holds the lessons. **Harvest before landing:** `agent-land` now refuses to delete an unharvested run.
-- **Review runs** today used `pi -p --mode json --provider openai-codex --model gpt-5.6-sol` with the run directory mounted read-only. The sandbox's Codex login lives in the `agent-pi` volume.
-- **Gotchas:**
-  - `agent-land` needs `~/.local/bin` on PATH for `check-jsonschema`.
-  - Sandbox Claude runs use the subscription's default model (Sonnet), since none is set.
-  - Never edit `scripts/agent-run` or `agents/` while a run is using them.
-  - Pushing platform also pushes submodule `main` branches.
-  - `$6` per session is tight for a change that touches many files.
-- **Next in the queue:** `sandbox-dated-snapshot`, then the driver split with work and review runs, then telemetry and benchmarks, then `sandbox-extract`, porting to Rust or Babashka when it moves out.
+Before the 2026-09-30 redesign, one `scripts/agent-run [action]` was one run in one container and `agents/loop` worked the queue inside it. Only Claude had a runner adapter; pi/Codex reviews were launched by hand. The earlier queue started with `land-run-171333` (a Codex review's two should-fixes), then dated snapshots, the driver split, telemetry and benchmarks, and extraction. The current state and actions above supersede that handoff.
 
 ## Findings
 

@@ -6,16 +6,16 @@ status: deprecated
 generated: { by: agent/claude, at: 2026-09-18T06:00:00Z }
 sources:
   - id: agent-surface
-    resource: ../.clearhead/charters/agent-surface/next.actions
+    resource: ../../.clearhead/charters/agent-surface/next.actions
     title: agent-surface charter actions (tasks 1, 2, 6 come from here)
   - id: support
-    resource: ../.clearhead/charters/support.actions
+    resource: ../../.clearhead/charters/support.actions
     title: support charter actions (tasks 3, 4 come from here)
 ---
 
 # Overnight worker — clearhead-core task list
 
-> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](overnight-runbook.md). This file records what the 2026-09-18 run was told.
+> **Superseded.** The standing rules for every overnight run now live in [the overnight runbook](../overnight-runbook.md). This file records what the 2026-09-18 run was told.
 
 You are continuing tonight's work in `/home/dab/Products/platform`, a multi-repo
 ClearHead monorepo (git submodules). Everything in `platform` and

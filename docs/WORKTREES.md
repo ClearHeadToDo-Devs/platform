@@ -1,14 +1,14 @@
 ---
 type: Runbook
 title: Git Worktree Workflow
-description: The practical workflow for working in this repo across multiple parallel branches/worktrees.
+description: The practical workflow for a human's own branches and worktrees in this repo.
 status: stable
 generated: { by: human:dab, at: 2026-04-12 }
 ---
 
 # Git Worktree Workflow
 
-This is the practical workflow for working in this repo with multiple parallel branches/worktrees.
+This is the practical workflow for a human's own branches and worktrees. Parallel agent work uses the [agent sandbox](../scripts/agent-sandbox.md), with disposable clones and a work/review/fix loop, not this workflow.
 
 ## Mental Model
 - Keep one base checkout on `main` as your sync point.
@@ -38,8 +38,8 @@ git branch -d feat/my-change
 git worktree prune
 ```
 
-## Parallel Worktrees (3-4 Agents)
-When several branches are active, use an integration lane.
+## Integrating a Human's Parallel Branches
+When several of your branches are active, use an integration lane.
 
 ### 1) Keep a dedicated integration worktree
 From the base checkout:
@@ -139,7 +139,7 @@ git worktree prune
 ## Quick Recipe
 1. Update base checkout on `main`.
 2. Spawn task worktree with `git worktree add -b ...`.
-3. Let each agent work in its own worktree.
+3. Work on each task in its own worktree.
 4. Integrate all active branches in `int/...` worktree.
 5. Resolve conflicts + run checks in integration worktree.
 6. Merge integration branch to `main`.

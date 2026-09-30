@@ -23,11 +23,12 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 
 ## Runbooks
 
-* [Crate merge and charter identity](crate-merge-and-charter-identity.md) — invariants, ordered steps, gates and stop conditions for the two-crate/one-binary merge and the charter identity split (2026-09-18)
-* [Overnight runbook](overnight-runbook.md) — the standing procedure for an unattended overnight agent: setup, working rules, the review gate, reporting and the morning brief
-* [Overnight worker — crate merge and charter identity](overnight-worker-crate-merge-and-identity.md) — branch-isolated task list with a review step, a morning brief and a launch checklist (deprecated, 2026-09-18)
-* [Overnight worker — clearhead-core task list](overnight-worker-clearhead-core.md) — pre-decided, ordered task list for an unsupervised overnight agent (deprecated, 2026-09-18)
+* [Agent sandbox guide](../scripts/agent-sandbox.md) — workspaces, agents, sessions, commands and the review/fix/landing loop
+* [Sandbox runbook](overnight-runbook.md) — standing rules for sandboxed sessions and the work, review and fix run kinds
 
 ## History
 
+* [Crate merge and charter identity](history/crate-merge-and-charter-identity.md) — the completed crate merge and charter identity plan (2026-09-18)
+* [Overnight worker — crate merge and charter identity](history/overnight-worker-crate-merge-and-identity.md) — superseded branch-isolated task list (2026-09-18)
+* [Overnight worker — clearhead-core task list](history/overnight-worker-clearhead-core.md) — superseded pre-decided task list (2026-09-18)
 * [RDF publication migration baseline](history/rdf-publication-baseline.md) — archived, pre-migration evidence only
