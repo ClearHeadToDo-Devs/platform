@@ -91,7 +91,8 @@ attempt. Every session ends in exactly one of:
 - **Done:** gate green, work committed, `clearhead complete action <id>`.
 - **Needs a decision:** `clearhead update action <id> --state blocked`, with
   `NEEDS DECISION: <question>` as the first line of its description, then the
-  analysis and options; commit it. Do this the moment you reach the decision
+  analysis and options, and the `human` context added (`--context` replaces
+  the whole set, so repeat any contexts the action already has); commit it. Do this the moment you reach the decision
   point, before exploring further: a spend cap can end the session at any time,
   and an unrecorded finding is lost.
 - **Stopped for another reason:** leave the action as it is, commit nothing
@@ -204,8 +205,10 @@ sessions do not:
   branch moves unless the gate passes. A red gate leaves the candidate and
   `gate.log` in the workspace directory.
 - **Record the human’s landing verdict:** `scripts/agent-verdict <workspace> [--agree] [--overrule <text>]... [--missed <text>]... [--note <text>]`; an orchestrator may record it on the human’s word.
-- **Keep the queue decided.** Anything that needs your call comes back as
-  `NEEDS DECISION`.
+- **Keep the queue decided.** Anything that needs the human's call comes back
+  as `NEEDS DECISION` with the `human` context. Ask the human only through that
+  queue, never by repeating a question in chat: `clearhead query named
+  for-human` lists everything waiting on them, and empty means nothing is.
 - **Respect the flow rule** in the agent-sandbox charter: review time is the
   limit, so at most two unreviewed runs, in parallel only across separate areas.
 - **Harness changes are work too.** A change to this runbook, the prompt or the
