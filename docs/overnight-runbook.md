@@ -40,8 +40,10 @@ prompt is the whole task.
 - **If two instructions conflict, stop at once** and report the conflict in
   your closing message. Do not choose between them and do not work around them:
   a conflict is a harness bug, and finding it in seconds is the point.
-- **Mutate ClearHead through its CLI** (`update`, `complete`, `add`, `jot`), not
-  by hand-editing `.actions` or charter files.
+- **Mutate ClearHead data through its CLI** (`update`, `complete`, `add`, `jot`),
+  not by hand-editing `.actions` files or a charter's frontmatter. A charter's
+  Markdown body below the frontmatter is prose: edit it directly when the task
+  asks for it.
 - **File out-of-bounds findings as actions** in the owning charter, with the
   evidence. A finding must not live only in your closing message.
 - **Read narrowly.** Use `rg` for text and outline before reading; issue
