@@ -6,5 +6,6 @@ cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead_cli
 export PATH="$CARGO_TARGET_DIR/debug:$PATH"
 # A fresh clone has no node_modules; the grammar's gate needs them. Which
 # dependencies may run install scripts is tree-sitter-actions' allowScripts.
-[ -d tree-sitter-actions/node_modules ] ||
+# A read-only session (a review) cannot write them, and runs no gate.
+[ -d tree-sitter-actions/node_modules ] || [ ! -w tree-sitter-actions ] ||
     (cd tree-sitter-actions && npm ci --no-audit --no-fund --loglevel=error)
