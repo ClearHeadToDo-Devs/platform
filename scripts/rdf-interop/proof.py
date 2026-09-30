@@ -13,9 +13,11 @@ files *unchanged*, asserting the representative facts survive the round trip.
 It is wired into `scripts/validate-pinned`, not `cargo test`: the everyday Rust
 loop stays engine-free, and only the platform composition gate pays for the
 independent engine — which the ontology suite already installs (`ontology/.venv`
-carries rdflib). Run directly with that interpreter:
+carries rdflib). Run directly with that interpreter, naming the binary under
+test (validate-pinned passes the one it built from the pinned revisions):
 
-    ontology/.venv/bin/python scripts/rdf-interop/proof.py
+    CLEARHEAD_BIN=clearhead-core/target/debug/clearhead \
+        ontology/.venv/bin/python scripts/rdf-interop/proof.py
 
 Recorded engine-local behavior:
   * `all-plans.sparql` uses GROUP_CONCAT over an OPTIONAL (possibly unbound)
@@ -28,7 +30,6 @@ Recorded engine-local behavior:
 from __future__ import annotations
 
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -51,14 +52,12 @@ ID_STEP_TWO = "urn:uuid:019f733d-4600-7000-8000-000000000012"
 
 
 def clearhead_binary() -> str:
-    """The installed `clearhead`, or the repo's debug build as a fallback."""
-    found = shutil.which("clearhead")
-    if found:
-        return found
-    built = REPO_ROOT / "clearhead-core" / "target" / "debug" / "clearhead"
-    if built.exists():
-        return str(built)
-    sys.exit("proof: `clearhead` not found on PATH; run scripts/startup first")
+    """The binary under test, named by CLEARHEAD_BIN. No PATH lookup: an
+    installed `clearhead` was built from some other revision."""
+    named = os.environ.get("CLEARHEAD_BIN")
+    if not named or not Path(named).is_file():
+        sys.exit("proof: set CLEARHEAD_BIN to the clearhead binary under test")
+    return named
 
 
 def export_dataset() -> str:

@@ -134,7 +134,10 @@ sessions do not:
   per task and never questioned the hand-written parsing). A blocking finding
   goes to a follow-up work run or a `NEEDS DECISION`.
 - **Land bottom-up**: `scripts/agent-harvest <workspace>`, then
-  `scripts/agent-land <workspace>`, then push.
+  `scripts/agent-land <workspace>`, then push. `agent-land` merges into a
+  candidate clone and runs `.sandbox/gate` on it in the sandbox image; no real
+  branch moves unless the gate passes. A red gate leaves the candidate and
+  `gate.log` in the workspace directory.
 - **Keep the queue decided.** Anything that needs your call comes back as
   `NEEDS DECISION`.
 - **Respect the flow rule** in the agent-sandbox charter: review time is the

@@ -1,0 +1,5 @@
+#!/bin/sh
+# This repo's landing gate. scripts/agent-land runs it on a candidate merge in
+# the sandbox image, after sourcing .sandbox/setup, and advances no branch
+# unless it exits 0.
+exec scripts/validate-pinned

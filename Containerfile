@@ -26,6 +26,13 @@ RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claud
 # so adding it does not rebuild the pacman layer from a newer Arch.
 RUN UV_TOOL_DIR=/opt/uv-tools UV_TOOL_BIN_DIR=/usr/local/bin uv tool install check-jsonschema
 
+# topiary for tree-sitter-actions' formatting tests; not packaged for Arch.
+RUN cargo install --locked --root /usr/local topiary-cli@0.7.3 \
+    && rm -rf /root/.cargo/registry
+
+# Graphviz for clearhead.nvim's graph-view spec, which is pending without it.
+RUN pacman -S --noconfirm --needed graphviz && pacman -Scc --noconfirm
+
 # uid 1000 so `podman run --userns=keep-id` maps the agent onto the host user
 # and its commits in the mounted clone stay owned by that user.
 RUN useradd --create-home --uid 1000 agent \

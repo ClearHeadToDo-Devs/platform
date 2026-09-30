@@ -39,7 +39,17 @@ run_gate() {
 # not duplicate weaker path greps here.
 run_gate tree-sitter-actions
 run_gate clearhead-core
-run_gate clearhead.nvim
+# clearhead.nvim's parser specs run against the pinned grammar, never a parser
+# installed on this machine: build it into a private XDG data directory.
+(
+    nvim_data=$(mktemp -d)
+    trap 'rm -rf "$nvim_data"' EXIT
+    mkdir -p "$nvim_data/nvim/site/parser"
+    (cd "$root/tree-sitter-actions" &&
+        ./node_modules/.bin/tree-sitter build -o "$nvim_data/nvim/site/parser/actions.so")
+    export XDG_DATA_HOME="$nvim_data"
+    run_gate clearhead.nvim
+)
 run_gate ontology
 
 # Specifications owns no runnable gate of its own — it is inert oracle data.
@@ -64,18 +74,23 @@ echo "validate-pinned > CLI index query-output conformance"
         cargo test --features spec-conformance --test spec_conformance
 )
 
+# The pinned CLI, which the checks below run. Never one on PATH: that one was
+# built from some other revision.
+cargo build -q --manifest-path "$root/clearhead-core/crates/clearhead-cli/Cargo.toml"
+clearhead="${CARGO_TARGET_DIR:-$root/clearhead-core/target}/debug/clearhead"
+
 # Engine-independence (rdf-publication external-rdf-proof): export the fixture
 # workspace with the real binary and answer the CLI's saved .sparql in rdflib, a
 # wholly independent SPARQL engine. Proves the publication is standard RDF, not
 # an Oxigraph-shaped artifact. rdflib rides in the ontology venv the ontology
-# gate already provisions; this needs the pinned CLI built, so it runs after it.
+# gate already provisions.
 echo "validate-pinned > RDF publication is engine-independent"
 if test -x "$root/ontology/.venv/bin/python"; then
     proof_python="$root/ontology/.venv/bin/python"
 else
     proof_python=python3
 fi
-"$proof_python" "$root/scripts/rdf-interop/proof.py"
+CLEARHEAD_BIN="$clearhead" "$proof_python" "$root/scripts/rdf-interop/proof.py"
 
 echo "validate-pinned > specifications schema conformance"
 # check-jsonschema comes first: a `jsonschema` on PATH may be python-jsonschema's
@@ -116,17 +131,16 @@ validate_schema "$schema" "$root/specifications/examples/actions/sample.json"
 
 # 2. Implementation conformance: the pinned CLI's canonical projection
 #    (`read actions --format json`) of a real workspace — this repo — conforms.
-cargo build -q --manifest-path "$root/clearhead-core/crates/clearhead-cli/Cargo.toml"
 projection=$(mktemp)
 trap 'rm -f "$projection"' EXIT
-(cd "$root" && "$root/clearhead-core/target/debug/clearhead" read actions --format json) \
+(cd "$root" && "$clearhead" read actions --format json) \
     >"$projection" 2>/dev/null
 validate_schema "$schema" "$projection"
 
 # 3. Charter schema self-consistency and pinned implementation projection.
 charter_schema="$root/specifications/schemas/charters.schema.json"
 validate_schema "$charter_schema" "$root/specifications/examples/charters/sample.json"
-(cd "$root" && "$root/clearhead-core/target/debug/clearhead" read charters --format json) \
+(cd "$root" && "$clearhead" read charters --format json) \
     >"$projection" 2>/dev/null
 validate_schema "$charter_schema" "$projection"
 
