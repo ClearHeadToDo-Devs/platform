@@ -120,12 +120,21 @@ with one verdict line: land, land after fixes, or do not land.
 Whoever launches runs, the human or an interactive agent, owns what the
 sessions do not:
 
-- **Review between work and landing.** Run a review with a different vendor
-  than the worker: two models from one provider share blind spots (on
+- **Start work with the driver, anything else with a prompt.**
+  `scripts/clearhead-work [<action>]` works the queue or one action: one
+  workspace, one session per action. `scripts/agent-run --prompt <file|text>`
+  starts any other session, and `--in <workspace>` puts it in a workspace that
+  already holds work. `scripts/agent-result <workspace>[/<n>] --wait` returns
+  the record as JSON.
+- **Review between work and landing.** A review is a read-only session in the
+  worker's workspace, e.g. `scripts/agent-run --in <workspace> --harness pi
+  --read-only --prompt "Run kind: review. Target: this workspace's branch."`
+  Run it with a different vendor than the worker: two models from one provider share blind spots (on
   2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
   per task and never questioned the hand-written parsing). A blocking finding
   goes to a follow-up work run or a `NEEDS DECISION`.
-- **Land bottom-up** with `scripts/agent-land <id>`, then push.
+- **Land bottom-up**: `scripts/agent-harvest <workspace>`, then
+  `scripts/agent-land <workspace>`, then push.
 - **Keep the queue decided.** Anything that needs your call comes back as
   `NEEDS DECISION`.
 - **Respect the flow rule** in the agent-sandbox charter: review time is the

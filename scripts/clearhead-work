@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# The ClearHead driver for the agent sandbox: turns actions into work sessions.
+# Everything ClearHead-specific about sandboxed work lives here and in
+# .sandbox/; the runner (scripts/agent-*) only knows prompts.
+#
+#   scripts/clearhead-work             work the unscheduled queue
+#   scripts/clearhead-work <action>    work just that action
+#
+# One workspace, one session per action (.sandbox/work-prompt.md), so each
+# action builds on the ones before it and the queue lands as one branch. The
+# queue is re-read from the workspace's clone after every session, and each
+# action is attempted at most once. Every outcome is acceptable: it is the
+# action's real state in the clone afterwards — completed, blocked (NEEDS
+# DECISION) or unfinished — whatever the session's own ending was. The runner's
+# records never mention actions, so the pairing is kept in the workspace as
+# clearhead-work.json: [{session, action, outcome}].
+#
+# The queue stops when nothing untried is queued, or at a limit:
+#   AGENT_MAX_ACTIONS   sessions per queue         (default 10)
+#   AGENT_RUN_USD       spend cap for the queue    (default 15)
+#   AGENT_SESSION_USD   spend cap per session      (default 3, the runner's)
+# AGENT_HARNESS and the model variables choose the agent, as for agent-run.
+# Reads the queue and the outcomes with the clearhead on PATH.
+set -eu
+
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+. "$root/scripts/lib/agent-runs.sh"
+max=${AGENT_MAX_ACTIONS:-10}
+run_usd=${AGENT_RUN_USD:-15}
+
+ws=$("$root/scripts/agent-new")
+dir="$(runs_dir)/$ws"
+ledger="$dir/clearhead-work.json"
+echo '[]' >"$ledger"
+tried="$dir/clearhead-work.tried"
+: >"$tried"
+
+in_clone() { (cd "$dir/work" && "$@"); }
+
+queue() {
+    in_clone clearhead query index unscheduled --format ids 2>/dev/null
+}
+
+outcome() { # <action>
+    state=$(in_clone clearhead read actions --format json 2>/dev/null |
+        jq -r --arg id "${1#urn:uuid:}" '.actions[] | select(.id == $id or .alias == $id) | .state' | head -n 1) || true
+    case "$state" in
+        completed) echo completed ;;
+        blocked) echo blocked ;;
+        *) echo unfinished ;;
+    esac
+}
+
+work() { # <action>
+    echo "$1" >>"$tried"
+    echo "clearhead-work > $1"
+    sed "s|{{ACTION}}|$1|g" "$root/.sandbox/work-prompt.md" >"$dir/clearhead-work.prompt"
+    ref=$("$root/scripts/agent-run" --in "$ws" --label "${1#urn:uuid:}" \
+        --prompt "$dir/clearhead-work.prompt" --wait) || true
+    [ -n "$ref" ] || { echo "clearhead-work > the session did not start" >&2; exit 1; }
+    result=$(outcome "$1")
+    jq --argjson n "${ref#*/}" --arg a "$1" --arg o "$result" '. + [{session: $n, action: $a, outcome: $o}]' \
+        "$ledger" >"$ledger.tmp" && mv "$ledger.tmp" "$ledger"
+    echo "clearhead-work > $result, \$$(jq -r .cost_usd "$dir/sessions/${ref#*/}.json")"
+}
+
+finish() {
+    echo "clearhead-work > $1; harvest with: scripts/agent-harvest $ws"
+    exit 0
+}
+
+if [ $# -gt 0 ]; then
+    work "$1"
+    finish "done"
+fi
+
+n=0
+while [ "$n" -lt "$max" ]; do
+    spent=$(workspace_json "$dir" | jq '[.sessions[]?.cost_usd // 0] | add // 0')
+    jq -n -e --argjson spent "$spent" --argjson cap "$run_usd" '$spent >= $cap' >/dev/null &&
+        finish "spent \$$spent of AGENT_RUN_USD=$run_usd"
+    action=$(queue | grep -vxF -f "$tried" | head -n 1 || true)
+    [ -n "$action" ] || finish "no untried actions queued"
+    n=$((n + 1))
+    work "$action"
+done
+finish "reached AGENT_MAX_ACTIONS=$max"
