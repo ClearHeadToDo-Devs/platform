@@ -15,11 +15,7 @@ RUN printf '%s\n' 'Server=https://archive.archlinux.org/repos/2026/09/25/$repo/o
         neovim lua51 luarocks \
     && pacman -Scc --noconfirm
 
-# Claude Code's postinstall links its native binary. npm blocks dependency
-# lifecycle scripts by default, so approve only this package explicitly.
-RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code \
-    && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.85.1 \
-    && luarocks --lua-version=5.1 install busted \
+RUN luarocks --lua-version=5.1 install busted \
     && luarocks --lua-version=5.1 install nlua
 
 # check-jsonschema for scripts/validate-pinned, isolated by uv. Its own layer
@@ -32,6 +28,13 @@ RUN cargo install --locked --root /usr/local topiary-cli@0.7.3 \
 
 # Graphviz for clearhead.nvim's graph-view spec, which is pending without it.
 RUN pacman -S --noconfirm --needed graphviz && pacman -Scc --noconfirm
+
+# The agent harnesses, after the toolchain so a version bump rebuilds only this (and the
+# layer the runner will own once it leaves this repo). Claude Code's
+# postinstall links its native binary; npm blocks dependency lifecycle scripts
+# by default, so approve only that package. pi's pin fixes its model list.
+RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code \
+    && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.99.2
 
 # uid 1000 so `podman run --userns=keep-id` maps the agent onto the host user
 # and its commits in the mounted clone stay owned by that user.
