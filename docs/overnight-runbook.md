@@ -103,7 +103,7 @@ changed, with commits. Do not restate it elsewhere.
 
 ## Fix run
 
-Target: the review session named in the prompt. The prompt contains its verdict,
+Target: the review session or review file named in the prompt. The prompt contains its verdict,
 findings as JSON, and an optional note carrying the human's or orchestrator's
 decisions and answers. No ClearHead action is required.
 
@@ -111,18 +111,9 @@ decisions and answers. No ClearHead action is required.
   Stay inside those findings and the note; do not invent decisions the note
   does not make. If a decision is missing, decline that finding with the
   question and options needed to proceed.
-- Run `clearhead doctor` before and after when the repo has ClearHead data;
-  any new warning or violation is a failure. In this repo, run
-  `sh scripts/gate.sh` in `clearhead-core` before every commit you keep, checking
-  its own exit code. Allow one retry only for an apparently flaky failure;
-  otherwise stop. Never weaken tests or bypass the gate. Commit no half-done
-  work and never push.
-- Prefer a vetted dependency over a custom parser, validator or format handler;
-  confirm new core dependencies with `scripts/wasm-dependency-gate.sh`.
-  Resolve design concerns with a fix or decline the finding for a decision.
-- Do not spawn a reviewer. End every commit message with
-  `Agent: <model>/<run id>`. Name any new dependencies in the closing message;
-  if a Containerfile changed, state that the image build is unverified.
+- Follow the rules for every run above. The Work run's gate, dependency,
+  design-concern, no-review and provenance rules also apply, including its
+  Containerfile and closing-message requirements. Commit no half-done work.
 - A fix does not reconcile a finding. The human does that after checking it;
   do not change the review record or mark findings reconciled.
 
@@ -193,7 +184,10 @@ sessions do not:
   --read-only --prompt "Run kind: review. Target: this workspace's branch."`
   Run it with a different vendor than the worker: two models from one provider share blind spots (on
   2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
-  per task and never questioned the hand-written parsing). A blocking finding
+  per task and never questioned the hand-written parsing). An orchestrator's
+  review can instead be supplied to `agent-fix` with `--review <file>`: one JSON
+  report in the same shape as a review session's report, used instead of the
+  session's review. A blocking finding
   goes to `scripts/agent-fix <workspace>[/<n>] [--harness claude|pi]
   [--model id] [--note <file|text>] [--wait]`, or a `NEEDS DECISION`.
   With no session number, `agent-fix` uses the latest read-only session with
