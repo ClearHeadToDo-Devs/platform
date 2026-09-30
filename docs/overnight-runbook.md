@@ -198,6 +198,7 @@ sessions do not:
   candidate clone and runs `.sandbox/gate` on it in the sandbox image; no real
   branch moves unless the gate passes. A red gate leaves the candidate and
   `gate.log` in the workspace directory.
+- **Record the human’s landing verdict:** `scripts/agent-verdict <workspace> [--agree] [--overrule <text>]... [--missed <text>]... [--note <text>]`; an orchestrator may record it on the human’s word.
 - **Keep the queue decided.** Anything that needs your call comes back as
   `NEEDS DECISION`.
 - **Respect the flow rule** in the agent-sandbox charter: review time is the
