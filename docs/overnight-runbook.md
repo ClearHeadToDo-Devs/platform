@@ -185,9 +185,12 @@ sessions do not:
   Run it with a different vendor than the worker: two models from one provider share blind spots (on
   2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
   per task and never questioned the hand-written parsing). An orchestrator's
-  review can instead be supplied to `agent-fix` with `--review <file>`: one JSON
-  report in the same shape as a review session's report, used instead of the
-  session's review. A blocking finding
+  review can instead be supplied to `agent-fix` with
+  `--review <file> --reviewer <name>`: one JSON report in the same shape as a
+  review session's report, used instead of the session's review. The reviewer
+  name is required; a session number cannot be combined with `--review`.
+  Each supplied report is retained in `reviews/` with its reviewer for
+  calibration, harvest summaries and landing advisories. A blocking finding
   goes to `scripts/agent-fix <workspace>[/<n>] [--harness claude|pi]
   [--model id] [--note <file|text>] [--wait]`, or a `NEEDS DECISION`.
   With no session number, `agent-fix` uses the latest read-only session with
