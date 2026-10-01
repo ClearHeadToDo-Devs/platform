@@ -6,11 +6,19 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** September 18th 2026 **Status:** Living Document
+**Last Updated:** September 30th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 42: Shapes Belong to the Specification, Meaning to the Ontology
+
+Decided 2026-09-30. SHACL shapes and the JSON-LD context are a data contract, so they live in `specifications/schemas` beside the JSON schemas. The ontology repository holds only meaning (its own decisions are in `ontology/docs/DECISIONS.md`). Core implements the projection and tests its output against the specification's shapes, as it already does for the JSON schemas.
+
+**Alternatives rejected:** shapes in the ontology (other users of the ontology may want different shapes, and the ontology would own a data contract); shapes in the CLI (the implementation would become the authority, leaving a second implementation nothing to conform to).
+
+**Trade-off accepted:** a change of meaning can need edits in two repositories, the ontology and the specification's shapes, landed in that order.
 
 ## Decision 41: Agents Navigate Code Through One Shared, Read-Only Language Server
 

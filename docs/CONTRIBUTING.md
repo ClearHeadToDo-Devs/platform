@@ -44,6 +44,7 @@ already begun to disagree. The rule:
 
 Consequences worth stating plainly:
 
+- **Ask whether it should outlive the work.** Charters, actions and their logs are working memory: useful while the work runs, and archived when it ends. Anything meant to outlive the work (a decision, a durable fact, a design that others will build on) goes in `docs/`, which is evergreen. A design note written during a charter is distilled into decisions and reference docs before the charter closes.
 - **A decision lives in the smallest repo that must change to honor it.** If
   only one repo's code is bound by it, it goes in that repo's
   `docs/DECISIONS.md`. The platform's [`DECISIONS.md`](DECISIONS.md) keeps what
