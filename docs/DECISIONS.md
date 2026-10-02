@@ -12,6 +12,18 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 44: The Graph Holds the Work, Not Where It Is Kept
+
+Decided 2026-10-01 by the human, while drafting the mapping in `specifications/ontology.md`.
+
+- **No storage facts in the graph.** File paths, line numbers, workspace roots and calendar identifiers (`UID`, `RECURRENCE-ID`) describe a copy, not the work, and another backend (a future SQLite one) would have none. Queries return identities; a client that needs a location asks the CLI, which reads storage, for many identities in one call. The workspace's identity stays, as its named graph.
+- **Record metadata is Dublin Core annotations.** A description and a created time are `dcterms:description` and `dcterms:created` as annotation properties, the way CCO annotates its own terms: no nodes, nothing for a reasoner to act on, nothing minted.
+- **Recurrence is a repeating time condition.** A recurring action's rule is RFC 5545 `RRULE` text on its time condition, owned by the specification. No BFO-family ontology structures recurrence rules; schema.org `Schedule` and the W3C RDF Calendar vocabulary do, outside it.
+
+**Alternatives rejected:** a ClearHead `ws:` vocabulary for locators (implementation detail in the meaning layer); CCO patterns for descriptions and created times (several nodes per action for facts no question reasons over); the structured `ical:rrule` form (a second vocabulary and an RRULE parser in every projection).
+
+**Trade-off accepted:** clients make a second call for locations; a query cannot tell a recurring condition from a one-off one except by its text (revisit if a question must reason inside a rule).
+
 ## Decision 43: Core Emits the Grounded Ontology
 
 Decided 2026-10-01 by the human. The specification represents the domain exactly as the ontology grounds it (`ontology/docs/domain.md`): CCO v2.2 and IAO terms, nothing of ClearHead's own. Core is the adherent that matters: it projects every workspace straight to that graph, and that projection is the core code change. The specification states the mapping from each DSL, charter and objective field to its pattern, with SHACL shapes for the output (Decision 42); the CLI's saved queries move to the new graph with their row shapes unchanged; the v4 namespace is retired.
