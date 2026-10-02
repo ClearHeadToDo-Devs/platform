@@ -12,13 +12,33 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 47: A Date Means Any Time That Day
+
+Decided 2026-10-02 by the human. A bound written as a date, without a time, covers the whole day, as a calendar's all-day event does: `@2026-10-05` is "not before the start of the 5th", `:2026-10-05` is "by the end of the 5th". A datetime bound is that instant. The DSL needs no new syntax; a date and a datetime are already told apart as written.
+
+**Consequence for calendar sync:** a date-only `@` places an all-day event; a duration on it stays on the action, since RFC 5545 sizes a date-valued start only in whole days.
+
+**Alternatives rejected:** a date as midnight (makes `:2026-10-05` due at the day's first instant, which no one means).
+
+## Decision 46: Duration Is How Long the Work Takes, Not When
+
+Decided 2026-10-02 by the human, while settling the time model for the application vocabulary. Until now the grammar bound `D` to a date (`@… D60`, also `:… D60`), lint E001 refused a duration without a do-date, and the spec's field order omitted `D`.
+
+- **Duration is an action field of its own**: the expected length of the work in minutes, meaningful with or without a date ("what fits in thirty minutes?"). Minutes, as the grammar, schema and Core already have it; not ISO 8601 durations. Its sigil is `|` (`|30`), chosen by the human: `D` could stand only inside a date token, because a sigil character cannot appear unescaped in a title and the letter D must; `|` appeared in none of 303 real titles outside a link.
+- **Calendar sync places it at the do-time.** With both `@` and `D`, the calendar block starts at `@` and lasts `D`. Without `@`, nothing is placed; the duration stays in the action.
+- **`@` keeps its meaning, not before.** The calendar is where a sized action is placed, not a change in what `@` says. Whether a plan is an appointment (VEVENT) or a task (VTODO) stays with the plan's codec until a query needs it.
+
+**Alternatives rejected:** duration as the length of the do-time's slot (no way to size undated work); ISO 8601 durations in the DSL (a second syntax for what every implementation already reads as minutes).
+
+**Trade-off accepted:** E001 retires, and a line that wrote `:… D60` meaning a block ending at the deadline now means only "takes an hour".
+
 ## Decision 45: The Application Vocabulary Is the Graph; CCO Is Its Meaning
 
 Decided 2026-10-02 by the human, after a spike rewrote three real queries (for-human, agenda, unscheduled) three ways with identical answers: today's v4, raw CCO, and a CCO-derived convenience view. Lines without comments, v4 / CCO / view: 12/27/6, 48/55/17, 50/53/17. Supersedes Decision 43's "Core emits the grounded ontology directly" and, for the application graph only, Decision 44's "no storage facts".
 
-- **Core publishes a ClearHead application vocabulary**, under a fresh name, owned by the specification beside the JSON schemas and SHACL shapes. It is what people, agents and saved queries query, and what `export` writes by default. It is coupled to our specifications and decisions on purpose, file and line included; if another backend arrives, those properties become optional.
+- **Core publishes a ClearHead application vocabulary**, `app:` (`https://clearhead.us/vocab/app/v1#`, named by the human the same day; it absorbs the retired `ws:` terms), owned by the specification beside the JSON schemas and SHACL shapes. It is what people, agents and saved queries query, and what `export` writes by default. It is coupled to our specifications and decisions on purpose, file and line included; if another backend arrives, those properties become optional.
 - **The ontology is the mapping.** Each application term is defined by a SPARQL CONSTRUCT from it to CCO v2.2 and IAO terms, kept in the ontology repository; the mapping is the term's meaning, and an application term asserts nothing its mapping does not. The mapping stays whatever else changes: it is the vocabulary's meaning and, through the fixture, its test. A CCO export, by contrast, is only a feature: the application graph is the default, and nothing exports CCO until someone needs it (the mapping run over an export is one SPARQL call). Such an export carries no storage facts.
-- **The specification's fixture is the contract between the two.** A workspace projects to an expected application graph; mapping that graph yields exactly the CCO `expected.ttl`, which passes the CCO shapes, reasons consistent under HermiT and passes the ontology's verify rules.
+- **The specification's fixture is the contract between the two.** A workspace projects to an expected application graph; mapping that graph yields exactly the CCO `expected.ttl`, which passes the CCO shapes, reasons consistent under HermiT and passes the ontology's verify rules. Every application term must appear in the mapping, so none exists without a meaning.
 
 **Alternatives rejected:** CCO as the queried graph (correct but unreadable: opaque IRIs, two kinds of state record per action, every closed-check repeated); a CCO-derived view (the spike's shape, but generated from the meaning rather than the other way round, so Core would emit 178 triples to publish 53).
 
