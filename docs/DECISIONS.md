@@ -6,11 +6,22 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** September 30th 2026 **Status:** Living Document
+**Last Updated:** October 1st 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 43: Core Emits the Grounded Ontology
+
+Decided 2026-10-01 by the human. The specification represents the domain exactly as the ontology grounds it (`ontology/docs/domain.md`): CCO v2.2 and IAO terms, nothing of ClearHead's own. Core is the adherent that matters: it projects every workspace straight to that graph, and that projection is the core code change. The specification states the mapping from each DSL, charter and objective field to its pattern, with SHACL shapes for the output (Decision 42); the CLI's saved queries move to the new graph with their row shapes unchanged; the v4 namespace is retired.
+
+- A plus-tag is a context: a condition on where, with what or by whom an action can be done. The set is open; any tag the user writes is a context. Areas of focus are not contexts (they may become their own document type; that is undecided).
+- A plan's objective is an objective file. A charter names its objectives in frontmatter, and `init` seeds the root charter an objective file. A charter with none is a gap `doctor` reports, never a refusal to load.
+
+**Alternatives rejected:** a compact ClearHead graph plus a published mapping to the standard terms (mints a vocabulary, against ontology Decision 1, and leaves two graphs to keep in sync); RDF only as an export, with queries answered from the domain model (gives up meaning in data); a charter's "Done when" counting as its objective (the human: the objective is a file); topic tags beside contexts.
+
+**Trade-off accepted:** the graph is wordy (an action with a priority, a context and an energy is about a dozen triples) and saved queries grow to match. The JSON-LD context stops being a contract, since it cannot create the extra nodes; JSON-LD is serialized from the graph instead.
 
 ## Decision 42: Shapes Belong to the Specification, Meaning to the Ontology
 
