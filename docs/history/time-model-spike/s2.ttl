@@ -1,0 +1,48 @@
+@prefix app: <https://clearhead.us/vocab/app/v1#> .
+<urn:example:A> a app:Action ; app:name "A" ; app:status "not started" .
+<urn:example:A> app:due "2026-10-05"^^<http://www.w3.org/2001/XMLSchema#date> .
+<urn:example:A> app:lateFrom "2026-10-06T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:B> a app:Action ; app:name "B" ; app:status "not started" .
+<urn:example:B> app:due "2026-10-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+<urn:example:B> app:lateFrom "2026-10-05T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:C> a app:Action ; app:name "C" ; app:status "not started" .
+<urn:example:C> app:due "2026-10-05T12:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:C> app:lateFrom "2026-10-05T12:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:D> a app:Action ; app:name "D" ; app:status "not started" .
+<urn:example:D> app:due "2026-10-05T20:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:D> app:lateFrom "2026-10-05T20:00:00+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:E> a app:Action ; app:name "E" ; app:status "not started" .
+<urn:example:E> app:due "2026-10-05T23:00:00+09:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:E> app:lateFrom "2026-10-05T23:00:00+09:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:X> a app:Action ; app:name "X" ; app:status "not started" .
+<urn:example:X> app:due "2026-10-06T01:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:X> app:lateFrom "2026-10-06T01:00:00+00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:F> a app:Action ; app:name "F" ; app:status "not started" .
+<urn:example:F> app:start "2026-10-06"^^<http://www.w3.org/2001/XMLSchema#date> .
+<urn:example:F> app:notBefore "2026-10-06T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:G> a app:Action ; app:name "G" ; app:status "not started" .
+<urn:example:G> app:minutes 30 .
+<urn:example:G> app:start "2026-10-05T15:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:G> app:notBefore "2026-10-05T15:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:H> a app:Action ; app:name "H" ; app:status "not started" .
+<urn:example:H> app:minutes 20 .
+<urn:example:H> app:start "2026-10-05"^^<http://www.w3.org/2001/XMLSchema#date> .
+<urn:example:H> app:notBefore "2026-10-05T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:H> app:due "2026-10-05"^^<http://www.w3.org/2001/XMLSchema#date> .
+<urn:example:H> app:lateFrom "2026-10-06T00:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:I> a app:Action ; app:name "I" ; app:status "not started" .
+<urn:example:I> app:minutes 45 .
+<urn:example:J> a app:Action ; app:name "J" ; app:status "not started" .
+<urn:example:J> app:minutes 15 .
+<urn:example:K> a app:Action ; app:name "K" ; app:status "not started" .
+<urn:example:K> app:minutes 30 .
+<urn:example:K> app:start "2026-10-05T14:00:00-04:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:K> app:notBefore "2026-10-05T14:00:00-04:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:Y> a app:Action ; app:name "Y" ; app:status "not started" .
+<urn:example:Y> app:minutes 10 .
+<urn:example:Y> app:start "2026-10-05T16:00:00+02:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:Y> app:notBefore "2026-10-05T16:00:00+02:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:M> a app:Action ; app:name "M" ; app:status "not started" .
+<urn:example:M> app:minutes 30 .
+<urn:example:M> app:start "2026-10-05T09:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<urn:example:M> app:notBefore "2026-10-05T09:00:00-07:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

@@ -1,0 +1,14 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open actions already late.
+# Times as written: a date is late the day after; a floating time takes the viewer's offset.
+SELECT ?name WHERE {
+  BIND("2026-10-05" AS ?today)
+  BIND("-07:00" AS ?offset)
+  BIND("2026-10-05T14:30:00-07:00"^^xsd:dateTime AS ?now)
+  ?action app:name ?name ; app:status ?status ; app:due ?due .
+  FILTER(?status IN ("not started", "in progress"))
+  BIND(IF(TZ(?due) = "", xsd:dateTime(CONCAT(STR(?due), ?offset)), ?due) AS ?at)
+  FILTER(IF(DATATYPE(?due) = xsd:date, STR(?due) < ?today, ?at <= ?now))
+}

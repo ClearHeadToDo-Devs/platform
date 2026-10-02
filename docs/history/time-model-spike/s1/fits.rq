@@ -1,0 +1,18 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open actions that can start now and take 30 minutes or less.
+# Times as written: a date starts at the day's start; a floating time takes the viewer's offset.
+SELECT ?name WHERE {
+  BIND("2026-10-05" AS ?today)
+  BIND("-07:00" AS ?offset)
+  BIND("2026-10-05T14:30:00-07:00"^^xsd:dateTime AS ?now)
+  ?action app:name ?name ; app:status ?status ; app:minutes ?minutes .
+  FILTER(?status IN ("not started", "in progress"))
+  FILTER(?minutes <= 30)
+  FILTER NOT EXISTS {
+    ?action app:start ?start .
+    BIND(IF(TZ(?start) = "", xsd:dateTime(CONCAT(STR(?start), ?offset)), ?start) AS ?at)
+    FILTER(IF(DATATYPE(?start) = xsd:date, STR(?start) > ?today, ?at > ?now))
+  }
+}

@@ -18,7 +18,9 @@ Decided 2026-10-02 by the human. A bound written as a date, without a time, cove
 
 **Consequence for calendar sync:** a date-only `@` places an all-day event; a duration on it stays on the action, since RFC 5545 sizes a date-valued start only in whole days.
 
-**Alternatives rejected:** a date as midnight (makes `:2026-10-05` due at the day's first instant, which no one means).
+**In the application graph** (accepted by the human after the [time-model spike](history/time-model-spike/README.md)): a bound keeps its written value and gains the instant it means, which the projection resolves in the viewer's zone with the time-zone database. `notBefore` is the first allowed instant; `lateFrom` is the first late one, a date's next midnight. Queries compare instants only; SPARQL has no time-zone database, and the spike's as-written queries already disagreed between Oxigraph and rdflib. This is the application vocabulary doing its job: it may carry derived terms that represent the application precisely, provided each is computed from the files plus the viewer's context, never written back, and mapped to CCO like any other term. An export resolves floating times in the exporter's zone and should say which.
+
+**Alternatives rejected:** a date as midnight (makes `:2026-10-05` due at the day's first instant, which no one means); times as written only (every query branches on datatype and zone, and engines diverge).
 
 ## Decision 46: Duration Is How Long the Work Takes, Not When
 

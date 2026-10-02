@@ -1,0 +1,10 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open actions already late.
+SELECT ?name WHERE {
+  BIND("2026-10-05T14:30:00-07:00"^^xsd:dateTime AS ?now)
+  ?action app:name ?name ; app:status ?status ; app:lateFrom ?late .
+  FILTER(?status IN ("not started", "in progress"))
+  FILTER(?late <= ?now)
+}

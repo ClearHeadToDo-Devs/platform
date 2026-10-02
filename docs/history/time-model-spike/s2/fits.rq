@@ -1,0 +1,11 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open actions that can start now and take 30 minutes or less.
+SELECT ?name WHERE {
+  BIND("2026-10-05T14:30:00-07:00"^^xsd:dateTime AS ?now)
+  ?action app:name ?name ; app:status ?status ; app:minutes ?minutes .
+  FILTER(?status IN ("not started", "in progress"))
+  FILTER(?minutes <= 30)
+  FILTER NOT EXISTS { ?action app:notBefore ?start FILTER(?start > ?now) }
+}

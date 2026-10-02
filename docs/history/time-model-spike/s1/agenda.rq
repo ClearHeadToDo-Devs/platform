@@ -1,0 +1,15 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open actions that start today or earlier, or are due by the end of today.
+# Times as written: a date compares as a day; a floating time takes the viewer's offset.
+SELECT DISTINCT ?name WHERE {
+  BIND("2026-10-05" AS ?today)
+  BIND("-07:00" AS ?offset)
+  BIND("2026-10-06T00:00:00-07:00"^^xsd:dateTime AS ?endOfToday)
+  ?action app:name ?name ; app:status ?status .
+  FILTER(?status IN ("not started", "in progress"))
+  { ?action app:start ?when } UNION { ?action app:due ?when }
+  BIND(IF(TZ(?when) = "", xsd:dateTime(CONCAT(STR(?when), ?offset)), ?when) AS ?at)
+  FILTER(IF(DATATYPE(?when) = xsd:date, STR(?when) <= ?today, ?at < ?endOfToday))
+}
