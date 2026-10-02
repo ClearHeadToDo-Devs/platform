@@ -159,4 +159,10 @@ validate_schema "$charter_schema" "$root/specifications/examples/charters/sample
     >"$projection" 2>/dev/null
 validate_schema "$charter_schema" "$projection"
 
+# 4. Graph shapes (platform Decisions 42-44): the spec's expected graph
+#    conforms to its SHACL shapes and reasons consistent with the ontology;
+#    each invalid graph fails on exactly the shape it names.
+echo "validate-pinned > graph shapes and fixture"
+uv run --quiet --with pyshacl==0.40.1 python "$root/scripts/check-graph-shapes.py"
+
 echo "validate-pinned > all repository-owned checks passed"
