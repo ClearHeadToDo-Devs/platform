@@ -3,7 +3,7 @@ id: 01a0faa1-ca17-72a9-8a6b-f05b6bd6dbd3
 alias: emit-the-ontology
 parent: platform
 objectives: [data-integration]
-state: New
+state: Active
 ---
 # Emit the Grounded Ontology
 
