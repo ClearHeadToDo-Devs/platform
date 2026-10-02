@@ -1,0 +1,16 @@
+PREFIX app: <https://clearhead.us/vocab/app/v1#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open, undated actions under fully active charters, with nothing left to
+# wait on and no open children.
+SELECT ?id ?name ?state ?priority WHERE {
+  ?id a app:Action ; rdfs:label ?name ; app:state ?state .
+  FILTER(?state IN (app:NotStarted, app:InProgress))
+  FILTER NOT EXISTS { ?id app:partOf+ ?charter . ?charter a app:Charter ; app:state ?charter_state . FILTER(?charter_state != app:Active) }
+  FILTER NOT EXISTS { ?id app:notBefore|app:lateFrom ?bound }
+  FILTER NOT EXISTS { ?id app:waitsOn/app:state ?wait_state . FILTER(?wait_state NOT IN (app:Completed, app:Cancelled)) }
+  FILTER NOT EXISTS { ?child app:partOf ?id ; app:state ?child_state . FILTER(?child_state NOT IN (app:Completed, app:Cancelled)) }
+  OPTIONAL { ?id app:priority ?priority }
+}
+ORDER BY ?state COALESCE(?priority, 99) ?name

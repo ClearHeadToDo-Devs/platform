@@ -101,7 +101,7 @@ def action(owner, label, *more):
 
 eat, keep = u("0000000000b0"), u("0000000000b1")
 home, groc = u("0000000000c0"), u("0000000000c1")
-a = {k: u(f"0000000000{k}") for k in ("01", "02", "03", "04", "05", "10", "11", "12", "13")}
+a = {k: u(f"0000000000{k}") for k in ("01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "10", "11", "12", "13")}
 
 block("Objective: eat well (objectives/eat-well.md)",
       f"{iri(eat)} a cco:ont00000476 ; rdfs:label \"Eat well\" ;",
@@ -117,7 +117,7 @@ block("Charter: home, the root (charters/README.md)",
       f"{iri(home)} a cco:ont00000974 ; rdfs:label \"Run the household\" ;",
       '    dcterms:description "Everything that keeps the house going." ;',
       f"    obo:BFO_0000178 {iri(eat)} , {iri(groc)} ,",
-      "        " + " , ".join(iri(a[k]) for k in ("01", "02", "03", "04", "05")) + " .",
+      "        " + " , ".join(iri(a[k]) for k in ("01", "02", "03", "04", "05", "06", "08")) + " .",
       *alias(home, "home"), *state(home, "active"))
 block("Charter: groceries (charters/groceries.md)",
       f"{iri(groc)} a cco:ont00000974 ; rdfs:label \"Groceries\" ;",
@@ -153,6 +153,20 @@ block("[ ] Fix the fence: not started (no act), a context and a predecessor",
       *action(o, "Fix the fence"),
       *condition(o, "when/context/home", describes=ctx("home")),
       *condition(o, f"when/after/{a['04']}", describes=iri(a["04"])))
+o = a["06"]
+block("[ ] Paint the shed: a predecessor its child inherits (in the application graph)",
+      *action(o, "Paint the shed", f" ;\n    obo:BFO_0000178 {iri(a['07'])}"),
+      *condition(o, f"when/after/{a['04']}", describes=iri(a["04"])))
+block("Its child: nothing of its own; inheritance is not stated here",
+      *action(a["07"], "Buy paint"))
+o = a["08"]
+block("[ ] Plan the party: a due date one child narrows and one inherits",
+      *action(o, "Plan the party", f" ;\n    obo:BFO_0000178 {iri(a['09'])} , {iri(a['0a'])}"),
+      *condition(o, "when/due", value=date("2026-10-04")))
+block("Its children: an earlier due of its own, and none",
+      *action(a["09"], "Send invites"),
+      *condition(a["09"], "when/due", value=date("2026-10-03")),
+      *action(a["0a"], "Bake the cake"))
 o = a["10"]
 block("[ ] Weekly shop ~: sequential parent; the marker itself is not emitted",
       *action(o, "Weekly shop", f" ;\n    obo:BFO_0000178 {iri(a['11'])} , {iri(a['12'])}"),
