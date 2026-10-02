@@ -2,7 +2,7 @@
 id: 01a0f48f-3fd6-70c5-84c3-18f297a41250
 alias: ground-the-ontology
 parent: platform
-state: Active
+state: Closed
 ---
 # Ground the Ontology
 
@@ -28,3 +28,4 @@ Competency questions, then the domain in plain words, then alignment with BFO an
 - 2026-10-01 — Domain grounded on standard terms only (CCO v2.2 + IAO action specification); all eight competency questions answer under the ROBOT gate. Ontology Decisions 1-6, platform Decision 42; ontology d141a85. Left: distill V5_DESIGN.md, then decide spec representation.
 - 2026-10-01 — Charter Active. V5_DESIGN.md distilled into ontology docs/domain.md and retired; README and agent guides describe V5 (ontology b7c438a). Representation decision queued for the human with a recommendation (V5 directly), plus two related choices: what plus-tags mean, and the root objective. Found: Core, the CLI and the for-human query still use v4; the ROBOT gate does not check competency answers; the move action would have carried v4 meaning into the spec, so it now waits on the decision.
 - 2026-10-01 — The human confirmed the representation (platform Decision 43): Core emits V5 directly; a plus-tag is a context, an open set; a plan's objective is an objective file, seeded by init. Implementation planned as [[emit-the-ontology]], which absorbed implement-objectives; the SHACL/context move is cancelled in its favour. Left here: finish the ROBOT gate, then close.
+- 2026-10-01 — Closed. ROBOT gate finished: competency answers checked against expected CSVs, header lint, CI job. Everything in Done when holds; implementation continues in [[emit-the-ontology]].
