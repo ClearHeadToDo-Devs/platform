@@ -6,11 +6,23 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 1st 2026 **Status:** Living Document
+**Last Updated:** October 2nd 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 45: The Application Vocabulary Is the Graph; CCO Is Its Meaning
+
+Decided 2026-10-02 by the human, after a spike rewrote three real queries (for-human, agenda, unscheduled) three ways with identical answers: today's v4, raw CCO, and a CCO-derived convenience view. Lines without comments, v4 / CCO / view: 12/27/6, 48/55/17, 50/53/17. Supersedes Decision 43's "Core emits the grounded ontology directly" and, for the application graph only, Decision 44's "no storage facts".
+
+- **Core publishes a ClearHead application vocabulary**, under a fresh name, owned by the specification beside the JSON schemas and SHACL shapes. It is what people, agents and saved queries query, and what `export` writes by default. It is coupled to our specifications and decisions on purpose, file and line included; if another backend arrives, those properties become optional.
+- **The ontology is the mapping.** Each application term is defined by a SPARQL CONSTRUCT from it to CCO v2.2 and IAO terms, kept in the ontology repository; the mapping is the term's meaning, and an application term asserts nothing its mapping does not. The mapping stays whatever else changes: it is the vocabulary's meaning and, through the fixture, its test. A CCO export, by contrast, is only a feature: the application graph is the default, and nothing exports CCO until someone needs it (the mapping run over an export is one SPARQL call). Such an export carries no storage facts.
+- **The specification's fixture is the contract between the two.** A workspace projects to an expected application graph; mapping that graph yields exactly the CCO `expected.ttl`, which passes the CCO shapes, reasons consistent under HermiT and passes the ontology's verify rules.
+
+**Alternatives rejected:** CCO as the queried graph (correct but unreadable: opaque IRIs, two kinds of state record per action, every closed-check repeated); a CCO-derived view (the spike's shape, but generated from the meaning rather than the other way round, so Core would emit 178 triples to publish 53).
+
+**Trade-off accepted:** ClearHead owns a vocabulary again, bounded by the rule that it means only what its mapping says; the ontology repository now names the specification's term IRIs, so a change to an application term lands in the specification first and its mapping second.
 
 ## Decision 44: The Graph Holds the Work, Not Where It Is Kept
 
