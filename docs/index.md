@@ -31,4 +31,5 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 * [Crate merge and charter identity](history/crate-merge-and-charter-identity.md) — the completed crate merge and charter identity plan (2026-09-18)
 * [Overnight worker — crate merge and charter identity](history/overnight-worker-crate-merge-and-identity.md) — superseded branch-isolated task list (2026-09-18)
 * [Overnight worker — clearhead-core task list](history/overnight-worker-clearhead-core.md) — superseded pre-decided task list (2026-09-18)
+* [Query-surface spike](history/query-surface-spike/README.md) — evidence behind Decision 45, and the generator for the spec fixture's CCO graph (2026-10-02)
 * [RDF publication migration baseline](history/rdf-publication-baseline.md) — archived, pre-migration evidence only

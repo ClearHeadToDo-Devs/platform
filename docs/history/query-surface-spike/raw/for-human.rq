@@ -1,0 +1,37 @@
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX cco: <https://www.commoncoreontologies.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Open actions whose context is "human".
+SELECT ?id ?name ?status ?priority WHERE {
+  ?id a obo:IAO_0000007 ; rdfs:label ?name .
+  # context: a condition whose description describes the "human" context
+  ?when obo:BFO_0000178 ?id , ?condition .
+  ?condition cco:ont00001982 ?context .
+  ?context rdfs:label "human" .
+  # not cancelled
+  FILTER NOT EXISTS { ?cancelled a cco:ont00000293 ; cco:ont00001868 ?id }
+  # not completed: no act of it with a "completed" status
+  FILTER NOT EXISTS {
+    ?act cco:ont00001920 ?id .
+    ?status_record cco:ont00001868 ?act .
+    ?status_bearer obo:BFO_0000101 ?status_record ; cco:ont00001765 "completed" .
+  }
+  # status shown: in progress if an act records it, blocked if it waits outside
+  OPTIONAL {
+    ?act2 cco:ont00001920 ?id .
+    ?s2 cco:ont00001868 ?act2 .
+    ?b2 obo:BFO_0000101 ?s2 ; cco:ont00001765 ?progress .
+  }
+  OPTIONAL {
+    ?wait obo:BFO_0000178 ?id , ?wait_condition .
+    ?wait_bearer obo:BFO_0000101 ?wait_condition ; cco:ont00001765 "waiting" .
+  }
+  BIND(COALESCE(?progress, IF(BOUND(?wait), "blocked", "not started")) AS ?status)
+  # priority: the integer on the bearer of its priority measurement
+  OPTIONAL {
+    ?measurement cco:ont00001811 ?id .
+    ?priority_bearer obo:BFO_0000101 ?measurement ; cco:ont00001773 ?priority .
+  }
+}
+ORDER BY ?priority ?name

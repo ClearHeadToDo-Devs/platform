@@ -1,0 +1,21 @@
+PREFIX v: <https://clearhead.us/view#>
+
+# Open, unblocked actions under fully active charters, with closed
+# predecessors and closed children, scheduled or due by the end of today.
+SELECT DISTINCT ?id ?name ?status ?priority WHERE {
+  ?id a v:Action ; v:name ?name ; v:status ?status ; v:when ?when .
+  FILTER(?status IN ("not started", "in progress"))
+  FILTER(SUBSTR(STR(?when), 1, 10) <= "2026-10-04")
+  FILTER NOT EXISTS { ?id v:partOf+ ?charter . ?charter v:state ?state . FILTER(?state != "active") }
+  FILTER NOT EXISTS {
+    ?id v:partOf* ?gated . ?gated v:after ?predecessor .
+    ?predecessor v:status ?predecessor_status .
+    FILTER(?predecessor_status NOT IN ("completed", "cancelled"))
+  }
+  FILTER NOT EXISTS {
+    ?child v:partOf ?id ; v:status ?child_status .
+    FILTER(?child_status NOT IN ("completed", "cancelled"))
+  }
+  OPTIONAL { ?id v:priority ?priority }
+}
+ORDER BY ?status COALESCE(?priority, 99) ?name

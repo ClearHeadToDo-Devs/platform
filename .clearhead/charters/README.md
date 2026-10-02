@@ -14,18 +14,23 @@ My dream is to build the ClearHead platform out of composable, open, data-driven
 
 We are working through the individual structures such that we are going to be able to make a full platform just by handling individual structures
 
-## Charter Map & Prioritization (2026-09-14)
+## Charter Map & Prioritization (2026-10-02)
 
 Choose the highest-priority open action whose `<` predecessors are closed. Finish bounded active work before promoting another charter. `someday/` charters remain bets rather than backlog; promote one only when its recorded trigger is evidenced.
 
+Refreshed 2026-10-02 by an agent from what the human worked on in the 2026-10-01/02 sessions; the human has not yet confirmed this order.
+
 ### Work streams, in priority order
 
-1. **[[unified-workspace-root]]** — one canonical root-charter layout for project and user workspaces; already specified and sequenced. A predecessor of agent-surface: `orient` projects whatever root shape this settles.
-2. **[[agent-surface]]** — a CLI `orient` command first, then a thin MCP wrapper over the CLI library, then a dogfood verdict on mid-task capture.
-3. **[[support]]** — CLI friction surfaced by real use: query output consistency, charter actions-file creation, ambiguous short ids, ambient capture.
-4. **Objective integration** — first repair objective and charter metadata and define durable identity/resolution semantics; then implement load → charter linkage → graph projection → objective-actions view.
-5. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37); resume when that is scheduled.
-6. **[[deployment]]** — the specification authority and data-workflow gates are satisfied; promote release work when a standalone or edge consumer creates immediate pressure.
+1. **[[emit-the-ontology]]** (Active) — the application vocabulary becomes the graph people query and export, the ontology its mapping to CCO (Decisions 43–45). Next: `scheduled-vs-due`, then `app-vocabulary`, whose name waits on the human.
+2. **[[agent-sandbox]]** (Active) — sandboxed agent sessions; next `sandbox-auto-reconcile`, then extraction to its own repository.
+3. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.
+4. **[[root-next-default]]** (Active) — one open action: resume the homelab calendar sync.
+5. **[[support]]** — CLI friction surfaced by real use.
+6. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37).
+7. **[[deployment]]** — promote release work when a standalone or edge consumer creates immediate pressure.
+
+Closed since the last map: unified-workspace-root, ground-the-ontology. Objective integration was absorbed by emit-the-ontology (implement-objectives cancelled).
 
 ### Settled prerequisites
 
