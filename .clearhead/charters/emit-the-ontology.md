@@ -11,16 +11,20 @@ Core projects every workspace to the ontology's standard terms (CCO v2.2 and IAO
 
 ## Done when
 
-- The specification maps every DSL, charter and objective field to its pattern in the ontology, with SHACL shapes for the output and a fixture (a workspace and its expected graph) that any implementation is checked against.
-- Objectives are in Core's domain model: charters link to objective files, `init` seeds the root charter one, and `doctor` reports a charter with none.
-- Core emits only the new graph. It passes the specification's shapes and is consistent under HermiT with the ontology.
-- Every saved CLI query, and the workspace's own (`for-human`), answers from the new graph with the same rows as before.
-- v4 is gone: namespace constants, Core fixtures, the ontology's `v4/` and its pytest suite; the specification's `ontology.md` points at the ontology's `docs/domain.md`.
+Re-planned 2026-10-02 by Decision 45: the application vocabulary is the graph; CCO is its meaning.
+
+- The specification defines the application vocabulary, with its shapes and the fixture's exact `expected-app.ttl`; `ontology.md` describes the application graph first.
+- The ontology repository maps the application vocabulary to CCO, and the mapping of `expected-app.ttl` is `expected.ttl`, which passes the CCO shapes, HermiT and the verify rules, in the pinned gate.
+- Objectives are in Core's domain model: charters link to objective files, `init` seeds the root objective, and `doctor` reports a charter with none. (Done.)
+- Core emits the application graph and matches `expected-app.ttl`.
+- Every saved CLI query, and the workspace's own (`for-human`), answers from the application graph with the same rows as before.
+- v4 is gone: namespace constants, Core fixtures, the ontology's `v4/` and its pytest suite.
 
 ## Sequence
 
-Specification first (mapping, then shapes and fixture), objectives alongside it; then Core's projection; then the queries; then removing v4. The mapping is where the remaining design lives, so nothing in Core starts before it is settled.
+Fix scheduled versus due in the mapping first, since the application vocabulary will say both and the mapping must not lose the difference. Then the vocabulary, then its mapping, then Core, then the queries, then removing v4.
 
 ## Log
 
 - 2026-10-01 — Created New from ground-the-ontology, once the human confirmed Decision 43. Absorbs implement-objectives: V5 has no plan without an objective, so objectives in the model are a step of this work, not a separate stream.
+- 2026-10-02 — Re-planned by Decision 45 after the query-surface spike (same answers three ways; view queries about a third of v4's length). The application vocabulary becomes the queried, exported graph with file and line; the ontology becomes its mapping to CCO; a CCO export is optional. nvim-locate cancelled. Found a mapping bug: scheduled and due were indistinguishable.

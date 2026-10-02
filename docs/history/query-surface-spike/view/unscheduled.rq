@@ -1,0 +1,25 @@
+PREFIX v: <https://clearhead.us/view#>
+
+# Open, unblocked, undated actions under fully active charters, whose
+# predecessors are closed and whose children are all closed.
+SELECT ?id ?name ?status ?priority WHERE {
+  ?id a v:Action ; v:name ?name ; v:status ?status .
+  FILTER(?status IN ("not started", "in progress"))
+  # every charter containing it is active
+  FILTER NOT EXISTS { ?id v:partOf+ ?charter . ?charter v:state ?state . FILTER(?state != "active") }
+  # no time on it or on any action containing it
+  FILTER NOT EXISTS { ?id v:partOf* ?scope . ?scope v:when ?when }
+  # every predecessor of it, or of an action containing it, is closed
+  FILTER NOT EXISTS {
+    ?id v:partOf* ?gated . ?gated v:after ?predecessor .
+    ?predecessor v:status ?predecessor_status .
+    FILTER(?predecessor_status NOT IN ("completed", "cancelled"))
+  }
+  # every child is closed
+  FILTER NOT EXISTS {
+    ?child v:partOf ?id ; v:status ?child_status .
+    FILTER(?child_status NOT IN ("completed", "cancelled"))
+  }
+  OPTIONAL { ?id v:priority ?priority }
+}
+ORDER BY ?status COALESCE(?priority, 99) ?name

@@ -1,3 +1,6 @@
+---
+id: 01a0fb1a-dd78-7100-a79b-ffa9a1576143
+---
 # Creating a compelling capture workflow
 for allot of our work we are also going to need to make the act of capturing new information as easy as possible while still allowing the process of continued structuring easier in the long run.
 

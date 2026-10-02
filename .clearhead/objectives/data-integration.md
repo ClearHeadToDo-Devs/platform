@@ -1,3 +1,6 @@
+---
+id: 01a0fb1a-dd79-7219-8047-61d7487918ef
+---
 # Data Integration through data rather than API
 
 Another core virtue i desire to structure is how this platform can serve as a root for other existing applications and how we can leverage the connections from this graph into other graphs in such a way that we are able to integrate apps that never though about each other

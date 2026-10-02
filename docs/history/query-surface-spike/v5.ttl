@@ -1,0 +1,116 @@
+# Expected graph for the graph conformance fixture (../ontology.md).
+# The workspace in ./workspace projects to exactly these triples, in the
+# workspace's named graph urn:clearhead:workspace:01a0fb10-0000-7000-8000-000000000000.
+# Helper IRIs are UUIDv5 of owner id and role (Helper node IRIs).
+
+@prefix cco: <https://www.commoncoreontologies.org/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# Objective: eat well (objectives/eat-well.md)
+<urn:uuid:01a0fb10-0000-7000-8000-0000000000b0> a cco:ont00000476 ; rdfs:label "Eat well" ;
+    dcterms:description "Meals at home most days, with food we like." ;
+    obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b1> .
+<urn:uuid:30eabec3-e720-50bb-b4c6-97d17b5409a6> a cco:ont00000003 ; cco:ont00001916 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b0> .
+<urn:uuid:0bb6fb11-4da0-5e90-ac66-690c9640fc64> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:30eabec3-e720-50bb-b4c6-97d17b5409a6> ; cco:ont00001765 "eat-well" .
+
+# Objective: keep food in the house, with one metric (objectives/keep-food.md)
+<urn:uuid:01a0fb10-0000-7000-8000-0000000000b1> a cco:ont00000476 ; rdfs:label "Keep food in the house" .
+<urn:uuid:ec790c9c-93d1-54ec-9edc-683753d36cf9> a cco:ont00000003 ; cco:ont00001916 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b1> .
+<urn:uuid:d54a5022-e961-5123-a3a1-0d4e666af605> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:ec790c9c-93d1-54ec-9edc-683753d36cf9> ; cco:ont00001765 "keep-food" .
+<urn:uuid:295c019b-5793-5d72-82dd-69a32e9e713a> a cco:ont00000853 ; cco:ont00001808 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b1> .
+<urn:uuid:5a92a28e-707f-5851-9909-567068dd30ba> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:295c019b-5793-5d72-82dd-69a32e9e713a> ; cco:ont00001765 "fridge stocked: milk, eggs and vegetables on hand" .
+
+# Charter: home, the root (charters/README.md)
+<urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> a cco:ont00000974 ; rdfs:label "Run the household" ;
+    dcterms:description "Everything that keeps the house going." ;
+    obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b0> , <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> ,
+        <urn:uuid:01a0fb10-0000-7000-8000-000000000001> , <urn:uuid:01a0fb10-0000-7000-8000-000000000002> , <urn:uuid:01a0fb10-0000-7000-8000-000000000003> , <urn:uuid:01a0fb10-0000-7000-8000-000000000004> , <urn:uuid:01a0fb10-0000-7000-8000-000000000005> .
+<urn:uuid:58e83052-7ae6-52cf-b45b-619a5244a98c> a cco:ont00000003 ; cco:ont00001916 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> .
+<urn:uuid:d9c47e94-75f3-5f50-8431-6e7a6a15cc40> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:58e83052-7ae6-52cf-b45b-619a5244a98c> ; cco:ont00001765 "home" .
+<urn:uuid:146d7ad1-fcf6-5701-96ad-3ed6fcf6b311> a cco:ont00000293 ; cco:ont00001868 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> .
+<urn:uuid:dc80a917-c08d-594c-b098-29940606cc90> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:146d7ad1-fcf6-5701-96ad-3ed6fcf6b311> ; cco:ont00001765 "active" .
+
+# Charter: groceries (charters/groceries.md)
+<urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> a cco:ont00000974 ; rdfs:label "Groceries" ;
+    obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-0000000000b1> , <urn:uuid:01a0fb10-0000-7000-8000-000000000010> , <urn:uuid:01a0fb10-0000-7000-8000-000000000013> .
+<urn:uuid:0eb7be97-e0a6-5783-b7ca-b59e7d8d7dba> a cco:ont00000003 ; cco:ont00001916 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> .
+<urn:uuid:49a02d00-89e7-588d-a632-cf20e845ebe5> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:0eb7be97-e0a6-5783-b7ca-b59e7d8d7dba> ; cco:ont00001765 "groceries" .
+<urn:uuid:2ef49470-4820-5937-97f1-7ceabf6ee499> a cco:ont00000293 ; cco:ont00001868 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> .
+<urn:uuid:11780139-5577-509a-a9c1-fe6aef3a8599> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:2ef49470-4820-5937-97f1-7ceabf6ee499> ; cco:ont00001765 "active" .
+
+# [-] Call the plumber: every field
+<urn:uuid:01a0fb10-0000-7000-8000-000000000001> a obo:IAO_0000007 ; rdfs:label "Call the plumber" ;
+    dcterms:description "The kitchen tap drips." ;
+    dcterms:created "2026-10-01T10:00:00"^^xsd:dateTime .
+<urn:uuid:d3d2f5c9-e206-5f67-8658-f93c79746ac5> a cco:ont00000003 ; cco:ont00001916 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> .
+<urn:uuid:dd729f66-96ee-5427-b707-e57ac1a9e852> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:d3d2f5c9-e206-5f67-8658-f93c79746ac5> ; cco:ont00001765 "plumber" .
+<urn:uuid:9f8ce3a1-96cc-5ff1-bf82-4d5797b2f068> a cco:ont00000369 ; cco:ont00001811 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> .
+<urn:uuid:2d3b79f2-3cfd-5d2d-a727-d97fe12d75f8> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:9f8ce3a1-96cc-5ff1-bf82-4d5797b2f068> ; cco:ont00001773 2 .
+<urn:uuid:bffa6615-40e2-5c68-8cc9-2d7a4cdafad3> a cco:ont00001163 ; cco:ont00001808 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> .
+<urn:uuid:83087f9a-4e23-5f76-ac95-08358b2a8b95> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:bffa6615-40e2-5c68-8cc9-2d7a4cdafad3> ; cco:ont00001773 15 ; cco:ont00001863 cco:ont00001667 .
+<urn:uuid:e39242b3-7f56-56dc-99dd-c646ae6e7f0c> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> , <urn:uuid:c9da9a09-9ff2-5e2d-8a2d-69b3f8253b91> .
+<urn:uuid:c9da9a09-9ff2-5e2d-8a2d-69b3f8253b91> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:aa0d0a8e-8a8b-5ef1-b25b-f894935d2d82> .
+<urn:uuid:994a7242-cfda-5ed3-bef3-17e0e4dfbe7c> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> , <urn:uuid:101f7182-b315-500b-a483-c4d56ff20b2c> .
+<urn:uuid:101f7182-b315-500b-a483-c4d56ff20b2c> a cco:ont00000853 .
+<urn:uuid:6f147bd8-89e9-5cd2-920e-d9785f1a7349> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:101f7182-b315-500b-a483-c4d56ff20b2c> ; cco:ont00001767 "2026-10-03T09:00:00"^^xsd:dateTime .
+<urn:uuid:84015f7c-df40-5eaa-ab4a-c86bcd327e4b> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> , <urn:uuid:5979f87e-807c-59d5-ad02-1ad7c58a4e2c> .
+<urn:uuid:5979f87e-807c-59d5-ad02-1ad7c58a4e2c> a cco:ont00000853 .
+<urn:uuid:bbe58783-2db1-563f-9681-912dcb6ca50a> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:5979f87e-807c-59d5-ad02-1ad7c58a4e2c> ; cco:ont00001771 "2026-10-04"^^xsd:date .
+<urn:uuid:ccec58f9-f9fb-5b9e-be7d-fff19c95943b> a cco:ont00000228 ; cco:ont00001920 <urn:uuid:01a0fb10-0000-7000-8000-000000000001> .
+<urn:uuid:001fc803-e9c0-50ad-8f31-9dfd176630ab> a cco:ont00000203 ; cco:ont00001868 <urn:uuid:ccec58f9-f9fb-5b9e-be7d-fff19c95943b> .
+<urn:uuid:949167ff-0fb0-5676-bff8-049b994dcf11> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:001fc803-e9c0-50ad-8f31-9dfd176630ab> ; cco:ont00001765 "in progress" .
+
+# [x] Pay the water bill: completed, with its time
+<urn:uuid:01a0fb10-0000-7000-8000-000000000002> a obo:IAO_0000007 ; rdfs:label "Pay the water bill" .
+<urn:uuid:aafb549c-ef06-54af-a8f2-e590a9b7dca8> a cco:ont00000228 ; cco:ont00001920 <urn:uuid:01a0fb10-0000-7000-8000-000000000002> .
+<urn:uuid:08d3c246-49f9-5b94-a02e-674b1d0a0422> a cco:ont00000203 ; cco:ont00001868 <urn:uuid:aafb549c-ef06-54af-a8f2-e590a9b7dca8> .
+<urn:uuid:db8872ab-6d57-536e-b775-f1ed8adca588> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:08d3c246-49f9-5b94-a02e-674b1d0a0422> ; cco:ont00001765 "completed" ; cco:ont00001767 "2026-09-30T18:00:00"^^xsd:dateTime .
+
+# [_] Renew the magazine: cancelled, with its time
+<urn:uuid:01a0fb10-0000-7000-8000-000000000003> a obo:IAO_0000007 ; rdfs:label "Renew the magazine" .
+<urn:uuid:2e6496ee-2fa4-5ecc-bd29-85cd678d2ddf> a cco:ont00000293 ; cco:ont00001868 <urn:uuid:01a0fb10-0000-7000-8000-000000000003> .
+<urn:uuid:a042a362-af51-56dc-a220-91853055d1c2> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:2e6496ee-2fa4-5ecc-bd29-85cd678d2ddf> ; cco:ont00001765 "cancelled" ; cco:ont00001767 "2026-09-28T08:30:00"^^xsd:dateTime .
+
+# [=] Hear back from the landlord: blocked, waiting on something outside
+<urn:uuid:01a0fb10-0000-7000-8000-000000000004> a obo:IAO_0000007 ; rdfs:label "Hear back from the landlord about the fence" ;
+    dcterms:description "Asked on Monday." .
+<urn:uuid:ebf52c9d-2b60-5fab-9f7f-0d6ee41e2ef3> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000004> , <urn:uuid:64534e94-3829-57b0-91c7-8019da138839> .
+<urn:uuid:64534e94-3829-57b0-91c7-8019da138839> a cco:ont00000853 .
+<urn:uuid:24b9e34d-c940-531a-a8dc-9576c94ae2dc> a cco:ont00000253 ; obo:BFO_0000101 <urn:uuid:64534e94-3829-57b0-91c7-8019da138839> ; cco:ont00001765 "waiting" .
+
+# [ ] Fix the fence: not started (no act), a context and a predecessor
+<urn:uuid:01a0fb10-0000-7000-8000-000000000005> a obo:IAO_0000007 ; rdfs:label "Fix the fence" .
+<urn:uuid:e673e363-8dc9-554e-b77c-b27c3e35f6ef> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000005> , <urn:uuid:c65b619a-fbe4-5d63-a69b-b5f5403240f9> .
+<urn:uuid:c65b619a-fbe4-5d63-a69b-b5f5403240f9> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:0e55438d-0967-5a02-bd80-14ed8b659721> .
+<urn:uuid:5de69601-895f-529e-b41d-a6f9d49ce864> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000005> , <urn:uuid:b5586101-dcb2-56f4-8df9-054e077b89ce> .
+<urn:uuid:b5586101-dcb2-56f4-8df9-054e077b89ce> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:c50941c3-726d-5537-8787-1bdedbf36117> .
+<urn:uuid:651ae113-bbe2-5e37-95b9-dbbef2ef4a8a> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000005> , <urn:uuid:c61b00ee-6f57-56f1-a2eb-d3d36736a5f0> .
+<urn:uuid:c61b00ee-6f57-56f1-a2eb-d3d36736a5f0> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:01a0fb10-0000-7000-8000-000000000004> .
+
+# [ ] Weekly shop ~: sequential parent; the marker itself is not emitted
+<urn:uuid:01a0fb10-0000-7000-8000-000000000010> a obo:IAO_0000007 ; rdfs:label "Weekly shop" ;
+    obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000011> , <urn:uuid:01a0fb10-0000-7000-8000-000000000012> .
+<urn:uuid:9942bb6e-7014-5da1-aa27-ebeabb095ecd> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000010> , <urn:uuid:a517df90-ed71-5793-b55f-8048ab79e78a> .
+<urn:uuid:a517df90-ed71-5793-b55f-8048ab79e78a> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:64c88ec0-94dc-5583-a02e-8f4ae1f80d9b> .
+
+# Its children: the second waits on the first (sequential expansion)
+<urn:uuid:01a0fb10-0000-7000-8000-000000000011> a obo:IAO_0000007 ; rdfs:label "Write the list" .
+<urn:uuid:01a0fb10-0000-7000-8000-000000000012> a obo:IAO_0000007 ; rdfs:label "Buy the food" .
+<urn:uuid:76585dc7-fa5d-5c3d-a009-2dedcd79356c> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000012> , <urn:uuid:c36959b5-ac89-5e5b-a261-be17275f5ebc> .
+<urn:uuid:c36959b5-ac89-5e5b-a261-be17275f5ebc> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:01a0fb10-0000-7000-8000-000000000011> .
+
+# [ ] Cook the soup: an explicit predecessor
+<urn:uuid:01a0fb10-0000-7000-8000-000000000013> a obo:IAO_0000007 ; rdfs:label "Cook the soup" .
+<urn:uuid:e3a8981f-df19-5fb7-8190-cd0c03ab9754> a cco:ont00000127 ; obo:BFO_0000178 <urn:uuid:01a0fb10-0000-7000-8000-000000000013> , <urn:uuid:e40c37b4-52a0-5f70-a7a6-8cd7fc001959> .
+<urn:uuid:e40c37b4-52a0-5f70-a7a6-8cd7fc001959> a cco:ont00000853 ; cco:ont00001982 <urn:uuid:01a0fb10-0000-7000-8000-000000000012> .
+
+# Contexts: one node per slug, untyped; config's hierarchy as skos:broader
+<urn:uuid:aa0d0a8e-8a8b-5ef1-b25b-f894935d2d82> rdfs:label "phone" .
+<urn:uuid:0e55438d-0967-5a02-bd80-14ed8b659721> rdfs:label "home" .
+<urn:uuid:c50941c3-726d-5537-8787-1bdedbf36117> rdfs:label "human" .
+<urn:uuid:64c88ec0-94dc-5583-a02e-8f4ae1f80d9b> rdfs:label "errands" ; skos:broader <urn:uuid:60ca6b33-f718-5a81-b8cc-b1c457d0e3e3> .
+<urn:uuid:60ca6b33-f718-5a81-b8cc-b1c457d0e3e3> rdfs:label "out" .

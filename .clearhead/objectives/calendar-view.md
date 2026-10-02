@@ -1,3 +1,6 @@
+---
+id: 01a0fb1a-dd78-7100-a79b-ffa837561555
+---
 # Leveraging the calendar as a useful view
 one of the core usecases is the ability to review, alter, and update our calendar with our upcoming actions and making that something that we want to structure our actions in such a way that we are able to understand our larger structure within the context of our finite time.
 

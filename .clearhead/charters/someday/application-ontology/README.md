@@ -59,3 +59,7 @@ The rule of thumb: the third repeated seam violation earns the abstraction.
 2. define the boundary explicitly: what belongs in the domain ontology, what belongs in the workspace vocabulary, what remains query-contract only
 3. choose one proving example — likely locator bundles or structured mutation results — and model it end-to-end across core, CLI, and nvim
 4. write the promotion criteria back into the query and workspace specs so the layering stays explicit going forward
+
+## Log
+
+- 2026-10-02 — Largely realized by platform Decision 45: a fresh-named application vocabulary, owned by the specification, is now the graph people query and export, with file and line, and the ontology is its mapping to CCO. Work continues in [[emit-the-ontology]]; close this bet when that vocabulary ships, or narrow it to whatever remains.

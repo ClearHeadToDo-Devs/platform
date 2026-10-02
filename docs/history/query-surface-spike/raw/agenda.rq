@@ -1,0 +1,71 @@
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX cco: <https://www.commoncoreontologies.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Open, unblocked actions under fully active charters, with closed
+# predecessors and closed children, scheduled or due by the end of today.
+SELECT DISTINCT ?id ?name ?status ?priority WHERE {
+  ?id a obo:IAO_0000007 ; rdfs:label ?name .
+
+  OPTIONAL {
+    ?act cco:ont00001920 ?id .
+    ?status_record cco:ont00001868 ?act .
+    ?status_bearer obo:BFO_0000101 ?status_record ; cco:ont00001765 ?progress .
+  }
+  FILTER(!BOUND(?progress) || ?progress = "in progress")
+  FILTER NOT EXISTS { ?cancelled a cco:ont00000293 ; cco:ont00001868 ?id }
+  FILTER NOT EXISTS {
+    ?wait obo:BFO_0000178 ?id , ?wait_condition .
+    ?wait_bearer obo:BFO_0000101 ?wait_condition ; cco:ont00001765 "waiting" .
+  }
+  BIND(COALESCE(?progress, "not started") AS ?status)
+
+  FILTER NOT EXISTS {
+    ?plan a cco:ont00000974 ; obo:BFO_0000178+ ?id .
+    FILTER NOT EXISTS {
+      ?plan_state cco:ont00001868 ?plan .
+      ?plan_state_bearer obo:BFO_0000101 ?plan_state ; cco:ont00001765 "active" .
+    }
+  }
+
+  FILTER NOT EXISTS {
+    ?gated obo:BFO_0000178* ?id .
+    ?after obo:BFO_0000178 ?gated , ?after_condition .
+    ?after_condition cco:ont00001982 ?predecessor .
+    ?predecessor a obo:IAO_0000007 .
+    FILTER NOT EXISTS { ?pc a cco:ont00000293 ; cco:ont00001868 ?predecessor }
+    FILTER NOT EXISTS {
+      ?pact cco:ont00001920 ?predecessor .
+      ?pstatus cco:ont00001868 ?pact .
+      ?pbearer obo:BFO_0000101 ?pstatus ; cco:ont00001765 "completed" .
+    }
+  }
+
+  FILTER NOT EXISTS {
+    ?id obo:BFO_0000178 ?child .
+    ?child a obo:IAO_0000007 .
+    FILTER NOT EXISTS { ?cc a cco:ont00000293 ; cco:ont00001868 ?child }
+    FILTER NOT EXISTS {
+      ?cact cco:ont00001920 ?child .
+      ?cstatus cco:ont00001868 ?cact .
+      ?cbearer obo:BFO_0000101 ?cstatus ; cco:ont00001765 "completed" .
+    }
+  }
+
+  # Scheduled and due cannot be told apart: both are a condition with a time
+  # on its bearer (see findings). Agenda needs only "any time by today".
+  ?timed obo:BFO_0000178 ?id , ?time_condition .
+  ?time_bearer obo:BFO_0000101 ?time_condition .
+  { ?time_bearer cco:ont00001767 ?when } UNION { ?time_bearer cco:ont00001771 ?when }
+
+  OPTIONAL {
+    ?measurement cco:ont00001811 ?id .
+    ?priority_bearer obo:BFO_0000101 ?measurement ; cco:ont00001773 ?priority .
+  }
+
+  # Times are as written: a date and a datetime cannot be compared directly,
+  # so compare the date part of each against today.
+  FILTER(SUBSTR(STR(?when), 1, 10) <= "2026-10-04")
+}
+ORDER BY ?status COALESCE(?priority, 99) ?name

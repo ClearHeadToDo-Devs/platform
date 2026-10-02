@@ -1,0 +1,65 @@
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX cco: <https://www.commoncoreontologies.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX v: <https://clearhead.us/view#>
+
+# A convenience view, generated from the V5 graph. Every v: term is a name
+# for one path in V5; the view states nothing V5 does not.
+CONSTRUCT {
+  ?a a v:Action ; v:name ?name ; v:status ?status .
+  ?c a v:Charter ; v:name ?charter_name ; v:state ?charter_state .
+  ?part v:partOf ?whole .
+  ?p v:priority ?priority .
+  ?x v:context ?context_name .
+  ?y v:after ?predecessor .
+  ?t v:when ?when .
+} WHERE {
+  {
+    # one status per action, from its commitment and progress records
+    ?a a obo:IAO_0000007 ; rdfs:label ?name .
+    OPTIONAL { ?cancelled a cco:ont00000293 ; cco:ont00001868 ?a . BIND("cancelled" AS ?is_cancelled) }
+    OPTIONAL {
+      ?act cco:ont00001920 ?a .
+      ?status_record cco:ont00001868 ?act .
+      ?status_bearer obo:BFO_0000101 ?status_record ; cco:ont00001765 ?progress .
+    }
+    OPTIONAL {
+      ?wait obo:BFO_0000178 ?a , ?wait_condition .
+      ?wait_bearer obo:BFO_0000101 ?wait_condition ; cco:ont00001765 "waiting" .
+      BIND("blocked" AS ?is_blocked)
+    }
+    BIND(COALESCE(?is_cancelled, ?progress, ?is_blocked, "not started") AS ?status)
+  } UNION {
+    ?c a cco:ont00000974 ; rdfs:label ?charter_name .
+    OPTIONAL {
+      ?state cco:ont00001868 ?c .
+      ?state_bearer obo:BFO_0000101 ?state ; cco:ont00001765 ?declared_state .
+    }
+    BIND(COALESCE(?declared_state, "new") AS ?charter_state)
+  } UNION {
+    # containment among charters and actions (not conditions or objectives)
+    ?whole obo:BFO_0000178 ?part .
+    { ?whole a obo:IAO_0000007 } UNION { ?whole a cco:ont00000974 }
+    { ?part a obo:IAO_0000007 } UNION { ?part a cco:ont00000974 }
+  } UNION {
+    ?measurement cco:ont00001811 ?p .
+    ?priority_bearer obo:BFO_0000101 ?measurement ; cco:ont00001773 ?priority .
+  } UNION {
+    ?context_ps obo:BFO_0000178 ?x , ?context_condition .
+    ?x a obo:IAO_0000007 .
+    ?context_condition cco:ont00001982 ?context .
+    FILTER NOT EXISTS { ?context a obo:IAO_0000007 }
+    ?context rdfs:label ?context_name .
+  } UNION {
+    ?after_ps obo:BFO_0000178 ?y , ?after_condition .
+    ?y a obo:IAO_0000007 .
+    ?after_condition cco:ont00001982 ?predecessor .
+    ?predecessor a obo:IAO_0000007 .
+    FILTER(?predecessor != ?y)
+  } UNION {
+    ?time_ps obo:BFO_0000178 ?t , ?time_condition .
+    ?t a obo:IAO_0000007 .
+    ?time_bearer obo:BFO_0000101 ?time_condition .
+    { ?time_bearer cco:ont00001767 ?when } UNION { ?time_bearer cco:ont00001771 ?when }
+  }
+}

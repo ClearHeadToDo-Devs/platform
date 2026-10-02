@@ -1,0 +1,9 @@
+PREFIX v: <https://clearhead.us/view#>
+
+# Open actions whose context is "human".
+SELECT ?id ?name ?status ?priority WHERE {
+  ?id a v:Action ; v:name ?name ; v:status ?status ; v:context "human" .
+  FILTER(?status NOT IN ("completed", "cancelled"))
+  OPTIONAL { ?id v:priority ?priority }
+}
+ORDER BY ?priority ?name

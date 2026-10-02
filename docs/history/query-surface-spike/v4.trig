@@ -1,0 +1,121 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ws: <https://clearhead.us/vocab/workspace/v1#> .
+@prefix actions: <https://clearhead.us/vocab/actions/v4#> .
+@prefix cco: <https://www.commoncoreontologies.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+<urn:clearhead:workspace:01a0fb10-0000-7000-8000-000000000000> {
+	<urn:clearhead:workspace:01a0fb10-0000-7000-8000-000000000000> a ws:Workspace ;
+		rdfs:label "graph-fixture" ;
+		actions:hasAlias "graph-fixture" ;
+		ws:charterRoot "/tmp/claude-1000/-home-dab-Products-platform/07e26322-72c2-4467-a8d6-ac17868f559d/scratchpad/spike/workspace/.clearhead/charters" ;
+		ws:root "/tmp/claude-1000/-home-dab-Products-platform/07e26322-72c2-4467-a8d6-ac17868f559d/scratchpad/spike/workspace" .
+	<urn:context:errands> a actions:Context ;
+		actions:contextBroader <urn:context:out> ;
+		actions:hasContextIdentifier "errands" .
+	<urn:context:home> a actions:Context ;
+		actions:hasContextIdentifier "home" .
+	<urn:context:human> a actions:Context ;
+		actions:hasContextIdentifier "human" .
+	<urn:context:out> a actions:Context ;
+		actions:contextNarrower <urn:context:errands> ;
+		actions:hasContextIdentifier "out" .
+	<urn:context:phone> a actions:Context ;
+		actions:hasContextIdentifier "phone" .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000001> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> ;
+		dcterms:description "The kitchen tap drips." ;
+		a actions:Action ;
+		rdfs:label "Call the plumber" ;
+		actions:hasAlias "plumber" ;
+		actions:hasCreatedDateTime "2026-10-01T10:00:00-07:00"^^xsd:dateTime ;
+		actions:hasDueDateTime "2026-10-04T00:00:00-07:00"^^xsd:dateTime ;
+		actions:hasDurationMinutes 15 ;
+		actions:hasPriority 2 ;
+		actions:hasScheduledDateTime "2026-10-03T09:00:00-07:00"^^xsd:dateTime ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000001" ;
+		actions:requiresContext <urn:context:phone> ;
+		ws:hasSourceFile "next.actions" ;
+		ws:hasSourceLine 1 ;
+		cco:ont00001868 actions:InProgress .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000002> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> ;
+		a actions:Action ;
+		rdfs:label "Pay the water bill" ;
+		actions:hasCompletedDateTime "2026-09-30T18:00:00-07:00"^^xsd:dateTime ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000002" ;
+		ws:hasSourceFile "next.actions" ;
+		ws:hasSourceLine 2 ;
+		cco:ont00001868 actions:Completed .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000003> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> ;
+		a actions:Action ;
+		rdfs:label "Renew the magazine" ;
+		actions:hasCompletedDateTime "2026-09-28T08:30:00-07:00"^^xsd:dateTime ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000003" ;
+		ws:hasSourceFile "next.actions" ;
+		ws:hasSourceLine 3 ;
+		cco:ont00001868 actions:Cancelled .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000004> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> ;
+		dcterms:description "Asked on Monday." ;
+		a actions:Action ;
+		rdfs:label "Hear back from the landlord about the fence" ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000004" ;
+		ws:hasSourceFile "next.actions" ;
+		ws:hasSourceLine 4 ;
+		cco:ont00001868 actions:Blocked .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000005> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> ;
+		a actions:Action ;
+		rdfs:label "Fix the fence" ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000005" ;
+		actions:requiresContext <urn:context:home> , <urn:context:human> ;
+		ws:hasSourceFile "next.actions" ;
+		ws:hasSourceLine 5 ;
+		cco:ont00001775 <urn:uuid:01a0fb10-0000-7000-8000-000000000004> ;
+		cco:ont00001868 actions:NotStarted .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000010> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> ;
+		a actions:Action ;
+		rdfs:label "Weekly shop" ;
+		actions:hasSequentialChildren true ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000010" ;
+		actions:requiresContext <urn:context:errands> ;
+		ws:hasSourceFile "groceries.actions" ;
+		ws:hasSourceLine 1 ;
+		cco:ont00001868 actions:NotStarted .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000011> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-000000000010> ;
+		a actions:Action ;
+		rdfs:label "Write the list" ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000011" ;
+		ws:hasSourceFile "groceries.actions" ;
+		ws:hasSourceLine 2 ;
+		cco:ont00001868 actions:NotStarted .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000012> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-000000000010> ;
+		a actions:Action ;
+		rdfs:label "Buy the food" ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000012" ;
+		ws:hasSourceFile "groceries.actions" ;
+		ws:hasSourceLine 3 ;
+		cco:ont00001775 <urn:uuid:01a0fb10-0000-7000-8000-000000000011> ;
+		cco:ont00001868 actions:NotStarted .
+	<urn:uuid:01a0fb10-0000-7000-8000-000000000013> bfo:BFO_0000050 <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> ;
+		a actions:Action ;
+		rdfs:label "Cook the soup" ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-000000000013" ;
+		ws:hasSourceFile "groceries.actions" ;
+		ws:hasSourceLine 4 ;
+		cco:ont00001775 <urn:uuid:01a0fb10-0000-7000-8000-000000000012> ;
+		cco:ont00001868 actions:NotStarted .
+	<urn:uuid:01a0fb10-0000-7000-8000-0000000000c0> dcterms:description "Everything that keeps the house going." ;
+		a actions:Charter ;
+		rdfs:label "Run the household" ;
+		actions:hasAlias "home" ;
+		actions:hasCharterState actions:CharterActive ;
+		actions:hasSubCharter <urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-0000000000c0" ;
+		ws:hasSourceFile "README.md" .
+	<urn:uuid:01a0fb10-0000-7000-8000-0000000000c1> a actions:Charter ;
+		rdfs:label "Groceries" ;
+		actions:hasAlias "groceries" ;
+		actions:hasCharterState actions:CharterActive ;
+		actions:hasUUID "01a0fb10-0000-7000-8000-0000000000c1" ;
+		ws:hasSourceFile "groceries.md" .
+}
