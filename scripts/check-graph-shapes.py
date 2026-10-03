@@ -8,6 +8,9 @@ and the application graph (app.shapes.ttl, expected-app.ttl, invalid-app/).
 - Each warning graph yields only warnings, from the shape it names.
 - The CCO expected graph, merged with the ontology, reasons consistent under
   HermiT and passes the ontology's own verify rules (ROBOT).
+- The mapping (specifications/ontology/mapping/*.rq) of the application
+  expected graph is isomorphic to the CCO one, and every application term in
+  the app shapes is read by the mapping or listed in ontology/unmapped.ttl.
 
 Run: uv run --with pyshacl==0.40.1 python scripts/check-graph-shapes.py
 """
@@ -18,7 +21,10 @@ import sys
 import tempfile
 
 from pyshacl import validate
+import re
+
 from rdflib import Graph, Namespace, URIRef
+from rdflib.compare import graph_diff, to_isomorphic
 from rdflib.namespace import RDF
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
@@ -99,8 +105,31 @@ with tempfile.TemporaryDirectory() as tmp:
             failures.append(f"robot {name}: {(run.stdout + run.stderr).strip()[-600:]}")
             break
 
+mapping_dir = root / "specifications/ontology/mapping"
+queries = sorted(mapping_dir.glob("*.rq"))
+app_graph = Graph().parse(fixture / "expected-app.ttl")
+mapped = Graph()
+for query in queries:
+    for triple in app_graph.query(query.read_text()):
+        mapped.add(triple)
+want, got = to_isomorphic(Graph().parse(fixture / "expected.ttl")), to_isomorphic(mapped)
+if want != got:
+    _, missing, extra = graph_diff(want, got)
+    failures.append(f"mapping: {len(missing)} triples of expected.ttl missing, {len(extra)} extra")
+
+APP = "https://clearhead.us/vocab/app/v1#"
+local = lambda text: set(re.findall(r"\bapp:([A-Za-z]+)", text))
+terms = local((schemas / "app.shapes.ttl").read_text())
+used = set().union(*(local(q.read_text()) for q in queries))
+exempt = {str(s).removeprefix(APP) for s in Graph().parse(mapping_dir.parent / "unmapped.ttl").subjects()}
+if terms - used - exempt:
+    failures.append(f"terms with no meaning (map them or list them in unmapped.ttl): {sorted(terms - used - exempt)}")
+if used & exempt:
+    failures.append(f"terms both mapped and listed as unmapped: {sorted(used & exempt)}")
+
 if failures:
     print("graph shapes > FAILED", *failures, sep="\n  ", file=sys.stderr)
     sys.exit(1)
-print("graph shapes > both expected graphs conform, the CCO one reasons consistent; "
+print("graph shapes > both expected graphs conform, the CCO one reasons consistent and is the "
+      f"mapping of the application one ({len(queries)} queries, every term mapped or listed); "
       f"invalid graphs fail on their shapes ({', '.join(counts)})")
