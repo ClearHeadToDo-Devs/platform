@@ -12,18 +12,35 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
-## Decision 49: Identifiers Live at w3id.org; Helper Nodes Are Blank
+## Decision 50: The Ontology Folds Into the Specification
 
-Decided 2026-10-02 by the human, after `clearhead.us` lapsed (expired 2026-07-23; pending delete as of 2026-10-02). Every IRI we had minted named a domain we no longer held, and anyone could register it.
+Decided 2026-10-03 by the human. Grounding the domain needed no terms of our own: `ontology/v5/clearhead.ttl` imports CCO v2.2 and IAO and declares nothing, which is the sign the modelling was right, not a gap. With v4 retired, the ontology repository would hold only that import manifest, the imports, examples, competency queries, verify rules, `docs/domain.md` and, from `app-to-cco`, the mapping: no published name, and nothing that changes without a specification change beside it.
 
-- **Identifiers are permanent names, hosting is a redirect.** Every IRI we mint moves from `https://clearhead.us/` to `https://w3id.org/clearhead/`, keeping its path: `app:` becomes `https://w3id.org/clearhead/vocab/app/v1#`, the ontology `https://w3id.org/clearhead/vocab/clearhead`, the shapes `https://w3id.org/clearhead/specifications/app-shapes`. w3id.org is the W3C Permanent Identifier Community Group's redirect service; our space is `ids/clearhead/.htaccess` in its repository. Data never holds a hosting URL, so a lapsed domain or a new host changes one redirect, never the data. A domain for a website is a separate, optional choice.
-- **A version path is a release.** `…/v1` means the latest release of v1; `…/v1/<x.y.z>` means release `x.y.z` exactly. Each repository that defines IRIs keeps a `release` branch, advanced when it tags a release, and the redirects point at it and at the tags by pattern. So releasing never needs a change at w3id, and `main` (unreleased work) is never what an IRI resolves to. A breaking change to a vocabulary is a new major path (`v2`), not an edit under `v1`.
+- **The ontology moves into `specifications/ontology/`**, merged with its history (`git subtree`), and the `ontology` submodule is removed. Its `docs/DECISIONS.md` moves with it.
+- **The mapping is written there from the start:** `app-to-cco` puts its CONSTRUCT in the specification, so a change to an application term and to its meaning is one commit in one repository.
+- **The specification stays inert data.** The mapping is a query and the imports are data; ROBOT, HermiT and the verify rules keep running from the platform gate (`scripts/check-graph-shapes.py`), as they already do.
+- **Sequence:** after `retire-v4`, which deletes most of the repository, so little is left to move.
+
+**Revises** Decision 42 (shapes in the specification, meaning in the ontology): both now live in the specification. **Revises** Decision 45's "kept in the ontology repository" for the mapping; its trade-off, every term change landing in two repositories, goes away.
+
+**Alternatives rejected:** keeping the repository for the mapping alone (a submodule whose every change follows a specification change); keeping it as a standalone ontology to share (it contains no terms to share).
+
+**Trade-off accepted:** the specification repository carries 2 MB of imported ontologies and a Java-based check in the gate that verifies it.
+
+## Decision 49: Identifiers Live at clearhead.dev; Helper Nodes Are Blank
+
+Decided 2026-10-02 by the human, after `clearhead.us` lapsed (expired 2026-07-23; pending delete as of 2026-10-02). Every IRI we had minted named a domain we no longer held, and anyone could register it. Amended 2026-10-03: the first draft put identifiers at w3id.org; once the only published names were one application vocabulary, the human chose a domain of our own.
+
+- **Identifiers live at `https://clearhead.dev/`**, registered 2026-10-03 through Cloudflare Registrar, keeping their paths: `app:` becomes `https://clearhead.dev/vocab/app/v1#`, the shapes `https://clearhead.dev/specifications/app-shapes`. Data never holds a hosting URL; the site resolves names to wherever their documentation lives. Renewal is the single point of failure, so the domain auto-renews on a card that will not lapse quietly, with the registrar lock on, and is registered for longer when renewal allows.
+- **Only the specification publishes.** It defines everything with a public name: the application vocabulary, the shapes and the JSON schemas, whose `$id`s move from raw GitHub URLs to `https://clearhead.dev/schemas/<tag>/<name>.schema.json` at the next release. The ontology declares no terms and publishes nothing (Decision 50). The CLI publishes nothing: publishing is a release concern of the repository that defines the names.
+- **The site is the specification.** `clearhead.dev` is an mdbook build of the specification's Markdown, deployed by Cloudflare Pages from the specification's `release` branch, with a `_redirects` file resolving vocabulary, version and schema paths. Releasing is publishing: tag `vX.Y.Z` on `main`, fast-forward `release` to it, and the site, vocabulary and schemas update together.
+- **A version path is a release.** `…/v1` resolves to the latest release of v1; `…/v1/<x.y.z>` to release `x.y.z` exactly; `main` (unreleased work) never. A breaking change to a vocabulary is a new major path (`v2`), not an edit under `v1`.
 - **Helper nodes are blank nodes.** A condition, measurement, bearer or act exists only as part of its owner, and nothing outside the graph refers to it, so it gets no name. This revises convention 6 of the CCO graph (helper IRIs from UUIDv5), whose reason, exports that diff cleanly, is now met by W3C RDF Dataset Canonicalization (RDFC-1.0): canonical exports are byte-stable, and fixtures compare by graph isomorphism. The mapping's CONSTRUCT mints blank nodes natively, so no IRI needs computing in SPARQL.
-- **Migration:** `app:`, the ontology, the shapes and the examples move now, before anything is published under them. The v4 IRIs do not move: `retire-v4` removes them.
+- **Migration:** `app:`, the shapes and the examples move now, before anything is published under them. The v4 IRIs do not move: `retire-v4` removes them. The platform's dead `deploy-vocab.yml` (v4 era, never succeeded) and the untracked `book/` build go.
 
-**Alternatives rejected:** buying a domain for the IRIs (renewal is a single point of failure, the one that just failed); Skolem IRIs under `…/genid/` (public names for implementation details nothing references); hashes SPARQL can compute dressed as UUIDs (breaks what `urn:uuid:` promises); an unregistered `urn:clearhead:` scheme (RFC 8141 requires registration).
+**Alternatives rejected:** w3id.org permanent identifiers (built for this, but the human judged one application vocabulary too small for a shared community service, and it only redirects, so a host is needed anyway); Skolem IRIs under `…/genid/` (public names for implementation details nothing references); hashes SPARQL can compute dressed as UUIDs (breaks what `urn:uuid:` promises); an unregistered `urn:clearhead:` scheme (RFC 8141 requires registration); a deploy pipeline in the CLI (couples every user's binary to our hosting).
 
-**Trade-off accepted:** changing where an identifier redirects takes a pull request to w3id, rarely, since releases move the `release` branch instead; helper nodes cannot be referenced across graphs.
+**Trade-off accepted:** the names are only as durable as the domain's renewal; helper nodes cannot be referenced across graphs.
 
 ## Decision 48: Due Dates Can Contain Ranges
 

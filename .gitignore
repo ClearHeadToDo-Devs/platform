@@ -3,3 +3,4 @@ book/*
 .pi/
 node_modules
 .clearhead/.clearhead.lock
+.wrangler/
