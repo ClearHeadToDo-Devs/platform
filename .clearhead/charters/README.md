@@ -14,23 +14,23 @@ My dream is to build the ClearHead platform out of composable, open, data-driven
 
 We are working through the individual structures such that we are going to be able to make a full platform just by handling individual structures
 
-## Charter Map & Prioritization (2026-10-02)
+## Charter Map & Prioritization (2026-10-03)
 
 Choose the highest-priority open action whose `<` predecessors are closed. Finish bounded active work before promoting another charter. `someday/` charters remain bets rather than backlog; promote one only when its recorded trigger is evidenced.
 
-Refreshed 2026-10-02 by an agent from what the human worked on in the 2026-10-01/02 sessions; the human has not yet confirmed this order.
+Refreshed 2026-10-03 by an agent at the end of a session with the human; the order follows what the human chose in it.
 
 ### Work streams, in priority order
 
-1. **[[emit-the-ontology]]** (Active) — the application vocabulary becomes the graph people query and export, the ontology its mapping to CCO (Decisions 43–45). Next: `scheduled-vs-due`, then `app-vocabulary`, whose name waits on the human.
-2. **[[agent-sandbox]]** (Active) — sandboxed agent sessions; next `sandbox-auto-reconcile`, then extraction to its own repository.
-3. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.
-4. **[[root-next-default]]** (Active) — one open action: resume the homelab calendar sync.
-5. **[[support]]** — CLI friction surfaced by real use.
-6. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37).
-7. **[[deployment]]** — promote release work when a standalone or edge consumer creates immediate pressure.
+1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–51). The mapping is done. Next: `intent-range` (Decision 51), then `v5-projection`, then `migrate-iris`.
+2. **[[deployment]]** (Active since 2026-10-03) — the specification publishes at `clearhead.dev` (Decision 49): `spec-site`, then the `v0.2.0` release with its `release` branch. Needs the human for the Cloudflare Pages setup.
+3. **[[agent-sandbox]]** (Active) — waits on the NUC's move to an immutable container OS; this desktop cannot host runs. Then `sandbox-auto-reconcile` and extraction; the NUC bring-up is the runner's first portability test.
+4. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.
+5. **[[root-next-default]]** (Active) — resume the homelab calendar sync when the NUC is back, including moving the orphaned inbox calendar collection.
+6. **[[support]]** — CLI friction surfaced by real use.
+7. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37).
 
-Closed since the last map: unified-workspace-root, ground-the-ontology. Objective integration was absorbed by emit-the-ontology (implement-objectives cancelled).
+Closed since the last map: app-to-cco. Decided since the last map: Decisions 48–51 (the due window, `clearhead.dev`, the ontology folding into the specification, intent as a range).
 
 ### Settled prerequisites
 
