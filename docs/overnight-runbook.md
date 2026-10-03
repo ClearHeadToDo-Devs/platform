@@ -178,7 +178,7 @@ sessions do not. The runner's commands, review loop and landing are in the
 README of the agent-sandbox repository (`~/Products/agent-sandbox`); what
 follows is how this repo uses it.
 
-- **Setup.** Install the agent-sandbox repository (`~/Products/agent-sandbox/install.sh`) and run from this checkout.
+- **Setup.** Put the agent-sandbox repository's `bin/` on `PATH` (its README, Install; `agent-doctor` checks the host) and run from this checkout.
   `.sandbox/setup` builds `clearhead` from the branch and puts it first on
   `PATH`; `.sandbox/prompt.md` points every session here; `.sandbox/gate` runs
   `scripts/validate-pinned`; `.sandbox/work-prompt.md` is the driver's
