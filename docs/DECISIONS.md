@@ -12,6 +12,24 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 51: Intent Is a Range; Duration Is Derived
+
+Decided 2026-10-03 by the human, before Decision 46 was implemented. Decision 46 made duration a field of its own (`|30`) so undated work could answer "what fits in thirty minutes?"; the human does not work that way, and a range on `@` says when and how long in one value.
+
+- **`@` takes a time or an ISO 8601 interval**, as `:` does (Decision 48): `@2026-10-03T09:00/2026-10-03T09:30` plans a block, `@2026-10-03/2026-10-05` three whole days. A single value is the start: a date is an all-day event (Decision 47), a date and time is a point. Only the full `start/end` form, as for `:`.
+- **A bound covers its written precision and the range is half-open**, as for `:`: `@…T09:00/…T09:30` ends at 09:31, and `@2026-10-03/2026-10-05` ends at the start of the 6th.
+- **Duration is derived**, never written: the length of the `@` range. `app:durationMinutes` becomes a derived term, and its CCO measurement is unchanged, fed from the range.
+- **No duration sigil.** `|` (Decision 46) is never introduced, `D` is retired, and E001 (a duration without a do-date) goes with it. The parser keeps reading `@… D60` for a while and the formatter writes it as a range, so files migrate by formatting.
+- **Calendar sync** maps the range to `DTSTART`/`DTEND`. RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end.
+- **W015 compares two ranges:** the `@` range must lie within the `:` window.
+- **Core has one interval type** with two readings of a single value: an end for `:`, a start for `@`.
+
+**Supersedes** Decision 46 (duration as its own field, the `|` sigil). **Revises** Decision 48's wording of W015 ("`@` plus its duration").
+
+**Alternatives rejected:** a duration field beside the range (two ways to write one block); keeping `|` for undated estimates (no use the human has); ISO 8601 durations such as `@…/PT30M` (Decision 48 admits only `start/end`).
+
+**Trade-off accepted:** an estimate without a date cannot be written; a planned block always says when.
+
 ## Decision 50: The Ontology Folds Into the Specification
 
 Decided 2026-10-03 by the human. Grounding the domain needed no terms of our own: `ontology/v5/clearhead.ttl` imports CCO v2.2 and IAO and declares nothing, which is the sign the modelling was right, not a gap. With v4 retired, the ontology repository would hold only that import manifest, the imports, examples, competency queries, verify rules, `docs/domain.md` and, from `app-to-cco`, the mapping: no published name, and nothing that changes without a specification change beside it.
