@@ -28,20 +28,24 @@ the practical update is that `@` no longer bounds anything: it is intention, whe
 
 this separates "can't do this before" (the lower end of `:`) from "start doing at" (`@`), two facts `@` used to carry at once.
 
-**The window is half-open**, `[lower, lateFrom)`: the lower bound is the first allowed instant, and `lateFrom` is the first late one (a date's next midnight, per Decision 47). The lint compares the intended block, `@` plus `|`, against it: `@` before the window opens, or the block ending after it closes, is a warning.
+**A bound covers its written precision**, as ISO 8601 reads a reduced-precision value: a date covers its day, a minute its minute, a second its second. So `:…T17:00` is still on time at 17:00:59 and late from 17:01. This generalizes Decision 47 and needs no epsilon. The cost: `T17:00` and `T17:00:00` are different deadlines, and the spec must say so.
+
+**The window is half-open**, `[lower, lateFrom)`: the lower bound's first instant is the first allowed one, and `lateFrom` is the start of the unit after the upper bound. The lint compares the intended block, `@` plus `|`, against it: `@` before the window opens, or the block ending after it closes, is a warning.
 
 **Alternatives considered:**
 
 - *A parent action carrying `@` and `:` as the window.* Rejected: `@` would mean "can't before" on the parent and "intend to" on the child, the same conflation moved by position, and the parent is a world event posing as a task.
 - *Waiting on a calendar event (`event-triggers`).* Deferred, not rejected: it is the right tool when someone else owns the date and it moves. A written range must be edited by hand when that happens.
 
-**Revises:** Decision 47's `@` reading ("not before the start of the 5th"); `specifications/action_file_format.md` Do/Due sections, where `@` is the lower bound and the range is inclusive; `specifications/ontology.md`, where `notBefore` derives from `@` and `@` maps to a not-before condition. `notBefore` becomes the latest lower bound of `:` over the action and its ancestors.
+**Revises:** Decision 47's `@` reading ("not before the start of the 5th") and its "a datetime bound is that instant"; `specifications/action_file_format.md` Do/Due sections, where `@` is the lower bound and the range is inclusive; `specifications/ontology.md`, where `notBefore` derives from `@` and `@` maps to a not-before condition. `notBefore` becomes the latest lower bound of `:` over the action and its ancestors.
 
-**Open:** the range syntax. Whether anything today hides actions until their `@`; if so, that behavior changes.
+**Syntax** (standards first): an ISO 8601 interval, `:2026-11-01/2026-12-15`; a single `:` value is still the deadline alone. Only the full `start/end` form: no `start/P2W` (Decision 46 chose minutes over ISO durations) and no abbreviated end. A lower bound with no deadline waits for a real case; ISO 8601-2's open interval, `:2026-11-01/..`, is the standard answer when one comes.
+
+**Open:** whether anything today hides actions until their `@`; if so, that behavior changes.
 
 ## Decision 47: A Date Means Any Time That Day
 
-Decided 2026-10-02 by the human. A bound written as a date, without a time, covers the whole day, as a calendar's all-day event does: `@2026-10-05` is "not before the start of the 5th", `:2026-10-05` is "by the end of the 5th". A datetime bound is that instant. The DSL needs no new syntax; a date and a datetime are already told apart as written. (Revised by Decision 48: `@` no longer bounds; a date-only `@` still means the whole day for placing it.)
+Decided 2026-10-02 by the human. A bound written as a date, without a time, covers the whole day, as a calendar's all-day event does: `@2026-10-05` is "not before the start of the 5th", `:2026-10-05` is "by the end of the 5th". A datetime bound is that instant. The DSL needs no new syntax; a date and a datetime are already told apart as written. (Revised by Decision 48: `@` no longer bounds; a date-only `@` still means the whole day for placing it. A datetime bound is that instant only at full precision; otherwise it covers its written unit.)
 
 **Consequence for calendar sync:** a date-only `@` places an all-day event; a duration on it stays on the action, since RFC 5545 sizes a date-valued start only in whole days.
 
