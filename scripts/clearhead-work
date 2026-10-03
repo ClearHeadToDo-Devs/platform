@@ -27,7 +27,7 @@
 set -eu
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-command -v agent-run >/dev/null || { echo "clearhead-work > agent-run is not on PATH; install the agent-sandbox repository (~/Products/agent-sandbox/bin)" >&2; exit 2; }
+command -v agent-run >/dev/null || { echo "clearhead-work > agent-run is not on PATH; run ~/Products/agent-sandbox/install.sh" >&2; exit 2; }
 max=${AGENT_MAX_ACTIONS:-10}
 run_usd=${AGENT_RUN_USD:-15}
 
