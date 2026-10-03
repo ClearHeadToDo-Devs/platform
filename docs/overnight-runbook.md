@@ -19,7 +19,7 @@ sources:
 
 # Agent runbook
 
-You are one headless session in a sandboxed run (`scripts/agent-run`). Your
+You are one headless session in a sandboxed run (`agent-run`, from [the agent sandbox](../agent-sandbox/README.md)). Your
 prompt names the run's **kind** and its **target**; this file is the whole
 procedure. Follow the rules for every run, then your kind's section. A prompt
 that names no kind is a plain task: the rules for every run apply, and the
@@ -174,16 +174,26 @@ The human may record `reconciled: true` on a finding in the session record.
 ## For the orchestrator
 
 Whoever launches runs, the human or an interactive agent, owns what the
-sessions do not:
+sessions do not. The runner's commands, review loop and landing are in [the
+agent sandbox guide](../agent-sandbox/README.md); what follows is how this repo
+uses it.
 
+- **Setup.** Put `agent-sandbox/bin` on `PATH` and run from this checkout.
+  `.sandbox/setup` builds `clearhead` from the branch and puts it first on
+  `PATH`; `.sandbox/prompt.md` points every session here; `.sandbox/gate` runs
+  `scripts/validate-pinned`; `.sandbox/work-prompt.md` is the driver's
+  per-action prompt.
+- **Limits.** Besides the runner's per-session limits, the driver stops at
+  `AGENT_MAX_ACTIONS` (10) sessions or `AGENT_RUN_USD` ($15). The NUC fits
+  about two sessions at once, and the shared build cache serializes compiles.
 - **Start work with the driver, anything else with a prompt.**
   `scripts/clearhead-work [<action>]` works the queue or one action: one
-  workspace, one session per action. `scripts/agent-run --prompt <file|text>`
+  workspace, one session per action. `agent-run --prompt <file|text>`
   starts any other session, and `--in <workspace>` puts it in a workspace that
-  already holds work. `scripts/agent-result <workspace>[/<n>] --wait` returns
+  already holds work. `agent-result <workspace>[/<n>] --wait` returns
   the record as JSON.
 - **Review between work and landing.** A review is a read-only session in the
-  worker's workspace, e.g. `scripts/agent-run --in <workspace> --harness pi
+  worker's workspace, e.g. `agent-run --in <workspace> --harness pi
   --read-only --prompt "Run kind: review. Target: this workspace's branch."`
   Run it with a different vendor than the worker: two models from one provider share blind spots (on
   2026-09-22 a GPT worker and a GPT reviewer went through four or five rounds
@@ -194,17 +204,18 @@ sessions do not:
   name is required; a session number cannot be combined with `--review`.
   Each supplied report is retained in `reviews/` with its reviewer for
   calibration, harvest summaries and landing advisories. A blocking finding
-  goes to `scripts/agent-fix <workspace>[/<n>] [--harness claude|pi]
+  goes to `agent-fix <workspace>[/<n>] [--harness claude|pi]
   [--model id] [--note <file|text>] [--wait]`, or a `NEEDS DECISION`.
   With no session number, `agent-fix` uses the latest read-only session with
   a parsed review. It supplies blocking and should-fix findings (`--nits` also
   includes nits); use `--note` for decisions and answers to `for_human` points.
-- **Land bottom-up**: `scripts/agent-harvest <workspace>`, then
-  `scripts/agent-land <workspace>`, then push. `agent-land` merges into a
+- **Land bottom-up**: `agent-harvest <workspace>`, then
+  `agent-land <workspace>`, then push; pushing platform also pushes the
+  submodules' `main` branches. `agent-land` merges into a
   candidate clone and runs `.sandbox/gate` on it in the sandbox image; no real
   branch moves unless the gate passes. A red gate leaves the candidate and
   `gate.log` in the workspace directory.
-- **Record the human’s landing verdict:** `scripts/agent-verdict <workspace> [--agree] [--overrule <text>]... [--missed <text>]... [--note <text>]`; an orchestrator may record it on the human’s word.
+- **Record the human’s landing verdict:** `agent-verdict <workspace> [--agree] [--overrule <text>]... [--missed <text>]... [--note <text>]`; an orchestrator may record it on the human’s word.
 - **Keep the queue decided.** Anything that needs the human's call comes back
   as `NEEDS DECISION` with the `human` context. Ask the human only through that
   queue, never by repeating a question in chat: `clearhead query named

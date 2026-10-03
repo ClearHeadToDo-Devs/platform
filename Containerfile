@@ -1,4 +1,5 @@
-# Toolchain image for sandboxed agent runs (see scripts/agent-run).
+# Toolchain image for sandboxed agent runs (see agent-sandbox/README.md).
+# Built as root; the sandbox builds its own layer over it.
 #
 # Tools only: no platform code and no gate. Rebuild when a tool changes, not
 # when the code does. The package list mirrors what the repositories' gates
@@ -40,26 +41,11 @@ RUN pacman -S --noconfirm --needed jre21-openjdk-headless && pacman -Scc --nocon
 ENV UV_CACHE_DIR=/opt/uv-cache
 RUN uv run --with pyshacl==0.40.1 python -c "import pyshacl" && chmod -R a+rwX /opt/uv-cache
 
-# The agent harnesses, after the toolchain so a version bump rebuilds only this (and the
-# layer the runner will own once it leaves this repo). Claude Code's
-# postinstall links its native binary; npm blocks dependency lifecycle scripts
-# by default, so approve only that package. pi's pin fixes its model list.
-RUN npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code \
-    && npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.99.2
+# Mount points for the cache volumes in .sandbox/volumes. The sandbox's own
+# layer (agent-sandbox/agents/Containerfile) adds the harnesses and the agent
+# user over this image, and gives that user /home/agent.
+RUN mkdir -p /home/agent/.cargo/registry /home/agent/target
 
-# uid 1000 so `podman run --userns=keep-id` maps the agent onto the host user
-# and its commits in the mounted clone stay owned by that user.
-RUN useradd --create-home --uid 1000 agent \
-    && mkdir -p /home/agent/.cargo/registry /home/agent/target /home/agent/.pi/agent \
-    && chown -R agent:agent /home/agent/.cargo /home/agent/target /home/agent/.pi
-
-# One build directory shared by every run (the agent-target volume), so a run
-# recompiles only what its branch changed.
+# One build directory shared by every workspace (the target volume), so a
+# session recompiles only what its branch changed.
 ENV CARGO_TARGET_DIR=/home/agent/target
-
-USER agent
-RUN git config --global user.name "agent" \
-    && git config --global user.email "agent@localhost" \
-    && git config --global safe.directory '*'
-
-WORKDIR /job

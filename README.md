@@ -43,7 +43,7 @@ Git submodules are notoriously tricky to work with, so we have laid out document
 
 ### Parallel Agent Work
 
-Use the [agent sandbox](./scripts/agent-sandbox.md) for isolated agent workspaces and the work, review and fix loop. For a human's own branch-per-task development, see [Worktrees](./docs/WORKTREES.md).
+Use the [agent sandbox](./agent-sandbox/README.md) for isolated agent workspaces and the work, review and fix loop. For a human's own branch-per-task development, see [Worktrees](./docs/WORKTREES.md).
 
 ### Architecture
 

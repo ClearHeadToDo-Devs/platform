@@ -12,7 +12,7 @@ Started 2026-09-25. The NUC runs agents unattended; this charter keeps that disc
 
 ## Principles
 
-- **Git is the only channel.** A run clones the repo, the agent commits, `scripts/agent-harvest` fetches the commits back. No credentials enter the container except the model's own.
+- **Git is the only channel.** A run clones the repo, the agent commits, `agent-harvest` fetches the commits back. No credentials enter the container except the model's own.
 - **The host stays boring.** Tools live in the image; runs, caches and images are disposable.
 - **Stopping is a good outcome.** A clear account of why an agent stopped beats a forced finish. Spend caps bound every session, and nothing rewards gaming the result.
 - **Standards first.** The environment is the repo's root `Containerfile` (OCI). Telemetry uses OpenTelemetry semantic conventions; a custom attribute needs a reason.
@@ -40,7 +40,7 @@ The human's review time is the constraint, not the machine: every workspace prod
 
 ## Current status, 2026-09-30 (handoff, updated after the first gated landing)
 
-**Where it stands.** The runner is harness-neutral and knows nothing about ClearHead. Workspaces, agents and sessions are separate; the Log below records the decisions. The durable command reference, repository setup, review/fix loop and gotchas live in [the agent sandbox guide](../../scripts/agent-sandbox.md).
+**Where it stands.** The runner is harness-neutral and knows nothing about ClearHead. Workspaces, agents and sessions are separate; the Log below records the decisions. The durable command reference, repository setup, review/fix loop and gotchas live in [the agent sandbox guide](../../agent-sandbox/README.md).
 
 **What to work on next, in order:**
 
@@ -59,7 +59,6 @@ The human's review time is the constraint, not the machine: every workspace prod
 **Known gaps:**
 
 - The harness tests are not run by any gate. `agent-land.test.sh` needs podman and the image, so it cannot run inside `validate-pinned`.
-- `agent-new` reads `~/.pi/agent/settings.json` unconditionally, so a host without pi cannot create a workspace even for a Claude session.
 - `sandbox-cross-vendor-review` can close: a real work run was reviewed by a read-only session from another vendor. Its description still asks for a durable verdict and findings; the closing message carries them today.
 - The image's Claude Code logs `unrecognized_model` for `claude-sonnet-5-5`; sessions still run and bill. Bump claude-code in the image with the pi bump.
 - pi is pinned at 0.85.1, whose newest model is `gpt-6-sol`. `gpt-6.1-sol` needs 0.99+: bump it with a smoke session, as part of the runner's own image layer.
