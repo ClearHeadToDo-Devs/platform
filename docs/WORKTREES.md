@@ -8,7 +8,7 @@ generated: { by: human:dab, at: 2026-04-12 }
 
 # Git Worktree Workflow
 
-This is the practical workflow for a human's own branches and worktrees. Parallel agent work uses the agent sandbox, the agent-sandbox repository (`~/Products/agent-sandbox`), with disposable clones and a work/review/fix loop, not this workflow.
+This is the practical workflow for a human's own branches and worktrees. Parallel agent work uses the [agent sandbox](https://github.com/ca-mantis-shrimp/agent-sandbox), with disposable clones and a work/review/fix loop, not this workflow.
 
 ## Mental Model
 - Keep one base checkout on `main` as your sync point.

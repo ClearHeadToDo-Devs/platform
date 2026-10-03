@@ -175,7 +175,7 @@ The human may record `reconciled: true` on a finding in the session record.
 
 Whoever launches runs, the human or an interactive agent, owns what the
 sessions do not. The runner's commands, review loop and landing are in the
-README of the agent-sandbox repository (`~/Products/agent-sandbox`); what
+[README of the agent-sandbox repository](https://github.com/ca-mantis-shrimp/agent-sandbox); what
 follows is how this repo uses it.
 
 - **Setup.** Put the agent-sandbox repository's `bin/` on `PATH` (its README, Install; `agent-doctor` checks the host) and run from this checkout.
