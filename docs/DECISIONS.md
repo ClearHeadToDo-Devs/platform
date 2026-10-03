@@ -12,9 +12,36 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 48: Due Dates Can Contain Ranges
+
+Decided 2026-10-02 by the human, from the open-enrollment case: preparing for enrollment (classes, comparing plans) can happen any time, but submitting cannot happen before enrollment opens.
+
+we are going to expand the structure of the due date and the meaning, like the start date it can be a range of time/days and this range will represent the valid range of time when an action can be done.
+
+if someone puts the date like now it will still be open so the assumption is it can be done any time before the due date.
+
+if a start date or range is before or after a due date range, then that will become a lint to capture when a start date is in an invalid range
+
+the assumption is that if you have other things that can be done before or after an action with a due range that those should be sibling actions with their own due dates or can simply be dependencies to the action with a range so we can communicate when we have actions to do before or after a specific action in a range
+
+the practical update is that `@` no longer bounds anything: it is intention, when the person or agent plans to do something. `:` is the window the world sets: an optional lower bound ("can't do this before") and the deadline ("must be done by").
+
+this separates "can't do this before" (the lower end of `:`) from "start doing at" (`@`), two facts `@` used to carry at once.
+
+**The window is half-open**, `[lower, lateFrom)`: the lower bound is the first allowed instant, and `lateFrom` is the first late one (a date's next midnight, per Decision 47). The lint compares the intended block, `@` plus `|`, against it: `@` before the window opens, or the block ending after it closes, is a warning.
+
+**Alternatives considered:**
+
+- *A parent action carrying `@` and `:` as the window.* Rejected: `@` would mean "can't before" on the parent and "intend to" on the child, the same conflation moved by position, and the parent is a world event posing as a task.
+- *Waiting on a calendar event (`event-triggers`).* Deferred, not rejected: it is the right tool when someone else owns the date and it moves. A written range must be edited by hand when that happens.
+
+**Revises:** Decision 47's `@` reading ("not before the start of the 5th"); `specifications/action_file_format.md` Do/Due sections, where `@` is the lower bound and the range is inclusive; `specifications/ontology.md`, where `notBefore` derives from `@` and `@` maps to a not-before condition. `notBefore` becomes the latest lower bound of `:` over the action and its ancestors.
+
+**Open:** the range syntax. Whether anything today hides actions until their `@`; if so, that behavior changes.
+
 ## Decision 47: A Date Means Any Time That Day
 
-Decided 2026-10-02 by the human. A bound written as a date, without a time, covers the whole day, as a calendar's all-day event does: `@2026-10-05` is "not before the start of the 5th", `:2026-10-05` is "by the end of the 5th". A datetime bound is that instant. The DSL needs no new syntax; a date and a datetime are already told apart as written.
+Decided 2026-10-02 by the human. A bound written as a date, without a time, covers the whole day, as a calendar's all-day event does: `@2026-10-05` is "not before the start of the 5th", `:2026-10-05` is "by the end of the 5th". A datetime bound is that instant. The DSL needs no new syntax; a date and a datetime are already told apart as written. (Revised by Decision 48: `@` no longer bounds; a date-only `@` still means the whole day for placing it.)
 
 **Consequence for calendar sync:** a date-only `@` places an all-day event; a duration on it stays on the action, since RFC 5545 sizes a date-valued start only in whole days.
 
