@@ -22,7 +22,7 @@ Re-planned 2026-10-02 by Decision 45: the application vocabulary is the graph; C
 
 ## Sequence
 
-Fix scheduled versus due in the mapping first, since the application vocabulary will say both and the mapping must not lose the difference. Then the vocabulary, then its mapping, then Core, then the queries, then removing v4.
+Fix scheduled versus due in the mapping first, since the application vocabulary will say both and the mapping must not lose the difference. Then the vocabulary; then Core and the mapping in parallel, since Core emits only the application graph and the fixture is their contract (2026-10-02); then the queries, then removing v4.
 
 ## Log
 
