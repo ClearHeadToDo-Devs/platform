@@ -4,7 +4,7 @@ alias: deployment
 parent: platform
 objectives:
   - strong-CI-CD
-state: New
+state: Active
 ---
 # Everything Ships a Release
 
