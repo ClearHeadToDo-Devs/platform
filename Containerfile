@@ -1,4 +1,4 @@
-# Toolchain image for sandboxed agent runs (see agent-sandbox/README.md).
+# Toolchain image for sandboxed agent runs (see the agent-sandbox repository's README).
 # Built as root; the sandbox builds its own layer over it.
 #
 # Tools only: no platform code and no gate. Rebuild when a tool changes, not
@@ -42,7 +42,7 @@ ENV UV_CACHE_DIR=/opt/uv-cache
 RUN uv run --with pyshacl==0.40.1 python -c "import pyshacl" && chmod -R a+rwX /opt/uv-cache
 
 # Mount points for the cache volumes in .sandbox/volumes. The sandbox's own
-# layer (agent-sandbox/agents/Containerfile) adds the harnesses and the agent
+# layer (agents/Containerfile in the agent-sandbox repository) adds the harnesses and the agent
 # user over this image, and gives that user /home/agent.
 RUN mkdir -p /home/agent/.cargo/registry /home/agent/target
 

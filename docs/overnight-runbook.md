@@ -13,13 +13,13 @@ sources:
     resource: history/overnight-worker-crate-merge-and-identity.md
     title: the 2026-09-18 successor that added branch isolation, the review gate and the morning brief
   - id: sandbox
-    resource: ../.clearhead/charters/agent-sandbox.md
+    resource: ../../agent-sandbox/.clearhead/charters/README.md
     title: the agent-sandbox charter, whose runs on 2026-09-25 reshaped this into one procedure per run kind
 ---
 
 # Agent runbook
 
-You are one headless session in a sandboxed run (`agent-run`, from [the agent sandbox](../agent-sandbox/README.md)). Your
+You are one headless session in a sandboxed run (`agent-run`, from the agent-sandbox repository). Your
 prompt names the run's **kind** and its **target**; this file is the whole
 procedure. Follow the rules for every run, then your kind's section. A prompt
 that names no kind is a plain task: the rules for every run apply, and the
@@ -174,11 +174,11 @@ The human may record `reconciled: true` on a finding in the session record.
 ## For the orchestrator
 
 Whoever launches runs, the human or an interactive agent, owns what the
-sessions do not. The runner's commands, review loop and landing are in [the
-agent sandbox guide](../agent-sandbox/README.md); what follows is how this repo
-uses it.
+sessions do not. The runner's commands, review loop and landing are in the
+README of the agent-sandbox repository (`~/Products/agent-sandbox`); what
+follows is how this repo uses it.
 
-- **Setup.** Put `agent-sandbox/bin` on `PATH` and run from this checkout.
+- **Setup.** Put the agent-sandbox repository's `bin/` (`~/Products/agent-sandbox/bin`) on `PATH` and run from this checkout.
   `.sandbox/setup` builds `clearhead` from the branch and puts it first on
   `PATH`; `.sandbox/prompt.md` points every session here; `.sandbox/gate` runs
   `scripts/validate-pinned`; `.sandbox/work-prompt.md` is the driver's
@@ -220,7 +220,7 @@ uses it.
   as `NEEDS DECISION` with the `human` context. Ask the human only through that
   queue, never by repeating a question in chat: `clearhead query named
   for-human` lists everything waiting on them, and empty means nothing is.
-- **Respect the flow rule** in the agent-sandbox charter: review time is the
+- **Respect the flow rule** in the agent-sandbox charter (in that repository): review time is the
   limit, so at most two unreviewed runs, in parallel only across separate areas.
 - **Harness changes are work too.** A change to this runbook, the prompt or the
   scripts gets a review run like any other.

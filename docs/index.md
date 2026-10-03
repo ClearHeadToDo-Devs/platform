@@ -23,7 +23,7 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 
 ## Runbooks
 
-* [Agent sandbox guide](../agent-sandbox/README.md) — workspaces, agents, sessions, commands and the review/fix/landing loop
+* Agent sandbox guide: the README of the agent-sandbox repository (`~/Products/agent-sandbox`) — workspaces, agents, sessions, commands and the review/fix/landing loop
 * [Sandbox runbook](overnight-runbook.md) — standing rules for sandboxed sessions and the work, review and fix run kinds
 
 ## History

@@ -1,4 +1,4 @@
-# Cache volumes for sessions and the landing gate (agent-sandbox/README.md).
+# Cache volumes for sessions and the landing gate (agent-sandbox's README).
 # Cargo's registry, and one build directory shared by every workspace: the
 # image sets CARGO_TARGET_DIR to it, so a session recompiles only what its
 # branch changed.
