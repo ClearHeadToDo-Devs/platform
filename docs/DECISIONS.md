@@ -6,7 +6,7 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 2nd 2026 **Status:** Living Document
+**Last Updated:** October 3rd 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
@@ -17,18 +17,18 @@ This document records decisions that bind more than one repository: the specific
 Decided 2026-10-03 by the human, before Decision 46 was implemented. Decision 46 made duration a field of its own (`|30`) so undated work could answer "what fits in thirty minutes?"; the human does not work that way, and a range on `@` says when and how long in one value.
 
 - **`@` takes a time or an ISO 8601 interval**, as `:` does (Decision 48): `@2026-10-03T09:00/2026-10-03T09:30` plans a block, `@2026-10-03/2026-10-05` three whole days. A single value is the start: a date is an all-day event (Decision 47), a date and time is a point. Only the full `start/end` form, as for `:`.
-- **A bound covers its written precision and the range is half-open**, as for `:`: `@…T09:00/…T09:30` ends at 09:31, and `@2026-10-03/2026-10-05` ends at the start of the 6th.
-- **Duration is derived**, never written: the length of the `@` range. `app:durationMinutes` becomes a derived term, and its CCO measurement is unchanged, fed from the range.
-- **No duration sigil.** `|` (Decision 46) is never introduced, `D` is retired, and E001 (a duration without a do-date) goes with it. The parser keeps reading `@… D60` for a while and the formatter writes it as a range, so files migrate by formatting.
-- **Calendar sync** maps the range to `DTSTART`/`DTEND`. RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end.
+- **The range is half-open, and its end is read as a calendar reads one** (amended the same day): a date end covers its day, so `@2026-10-03/2026-10-05` ends at the start of the 6th; a time end is the instant written, so `@…T09:00/…T09:30` ends at 09:30, thirty minutes. This is RFC 5545's `DTEND`. A start is its first instant, as for `:`.
+- **Duration is derived**, never written: the length of the `@` range in whole minutes, rounded down. `app:durationMinutes` becomes a derived term, and its CCO measurement is unchanged, fed from the range. In the application graph the range is written as `app:plannedStart` and `app:plannedEnd` (`app:start` is renamed).
+- **No duration sigil.** `|` (Decision 46) is never introduced, `D` is retired, and E001 (a duration without a do-date) goes with it. The parser keeps reading `@… D60` for a while and the formatter writes it as a range (`@…T09:00 D15` becomes `@…T09:00/…T09:15`), so files migrate by formatting. A `D` on a date-only `@` cannot become a range and is left as written; no real file has one.
+- **Calendar sync carries the block and nothing else**: VEVENT `DTSTART`/`DTEND`, VTODO `DTSTART`/`DURATION` (RFC 5545 forbids `DURATION` beside `DUE`). RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end. The window (`:`) is not synchronized, and a VTODO's `DUE` is neither written nor read.
 - **W015 compares two ranges:** the `@` range must lie within the `:` window.
-- **Core has one interval type** with two readings of a single value: an end for `:`, a start for `@`.
+- **Core has one interval type** with two readings per field: a single value is an end for `:` and a start for `@`; a time end covers its unit for `:` (Decision 48's deadline) and is the instant for `@`.
 
 **Supersedes** Decision 46 (duration as its own field, the `|` sigil). **Revises** Decision 48's wording of W015 ("`@` plus its duration").
 
-**Alternatives rejected:** a duration field beside the range (two ways to write one block); keeping `|` for undated estimates (no use the human has); ISO 8601 durations such as `@…/PT30M` (Decision 48 admits only `start/end`).
+**Alternatives rejected:** a duration field beside the range (two ways to write one block); keeping `|` for undated estimates (no use the human has); ISO 8601 durations such as `@…/PT30M` (Decision 48 admits only `start/end`); reading a time end as covering its unit, as `:` does (a half-hour meeting would last thirty-one minutes, and a calendar would show it).
 
-**Trade-off accepted:** an estimate without a date cannot be written; a planned block always says when.
+**Trade-off accepted:** an estimate without a date cannot be written; a planned block always says when. The two fields read a time end differently: `:…T17:00` is late from 17:01, while `@…/…T17:00` ends at 17:00. A deadline is "by", a block is "until". Deadlines are not on the calendar: a component holds one interval, and showing the window too (a second event per Action, a VTODO carrying the window, or a generated read-only deadlines calendar) cost more integration than seeing deadlines in ClearHead.
 
 ## Decision 50: The Ontology Folds Into the Specification
 
