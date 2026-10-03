@@ -5,12 +5,14 @@ description: Drive the clearhead CLI against a scratch workspace to verify core/
 
 # Verifying clearhead changes
 
-The surface for both `clearhead-core` and `clearhead-cli` changes is the CLI binary. Build it from the working tree (the CLI depends on core by path):
+The surface for both `clearhead-core` and `clearhead-cli` changes is the CLI binary. Both crates live in the `clearhead-core/` cargo workspace (`crates/clearhead-core`, `crates/clearhead-cli`); build from there (the CLI depends on core by path):
 
 ```bash
-cd clearhead-cli && cargo build --bin clearhead
-# binary: clearhead-cli/target/debug/clearhead
+cd clearhead-core && cargo build --bin clearhead
+# binary: clearhead-core/target/debug/clearhead
 ```
+
+File verbs take a `file` subcommand: `clearhead format file <path>`, `clearhead lint file <path>`.
 
 The installed `~/.cargo/bin/clearhead` is the *previous* release — useful as an old-vs-new comparison when the change alters observable behavior.
 
