@@ -17,18 +17,18 @@ This document records decisions that bind more than one repository: the specific
 Decided 2026-10-03 by the human, before Decision 46 was implemented. Decision 46 made duration a field of its own (`|30`) so undated work could answer "what fits in thirty minutes?"; the human does not work that way, and a range on `@` says when and how long in one value.
 
 - **`@` takes a time or an ISO 8601 interval**, as `:` does (Decision 48): `@2026-10-03T09:00/2026-10-03T09:30` plans a block, `@2026-10-03/2026-10-05` three whole days. A single value is the start: a date is an all-day event (Decision 47), a date and time is a point. Only the full `start/end` form, as for `:`.
-- **The range is half-open, and its end is read as a calendar reads one** (amended the same day): a date end covers its day, so `@2026-10-03/2026-10-05` ends at the start of the 6th; a time end is the instant written, so `@…T09:00/…T09:30` ends at 09:30, thirty minutes. This is RFC 5545's `DTEND`. A start is its first instant, as for `:`.
+- **A date covers its day; a time is an instant** (amended the same day), for `@` and `:` alike. The range is half-open: `@2026-10-03/2026-10-05` ends at the start of the 6th, and `@…T09:00/…T09:30` ends at 09:30, thirty minutes, as RFC 5545 reads `DTEND`. For `:`, `…T17:00` is late from 17:00. This revises Decision 48's written precision for times: the same text must mean the same interval in both fields.
 - **Duration is derived**, never written: the length of the `@` range in whole minutes, rounded down. `app:durationMinutes` becomes a derived term, and its CCO measurement is unchanged, fed from the range. In the application graph the range is written as `app:plannedStart` and `app:plannedEnd` (`app:start` is renamed).
 - **No duration sigil.** `|` (Decision 46) is never introduced, `D` is retired, and E001 (a duration without a do-date) goes with it. The parser keeps reading `@… D60` for a while and the formatter writes it as a range (`@…T09:00 D15` becomes `@…T09:00/…T09:15`), so files migrate by formatting. A `D` on a date-only `@` cannot become a range and is left as written; no real file has one.
 - **Calendar sync carries the block and nothing else**: VEVENT `DTSTART`/`DTEND`, VTODO `DTSTART`/`DURATION` (RFC 5545 forbids `DURATION` beside `DUE`). RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end. The window (`:`) is not synchronized, and a VTODO's `DUE` is neither written nor read.
 - **W015 compares two ranges:** the `@` range must lie within the `:` window.
-- **Core has one interval type** with two readings per field: a single value is an end for `:` and a start for `@`; a time end covers its unit for `:` (Decision 48's deadline) and is the instant for `@`.
+- **Core has one interval type** with one reading of a bound and two of a single value: an end for `:`, a start for `@`.
 
-**Supersedes** Decision 46 (duration as its own field, the `|` sigil). **Revises** Decision 48's wording of W015 ("`@` plus its duration").
+**Supersedes** Decision 46 (duration as its own field, the `|` sigil). **Revises** Decision 48's written precision for times (a minute covered its minute, so `:…T17:00` was late from 17:01) and its wording of W015 ("`@` plus its duration").
 
-**Alternatives rejected:** a duration field beside the range (two ways to write one block); keeping `|` for undated estimates (no use the human has); ISO 8601 durations such as `@…/PT30M` (Decision 48 admits only `start/end`); reading a time end as covering its unit, as `:` does (a half-hour meeting would last thirty-one minutes, and a calendar would show it).
+**Alternatives rejected:** a duration field beside the range (two ways to write one block); keeping `|` for undated estimates (no use the human has); ISO 8601 durations such as `@…/PT30M` (Decision 48 admits only `start/end`); keeping Decision 48's written precision for times, in both fields (a half-hour meeting would last thirty-one minutes, and a calendar would show it) or only in `:` (the same text would mean intervals a minute apart, depending on the field).
 
-**Trade-off accepted:** an estimate without a date cannot be written; a planned block always says when. The two fields read a time end differently: `:…T17:00` is late from 17:01, while `@…/…T17:00` ends at 17:00. A deadline is "by", a block is "until". Deadlines are not on the calendar: a component holds one interval, and showing the window too (a second event per Action, a VTODO carrying the window, or a generated read-only deadlines calendar) cost more integration than seeing deadlines in ClearHead.
+**Trade-off accepted:** an estimate without a date cannot be written; a planned block always says when. A deadline written as a time has no grace: `:…T17:00` is late at 17:00:00. Deadlines are not on the calendar: a component holds one interval, and showing the window too (a second event per Action, a VTODO carrying the window, or a generated read-only deadlines calendar) cost more integration than seeing deadlines in ClearHead.
 
 ## Decision 50: The Ontology Folds Into the Specification
 
@@ -76,7 +76,7 @@ the practical update is that `@` no longer bounds anything: it is intention, whe
 
 this separates "can't do this before" (the lower end of `:`) from "start doing at" (`@`), two facts `@` used to carry at once.
 
-**A bound covers its written precision**, as ISO 8601 reads a reduced-precision value: a date covers its day, a minute its minute, a second its second. So `:…T17:00` is still on time at 17:00:59 and late from 17:01. This generalizes Decision 47 and needs no epsilon. The cost: `T17:00` and `T17:00:00` are different deadlines, and the spec must say so.
+**A bound covers its written precision**, as ISO 8601 reads a reduced-precision value: a date covers its day, a minute its minute, a second its second. So `:…T17:00` is still on time at 17:00:59 and late from 17:01. This generalizes Decision 47 and needs no epsilon. The cost: `T17:00` and `T17:00:00` are different deadlines, and the spec must say so. (Revised by Decision 51: a time is an instant, in `:` and `@` alike; only a date covers a unit, its day.)
 
 **The window is half-open**, `[lower, lateFrom)`: the lower bound's first instant is the first allowed one, and `lateFrom` is the start of the unit after the upper bound. The lint compares the intended block, `@` plus `|`, against it: `@` before the window opens, or the block ending after it closes, is a warning.
 
