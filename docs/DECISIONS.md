@@ -12,6 +12,19 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 49: Identifiers Live at w3id.org; Helper Nodes Are Blank
+
+Decided 2026-10-02 by the human, after `clearhead.us` lapsed (expired 2026-07-23; pending delete as of 2026-10-02). Every IRI we had minted named a domain we no longer held, and anyone could register it.
+
+- **Identifiers are permanent names, hosting is a redirect.** Every IRI we mint moves from `https://clearhead.us/` to `https://w3id.org/clearhead/`, keeping its path: `app:` becomes `https://w3id.org/clearhead/vocab/app/v1#`, the ontology `https://w3id.org/clearhead/vocab/clearhead`, the shapes `https://w3id.org/clearhead/specifications/app-shapes`. w3id.org is the W3C Permanent Identifier Community Group's redirect service; our space is `ids/clearhead/.htaccess` in its repository. Data never holds a hosting URL, so a lapsed domain or a new host changes one redirect, never the data. A domain for a website is a separate, optional choice.
+- **A version path is a release.** `…/v1` means the latest release of v1; `…/v1/<x.y.z>` means release `x.y.z` exactly. Each repository that defines IRIs keeps a `release` branch, advanced when it tags a release, and the redirects point at it and at the tags by pattern. So releasing never needs a change at w3id, and `main` (unreleased work) is never what an IRI resolves to. A breaking change to a vocabulary is a new major path (`v2`), not an edit under `v1`.
+- **Helper nodes are blank nodes.** A condition, measurement, bearer or act exists only as part of its owner, and nothing outside the graph refers to it, so it gets no name. This revises convention 6 of the CCO graph (helper IRIs from UUIDv5), whose reason, exports that diff cleanly, is now met by W3C RDF Dataset Canonicalization (RDFC-1.0): canonical exports are byte-stable, and fixtures compare by graph isomorphism. The mapping's CONSTRUCT mints blank nodes natively, so no IRI needs computing in SPARQL.
+- **Migration:** `app:`, the ontology, the shapes and the examples move now, before anything is published under them. The v4 IRIs do not move: `retire-v4` removes them.
+
+**Alternatives rejected:** buying a domain for the IRIs (renewal is a single point of failure, the one that just failed); Skolem IRIs under `…/genid/` (public names for implementation details nothing references); hashes SPARQL can compute dressed as UUIDs (breaks what `urn:uuid:` promises); an unregistered `urn:clearhead:` scheme (RFC 8141 requires registration).
+
+**Trade-off accepted:** changing where an identifier redirects takes a pull request to w3id, rarely, since releases move the `release` branch instead; helper nodes cannot be referenced across graphs.
+
 ## Decision 48: Due Dates Can Contain Ranges
 
 Decided 2026-10-02 by the human, from the open-enrollment case: preparing for enrollment (classes, comparing plans) can happen any time, but submitting cannot happen before enrollment opens.
