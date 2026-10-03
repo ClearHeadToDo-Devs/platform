@@ -22,7 +22,7 @@ Refreshed 2026-10-03 by an agent at the end of a session with the human; the ord
 
 ### Work streams, in priority order
 
-1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–51). The mapping is done. Next: `intent-range` (Decision 51), then `v5-projection`, then `migrate-iris`.
+1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–51). The mapping and the time model are done. Next: `v5-projection`, then `migrate-iris`.
 2. **[[deployment]]** (Active since 2026-10-03) — the specification publishes at `clearhead.dev` (Decision 49): `spec-site`, then the `v0.2.0` release with its `release` branch. Needs the human for the Cloudflare Pages setup.
 3. **agent-sandbox** (Active) — extracted on 2026-10-03 into its own repository, `~/Products/agent-sandbox`, with its charter and actions as that workspace's root charter; platform uses it from PATH. Work on it there.
 4. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.

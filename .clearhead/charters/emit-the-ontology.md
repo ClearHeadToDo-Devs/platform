@@ -26,11 +26,11 @@ Fix scheduled versus due in the mapping first, since the application vocabulary 
 
 ## Current status, 2026-10-03 (handoff)
 
-The meaning side is done: the mapping exists and the gate enforces it. The time model was settled over 2026-10-02/03 by Decisions 47, 48 and 51: `:` is the world's window and `@` is intent, both ISO 8601 `start/end` ranges with written precision and half-open ends; duration is derived from `@`. Decision 48 is implemented end to end (spec, examples, grammar, Core with `domain::time::{Bound, Due}`); Decision 51 is not.
+The meaning side is done: the mapping exists and the gate enforces it. The time model is settled and implemented end to end (Decisions 47, 48, 51): `:` is the world's window and `@` is intent, both ISO 8601 `start/end` ranges, half-open; a date covers its day and a time is an instant, in both fields alike. Duration is the `@` block's length. Core has `domain::time::{Bound, Due, Planned}`; calendar sync carries the block only (VEVENT `DTEND`, VTODO `DURATION`) and never the window.
 
 **Next, in order:**
-1. `intent-range` (Decision 51): spec, examples, grammar, Core, calendar, the path Decision 48 took. In Core, generalize `Due` into one interval type rather than copying it.
-2. `v5-projection`: Core emits `expected-app.ttl`. Not blocked; do it after `intent-range` so it is built on the final syntax.
+1. `v5-projection`: Core emits `expected-app.ttl` (now with `app:plannedStart`, `app:plannedEnd` and a derived `app:durationMinutes`).
+2. `window-lints` (E008, including an empty `@` block, and W015) whenever convenient; it is small.
 3. `migrate-iris` (to `clearhead.dev`, Decision 49), then the `deployment` charter's `spec-site` and `spec-release-0-2`; `fold-ontology` after `retire-v4`.
 
 **Know before starting:** the installed `clearhead` is current (reinstalled 2026-10-03); ROBOT 1.9.10 is in `~/.local/bin`, so `scripts/check-graph-shapes.py` runs fully on the desktop. The pinned gate's graph checks, Core conformance and the grammar gate pass; the full `validate-pinned` was not re-run end to end.
@@ -39,4 +39,5 @@ The meaning side is done: the mapping exists and the gate enforces it. The time 
 
 - 2026-10-01 — Created New from ground-the-ontology, once the human confirmed Decision 43. Absorbs implement-objectives: V5 has no plan without an objective, so objectives in the model are a step of this work, not a separate stream.
 - 2026-10-02 — Re-planned by Decision 45 after the query-surface spike (same answers three ways; view queries about a third of v4's length). The application vocabulary becomes the queried, exported graph with file and line; the ontology becomes its mapping to CCO; a CCO export is optional. nvim-locate cancelled. Found a mapping bug: scheduled and due were indistinguishable.
+- 2026-10-03 — intent-range done (Decision 51, amended twice the same day): a time end of `@` is the instant written, then a time is an instant in `:` too, so the same text means the same interval in both fields; deadlines stay off the calendar. Spec, examples, grammar, Core and calendar landed; do-bound folded in. Found a pre-existing duplicate on calendar import (support).
 - 2026-10-03 — app-to-cco done: the mapping lives in the specification (Decision 50) as one CONSTRUCT per structure, reads the effective terms (waitsOn, notBefore, lateFrom), gives helper nodes no names (Decision 49), maps @ to a Prescriptive ICE (no act before the work starts), and says "not before" or "late from" on each time condition. Metric review_date removed. Decision 51 replaced the planned duration sigil with a range on @.
