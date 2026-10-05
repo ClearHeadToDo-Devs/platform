@@ -11,12 +11,14 @@ engine.
 ## Run it
 
 ```sh
-ontology/.venv/bin/python scripts/rdf-interop/proof.py
+CLEARHEAD_BIN=$PWD/clearhead-core/target/debug/clearhead \
+    uv run --with rdflib python scripts/rdf-interop/proof.py
 ```
 
-rdflib comes from the ontology venv (`ontology/.venv`), which the ontology
-pre-push gate already provisions. `scripts/validate-pinned` runs the proof as
-part of the pinned-composition gate, after the CLI is built.
+`CLEARHEAD_BIN` is the binary under test, as an absolute path: the proof never
+uses a `clearhead` on `PATH`, which was built from some other revision.
+`scripts/validate-pinned` runs the proof as part of the pinned-composition
+gate, with the CLI it built.
 
 ## What it asserts
 
@@ -25,19 +27,13 @@ part of the pinned-composition gate, after the CLI is built.
 - **Canonical ids** — actions surface as `urn:uuid:…`, the spelling the CLI
   verbs accept.
 - **Representative facts, via the CLI's saved queries run unchanged** — priority
-  (`high-priority`), the GTD dependency filter (`next-actions` correctly drops a
-  blocked successor and a completed action), the successor edge
-  (`dependency-chain`), charter membership (`orphaned-actions` is empty), and a
-  Plan (`all-plans-simple`).
+  (`high-priority`), the dependency, completion and container filters
+  (`index/unscheduled` drops a waiting successor, a completed action and a
+  parent with open work), what waits on what (`dependency-chain`), charter
+  membership (`orphaned-actions` is empty), and that the backlog and velocity
+  queries evaluate.
 
 The fixture lives in `fixture/data/clearhead/` — a charter of actions with a
 priority, a `~` sequential chain, a context tag, and a completed action, plus
-one recurring Plan.
-
-## Recorded engine-local behavior
-
-`all-plans.sparql` uses `GROUP_CONCAT` over an `OPTIONAL` (possibly unbound)
-variable. That is legal SPARQL — unbound values are skipped — and Oxigraph
-evaluates it. rdflib's aggregate implementation raises `NotBoundError` instead.
-This is an **rdflib limitation, not a defect in ClearHead's published data**, so
-the proof records it rather than treating it as a portability failure.
+one recurring Plan. The plan is not asserted: the application graph does not
+define recurrence yet (Decision 53).

@@ -12,19 +12,12 @@ files *unchanged*, asserting the representative facts survive the round trip.
 
 It is wired into `scripts/validate-pinned`, not `cargo test`: the everyday Rust
 loop stays engine-free, and only the platform composition gate pays for the
-independent engine — which the ontology suite already installs (`ontology/.venv`
-carries rdflib). Run directly with that interpreter, naming the binary under
-test (validate-pinned passes the one it built from the pinned revisions):
+independent engine. Run it with rdflib from uv, naming the binary under test by
+an absolute path (validate-pinned passes the one it built from the pinned
+revisions):
 
-    CLEARHEAD_BIN=clearhead-core/target/debug/clearhead \
-        ontology/.venv/bin/python scripts/rdf-interop/proof.py
-
-Recorded engine-local behavior:
-  * `all-plans.sparql` uses GROUP_CONCAT over an OPTIONAL (possibly unbound)
-    variable. That is legal SPARQL — unbound values are skipped — and Oxigraph
-    evaluates it. rdflib's aggregate implementation raises NotBoundError instead.
-    This is an rdflib limitation, not a defect in ClearHead's published data, so
-    the proof records it rather than failing. See ALL_PLANS_ENGINE_LOCAL below.
+    CLEARHEAD_BIN=$PWD/clearhead-core/target/debug/clearhead \
+        uv run --with rdflib python scripts/rdf-interop/proof.py
 """
 
 from __future__ import annotations
@@ -35,7 +28,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-import rdflib  # pyright: ignore[reportMissingImports] -- supplied by ontology/.venv
+import rdflib  # pyright: ignore[reportMissingImports] -- supplied by uv
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
@@ -142,22 +135,10 @@ def main() -> int:
 
     p.check(rows(ds, "orphaned-actions") == [], "orphaned-actions: every action is charter-linked")
 
-    plans = rows(ds, "all-plans-simple")
-    p.check(names(plans) == {"Weekly review"}, "all-plans-simple: the Plan travels")
-
     # These execute cleanly in rdflib; their rows are fixture-incidental, so we
     # assert the deterministic counts to prove standard evaluation, not content.
     p.check(len(rows(ds, "open-actions")) == 4, "open-actions (backlog): 4 open actions")
     p.check(rows(ds, "completion-velocity") == [], "completion-velocity: runs (no dated completions)")
-    p.check(rows(ds, "plans-with-contexts") == [], "plans-with-contexts: runs (fixture plan has no context)")
-
-    print("recorded engine-local behavior")
-    try:
-        rows(ds, "all-plans")
-        p.check(True, "all-plans: rdflib accepted GROUP_CONCAT-over-unbound this time")
-    except rdflib.plugins.sparql.sparql.NotBoundError:
-        # Expected: documented rdflib limitation, not a portability defect.
-        p.check(True, "all-plans: rdflib NotBoundError (known aggregate limitation, recorded)")
 
     print()
     if p.failures:

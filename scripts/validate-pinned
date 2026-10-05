@@ -82,15 +82,10 @@ clearhead="${CARGO_TARGET_DIR:-$root/clearhead-core/target}/debug/clearhead"
 # Engine-independence (rdf-publication external-rdf-proof): export the fixture
 # workspace with the real binary and answer the CLI's saved .sparql in rdflib, a
 # wholly independent SPARQL engine. Proves the publication is standard RDF, not
-# an Oxigraph-shaped artifact. rdflib rides in the ontology venv the ontology
-# gate already provisions.
+# an Oxigraph-shaped artifact. rdflib comes from uv, as pyshacl does for the
+# graph gate.
 echo "validate-pinned > RDF publication is engine-independent"
-if test -x "$root/ontology/.venv/bin/python"; then
-    proof_python="$root/ontology/.venv/bin/python"
-else
-    proof_python=python3
-fi
-CLEARHEAD_BIN="$clearhead" "$proof_python" "$root/scripts/rdf-interop/proof.py"
+CLEARHEAD_BIN="$clearhead" uv run --with rdflib python "$root/scripts/rdf-interop/proof.py"
 
 echo "validate-pinned > specifications schema conformance"
 # check-jsonschema comes first: a `jsonschema` on PATH may be python-jsonschema's
