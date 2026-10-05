@@ -36,9 +36,9 @@ ontology = root / "specifications/ontology"
 
 # (name, shapes, their namespace, expected graph, invalid dir, warning dir)
 SUITES = [
-    ("cco", schemas / "graph.shapes.ttl", "https://clearhead.us/specifications/graph-shapes#",
+    ("cco", schemas / "graph.shapes.ttl", "https://clearhead.dev/specifications/graph-shapes#",
      fixture / "expected.ttl", fixture / "invalid", fixture / "warning"),
-    ("app", schemas / "app.shapes.ttl", "https://clearhead.us/specifications/app-shapes#",
+    ("app", schemas / "app.shapes.ttl", "https://clearhead.dev/specifications/app-shapes#",
      fixture / "expected-app.ttl", fixture / "invalid-app", fixture / "warning-app"),
 ]
 
@@ -117,7 +117,7 @@ if want != got:
     _, missing, extra = graph_diff(want, got)
     failures.append(f"mapping: {len(missing)} triples of expected.ttl missing, {len(extra)} extra")
 
-APP = "https://clearhead.us/vocab/app/v1#"
+APP = "https://clearhead.dev/vocab/app/v1#"
 local = lambda text: set(re.findall(r"\bapp:([A-Za-z]+)", text))
 terms = local((schemas / "app.shapes.ttl").read_text())
 used = set().union(*(local(q.read_text()) for q in queries))
