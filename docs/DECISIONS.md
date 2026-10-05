@@ -6,11 +6,23 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 3rd 2026 **Status:** Living Document
+**Last Updated:** October 4th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 52: A Time Is Kept as Written
+
+Decided 2026-10-04 by the human ("we always follow spec to keep behavior consistent"), from a property test that failed in the hour clocks go back. Core read every bound into an instant in the machine's zone and wrote back its wall-clock time, so `01:00` on that night could come back an hour off, and a written offset (`T09:00+02:00`) was rewritten as the formatting machine's local time. Both break the specification's rule that written values never depend on the machine (`ontology.md`), and `v5-projection` must emit times as written.
+
+- **A bound is its written form:** a local date and time, the offset if the file wrote one, and the precision. It resolves to an instant only when asked, in the viewer's zone; the text is written back as read, so parsing and formatting round-trip exactly.
+- **A local time resolves as RFC 5545 §3.3.5 resolves one:** a time that occurs twice is its first occurrence; a time that does not occur is read with the offset before the gap (`02:30` becomes `03:30`). Calendar sync already follows RFC 5545, so the same text means the same instant on both sides.
+- **A zero offset is written `Z`.** `+00:00` and `Z` name the same offset; RFC 3339 prefers `Z`.
+
+**Alternatives rejected:** keeping the instant and writing an offset only when the local time is ambiguous (formatting would add an offset the user never wrote, and a written offset would still be lost); always writing an offset (every file would change with the machine that formats it).
+
+**Trade-off accepted:** a floating time in the hour that occurs twice can only name its first occurrence; to mean the second, write the offset.
 
 ## Decision 51: Intent Is a Range; Duration Is Derived
 
