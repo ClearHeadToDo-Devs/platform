@@ -128,7 +128,7 @@ validate_schema() {
 #    spec-conformance test.
 releases=$(for s in "$root"/specifications/schemas/*.json; do
     jq -r '."$id" // ""' "$s" | sed -E \
-        -e 's#^https://raw\.githubusercontent\.com/ClearHeadToDo-Devs/specifications/(v[0-9]+\.[0-9]+\.[0-9]+)/schemas/[^/]+$#\1#' \
+        -e 's#^https://clearhead\.dev/schemas/(v[0-9]+\.[0-9]+\.[0-9]+)/[^/]+\.schema\.json$#\1#' \
         -e 't' -e "s#.*#not a release id in ${s##*/}#"
 done | sort -u)
 if [ "$(printf '%s\n' "$releases" | wc -l)" -ne 1 ] || ! printf '%s' "$releases" | grep -q '^v'; then

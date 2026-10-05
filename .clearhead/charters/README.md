@@ -22,15 +22,15 @@ Refreshed 2026-10-03 by an agent at the end of a session with the human; the ord
 
 ### Work streams, in priority order
 
-1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–53). Core projects the app graph, the CLI queries it, v4 is retired and the ontology lives in `specifications/ontology/`. Next: the v0.2.0 release (`deployment`), which publishes at `clearhead.dev`.
-2. **[[deployment]]** (Active since 2026-10-03) — the specification publishes at `clearhead.dev` (Decision 49): `spec-site`, then the `v0.2.0` release with its `release` branch. Needs the human for the Cloudflare Pages setup.
+1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–53). Core projects the app graph, the CLI queries it, v4 is retired and the ontology lives in `specifications/ontology/`. Published at `clearhead.dev` as v0.2.0 (2026-10-05). Next: `objective-actions-view`; `window-lints` whenever convenient.
+2. **[[deployment]]** (Active since 2026-10-03) — the specification publishes at `clearhead.dev` (Decision 49). `spec-site` and `spec-release-0-2` are done (2026-10-05), so it has no open actions; its wider shape (registry releases, per-repo semver, prebuilt binaries) needs the human's call before it gets any.
 3. **agent-sandbox** (Active) — extracted on 2026-10-03 into [its own repository](https://github.com/ca-mantis-shrimp/agent-sandbox) (checked out at `~/Products/agent-sandbox`), with its charter and actions as that workspace's root charter; platform uses it from PATH. Work on it there.
 4. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.
 5. **[[root-next-default]]** (Active) — resume the homelab calendar sync when the NUC is back, including moving the orphaned inbox calendar collection.
 6. **[[support]]** — CLI friction surfaced by real use.
 7. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37).
 
-Closed since the last map (2026-10-04): v5-projection, v5-queries, retire-v4, fold-ontology; support: CLI health findings route to doctor, piped charter listing, stable charter order. Decided: Decisions 52 (a time is kept as written) and 53 (queries read the application graph).
+Closed since the last map (2026-10-04): spec-site and spec-release-0-2 (2026-10-05); v5-projection, v5-queries, retire-v4, fold-ontology; support: CLI health findings route to doctor, piped charter listing, stable charter order. Decided: Decisions 52 (a time is kept as written) and 53 (queries read the application graph).
 
 ### Settled prerequisites
 
