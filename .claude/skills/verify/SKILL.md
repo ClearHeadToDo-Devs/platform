@@ -29,7 +29,7 @@ cd $SCRATCH/ws   # the CLI resolves the workspace by cwd-walk
 
 ## Gotchas
 
-- **`read actions` (no `--charter`) bypasses the workspace loader** — it lists files and parses each directly (`collect_all_actions`), touching no sidecars, no journal recovery, no load warnings. To exercise the load path use `read charters`, `read actions --charter <x>`, `query`, or `debug`.
-- `clearhead debug` prints the resolved config and data root *and* runs a full workspace load — fastest way to see load warnings.
-- Load warnings go to stderr; capture separately (`2>file`) when checking stdout purity for `--format json-ld` scripting.
+- **Loads print at most one stderr line**, and only when the workspace has violations; warnings appear only in `clearhead doctor`, which is where to see every finding. A read naming a quarantined target (`read actions --file`/`--charter`) exits 1 with the reason. Fixtures: a malformed `.actions` file or a corrupt sidecar each give one violation.
+- `clearhead debug` prints the resolved config and data root *and* runs a full workspace load.
+- Capture stderr separately (`2>file`) when checking stdout purity. In this shell (zsh), an unquoted `$cmd` is not word-split: loop over commands with `eval`.
 - Useful fixtures: corrupt sidecar = `echo '{ bad' > .clearhead/charters/.home.json`; interrupted batch = write `.tmp.x` + a `.pending` file of `<tmp-abs-path>\t<final-abs-path>` lines in `charters/`.
