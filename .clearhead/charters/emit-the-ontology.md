@@ -33,7 +33,6 @@ Core emits the application graph (`rdf::app::project_app`, matching `expected-ap
 **Next, in order:**
 1. Keep created and closed times as written; `objective-actions-view`; `window-lints` whenever convenient.
 2. `migrate-iris` (to `clearhead.dev`), then `deployment`'s `spec-site` and `spec-release-0-2` (the index schema change ships there).
-3. The context question moved here from the ontology workspace (blocked, the human's): much of it is now answered by app:Context, skos:broader from config and the CCO mapping's contexts.rq; close it or restate what remains.
 
 ## Log
 
