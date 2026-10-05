@@ -34,7 +34,7 @@ Outcome: Decision 45 inverts the view. A fresh-named application vocabulary beco
 
 ## Files
 
-- `run.py` — reruns the comparison (`uv run --with rdflib python docs/history/query-surface-spike/run.py`). It reads the v4 queries live, so it stops reproducing once they move to the new vocabulary.
+- `run.py` — reran the comparison against the v4 queries live. They moved to the application vocabulary on 2026-10-04 (Decision 53), so it no longer reproduces; the recorded results stand.
 - `v4.trig`, `v5.ttl` — the two graphs of the spike workspace.
 - `raw/`, `view/` — the CCO and view versions of each query; `view/view.rq` is the CONSTRUCT.
-- `gen_expected.py` — writes the spec fixture's `expected.ttl` (usage in its docstring). The working tool until the `app-to-cco` mapping generates that graph instead; delete it then.
+- `gen_expected.py` — wrote the spec fixture's `expected.ttl` until the `app-to-cco` mapping generated it; deleted 2026-10-04 (git history keeps it).
