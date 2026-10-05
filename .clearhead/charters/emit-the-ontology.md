@@ -31,7 +31,7 @@ The meaning side is done: the mapping exists and the gate enforces it. The time 
 Core emits the application graph (`rdf::app::project_app`, matching `expected-app.ttl`) and it is the only projection: the CLI's SPARQL dataset, every saved query, export and JSON-LD reads use it (Decision 53), and v4 is gone (`retire-v4`). The ontology now lives in `specifications/ontology/` (`fold-ontology`).
 
 **Next, in order:**
-1. Keep created and closed times as written; `objective-actions-view`; `window-lints` whenever convenient.
+1. `objective-actions-view`; `window-lints` whenever convenient.
 2. `migrate-iris` (to `clearhead.dev`), then `deployment`'s `spec-site` and `spec-release-0-2` (the index schema change ships there).
 
 ## Log
@@ -44,3 +44,4 @@ Core emits the application graph (`rdf::app::project_app`, matching `expected-ap
 - 2026-10-04 — v5-queries done (Decision 53): queries read the app graph. A snapshot of every query on four workspaces matched except where Decision 53 changes rows; the human chose data_root rows, app:plannedFrom, as-written row dates, local day bounds, and retiring the plan queries until recurrence. Found: charters load in a random order (support).
 - 2026-10-04 — retire-v4 done: the v4 projection, ws: layer and namespace constants left Core; the ontology repository dropped v4, the clearhead.us site and worker (the domain lapsed) and its Python tooling; the interop proof takes rdflib from uv.
 - 2026-10-04 — fold-ontology done: the ontology repository's V5 content and docs are in specifications/ontology/ with their history; the submodule and its CI are gone; validate-pinned runs the ROBOT gate there.
+- 2026-10-04 — created and closed times are kept as written (Decision 52 complete): format no longer rewrites ^ or %; host-stamped times are written as before.
