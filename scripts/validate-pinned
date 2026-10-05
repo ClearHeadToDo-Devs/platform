@@ -14,7 +14,7 @@ if printf '%s\n' "$status" | grep -Eq '^[+-U]'; then
 fi
 
 for repo in tree-sitter-actions clearhead-core \
-    clearhead.nvim ontology specifications
+    clearhead.nvim specifications
 do
     if test -n "$(git -C "$repo" status --porcelain)"; then
         echo "validate-pinned > $repo has uncommitted changes" >&2
@@ -50,7 +50,11 @@ run_gate clearhead-core
     export XDG_DATA_HOME="$nvim_data"
     run_gate clearhead.nvim
 )
-run_gate ontology
+
+# The ontology folded into the specification (Decision 50), which owns no
+# gate: its ROBOT check (merge, reason, verify, competency answers) runs here.
+echo "validate-pinned > ontology (ROBOT)"
+make -C "$root/specifications/ontology" test
 
 # Specifications owns no runnable gate of its own — it is inert oracle data.
 # Conformance is the implementations' responsibility, so it is checked here in

@@ -32,7 +32,7 @@ SH = Namespace("http://www.w3.org/ns/shacl#")
 root = pathlib.Path(__file__).resolve().parent.parent
 fixture = root / "specifications/examples/conformance/graph"
 schemas = root / "specifications/schemas"
-ontology = root / "ontology/v5"
+ontology = root / "specifications/ontology"
 
 # (name, shapes, their namespace, expected graph, invalid dir, warning dir)
 SUITES = [

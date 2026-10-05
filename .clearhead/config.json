@@ -4,7 +4,6 @@
     "../clearhead-core",
     "../clearhead-core/crates/clearhead-cli",
     "../clearhead.nvim",
-    "../ontology",
     "../specifications",
     "../tree-sitter-actions"
   ]

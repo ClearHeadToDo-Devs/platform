@@ -67,10 +67,7 @@ Please review product-specific documentation for more details on each repository
 
 - [Specifications](./specifications/README.md): The normative platform contracts, written in human-readable formats such as Markdown, examples, and data schemas
   - all downstream dependencies rely on this repository, but usually not directly, we vendor examples so that downstream repositories can be more self-contained, and where possible the products may simply conform to the specifications without needing to reference them directly
-- [Ontology](./ontology/README.md): The ontologies that provide the semantic backbone for the platform, ensuring that data is structured and interpreted consistently across different tools and repositories
-  - Aligned with the CCO ontology, which itself is a BFO-aligned ontology format.
-  - Creates the semantic backbone that enables interoperability and data integration across the platform
-  - tools like the CLI use it to do semantic reasoning and validation on the data ingested
+  - [Ontology](./specifications/ontology/README.md): what the data means, in CCO and IAO terms (BFO-aligned), and the mapping from the application graph to them; folded into the specifications from its own repository (Decision 50)
 - [Action File Parser](./tree-sitter-actions/README.md) a parser for the action file format, built using tree-sitter
   - used by the CLI and other tools to parse and validate action files
 - [Core Library](./clearhead-core/README.md) the pure Rust domain library at the heart of the platform: it owns the model and the algorithms and *decides* mutations, but performs no I/O

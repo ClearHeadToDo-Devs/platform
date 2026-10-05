@@ -30,8 +30,8 @@ RUN cargo install --locked --root /usr/local topiary-cli@0.7.3 \
 # Graphviz for clearhead.nvim's graph-view spec, which is pending without it.
 RUN pacman -S --noconfirm --needed graphviz && pacman -Scc --noconfirm
 
-# Java and ROBOT for the ontology's gate (ontology/v5/Makefile) and the graph
-# shapes check; ROBOT pinned by checksum, as in the ontology's CI. pyshacl is
+# Java and ROBOT for the ontology's gate (specifications/ontology/Makefile) and
+# the graph shapes check; ROBOT pinned by checksum. pyshacl is
 # cached for `uv run --with` in scripts/validate-pinned.
 RUN pacman -S --noconfirm --needed jre21-openjdk-headless && pacman -Scc --noconfirm \
     && curl -sSfL https://github.com/ontodev/robot/releases/download/v1.9.10/robot.jar -o /usr/local/lib/robot.jar \

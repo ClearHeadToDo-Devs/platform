@@ -14,7 +14,7 @@ My dream is to build the ClearHead platform out of composable, open, data-driven
 
 We are working through the individual structures such that we are going to be able to make a full platform just by handling individual structures
 
-## Charter Map & Prioritization (2026-10-03)
+## Charter Map & Prioritization (2026-10-04)
 
 Choose the highest-priority open action whose `<` predecessors are closed. Finish bounded active work before promoting another charter. `someday/` charters remain bets rather than backlog; promote one only when its recorded trigger is evidenced.
 
@@ -22,7 +22,7 @@ Refreshed 2026-10-03 by an agent at the end of a session with the human; the ord
 
 ### Work streams, in priority order
 
-1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–51). The mapping and the time model are done. Next: `v5-projection`, then `migrate-iris`.
+1. **[[emit-the-ontology]]** (Active) — the application vocabulary is the graph; the specification's mapping is its CCO meaning (Decisions 45–53). Core projects the app graph, the CLI queries it, v4 is retired and the ontology lives in `specifications/ontology/`. Next: created and closed times as written, then `migrate-iris`.
 2. **[[deployment]]** (Active since 2026-10-03) — the specification publishes at `clearhead.dev` (Decision 49): `spec-site`, then the `v0.2.0` release with its `release` branch. Needs the human for the Cloudflare Pages setup.
 3. **agent-sandbox** (Active) — extracted on 2026-10-03 into [its own repository](https://github.com/ca-mantis-shrimp/agent-sandbox) (checked out at `~/Products/agent-sandbox`), with its charter and actions as that workspace's root charter; platform uses it from PATH. Work on it there.
 4. **[[agent-surface]]** (Active) — CLI-first orientation and capture, then a thin MCP wrapper, then a dogfood verdict.
@@ -30,7 +30,7 @@ Refreshed 2026-10-03 by an agent at the end of a session with the human; the ord
 6. **[[support]]** — CLI friction surfaced by real use.
 7. **[[pure-core-split]]** — parked on the WASM C-toolchain blocker (bundle the grammar per Decision 37).
 
-Closed since the last map: app-to-cco. Decided since the last map: Decisions 48–51 (the due window, `clearhead.dev`, the ontology folding into the specification, intent as a range).
+Closed since the last map (2026-10-04): v5-projection, v5-queries, retire-v4, fold-ontology; support: CLI health findings route to doctor, piped charter listing, stable charter order. Decided: Decisions 52 (a time is kept as written) and 53 (queries read the application graph).
 
 ### Settled prerequisites
 

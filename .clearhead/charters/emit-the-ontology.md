@@ -28,12 +28,12 @@ Fix scheduled versus due in the mapping first, since the application vocabulary 
 
 The meaning side is done: the mapping exists and the gate enforces it. The time model is settled (Decisions 47, 48, 51, 52): `:` is the window and `@` is intent, both half-open `start/end` ranges; a date covers its day and a time is an instant. A `Bound` is its written form (local time, an offset only if written, precision) and resolves in the viewer's zone per RFC 5545, so files never change with the machine.
 
-Core emits the application graph (`rdf::app::project_app`, matching `expected-app.ttl`) and it is the only projection: the CLI's SPARQL dataset, every saved query, export and JSON-LD reads use it (Decision 53), and v4 is gone from Core, the CLI, the ontology repository and the specification (`retire-v4`).
+Core emits the application graph (`rdf::app::project_app`, matching `expected-app.ttl`) and it is the only projection: the CLI's SPARQL dataset, every saved query, export and JSON-LD reads use it (Decision 53), and v4 is gone (`retire-v4`). The ontology now lives in `specifications/ontology/` (`fold-ontology`).
 
 **Next, in order:**
-1. `fold-ontology`: the ontology repository now holds only `v5/` and `docs/`; move them into `specifications/ontology/` with history and drop the submodule.
-2. Keep created and closed times as written; `objective-actions-view`; `window-lints` whenever convenient.
-3. `migrate-iris` (to `clearhead.dev`), then `deployment`'s `spec-site` and `spec-release-0-2` (the index schema change ships there).
+1. Keep created and closed times as written; `objective-actions-view`; `window-lints` whenever convenient.
+2. `migrate-iris` (to `clearhead.dev`), then `deployment`'s `spec-site` and `spec-release-0-2` (the index schema change ships there).
+3. The context question moved here from the ontology workspace (blocked, the human's): much of it is now answered by app:Context, skos:broader from config and the CCO mapping's contexts.rq; close it or restate what remains.
 
 ## Log
 
@@ -44,3 +44,4 @@ Core emits the application graph (`rdf::app::project_app`, matching `expected-ap
 - 2026-10-04 — v5-projection done: the app graph projects from Core and matches expected-app.ttl. Found on the way and fixed first: Bound lost written offsets and did not round-trip in the hour clocks go back, and a time with an offset but no seconds, or in the spring-forward gap, failed to parse and format dropped the field (Decision 52).
 - 2026-10-04 — v5-queries done (Decision 53): queries read the app graph. A snapshot of every query on four workspaces matched except where Decision 53 changes rows; the human chose data_root rows, app:plannedFrom, as-written row dates, local day bounds, and retiring the plan queries until recurrence. Found: charters load in a random order (support).
 - 2026-10-04 — retire-v4 done: the v4 projection, ws: layer and namespace constants left Core; the ontology repository dropped v4, the clearhead.us site and worker (the domain lapsed) and its Python tooling; the interop proof takes rdflib from uv.
+- 2026-10-04 — fold-ontology done: the ontology repository's V5 content and docs are in specifications/ontology/ with their history; the submodule and its CI are gone; validate-pinned runs the ROBOT gate there.
