@@ -12,6 +12,22 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 53: Queries Read the Application Graph
+
+Decided 2026-10-04 by the human while `v5-queries` moved every saved query to the `app:` vocabulary. Each point was a choice the move forced.
+
+- **Rows locate an entity from the data root.** Index and tree rows carry `source_file` exactly as `app:file` (`charters/next.actions`) and an absolute `data_root`, replacing `charter_root`. The graph names no root (rule 3), so the CLI attaches it per row by id. One path convention runs from the graph to the client; the index schema changes in the next release and clearhead.nvim joins `data_root` and `source_file` as it joined `charter_root`.
+- **`@` gets a derived instant, `app:plannedFrom`:** the planned start's first instant in the viewer's zone, as `app:notBefore` and `app:lateFrom` are the window's. Views compare instants, never written values, and before this there was no instant for "planned for today".
+- **Row dates are as written.** `scheduled_at` is `app:plannedStart` and `due_date` is `app:due`: a date stays a date, so a client shows the deadline the file states. Views filter and sort on `app:plannedFrom` and `app:lateFrom`, the effective deadline, so an action can appear for an inherited deadline and carry no `due_date` of its own.
+- **Days end at the viewer's midnight.** `?END_OF_TODAY` and `?END_OF_WEEK` were computed in UTC, so for a viewer west of Greenwich "today" rolled over in the afternoon. They are now the viewer's next midnights, the zone the derived instants use.
+- **The plan queries wait for recurrence.** `all-plans`, `all-plans-simple`, `plans-with-contexts` and `read plans --format json-ld` read v4's Plan nodes, and the application graph does not define recurrence yet. They are retired, and the JSON-LD read fails with that reason, until `v5-fixture-gaps` brings recurrence into the graph; `read plans` lists plans natively meanwhile.
+
+What the move changed besides these, by following the specification: `overdue-tasks` means late (past `app:lateFrom`), not past the deadline's first instant; the agenda counts an inherited deadline, so the children of a parent due today appear; dependency views read `app:waitsOn`, which is the predecessors, the `~` sibling and the ancestors' waits. Three actions v4 reported as orphaned in the user workspace were a v4 projection gap; the app graph attaches them to their charters.
+
+**Alternatives rejected:** keeping `charter_root` and translating `app:file` back to it in the CLI (two path conventions joined by a translation); comparing written values in SPARQL (`xsd:date`, floating and offset `xsd:dateTime` do not compare reliably); rows carrying instants (a date deadline of the 3rd would display as due the 4th); specifying recurrence before moving the queries (it would block the move on a design not yet made).
+
+**Trade-off accepted:** saved queries written against v4 stop matching and must be rewritten; plan listings in SPARQL are unavailable until recurrence is specified.
+
 ## Decision 52: A Time Is Kept as Written
 
 Decided 2026-10-04 by the human ("we always follow spec to keep behavior consistent"), from a property test that failed in the hour clocks go back. Core read every bound into an instant in the machine's zone and wrote back its wall-clock time, so `01:00` on that night could come back an hour off, and a written offset (`T09:00+02:00`) was rewritten as the formatting machine's local time. Both break the specification's rule that written values never depend on the machine (`ontology.md`), and `v5-projection` must emit times as written.
