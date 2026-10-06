@@ -32,7 +32,7 @@ Promote when the moving seams stabilize — specifically once [[spec-conformance
 
 ## Current status, 2026-10-05
 
-The specification is released (v0.2.0) and published at `clearhead.dev`. Next is the CLI, as prebuilt binaries that `cargo binstall clearhead_cli` downloads: publish the grammar, then Core, to crates.io; build the binaries with `dist`; release. Decided with the human: each repository has its own semver, the CLI names the spec release it implements, and releases follow user-visible change rather than a calendar. Open: which targets to build.
+The specification is released (v0.2.0) and published at `clearhead.dev`. Next is the CLI, as prebuilt binaries that `cargo binstall clearhead_cli` downloads: publish the grammar, then Core, to crates.io; build the binaries with `dist`; release. Decided with the human: each repository has its own semver, the CLI names the spec release it implements, and releases follow user-visible change rather than a calendar. One build per release: x86_64 Linux, both binaries, default features; minimal is a source build (2026-10-06).
 
 ## Log
 
