@@ -6,11 +6,25 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 4th 2026 **Status:** Living Document
+**Last Updated:** October 6th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 54: Implementations Rely Only on Published, Pinned Releases
+
+Decided 2026-10-05 by the human, while making the CLI installable with `cargo binstall`. Inside the platform, Core had quietly built against whatever the grammar and specification submodules held: a `[patch]` redirected the grammar, and tests read the spec from a sibling directory. Neither was visible outside the platform, and both broke Core's own CI for at least its last 100 runs.
+
+- **Dependencies are releases.** Core takes the grammar from crates.io at the version its `Cargo.toml` names, in every checkout, as any consumer would. An unpublished grammar is tried with a one-invocation `--config` override, never committed.
+- **Conformance is declared.** `clearhead_core` names the specification release it implements in `[package.metadata.clearhead] specification`, which ships with the published crate. Its CI tests against that tag's published examples; the CLI's `--version` will report it.
+- **The platform proves the pins.** `validate-pinned` fails unless the grammar Core resolves matches the submodule file for file, and the specification submodule is exactly the release Core declares.
+
+In the human's words: the spec is required for conformance, and pinning it makes conformance a specific consideration rather than something that just happens and can break the build.
+
+**Alternatives rejected:** the platform `[patch]` to the submodules (tests something no consumer builds, and the committed lockfile breaks `--locked` outside the platform); gating spec-reading tests behind a feature (standalone CI would never prove conformance).
+
+**Trade-off accepted:** a change that spans repositories goes in order. The grammar or specification releases first, then Core bumps its pin.
 
 ## Decision 53: Queries Read the Application Graph
 
