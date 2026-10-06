@@ -24,6 +24,21 @@ done
 
 echo "validate-pinned > submodules are clean and match the platform gitlinks"
 
+# Core takes the grammar from crates.io, as any consumer does, so the gates
+# below test the published crate. Prove it is the pinned submodule, file for
+# file: an unpublished grammar edit, or a version Core did not bump, fails here.
+published=$(cd "$root/clearhead-core" &&
+    cargo metadata --locked --format-version 1 |
+    jq -r '.packages[] | select(.name == "tree-sitter-actions") | .manifest_path')
+published=${published%/Cargo.toml}
+for path in grammar.js patterns.js src queries; do
+    if ! diff -r "$root/tree-sitter-actions/$path" "$published/$path" >/dev/null; then
+        echo "validate-pinned > Core's grammar ($published) differs from the submodule in $path" >&2
+        exit 1
+    fi
+done
+echo "validate-pinned > Core's grammar from crates.io is the pinned submodule"
+
 run_gate() {
     repo=$1
     echo "validate-pinned > $repo"
