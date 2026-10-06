@@ -29,3 +29,11 @@ Promote when the moving seams stabilize — specifically once [[spec-conformance
 1. Publish `tree-sitter-actions` to a registry with a real version, closing Core's standalone-build gap (the near-term motivator).
 2. Establish per-repo semver + tagged releases across the platform.
 3. Prebuilt binaries for the edge-facing tools (CLI, graphd) so phone/laptop install rather than compile.
+
+## Current status, 2026-10-05
+
+The specification is released (v0.2.0) and published at `clearhead.dev`. Next is the CLI, as prebuilt binaries that `cargo binstall clearhead_cli` downloads: publish the grammar, then Core, to crates.io; build the binaries with `dist`; release. Decided with the human: each repository has its own semver, the CLI names the spec release it implements, and releases follow user-visible change rather than a calendar. Open: which targets to build.
+
+## Log
+
+- 2026-10-05 — spec-site and spec-release-0-2 done. Planned the CLI release: publish-grammar, publish-core, cli-dist, version-names-spec, cli-release. Found: crates.io serves clearhead_cli 0.2.1 from 2025-12-24, and the CLI's repository URL is a 404.
