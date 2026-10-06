@@ -2,7 +2,7 @@
 # each session, and by agent-land before .sandbox/gate. Builds the
 # clearhead CLI from this branch and puts it first on PATH, so agents use the
 # branch's CLI and never an installed copy.
-cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead_cli
+cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead
 export PATH="$CARGO_TARGET_DIR/debug:$PATH"
 # A fresh clone has no node_modules; the grammar's gate needs them. Which
 # dependencies may run install scripts is tree-sitter-actions' allowScripts.

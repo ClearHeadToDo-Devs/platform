@@ -32,9 +32,9 @@ Promote when the moving seams stabilize — specifically once [[spec-conformance
 
 ## Current status, 2026-10-06
 
-The CLI ships: clearhead 0.3.0 is a GitHub release with a prebuilt x86_64 Linux archive, and `cargo binstall clearhead_cli` downloads it rather than compiling. The grammar (0.10.0), Core (0.3.0) and the CLI (0.3.0) are on crates.io; the specification (v0.2.1) is at `clearhead.dev`. Every repository relies only on published, pinned releases (Decision 54).
+The CLI ships: clearhead 0.3.1 is a GitHub release with a prebuilt x86_64 Linux archive, and `cargo binstall clearhead` downloads it rather than compiling. The grammar (0.10.0), Core (0.3.0) and the CLI (`clearhead` 0.3.1; `clearhead_cli` through 0.3.0) are on crates.io; the specification (v0.2.1) is at `clearhead.dev`. Every repository relies only on published, pinned releases (Decision 54).
 
-Next, none blocking: `windows-ci` before any Windows binary, `lint-minimal`, `keep-line-endings`, `release-notes`. The charter's wider shape (macOS, a separate LSP package) waits for a real user.
+Next, none blocking: `windows-ci` before any Windows binary, `lint-minimal`, `keep-line-endings`, then `changelog-format`, `core-root-changelog` and `platform-release`. The charter's wider shape (macOS, a separate LSP package) waits for a real user.
 
 ## Log
 
@@ -42,3 +42,4 @@ Next, none blocking: `windows-ci` before any Windows binary, `lint-minimal`, `ke
 - 2026-10-05 — publish-grammar done; Core takes the grammar from crates.io and declares the specification release it implements (v0.2.0), which CI checks out and validate-pinned enforces. Decided with the human: rely only on published, pinned versions, as a consumer would. Core's CI is green for the first time in at least 100 runs: the platform-only [patch] had broken --locked, and tests assumed a sibling spec checkout and the formatting feature.
 - 2026-10-06 — The specification is MIT-licensed (the human: permissive, commercial use is a win) and released as v0.2.1 so clearhead.dev serves the license; its contract is unchanged, so Core still declares v0.2.0 and the platform pins it. The README credits the imports' licenses (CCO BSD 3-Clause, IAO CC BY 4.0). clearhead.nvim has the MIT LICENSE its README claimed.
 - 2026-10-06 — clearhead 0.3.0 released: version-names-spec, publish-core, cli-dist and cli-release done. binstall downloads the binary (proved with compiling disabled); a container installs the archive by checksum. Found on the way: the Core crates shipped no license (fixed), dist overrides --target under --yes, and dist finds no release notes in the CLI changelog (release-notes).
+- 2026-10-06 — rename-cli-crate done as 0.3.1: the crate is `clearhead`, named for its command; the library keeps `clearhead_cli`. Proved by binstall (download, no compile) and the README's container commands. The rename missed Core's gate script, fixed after the tag, so the platform pins that fix.

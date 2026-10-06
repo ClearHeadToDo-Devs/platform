@@ -31,7 +31,7 @@ sh scripts/install-hooks.sh
 
 # Build from the platform root so .cargo/config.toml patches the grammar to the
 # tree-sitter-actions submodule, as every other platform build does.
-cargo build --manifest-path clearhead-core/Cargo.toml -p clearhead_cli
+cargo build --manifest-path clearhead-core/Cargo.toml -p clearhead
 
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export PATH=\"$PWD/clearhead-core/target/debug:\$PATH\"" >> "$CLAUDE_ENV_FILE"
