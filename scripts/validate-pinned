@@ -39,6 +39,19 @@ for path in grammar.js patterns.js src queries; do
 done
 echo "validate-pinned > Core's grammar from crates.io is the pinned submodule"
 
+# Core declares the specification release it implements, and its CI tests
+# against that tag. The pinned specification must be exactly that release, so
+# the conformance checks below test what Core claims and nothing unreleased.
+declared=$(cd "$root/clearhead-core" &&
+    cargo metadata --no-deps --locked --format-version 1 |
+    jq -r '.packages[] | select(.name == "clearhead_core") | .metadata.clearhead.specification')
+pinned=$(git -C "$root/specifications" describe --exact-match --tags HEAD 2>/dev/null || echo "an untagged commit")
+if [ "$declared" != "$pinned" ]; then
+    echo "validate-pinned > clearhead_core implements specification $declared, but the pinned specification is $pinned" >&2
+    exit 1
+fi
+echo "validate-pinned > the pinned specification is $declared, the release Core implements"
+
 run_gate() {
     repo=$1
     echo "validate-pinned > $repo"

@@ -37,3 +37,4 @@ The specification is released (v0.2.0) and published at `clearhead.dev`. Next is
 ## Log
 
 - 2026-10-05 — spec-site and spec-release-0-2 done. Planned the CLI release: publish-grammar, publish-core, cli-dist, version-names-spec, cli-release. Found: crates.io serves clearhead_cli 0.2.1 from 2025-12-24, and the CLI's repository URL is a 404.
+- 2026-10-05 — publish-grammar done; Core takes the grammar from crates.io and declares the specification release it implements (v0.2.0), which CI checks out and validate-pinned enforces. Decided with the human: rely only on published, pinned versions, as a consumer would. Core's CI is green for the first time in at least 100 runs: the platform-only [patch] had broken --locked, and tests assumed a sibling spec checkout and the formatting feature.
