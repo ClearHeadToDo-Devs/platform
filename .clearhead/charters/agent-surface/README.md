@@ -14,13 +14,13 @@ The ecosystem shifted while this platform was being built: the consumer of a per
 
 ## Boundary: ClearHead is for US
 
-- **agent-workspace is for agents** — dense, revision-bound beliefs, intent, and checkpoints about the code. An agent's private working memory.
+- **agent-log is for agents** — a shared, append-only stream of observations across machines and harnesses. Capture, not project truth.
 - **ClearHead is for us** — the durable plan shared by the user, their agents, and any teammates.
 
 Consequences for this surface:
 
-- Everything written through it must be **human-legible**: `.actions` DSL and charter markdown. Agent-only metadata (revision fingerprints, confidence, freshness) stays in agent-workspace.
-- **Crossing the boundary is a deliberate promotion.** A private agent belief becomes a charter log entry or an action once it matters to the team — e.g. the subtract-before-add data-loss finding during [[direct-delivery]]. The reverse link already exists: an agent-workspace intent points at a charter via `external_reference`.
+- Everything written through it must be **human-legible**: `.actions` DSL and charter markdown. Agent-only metadata (confidence, harness, provenance) stays in agent-log.
+- **Crossing the boundary is a deliberate promotion.** An agent observation becomes a charter log entry or an action once it matters to the team — e.g. the subtract-before-add data-loss finding during [[direct-delivery]].
 - **Client-agnostic.** Teammates may run different agents, so nothing load-bearing depends on one harness's hooks.
 
 ## Topology: CLI-first, not inside the LSP

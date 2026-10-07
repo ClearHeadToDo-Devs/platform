@@ -37,10 +37,9 @@ already begun to disagree. The rule:
 | --- | --- | --- |
 | Platform decisions | `DECISIONS.md` | actions, logs, runbooks |
 | Project decisions | that repo's `docs/DECISIONS.md` | the platform's `DECISIONS.md` |
-| Task state | ClearHead actions | docs, memory |
+| Task state | ClearHead actions | docs |
 | Dated run findings | the charter's `## Log` | `DECISIONS.md`, actions |
-| Agent beliefs | the agent workspace | the repo |
-| Durable repo facts | `docs/` | memory, agent workspace |
+| Durable repo facts | `docs/` | actions, logs |
 
 Consequences worth stating plainly:
 
@@ -62,21 +61,3 @@ Consequences worth stating plainly:
   observed; a decision is a choice that outlives the run. If a finding turns out
   to be a decision, put the decision in `DECISIONS.md` and leave the log line
   pointing at it.
-- **Memory holds only what is not derivable from the repo.** If `rg` can find
-  it, memory should not duplicate it.
-- **The agent workspace holds cited beliefs**, revision-bound and scoped to a
-  worktree. It is an agent's private working memory, not project truth.
-
-### Promotion: agent workspace → ClearHead
-
-The agent workspace and ClearHead are deliberately separate stores, and nothing
-syncs them. A private belief becomes project knowledge only by an explicit
-promotion: promote it to a `clearhead jot` (a dated charter log finding) or to a
-`clearhead add action` (task state) once it matters beyond the session. Nothing
-else copies it — there is no automatic mirror in either direction, and a belief
-does not become project truth merely by existing.
-
-Cite the source so the promotion is auditable: the belief's id in the jot or
-action note, and — once the agent-surface `capture` tool exists — an optional
-`promoted_from` field naming that id. The reverse link already exists: an agent
-claim's `external_reference` can point at a charter.
