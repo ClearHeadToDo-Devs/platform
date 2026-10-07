@@ -14,12 +14,12 @@ The ecosystem shifted while this platform was being built: the consumer of a per
 
 ## Boundary: ClearHead is for US
 
-- **agent-log is for agents** — a shared, append-only stream of observations across machines and harnesses. Capture, not project truth.
+- **Harness memory is for agents** — what only one agent's harness needs. Private working memory, not project truth.
 - **ClearHead is for us** — the durable plan shared by the user, their agents, and any teammates.
 
 Consequences for this surface:
 
-- Everything written through it must be **human-legible**: `.actions` DSL and charter markdown. Agent-only metadata (confidence, harness, provenance) stays in agent-log.
+- Everything written through it must be **human-legible**: `.actions` DSL and charter markdown. Agent-only metadata stays in the agent's harness.
 - **Crossing the boundary is a deliberate promotion.** An agent observation becomes a charter log entry or an action once it matters to the team — e.g. the subtract-before-add data-loss finding during [[direct-delivery]].
 - **Client-agnostic.** Teammates may run different agents, so nothing load-bearing depends on one harness's hooks.
 

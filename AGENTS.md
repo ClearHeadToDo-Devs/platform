@@ -17,9 +17,7 @@ In each repo is a `.clearhead/` directory per the [workspace spec](./specificati
 
 | Knowledge | Lives in | Not in |
 | --- | --- | --- |
-| Cross-repo agent observations | [agent-log](https://github.com/ca-mantis-shrimp/agent-log) | the repo |
-| What only one harness needs | that harness's memory | the repo, agent-log |
+| What only one harness needs | that harness's memory | the repo |
 
 - **Memory holds only what is not derivable from the repo.** If `rg` can find it, memory should not duplicate it.
-- **agent-log holds observations, not project truth.** Its README says what belongs there.
-- **Promotion is explicit.** agent-log and ClearHead are separate stores and nothing syncs them. An observation becomes project knowledge only when promoted to a `clearhead jot` (a dated charter finding) or `clearhead add action` (task state). Cite the observation's `id` in the jot or action note so the promotion is auditable; once the agent-surface `capture` tool exists, its optional `promoted_from` field carries that id.
+- **Promotion is explicit.** Harness memory and ClearHead are separate stores and nothing syncs them. A finding becomes project knowledge only when promoted to a `clearhead jot` (a dated charter finding) or `clearhead add action` (task state).

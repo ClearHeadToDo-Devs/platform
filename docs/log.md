@@ -16,3 +16,4 @@
 
 ## 2026-10-06
 * **Update**: agent-log replaces the agent workspace, and agent-only guidance leaves `CONTRIBUTING.md`, which is for humans too. The memory rule and the promotion path (now agent-log → ClearHead, with `promoted_from` citing an observation id) move to a new "Where agent knowledge lives" section in `AGENTS.md`, which extends the "Where knowledge lives" table instead of copying it. The claim that a reverse link (`external_reference`) exists is dropped: agent-log has no such field. The agent-surface charter's boundary section and its open `capture` action follow. Dated records that mention the agent workspace are left as written.
+* **Update**: The agent-log trial ended the same day: every line it held had a better home (a repo, ClearHead, the user's CLAUDE.md, or one machine's memory). `AGENTS.md` drops the agent-log row and promotion now runs from harness memory to ClearHead; the agent-surface charter and `capture` action follow.
