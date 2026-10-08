@@ -34,6 +34,10 @@ A pile of triples where graphs "find what they need" degrades into the mess RDF 
 
 Prior art to study by name: **Solid** — this is a Solid pod rebuilt on local-first files. Its cautionary lesson is sequencing: Solid led with protocol and identity and never shipped the app that made pods worth having. We invert: killer app first, the convention written only when the importer forces its questions (health data forces time-alignment; git/telemetry force identity).
 
+## Open question: nested workspaces
+
+`additional_workspaces` loads one level only. meta-analysis loads platform but not platform's own sub-workspaces, so for now it lists them explicitly. Following the chain raises the question: what if a workspace disagrees with its sub-workspace? One answer to weigh: **membership follows the chain** (dedup by `workspace_id`, so loops and shared children load once), and **settings never cascade** (each workspace's config governs only its own files). What's left are identity conflicts, like aliases colliding across workspaces, and those already exist at one level. Not yet checked: whether settings today come from each workspace's own config or from the parent's.
+
 ## Promotion trigger
 
 Promote when [[core-seam]] is done (the write path must be trustworthy before new data flows in) and the ontology's next alignment sweep would otherwise be speculative — the importer should be that sweep's justification.
