@@ -28,6 +28,7 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 
 ## History
 
+* [VEVENT-only calendar sync](history/vevent-only-calendar.md) — implementation analysis for Decision 55: cost, order, test coverage risk and recurrence findings (2026-10-07)
 * [Crate merge and charter identity](history/crate-merge-and-charter-identity.md) — the completed crate merge and charter identity plan (2026-09-18)
 * [Overnight worker — crate merge and charter identity](history/overnight-worker-crate-merge-and-identity.md) — superseded branch-isolated task list (2026-09-18)
 * [Overnight worker — clearhead-core task list](history/overnight-worker-clearhead-core.md) — superseded pre-decided task list (2026-09-18)
