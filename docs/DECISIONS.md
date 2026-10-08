@@ -6,11 +6,35 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 6th 2026 **Status:** Living Document
+**Last Updated:** October 7th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 55: The Calendar Shows Set-Aside Time; VTODO Sync Is Retired
+
+Decided 2026-10-07 by the human, after running the VTODO profile against mobile task clients. It worked: a task edited on the phone came back to its Action. It also felt janky, and the jank came from the model rather than from any one client:
+
+- **Recurring tasks arrive as a wave.** An `RRULE` says every occurrence exists, so a client shows every future instance at once; a daily task buries the list, and seeing what is due today takes filtering. ClearHead keeps one live occurrence per recurring Plan. The same expansion is what a calendar is for when the occurrences are blocks of time; for tasks it is noise.
+- **Subactions do not recur.** `RELATED-TO` has expressed parent and child since RFC 2445, but few clients implement it, and an `RRULE` recurs one component, never a tree. A templated Plan's steps either become recurring components of their own or stop recurring.
+- **The clients are lists, and worse ones.** What was wanted was a calendar to edit, not a list. In the human's words: "i just didnt like the clients i cant imagine people using it, let alone worth maintaining in one of the larger parts of the code."
+
+VTODO is an interchange format for scheduled, assignable tasks, and it does that job. ClearHead models intent, which has structure: trees, dependencies, windows, and recurrence of the whole tree. The VTODO profile gave that format shared authority over the domain model, reconciling every task field both ways. This decision returns it to the projection layer, where the ICS schedule specification's contract boundaries already place it ("RFC 5545 and vdir behavior belong to the projection layer").
+
+- **The calendar shows when time is set aside; ClearHead owns the work.** Plans are VEVENTs only. Sync carries the planned block (`DTSTART`/`DTEND`) and recurrence with its exceptions, as today. The block stays bidirectionally reconciled for now (see Left open).
+- **Name and description merge both ways, as an experiment.** A linked Action's name and description reconcile with `SUMMARY` and `DESCRIPTION` through the same field-wise three-way merge as the block, replacing VEVENT's one-way display projection, since a rename made on the calendar was otherwise silently lost. A Plan's leading directive lines (`template: …`) are never part of the merged description. Renaming one occurrence renames only that occurrence's Action, not the Plan.
+- **Everything else is Action-local.** State, completion, priority and contexts are not synchronized. In the field-authority table of `ics_schedule_spec.md`, the VTODO entries go and name and description become bidirectional.
+- **`plan_component` is retired.** A workspace that still sets `vtodo` gets a warning, and sync converts its linked VTODO Plans to VEVENT through the existing codec conversion, keeping UID, overrides and time values as written. The conversion lives for one release. An unlinked VTODO in an owned collection is never adopted; `doctor` reports it.
+- **One-way export stays.** `clearhead export plans` writes Actions as VTODOs to a file and reads nothing back, so it carries none of the reconciliation cost.
+- **Non-goal: a date-based UI for editing tasks with subactions.** How a calendar should show a tree of work (one entry, or one per step) is an open design problem, and ClearHead does not take it on. A proposal to restore task sync must answer it first.
+- **Order, per Decision 54:** the specification releases first (`ics_schedule_spec.md`, `process.md`, `configuration.md`, `workspace.md`, and the VTODO mapping in `ontology.md`); Core then bumps its pin and removes the VTODO codec and the full-profile reconciliation. This amends Decision 51's calendar bullet, which named both components.
+
+**Left open:** after living with VEVENT only, decide whether the calendar keeps this much authority, by workflow (are names, descriptions and blocks actually edited from the calendar?) and by structure (do directive lines survive phone editors, and how often do the merges conflict?). If not, a calendar-side change can instead arrive as a proposal the human accepts in the DSL.
+
+**Alternatives rejected:** keeping VTODO as an opt-in profile (every sync path, codec and test keeps the two-profile split, for a profile nobody uses); projecting only the live occurrence to task clients (fixes the wave, not the trees or the clients); recurring components for template steps (the tree would exist only by convention, and clients would show the wave once per step).
+
+**Trade-off accepted:** work can no longer be completed or reprioritized from a phone; a phone can still move, rename and describe a planned block. A workspace on `vtodo` sees its Plans leave task apps and appear in calendars once converted.
 
 ## Decision 54: Implementations Rely Only on Published, Pinned Releases
 
@@ -62,7 +86,7 @@ Decided 2026-10-03 by the human, before Decision 46 was implemented. Decision 46
 - **A date covers its day; a time is an instant** (amended the same day), for `@` and `:` alike. The range is half-open: `@2026-10-03/2026-10-05` ends at the start of the 6th, and `@…T09:00/…T09:30` ends at 09:30, thirty minutes, as RFC 5545 reads `DTEND`. For `:`, `…T17:00` is late from 17:00. This revises Decision 48's written precision for times: the same text must mean the same interval in both fields.
 - **Duration is derived**, never written: the length of the `@` range in whole minutes, rounded down. `app:durationMinutes` becomes a derived term, and its CCO measurement is unchanged, fed from the range. In the application graph the range is written as `app:plannedStart` and `app:plannedEnd` (`app:start` is renamed).
 - **No duration sigil.** `|` (Decision 46) is never introduced, `D` is retired, and E001 (a duration without a do-date) goes with it. The parser keeps reading `@… D60` for a while and the formatter writes it as a range (`@…T09:00 D15` becomes `@…T09:00/…T09:15`), so files migrate by formatting. A `D` on a date-only `@` cannot become a range and is dropped, leaving the whole day planned; no real file has one, and keeping it would leave a duration field in the model for that case alone.
-- **Calendar sync carries the block and nothing else**: VEVENT `DTSTART`/`DTEND`, VTODO `DTSTART`/`DURATION` (RFC 5545 forbids `DURATION` beside `DUE`). RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end. The window (`:`) is not synchronized, and a VTODO's `DUE` is neither written nor read.
+- **Calendar sync carries the block and nothing else**: VEVENT `DTSTART`/`DTEND`, VTODO `DTSTART`/`DURATION` (RFC 5545 forbids `DURATION` beside `DUE`). (Amended by Decision 55: VEVENT only.) RFC 5545 makes an all-day event's `DTEND` exclusive, which is this range's half-open end. The window (`:`) is not synchronized, and a VTODO's `DUE` is neither written nor read.
 - **W015 compares two ranges:** the `@` range must lie within the `:` window.
 - **Core has one interval type** with one reading of a bound and two of a single value: an end for `:`, a start for `@`.
 
