@@ -30,7 +30,7 @@ prompt is the whole task.
 - **One session, then it ends.** Nothing resumes you after you reply. Run every
   command, the gate included, in the foreground and wait for it; never leave
   work in the background or end on a promise.
-- **Setup is done.** The clone, your working directory (`/job/<workspace>/work`), has every repo on this run's
+- **Setup is done.** The clone, your working directory (`/srv/job/<workspace>/work`), has every repo on this run's
   `agent/<id>` branch, and `refs/agent/base` marks where each repo started.
   `clearhead` on PATH is built from this branch; use it for every ClearHead
   command, never an installed copy.
