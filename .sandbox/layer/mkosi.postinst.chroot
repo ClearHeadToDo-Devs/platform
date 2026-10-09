@@ -1,0 +1,12 @@
+#!/bin/sh
+# What pacman doesn't package: busted and nlua, check-jsonschema, topiary for
+# tree-sitter-actions' formatting tests, and ROBOT (pinned by checksum).
+set -eu
+luarocks --lua-version=5.1 install busted
+luarocks --lua-version=5.1 install nlua
+UV_TOOL_DIR=/opt/uv-tools UV_TOOL_BIN_DIR=/usr/local/bin uv tool install --cache-dir /tmp/uv check-jsonschema
+CARGO_HOME=/tmp/cargo cargo install --locked --root /usr/local topiary-cli@0.7.3
+curl -sSfL https://github.com/ontodev/robot/releases/download/v1.9.10/robot.jar -o /usr/local/lib/robot.jar
+echo "16a73c074f3df359a7338a84b4e0788785fe06117f931bb9796e9619ea776105  /usr/local/lib/robot.jar" | sha256sum -c -
+printf '#!/bin/sh\nexec java -jar /usr/local/lib/robot.jar "$@"\n' >/usr/local/bin/robot
+chmod +x /usr/local/bin/robot

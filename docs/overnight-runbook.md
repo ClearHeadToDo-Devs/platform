@@ -78,7 +78,8 @@ not design.
 - **No review.** A worker never reviews itself; review is a separate run, by
   another vendor, before landing. Do not spawn a reviewer, and its absence is
   not a reason to stop.
-- If you change a Containerfile, say that the image build is unverified.
+- If you change `.sandbox/layer/`, say that the layer build is unverified:
+  sessions cannot build images.
 - **Provenance:** end every commit message with `Agent: <model>/<run id>`.
 
 ### Stopping is a good outcome
@@ -116,7 +117,7 @@ decisions and answers. No ClearHead action is required.
   question and options needed to proceed.
 - Follow the rules for every run above. The Work run's gate, dependency,
   design-concern, no-review and provenance rules also apply, including its
-  Containerfile and closing-message requirements. Commit no half-done work.
+  layer and closing-message requirements. Commit no half-done work.
 - A fix does not reconcile a finding. The human does that after checking it;
   do not change the review record or mark findings reconciled.
 

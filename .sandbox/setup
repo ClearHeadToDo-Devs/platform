@@ -1,7 +1,9 @@
 # Sourced by the agent sandbox (agents/session) in the clone's root before
 # each session, and by agent-land before .sandbox/gate. Builds the
 # clearhead CLI from this branch and puts it first on PATH, so agents use the
-# branch's CLI and never an installed copy.
+# branch's CLI and never an installed copy. Cargo's registry and one build
+# directory shared by this repository's workspaces live in the sandbox's cache.
+export CARGO_HOME=/srv/cache/cargo CARGO_TARGET_DIR=/srv/cache/target
 cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead
 export PATH="$CARGO_TARGET_DIR/debug:$PATH"
 # A fresh clone has no node_modules; the grammar's gate needs them. Which
