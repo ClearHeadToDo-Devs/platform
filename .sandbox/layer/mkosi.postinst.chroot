@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # What pacman doesn't package: busted and nlua, check-jsonschema, topiary for
 # tree-sitter-actions' formatting tests, and ROBOT (pinned by checksum).
 set -eu
+set -o pipefail
+export PATH="/usr/local/bin:$PATH"
 luarocks --lua-version=5.1 install busted
 luarocks --lua-version=5.1 install nlua
 UV_TOOL_DIR=/opt/uv-tools UV_TOOL_BIN_DIR=/usr/local/bin uv tool install --cache-dir /tmp/uv check-jsonschema
@@ -10,3 +12,13 @@ curl -sSfL https://github.com/ontodev/robot/releases/download/v1.9.10/robot.jar 
 echo "16a73c074f3df359a7338a84b4e0788785fe06117f931bb9796e9619ea776105  /usr/local/lib/robot.jar" | sha256sum -c -
 printf '#!/bin/sh\nexec java -jar /usr/local/lib/robot.jar "$@"\n' >/usr/local/bin/robot
 chmod +x /usr/local/bin/robot
+
+# Record what the non-pacman installs actually resolved to for agent-layer.
+mkdir -p /usr/share/agent-layer
+{
+    luarocks --lua-version=5.1 list --porcelain busted | awk '$1 == "busted" {print $1, $2}'
+    luarocks --lua-version=5.1 list --porcelain nlua | awk '$1 == "nlua" {print $1, $2}'
+    check-jsonschema --version | awk '{print "check-jsonschema", $NF}'
+    topiary --version | awk '{print "topiary", $NF}'
+    robot --version | awk '{print "robot", $NF}'
+} > /usr/share/agent-layer/versions
