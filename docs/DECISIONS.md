@@ -6,11 +6,32 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 7th 2026 **Status:** Living Document
+**Last Updated:** October 11th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 56: Recurring Plans Are Habits
+
+Decided 2026-10-11 by the human. A recurring Plan already roots its occurrences: it is scoped to a charter, each occurrence's Action identity derives from its UID and slot, and it may name a template. What it lacked was a name and a place in the domain. The specification says "`RRULE` changes cardinality, not domain type", and the application graph leaves "the recurring plan itself and its rule" unspecified (Decision 53 retired the plan queries until it is). A Habit is that thing, named.
+
+- **A Habit is anything done regularly:** whatever carries a recurrence rule. Intent does not enter into it; paying rent is as much a habit as a morning run. In the human's words: "a habit is anything we do regularly."
+- **Storage does not change.** A Habit is a recurring VEVENT in its charter's `plans/<charter>/` vdir, the only place calendar clients look. There is no habit file beside `.actions` and no new DSL.
+- **A Habit holds its rule, its template and its charter; occurrences point to it.** Each occurrence is an Action whose sidecar records the Habit's UID and slot, as today. The Habit does not hold its instances: the live one is in `.actions`, past ones are in the archive, and future ones are computed from the rule. "A Habit's instances" is a query over occurrences, so history and adherence come from one place with nothing to keep in sync.
+- **A one-off Plan stops being a domain concept.** It is the calendar projection of an Action's `@` block (Decision 51), which is all it ever carried. "Plan" remains the ICS schedule specification's word for a calendar resource.
+- **A Habit's id is derived from its event:** `UUIDv5(habit namespace, UID)`, as occurrence ids are. Nothing is stored, every device computes the same id, and it never collides with the Action whose UUID a ClearHead-authored one-off event uses as its UID.
+- **A change of kind is proposed, never applied silently.** A calendar edit can add or remove an event's recurrence. Sync detects this from the merge base (one-off at the last sync, recurring now, or the reverse) and surfaces it as it surfaces a field conflict, the proposal Decision 55 anticipated. The user accepts it, reverts it (ClearHead restores the event as it was at the last sync), or defers it (nothing changes, and the next sync asks again). `--accept-all` accepts every proposal for scripted runs; a run that cannot ask defers.
+  - **Accepting one-off → recurring** deletes the old Action, and the new Habit stamps its first occurrence like any other. The Action was converted, not cancelled, so it is not archived. The proposal lists what deletion loses (child actions, actions waiting on it, state, priority, contexts). The first occurrence's sidecar records `converted_from: <old Action id>`, and telemetry emits `converted_to_habit`.
+  - **Accepting recurring → one-off** ends the Habit. The live occurrence keeps its id and becomes the event's one-off Action, its link dropping the slot. Past occurrences keep the Habit's id in the archive.
+  - No conversion rewrites an id: the old Action is never adopted as an occurrence, because occurrence ids derive from (Habit, slot).
+- **Order, per Decision 54:** the specification releases first: `ontology.md` (Habit in the application graph, closing its Recurrence gap), `ics_schedule_spec.md` and `process.md` (the cardinality rule, "Recurring Plans" as Habits, kind-change proposals), `workspace.md`, `observability.md` (its recurring events still describe `.recurring.actions` and `template_uuid`). Core then replaces `domain::Plan` with a Habit whose rule is required.
+
+**Left open:** whether common clients, when a series loses its recurrence, leave the single event at the series start rather than the current slot. If they do, accepting recurring → one-off would pull the live occurrence's block back to that date; the proposal should show it. Untested.
+
+**Alternatives rejected:** a habit file beside `.actions`, as `.ics` or as a new DSL (calendar clients cannot see it, so each Habit would need a generated `.ics` copy and a sync path back: the recurrence syntax Decision 21 removed, plus a projection); a Habit that holds its instances (a second copy of facts that `.actions` and the archive own); keeping "recurring Plan" (the concept stays unnamed and the graph keeps its gap); the event's UID as the Habit's id (collides with the old Action's id after one-off → recurring); cancelling or archiving the converted Action (records a decision nobody made); adopting the old Action as the first occurrence (rewrites its id or breaks occurrence identity); converting automatically when the Action carries nothing ClearHead-only (still silent; the user decides every kind change instead).
+
+**Trade-off accepted:** "Habit" is broader than its everyday sense: rent sits beside exercise. "Plan" survives only as a word for the calendar layer. A recurrence edit made on the calendar does not take effect in ClearHead until it is accepted.
 
 ## Decision 55: The Calendar Shows Set-Aside Time; VTODO Sync Is Retired
 
