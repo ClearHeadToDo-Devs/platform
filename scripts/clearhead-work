@@ -33,7 +33,7 @@ run_usd=${AGENT_RUN_USD:-15}
 
 ws=$(cd "$root" && agent-new)
 # The workspace's directory, as the sandbox documents it.
-dir="${AGENT_RUNS:-$HOME/agent-runs}/$ws"
+dir="${AGENT_RUNS:-/var/lib/agent-runs}/$ws"
 ledger="$dir/clearhead-work.json"
 echo '[]' >"$ledger"
 tried="$dir/clearhead-work.tried"
