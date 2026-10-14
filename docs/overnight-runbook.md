@@ -60,8 +60,12 @@ not design.
 
 - **One gate:** `sh scripts/gate.sh` in `clearhead-core` before every commit you
   keep. Check the gate's own exit code; a pipe such as `| tail` hides a failure.
-  A failure your change caused is part of the work: fix it and run the gate
-  again. One retry for a failure that looks flaky (passes alone, fails under the
+  For decided tests-first work, an initial `Tests:`-only regression commit may
+  be kept when the only gate failures are the intended new regression assertions;
+  record that result in the commit message. Still run the complete gate: do not
+  skip checks, suppress failures or weaken tests. Implementation and all subsequent
+  ordinary commits require a green gate. Otherwise, a failure your change caused
+  is part of the work: fix it and run the gate again. One retry for a failure that looks flaky (passes alone, fails under the
   full suite). Stop only when the failure is not yours to fix (the gate or the
   environment is broken, or the fix would leave the task's scope), and then
   keep your work: leave it in the working tree and say where you stopped,
