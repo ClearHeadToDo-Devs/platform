@@ -20,3 +20,7 @@ Considered and rejected: keeping the inbox as a distinct unprocessed queue. It p
 - The CLI and nvim defaults agree with the spec, with tests.
 - The user workspace is migrated with identity preserved: `inbox.*` becomes the root anchors, and `plans/inbox/` becomes `plans/next/`.
 - The paused calendar sync on the homelab resumes against the migrated layout.
+
+## Log
+
+- 2026-10-16T00:43+00:00 — 2026-10-16, Darrion: the homelab CalDAV server no longer runs; Radicale's real home is the personal-os services box (mini-server services profile), so sync resumes there, not on the NUC. A throwaway devbox Radicale may serve client-behavior tests such as =x-prop-survival
