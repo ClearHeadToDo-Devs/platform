@@ -10,3 +10,6 @@
 [submodule "clearhead-core"]
 	path = clearhead-core
 	url = https://github.com/ClearHeadToDo-Devs/clearhead-core.git
+[submodule "clearhead.vscode"]
+	path = clearhead.vscode
+	url = https://github.com/ClearHeadToDo-Devs/clearhead.vscode.git
