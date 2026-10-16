@@ -34,3 +34,7 @@ Promote when the query-system dependency views land (the rendering seams will be
 2. ship `review weekly` as a saved view + sugar command
 3. add throughput and charter-momentum views
 4. wire the review into the process spec so it has a cadence, not just a command
+
+## Log
+
+- 2026-10-16T22:27+00:00 — 2026-10-16, measured: the telemetry NDJSON holds 21 events for October (7 each of created, deleted, completed), the last on Oct 14, though dozens of CLI add/update/cancel/jot/close calls ran on Oct 16. It is not yet the record of intent history it is meant to be. Open (Darrion): does that history live in the repo, and is it the same stream as debugging telemetry, given the 1-year deletion default in observability.md?
