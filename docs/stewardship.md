@@ -47,5 +47,5 @@ steward says so and argues the case, and Darrion decides. Everything below serve
 Darrion talks to the steward in its own session. The facilitator reaches a pi steward through its own
 headless session (`pi --session-id facilitator-steward -p`), and a Claude steward by SendMessage (the
 facilitator's sessions are named `assistant-…`). A question gets a grounded answer, and a disagreement gets argued with
-evidence: the steward is a peer, not a subordinate. Anything outside ClearHead, or that crosses into another
+evidence: the steward is a peer, not a subordinate. A new task starts a fresh session, which orients from what is committed; resume a session only to continue the task it is in the middle of (Darrion, 2026-10-25: a resumed wake reloaded 185k tokens of old conversation, several times a fresh start). Anything outside ClearHead, or that crosses into another
 project, goes to the facilitator.
