@@ -6,11 +6,32 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 11th 2026 **Status:** Living Document
+**Last Updated:** October 24th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 57: Habits Live in Their Own Actions File
+
+Decided 2026-10-24 and 2026-10-25 by the human, amending Decision 56. Decision 56 kept a Habit as a recurring VEVENT in its charter's `plans/` vdir, so one folder held two kinds of data: Habits, which are the truth and generate Actions, and one-off events, which are projections of Actions. yapdm, after it, concluded that text stays the truth and standard formats are projections of it. This applies that to Habits, so the calendar becomes an integration point rather than the root.
+
+- **A charter's Habits live in `<charter>.habits.actions`,** beside `<charter>.actions` and `<charter>.completed.actions`, in the actions syntax. A Habit is a top-level line with a recurrence. Its template is either its children or a `template: <name>` line in its description, the binding any event carries (`template-binding-home`, 2026-10-16), and it is stamped beneath each occurrence as a named template is today (`process.md`). A Habit with both draws a lint warning, and its children win. "Subactions do not recur" (Decision 55) stays true of the calendar, where only the Habit's own line appears.
+- **Recurrence returns to the grammar as it was written before Decision 21:** `R:` followed by an RFC 5545 `RRULE` value, after the `@` block it repeats. The block's start is the `DTSTART` and the `RRULE` governs recurrence; the calendar shows the block, as for a one-off (Decision 51), and a `:` window stays unsynchronized, keeping its offset from the block in every occurrence. The specification's Recurrence section, removed in 9533904, comes back scoped to habits files. In `.actions`, recurrence stays a non-goal and `R:` is a lint.
+- **Occurrences are Actions in `<charter>.actions`.** A Habit's id is its line's `#uuid`. An occurrence's id derives from (Habit, slot) and a step's from (Habit, slot, step), so every device computes the same ids.
+- **A missed occurrence stays open.** When a slot arrives, its occurrence is added whether or not earlier ones are done, and each missed one is completed or cancelled by hand. In the human's words, "simpler and more honest." This replaces the one live occurrence of Decisions 55 and 56.
+- **A Habit's own state is the whole Habit.** `[ ]` is active; `[x]` means it is completed in total, and no further occurrences are made.
+- **The calendar is a projection, editable both ways.** The `plans/` vdir is generated: each Habit as a recurring `VEVENT`, each one-off `@` block as before (Decision 51). A calendar edit comes back through the same field-wise three-way merge as one-off blocks (Decision 55): a series edit (time or rule) to the Habit's line, and a single-occurrence edit (a `RECURRENCE-ID` override) to that occurrence's Action, as `ics_schedule_spec.md` already specifies for occurrences. Sharing a calendar with other people needs nothing new here: the vdir is the complete integration boundary, so who else edits a collection is the transport's configuration (vdirsyncer, CalDAV), not ClearHead's.
+- **What the actions syntax cannot hold goes in a sidecar.** `RDATE`, `EXDATE`, a time value's frame (`TZID`, floating, all-day) and a single-occurrence override whose Action does not exist yet are kept in the Habit's sidecar, as an Action's sidecar keeps its Plan link, or in the charter's sidecar, so regenerating the projection loses nothing.
+- **A calendar kind change still goes through Decision 56's proposal.** Accepting recurring → one-off ends the Habit, and the newest open occurrence keeps its id and becomes the one-off Action; any older open occurrences stay open, to be completed or cancelled by hand.
+- **A kind change made in text is a move:** a one-off becomes a Habit by moving its line into the habits file and adding `R:`, and stops being one the same way.
+- **Order, per Decision 54:** the grammar (`R:` in tree-sitter-actions) and the specification (`action_file_format.md`, `ics_schedule_spec.md`, `workspace.md` for the new file and its readers, `ontology.md` for the Habit's state and id, `linting.md` for `R:` in each kind of file and a Habit with both a template line and children, `process.md`) release first; Core then moves Habits from the vdir to the file, and every reader that finds `*.actions` files (Core's assembly, the nvim plugin) learns the suffix in the same cycle. Habits, the calendar, sync and templates all meet here, so it lands in small reviewed steps. The migration is a clean break: the project has no users beyond its authors, so existing vdir Habits are rewritten into habits files once and their event-derived occurrence ids are not carried over. `spec-habits` and `core-habit` are re-scoped to this decision.
+
+**Left open:** pausing a Habit; Decision 56's open question about clients that drop a series' recurrence (`unrecur-series-test`).
+
+**Alternatives rejected:** keeping Decision 56 (two kinds of data in one vdir, and a Habit's truth in a format the rest of ClearHead only projects); `R:` on lines in `.actions` (habits and their instances mixed in one file, the problem being undone); a new habit DSL or JSCalendar (the actions syntax already carries trees, windows and states, and `RRULE` text is the standard's own).
+
+**Trade-off accepted:** every reader of `*.actions` files must learn the `.habits.actions` suffix, as it knows `.completed.actions`. Recurrence syntax comes back into the grammar that Decision 21 took it out of. Decision 56's event-derived Habit id is retired.
 
 ## Decision 56: Recurring Plans Are Habits
 
