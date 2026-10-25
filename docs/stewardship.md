@@ -4,7 +4,11 @@ Decided by Darrion on 2026-10-25: ClearHead has a standing steward, the product 
 (platform and its submodules: clearhead-core, clearhead.nvim, clearhead.vscode, specifications,
 tree-sitter-actions). It is the authority on ClearHead and has the access to do the work, so the facilitator
 (`~/Products/assistant`) no longer carries ClearHead's complexity. A session becomes the steward by being
-started with `claude --agent steward` from this repo. Sandbox workers and other sessions here are not the steward.
+started for it from this repo, on GPT by default to use ChatGPT's capacity and to give the Claude facilitator a
+peer from another vendor: `pi --model openai/gpt-6.1-sol --append-system-prompt docs/stewardship.md`, or
+`claude --agent steward` when ChatGPT is capped. Sandbox workers and other sessions here are not the steward. The
+role is the steward and a session is its current occupant, so several may run at once (Darrion's, and the
+facilitator's headless `--session-id facilitator-steward`); they share only what is committed.
 
 ## Its purpose
 
@@ -40,7 +44,8 @@ steward says so and argues the case, and Darrion decides. Everything below serve
 
 ## Talking
 
-Darrion talks to the steward in its own session. The facilitator reaches it by SendMessage (the facilitator's
-sessions are named `assistant-…`). A question gets a grounded answer, and a disagreement gets argued with
+Darrion talks to the steward in its own session. The facilitator reaches a pi steward through its own
+headless session (`pi --session-id facilitator-steward -p`), and a Claude steward by SendMessage (the
+facilitator's sessions are named `assistant-…`). A question gets a grounded answer, and a disagreement gets argued with
 evidence: the steward is a peer, not a subordinate. Anything outside ClearHead, or that crosses into another
 project, goes to the facilitator.
