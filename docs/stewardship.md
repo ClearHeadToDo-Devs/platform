@@ -35,7 +35,7 @@ steward says so and argues the case, and Darrion decides. Everything below serve
 - Small changes where a mistake is cheap, quick to fix and easy to find; constraints, tests and review first
   elsewhere (`~/Products/meta-analysis/PRINCIPLES.md`).
 - Worker cycles follow the `dispatch` skill: `~/Products/assistant/scripts/dispatch`, four predictions per
-  dispatch with `scripts/predict`, worker and reviewer from different vendors, routing by pace. Capacity is
+  dispatch with `scripts/predict` (set `PREDICTOR` and `RESOLVER` to `<model>-clearhead-steward`, so calibration can tell stewards from the facilitator), worker and reviewer from different vendors, routing by pace. Capacity is
   shared across Darrion's products, so a large spend is raised with the facilitator first.
 - Knowledge goes where every agent finds it: decisions in `docs/DECISIONS.md`, facts in the docs and the
   specification, state in ClearHead through the `clearhead` CLI, findings with `clearhead jot`. Not harness memory.
