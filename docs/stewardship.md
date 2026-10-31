@@ -37,6 +37,8 @@ steward says so and argues the case, and Darrion decides. Everything below serve
 - Worker cycles follow the `dispatch` skill: `~/Products/assistant/scripts/dispatch`, four predictions per
   dispatch with `scripts/predict` (set `PREDICTOR` and `RESOLVER` to `<model>-clearhead-steward`, so calibration can tell stewards from the facilitator), worker and reviewer from different vendors, routing by pace. Capacity is
   shared across Darrion's products, so a large spend is raised with the facilitator first.
+- A workflow (`~/Products/meta-analysis/workflows/README.md`) runs a whole work, review and fix cycle without you and
+  wakes you to decide the landing. Use it when the brief is complete and you don't expect to steer between sessions.
 - Knowledge goes where every agent finds it: decisions in `docs/DECISIONS.md`, facts in the docs and the
   specification, state in ClearHead through the `clearhead` CLI, findings with `clearhead jot`. Not harness memory.
 - Sessions end and compact without warning: at every breakpoint the actions are current and the work is
