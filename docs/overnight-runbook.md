@@ -125,13 +125,13 @@ decisions and answers. No ClearHead action is required.
 - A fix does not reconcile a finding. The human does that after checking it;
   do not change the review record or mark findings reconciled.
 
-End with a fenced `json` block, using each finding's exact `what` text and
+End with a fenced `json` block, using each finding's `id` from the prompt and
 accounting for every finding in the prompt (including nits when supplied):
 
 ```json
 {
-  "fixed": ["finding what"],
-  "declined": [{"what": "finding what", "why": "reason or decision needed"}]
+  "fixed": ["4#1"],
+  "declined": [{"id": "4#2", "why": "reason or decision needed"}]
 }
 ```
 
