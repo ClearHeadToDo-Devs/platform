@@ -1,2 +1,4 @@
 # verdict: facilitator agrees with the review (2026-11-01T19:08:25+00:00)
 note: Completing a parent no longer overwrites children that were already completed or cancelled: they keep their state and date, and open children below them still close. Completing an action that is already closed through transact now fails with already-closed instead of restamping it. Reopen is unchanged. One thing needs you: the new =complete-explicit-batch decision, on whether plain complete should cascade at all (the specification reads against it; this predates the change). The open =reopen question still waits on you too.
+
+# verdict: human agrees with the review (2026-11-01T19:13:56+00:00)
