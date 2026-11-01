@@ -6,11 +6,23 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** October 24th 2026 **Status:** Living Document
+**Last Updated:** November 1st 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 58: Closure Is a State Transition; Archive Is Storage
+
+Decided by Darrion on 2026-11-01, answering `=complete-explicit-batch`: the plain verb is not the batch command the specification allows ([process.md](../specifications/process.md), On Child Actions), so a cascade must be asked for. Amends [Decision 14](#decision-14-archiving-actions), which had the LSP archive as part of its generation workflow. The design and its open questions are in [the proposal](close-individually-proposal.md).
+
+- **The API is unopinionated.** "generally we want the api to be unopinionated with optional functinality extensions and so the process we define is just an opinionated configuration or workflow."
+- **Close acts on one action; cascade is a flag.** "we can close things individually by default and casacde is a flag and we cant really disallow that condition in a file all we can really do is make it an optional lint." The condition is a closed parent with open children.
+- **Reopen has a cascade option too.** "reopen should also have a cascade option but we might just be turning the parent open and adding new children."
+- **The flag is a batch of the base command.** "the base close or reopen command can be batched in a transaction in order to make the flag."
+- **Closure and archive are separate layers.** "closure is state transition whereas archive is a storage concern and they should be handled separately one happens at the data model layer while one happens at the storage layer."
+
+**Left open:** reopen "might be more granual in another format".
 
 ## Decision 57: Habits Live in Their Own Actions File
 
