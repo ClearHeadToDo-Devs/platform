@@ -6,11 +6,30 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** November 1st 2026 **Status:** Living Document
+**Last Updated:** November 2nd 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 59: Archive and Unarchive Move Whole Root Trees
+
+Decided by Darrion on 2026-11-02, answering the questions on `=close-individually` (platform charter log, three entries that day). Builds on [Decision 58](#decision-58-closure-is-a-state-transition-archive-is-storage) and delivers the unarchiving [Decision 14](#decision-14-archiving-actions) promised. The plan is [the proposal](close-individually-proposal.md).
+
+- **Nothing archives on a close.** "archival is a bulk process usually done at the end of a charter, we CAN archive individual actions but the default is a state change."
+- **Archive on save stays.** "yes the archive on save stays on its how we keep the active charters tidy". This changes neither the setting nor its default.
+- **Single-action archive is built.** "yes i think having this archive granularity is important so that we are building from the ground up".
+- **Only roots unarchive, with everything below them.** "i think we can only unarchive root actions and below? because otherwise we get into this sticky 'do you want the parents too?'"
+- **Unarchive is a move; reopen is separate.** "the root unarchive is a move then we need to reopen as a separate thing with an optional flag." Reopen "defaults to just that actions".
+- **Both flags exist.** "reopen cascade is for reopening a task and its children, while unarchive --reopen would BOTH move and reopen the actions."
+- **W002 stays a warning by default.** "i think the default stays, it should be rare that you unarchive a parent only to reopen the root and i think that should still be a warning by default." The shape described there draws W003 (tested); it stays a warning too.
+- **A cascade closes open members under a closed target,** amending Core Decision 2 for `--cascade` only. "the cascade implies we arent just looking at one so i think same rules apply, the selected action, and all open actions should be marked completed no?"
+
+**Readings, awaiting Darrion's review on the action:** a closed cascade target keeps its own state and date, per Core Decision 2's preservation rule; and single-action archive takes a closed root with its whole tree closed, because a child in the completed file must detach and could return only as a new root.
+
+**Left open:** whether `unarchive --reopen` reopens the root or the whole tree.
+
+**Trade-offs accepted:** a line closed through the CLI stays in the active file until something sweeps it. With archive on save on, a plain `unarchive` holds only until the next save of that file, when the still-closed tree is swept back with nothing lost (tested).
 
 ## Decision 58: Closure Is a State Transition; Archive Is Storage
 
