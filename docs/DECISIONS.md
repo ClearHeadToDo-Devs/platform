@@ -14,7 +14,7 @@ This document records decisions that bind more than one repository: the specific
 
 ## Decision 59: Archive and Unarchive Move Whole Root Trees
 
-Decided by Darrion on 2026-11-02, answering the questions on `=close-individually` (platform charter log, three entries that day). Builds on [Decision 58](#decision-58-closure-is-a-state-transition-archive-is-storage) and delivers the unarchiving [Decision 14](#decision-14-archiving-actions) promised. The plan is [the proposal](close-individually-proposal.md).
+Decided by Darrion on 2026-11-02, answering the questions on `=close-individually` (platform charter log, entries that day). Builds on [Decision 58](#decision-58-closure-is-a-state-transition-archive-is-storage) and delivers the unarchiving [Decision 14](#decision-14-archiving-actions) promised. The plan is [the proposal](close-individually-proposal.md).
 
 - **Nothing archives on a close.** "archival is a bulk process usually done at the end of a charter, we CAN archive individual actions but the default is a state change."
 - **Archive on save stays.** "yes the archive on save stays on its how we keep the active charters tidy". This changes neither the setting nor its default.
@@ -24,9 +24,9 @@ Decided by Darrion on 2026-11-02, answering the questions on `=close-individuall
 - **Both flags exist.** "reopen cascade is for reopening a task and its children, while unarchive --reopen would BOTH move and reopen the actions."
 - **The flags compose.** "--reopen and --cascade need to be two separate flags, one cascades down to the whole tree, while the other reopens the single action. combined, they will open AND move the whole tree. composobility". So `unarchive --reopen` reopens the root only.
 - **W002 stays a warning by default.** "i think the default stays, it should be rare that you unarchive a parent only to reopen the root and i think that should still be a warning by default." The shape described there draws W003 (tested); it stays a warning too.
-- **A cascade closes open members under a closed target,** amending Core Decision 2 for `--cascade` only. "the cascade implies we arent just looking at one so i think same rules apply, the selected action, and all open actions should be marked completed no?"
+- **A cascade forces the target and every open member,** amending Core Decision 2 for `--cascade` only; the single verbs still refuse a closed target. "if we say cascade the implication is 'this and all children should be closed GO' the only piece that we skip is stuff that is already closed so it doesnt lose the closure date and cancelled is a different thing so if im closing it im CLOSING it do what i mean and stop trying to be smart" (charter log, 2026-11-02T02:38). So `complete --cascade` makes a `[_]` target `[x]` with a new date, and an `[x]` target keeps its date; members already closed, cancelled ones included, keep their state and date; `cancel --cascade` mirrors this. Nothing refuses when nothing is open: the outcome already holds, so it succeeds and changes nothing. `reopen --cascade` follows the same spirit.
 
-**Readings, awaiting Darrion's review on the action:** a closed cascade target keeps its own state and date, per Core Decision 2's preservation rule; and single-action archive takes a closed root with its whole tree closed, because a child in the completed file must detach and could return only as a new root.
+**Reading, built as written while `=archive-child` waits for Darrion:** single-action archive takes a closed root with its whole tree closed, because a child in the completed file must detach and could return only as a new root. A child is refused and its root named; this can be relaxed later.
 
 **Trade-offs accepted:** a line closed through the CLI stays in the active file until something sweeps it. With archive on save on, a plain `unarchive` holds only until the next save of that file, when the still-closed tree is swept back with nothing lost (tested).
 
