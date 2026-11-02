@@ -106,6 +106,7 @@ Stated so they can be corrected:
 
 - **Bulk archive is the single archive applied to each eligible root,** through the same planner, one commit per file as today. Behaviour is unchanged, except that the single form refuses with a reason where bulk skips. `transact` gets no archive operation: nothing needs one yet, and it can be added later without breaking anything.
 - `reopen --cascade` on an open target with closed members reopens them and leaves the target's state alone.
+- A close cascade on an archived target succeeds and writes nothing when its outcome already holds. If it would have to change archived state, it refuses and names `unarchive` and the root: cascades write only the active file, so "Never" in the table above means never when the target is active or the outcome holds.
 - A closed child under an open parent stays in the active file until its root's tree closes. A long-lived parent collects closed lines.
 - `update` keeps refusing closed actions and terminal states, since `complete` remains the one door that stamps the date. Only the stated reason changes, because "a shape close can never produce" stops being true.
 - Neovim's `set_state_tree` overwrites a `[_]` child with `[x]`, against Core Decision 2. It gets fixed in this work.
