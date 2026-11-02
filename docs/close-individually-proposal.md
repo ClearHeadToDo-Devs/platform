@@ -27,7 +27,8 @@ Revised plan for Darrion's review; no worker has started. The goals are [Decisio
 | `archive action <id>` | None | The tree, to the completed file | Not a root, or anything in its tree is open |
 | `archive actions [scope]` | None | Every eligible tree | Never; ineligible trees stay |
 | `unarchive action <id>` | None | The tree, to the active file | Not a root (names the root), or already active |
-| `unarchive action <id> --reopen` | [Open](#open) | The tree, to the active file | As above |
+| `unarchive action <id> --reopen` | The root only; children stay closed with their dates | The tree, to the active file | As above |
+| `unarchive action <id> --reopen --cascade` | The root and closed members; dates cleared | The tree, to the active file | As above |
 
 Nothing archives on a CLI close. `nvim_archive_on_save` is unchanged: on in Darrion's config, off by default.
 
@@ -112,12 +113,9 @@ Stated so they can be corrected, and part of the question on the action:
 
 ## Open
 
-**`unarchive --reopen`: the root, or the whole tree?** Recommendation held until Darrion answers.
+**Is this plan right, including the [readings](#readings-of-darrions-words) above?** Asked on the action.
 
-1. **The whole tree:** `unarchive` plus `reopen --cascade`. Every line returns open and every closure date in the tree is cleared, including a child cancelled on its own. Git keeps the old lines.
-2. **The root:** `unarchive` plus `reopen`. The children stay closed with their dates, and W003 fires. The whole tree is then one more command, `reopen --cascade`, or `unarchive --reopen --cascade`.
-
-Darrion's words: "unarchive --reopen would BOTH move and reopen the actions" and "it should be rare that you unarchive a parent only to reopen the root". Against those, from Decision 58: "we might just be turning the parent open and adding new children".
+**Settled, `unarchive --reopen`:** "--reopen and --cascade need to be two separate flags, one cascades down to the whole tree, while the other reopens the single action. combined, they will open AND move the whole tree. composobility". So `--reopen` is `unarchive` plus `reopen`, with W003 firing over the closed children, and adding `--cascade` is `unarchive` plus `reopen --cascade`. The tree always moves whole, so `--cascade` without `--reopen` changes nothing and is refused as a usage error.
 
 **Left open by Darrion:** whether reopen becomes "more granual in another format".
 

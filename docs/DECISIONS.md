@@ -22,12 +22,11 @@ Decided by Darrion on 2026-11-02, answering the questions on `=close-individuall
 - **Only roots unarchive, with everything below them.** "i think we can only unarchive root actions and below? because otherwise we get into this sticky 'do you want the parents too?'"
 - **Unarchive is a move; reopen is separate.** "the root unarchive is a move then we need to reopen as a separate thing with an optional flag." Reopen "defaults to just that actions".
 - **Both flags exist.** "reopen cascade is for reopening a task and its children, while unarchive --reopen would BOTH move and reopen the actions."
+- **The flags compose.** "--reopen and --cascade need to be two separate flags, one cascades down to the whole tree, while the other reopens the single action. combined, they will open AND move the whole tree. composobility". So `unarchive --reopen` reopens the root only.
 - **W002 stays a warning by default.** "i think the default stays, it should be rare that you unarchive a parent only to reopen the root and i think that should still be a warning by default." The shape described there draws W003 (tested); it stays a warning too.
 - **A cascade closes open members under a closed target,** amending Core Decision 2 for `--cascade` only. "the cascade implies we arent just looking at one so i think same rules apply, the selected action, and all open actions should be marked completed no?"
 
 **Readings, awaiting Darrion's review on the action:** a closed cascade target keeps its own state and date, per Core Decision 2's preservation rule; and single-action archive takes a closed root with its whole tree closed, because a child in the completed file must detach and could return only as a new root.
-
-**Left open:** whether `unarchive --reopen` reopens the root or the whole tree.
 
 **Trade-offs accepted:** a line closed through the CLI stays in the active file until something sweeps it. With archive on save on, a plain `unarchive` holds only until the next save of that file, when the still-closed tree is swept back with nothing lost (tested).
 
