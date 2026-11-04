@@ -30,3 +30,7 @@ Promote on the felt pain: the first week where lost mobile thoughts noticeably e
 2. prove the Syncthing round-trip: phone append → desktop normalize → charter filing, one week of real use
 3. document the recommended phone-side capture tools rather than building one
 4. record what conflicts actually occurred — the CRDT bet's first real data
+
+## Log
+
+- 2026-11-04T07:44+00:00 — 2026-11-04, Darrion: the phone is the leverage platform and comes after the VS Code extension. The desktop is where actions get organised and the phone is where they get completed; the quintessential case is a shopping trip, a list that must be easy to look up and change on the fly while moving, likely offline in a store. This reframes the bet from inbound capture toward completing on the move. Sync is Syncthing with files as the only truth, not a CRDT server; conflict copies get merged by a watcher on the services machine (personal-os =syncthing-merge). Open for Darrion: whether to retire the CRDT sync plan in Decisions 15, 16 and 19.
