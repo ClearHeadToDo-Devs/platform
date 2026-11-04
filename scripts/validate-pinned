@@ -66,13 +66,7 @@ run_gate() {
 # the pure boundary with its source-capability and wasm dependency checks; do
 # not duplicate weaker path greps here.
 (
-    grammar_spec=$(mktemp -d)
-    trap 'rm -rf "$grammar_spec"' EXIT
-    cp -R "$root/specifications/." "$grammar_spec/"
-    # Grammar v0.10.0 predates R: formatting fixtures in specification v0.4.0.
-    # Remove this composition-only exclusion when the grammar pin moves.
-    rm -rf "$grammar_spec/examples/formatting/habits"
-    export CLEARHEAD_SPEC_DIR="$grammar_spec"
+    export CLEARHEAD_SPEC_DIR="$root/specifications"
     run_gate tree-sitter-actions
 )
 run_gate clearhead-core
