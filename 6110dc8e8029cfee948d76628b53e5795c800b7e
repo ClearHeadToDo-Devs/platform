@@ -1,0 +1,3 @@
+# review 20261104-044007/2: land by claude-opus-4-6
+clearhead-core/crates/clearhead-core/tests/spec_conformance.rs:28: nit: 2#1 Habit formatting fixture names are hardcoded rather than discovered from the directory — If a future specification release adds Habit formatting fixtures beyond 01_daily_review and 02_weekly_review, this test will silently skip them. The count assertion on line 36 guards against zero-test passes but not against missing new fixtures. Acceptable for this pin-adoption increment; worth addressing when the test suite grows.
+# review 20261104-044007/4: land by claude-opus-4-6
