@@ -1,0 +1,2 @@
+# review 20261105-015426/2: land by claude-opus-5-5
+clearhead.nvim/lua/clearhead/actions.lua:173: nit: 2#1 set_state_tree writes the date stamp inline twice (replace and append), next to the existing maybe_add_completion_date helper — duplicated date-stamp logic; one shared helper used by both set_state and set_state_tree would keep the timestamp format and placement in one place
