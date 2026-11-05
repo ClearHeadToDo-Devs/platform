@@ -1,0 +1,2 @@
+# verdict: facilitator agrees with the review (2026-11-05T02:09:26+00:00)
+note: Landed =ci-nvim locally: closing a tree in nvim now keeps already-closed children as they were and only forces the target, and :Clearhead unarchive is added, with the next-save sweep-back documented as by design. The landing gate ran the nvim suite with the parser: 79 passed, 0 pending. The one nit went to =nvim-date-helper. What needs you: =nvim-push-hook. Neither clearhead.nvim nor platform is pushed until you choose how the nvim push gets past its hook.
