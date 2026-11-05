@@ -27,6 +27,9 @@ The verbs you'll use most, all of which escape, stamp ids and keep the sidecars 
 - `clearhead add action "<name>" --alias <alias> --description "<why and what done means>" -p <1-9>`
 - `clearhead update action <alias> --state in-progress` (or `--description`, `--priority`, ...)
 - `clearhead complete action <alias>`, `clearhead cancel action <alias>`
+  close one action in place and leave its children open (the command reports them). `--cascade` closes the target and every open descendant; members already closed keep their state and date.
+- `clearhead reopen action <alias>` reopens one closed action; `--cascade` reopens its closed members too.
+- Closing never moves a line. Archiving is storage, done in bulk at the end of a charter's work: `clearhead archive actions` moves every fully closed root tree to `.completed.actions`, and `archive action <alias>` moves one. `unarchive action <alias>` moves a whole root tree back with states and dates kept; add `--reopen` to reopen its root, and `--reopen --cascade` for the whole tree.
 - `clearhead jot "<finding>"` for a timestamped note in a charter's log
 - `clearhead query named <query>` for saved queries, such as `for-human`
 

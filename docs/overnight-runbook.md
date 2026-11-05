@@ -94,6 +94,7 @@ not make, grows beyond its description, or will not go green after a reasonable
 attempt. Every session ends in exactly one of:
 
 - **Done:** gate green, work committed, `clearhead complete action <id>`.
+  This closes that action only; its children stay open unless you pass `--cascade`.
 - **Needs a decision:** `clearhead update action <id> --state blocked`, with
   `NEEDS DECISION: <question>` as the first line of its description, then the
   analysis and options, and the `human` context added (`--context` replaces
