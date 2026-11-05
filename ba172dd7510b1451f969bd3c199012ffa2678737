@@ -1,0 +1,2 @@
+# verdict: facilitator agrees with the review (2026-11-05T13:30:42+00:00)
+note: Habit occurrences and steps now get the same ids on every device whatever its time zone, matching the published vectors. Library functions only; nothing generates yet. Nothing needs you.
