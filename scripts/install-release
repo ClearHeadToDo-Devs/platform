@@ -1,0 +1,47 @@
+#!/bin/sh
+# Install a ClearHead CLI release on this host: every executable in the release
+# archive (clearhead and clearhead-lsp today), after checking the archive against
+# the digest GitHub publishes for it. Taking every executable, not a list, is the
+# point: v0.4.0 went on with clearhead alone and nvim lost its language server.
+#
+# Usage: scripts/install-release <tag> [dest]    dest defaults to ~/.local/bin
+set -eu
+
+tag=${1:?usage: install-release <tag> [dest]}
+dest=${2:-$HOME/.local/bin}
+repo=ClearHeadToDo-Devs/clearhead-core
+asset=clearhead-x86_64-unknown-linux-gnu.tar.xz
+
+fail() { echo "install-release > $*" >&2; exit 1; }
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+digest=$(gh release view "$tag" -R "$repo" --json assets \
+    --jq ".assets[] | select(.name == \"$asset\") | .digest")
+case $digest in
+    sha256:?*) ;;
+    *) fail "$tag publishes no sha256 digest for $asset" ;;
+esac
+
+gh release download "$tag" -R "$repo" -p "$asset" -D "$work"
+echo "${digest#sha256:}  $work/$asset" | sha256sum -c --quiet - ||
+    fail "$asset does not match the digest $tag publishes; nothing installed"
+
+mkdir "$work/x"
+tar -xJf "$work/$asset" -C "$work/x" --strip-components=1 --no-same-owner
+
+set --
+for f in "$work"/x/*; do
+    test -f "$f" && test -x "$f" && set -- "$@" "$f"
+done
+test $# -gt 0 || fail "$asset holds no executables"
+
+mkdir -p "$dest"
+for f; do
+    # install replaces the file rather than writing into it, so a running
+    # clearhead-lsp does not make it fail.
+    install -m 0755 "$f" "$dest/"
+    echo "install-release > $dest/$(basename "$f")"
+done
+"$dest/clearhead" --version

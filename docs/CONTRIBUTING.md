@@ -26,6 +26,13 @@ now let it be noted these are necessary for wide, multi-project updates but it i
 
 1. decide on your changes 
 
+## Installing a release on the host
+
+When a Core release lands, put it on the host with `scripts/install-release <tag>`. It checks the archive against the
+digest GitHub publishes and installs every executable in it into `~/.local/bin`: clearhead.nvim needs `clearhead-lsp`
+as much as `clearhead`, and the v0.4.0 install that copied `clearhead` alone left nvim without a language server.
+`scripts/install-release-test` covers it.
+
 ## Where knowledge lives
 
 Every kind of knowledge has exactly one home. Copying it into a second place is

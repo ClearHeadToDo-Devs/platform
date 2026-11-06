@@ -1,0 +1,54 @@
+#!/bin/sh
+# Tests for install-release, with a stub gh serving a fixture archive.
+set -eu
+
+script=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/install-release
+t=$(mktemp -d)
+trap 'rm -rf "$t"' EXIT
+
+# A fixture archive shaped like the release: two executables and a README.
+a=clearhead-x86_64-unknown-linux-gnu
+mkdir -p "$t/src/$a" "$t/bin"
+printf '#!/bin/sh\necho "clearhead fixture"\n' >"$t/src/$a/clearhead"
+printf '#!/bin/sh\n' >"$t/src/$a/clearhead-lsp"
+echo readme >"$t/src/$a/README.md"
+chmod 0755 "$t/src/$a/clearhead" "$t/src/$a/clearhead-lsp"
+tar -cJf "$t/$a.tar.xz" -C "$t/src" "$a"
+
+cat >"$t/bin/gh" <<EOF
+#!/bin/sh
+case "\$2" in
+    view) echo "sha256:\$(cat "$t/digest")" ;;
+    download) while test "\$1" != -D; do shift; done; cp "$t/$a.tar.xz" "\$2/" ;;
+esac
+EOF
+chmod 0755 "$t/bin/gh"
+PATH="$t/bin:$PATH"
+
+pass=0
+ok() { pass=$((pass + 1)); }
+no() { echo "FAIL: $*" >&2; exit 1; }
+
+# Installs every executable in the archive, and nothing else.
+sha256sum "$t/$a.tar.xz" | cut -d' ' -f1 >"$t/digest"
+out=$("$script" v0 "$t/dest")
+test -x "$t/dest/clearhead" && test -x "$t/dest/clearhead-lsp" || no "both executables installed"
+ok
+test ! -e "$t/dest/README.md" || no "non-executables skipped"
+ok
+case $out in *"clearhead fixture"*) ok ;; *) no "reports the installed version" ;; esac
+
+# Replaces a running binary's file instead of writing into it.
+inode=$(stat -c %i "$t/dest/clearhead-lsp")
+"$script" v0 "$t/dest" >/dev/null
+test "$(stat -c %i "$t/dest/clearhead-lsp")" != "$inode" || no "replaces rather than overwrites"
+ok
+
+# A digest mismatch installs nothing.
+echo 0000 >"$t/digest"
+if "$script" v0 "$t/bad" 2>/dev/null; then no "mismatch exits non-zero"; fi
+ok
+test ! -e "$t/bad" || no "mismatch installs nothing"
+ok
+
+echo "install-release-test > $pass passed"
