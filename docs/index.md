@@ -20,6 +20,7 @@ Process and architecture knowledge for the ClearHead platform monorepo, shared b
 ## Proposals
 
 * [Close One Action by Default](close-individually-proposal.md) — closing changes one action's state in place, cascade is a flag, and only archiving moves files
+* [Notes on Actions](action-notes-proposal.md) — draft: dated notes appended to an action in its charter's JSON sidecar, so the description stays whole
 * [Consequence-Proportional Assurance](consequence-proportional-assurance.md) — concentrate executable assurance where failure can destroy trust without turning every change into permanent process work
 
 ## Runbooks
