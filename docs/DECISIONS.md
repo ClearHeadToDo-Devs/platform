@@ -6,11 +6,22 @@ status: stable
 generated: { by: human:Darrion, at: 2025-11-01 }
 ---
 
-**Last Updated:** November 2nd 2026 **Status:** Living Document
+**Last Updated:** November 6th 2026 **Status:** Living Document
 
 This document records decisions that bind more than one repository: the specification, repository topology, and shared tooling. A decision only one repository must honor lives in that repository's `docs/DECISIONS.md` (see [Where knowledge lives](CONTRIBUTING.md#where-knowledge-lives)). Some older entries below predate that split. Each decision includes context, rationale, alternatives considered, and trade-offs.
 
 ---
+
+## Decision 60: Clients Reach Core Through the CLI's Schema'd JSON
+
+Decided by Darrion on 2026-11-06, in a facilitator session, after asking whether clearhead.nvim should bind to Core in process (mlua). The work is `=cli-json-contract`.
+
+- **Clients depend on data, not on CLI text.** "its more about making sure the json format is consistent with schemas so that the plugin can work through data rather than strings which is fine because nvim reads that natively as will any other tool". Every CLI output a client reads has a JSON form with a schema in `specifications/schemas`, checked by `spec_conformance`; human-facing text stays free to change.
+- **The binary is the accepted cost.** "i think its a tradeoff we made and fighting against it would only result in more churn with little to no benefit". Clients run the released `clearhead` and `clearhead-lsp`; an in-process binding would still be a per-platform binary, and Neovim has no WASM runtime.
+
+**Alternatives considered:** in-process bindings (mlua for Neovim, WASM elsewhere), each a binding layer to version per host; editor verbs as LSP commands, a second contract only editors could use. The CLI already serves agents and scripts, so one contract there serves every client. WASM stays the route for hosts without a terminal ([pure-core-split](../.clearhead/charters/pure-core-split.md)).
+
+**Measured:** `clearhead query index for-human --format json` took 0.06 s and `clearhead doctor` 0.02 s, so starting a process costs a client nothing it would notice.
 
 ## Decision 59: Archive and Unarchive Move Whole Root Trees
 
