@@ -1,0 +1,2 @@
+# verdict: facilitator agrees with the review (2026-11-07T19:48:51+00:00)
+note: Core and platform now adopt published specification v0.6.0 with coherent schema URLs; grammar remains 0.11.1. Tests-first runtime red recorded, independent Copilot Anthropic Claude review /2 returned land, and unchanged full platform candidate gate passed at exact published v0.6.0. This is contract adoption only; recurrence linting/stamping remain separate reviewed work. Nothing needs Darrion.
