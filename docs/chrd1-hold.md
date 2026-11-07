@@ -1,32 +1,35 @@
-# Run chrd1 is held: =chst-reader
+# chrd1: independent review wait, not a human decision
 
-**What it is.** Run chrd1 (workflow review-cycle, agent run 20261107-180153) did `=chst-reader`, the first of the
-three runs that replaced chst1: the named-template reader now returns the parser's own record of which steps had a
-written `#uuid`, and `habit-id-missing` covers template steps. Nothing has landed.
+## Current state (2026-11-07)
 
-**Where it stands.** Its bounded loop ended after three reviews at "land after fixes", so the stop rule holds it for
-you (workflows README, Deciding). Unlike chst1, it converged:
+Workflow `chrd1`, agent run `20261107-180153`, implements `=chst-reader`. It remains paused at `decide`; nothing has landed. The steward owns this technical recovery under meta-analysis `workflows/README.md`, **Deciding**. No answer from Darrion is needed.
 
-- The code has not changed since review 1, and all three reviews found it sound and in scope. The 6 named tests pass.
-- Review 1's one should-fix (the CLI reader tests were never run red) was resolved in round 2 by a recorded red run of
-  the Core lint tests at the test-only commit. The reader tests could not have compiled before the fix.
-- What is left is bookkeeping, not a shared cause: the red-run record went into a new Core doc
-  (`clearhead-core/docs/habit-template-ids-red-evidence.md`) instead of the action's completion note, and the
-  completion note is still missing.
-- The third finding (doctor drops line numbers and severities for template-file lint findings) predates this branch.
-  I filed it as `=template-lint-findings`.
+Read the actual sessions before continuing:
 
-**What's left before landing.** Move the red-run record into `=chst-reader`'s completion note, drop the Core doc, and
-run `scripts/gate.sh` in a writable checkout. No reviewer has seen the gate pass; only the worker's commit says it did.
+- Reviews `/2`, `/4`, `/6` found the reader implementation sound and in scope. `/6` accepted the retrospective Core red-run evidence; it requested moving that evidence into the action and removing the dated Core document. The pre-existing doctor source/severity defect has its own action, `=template-lint-findings`.
+- A push-back already happened. Writer `/7` made no changes because updating the closed action was refused and its question about reopening timed out.
+- Independent Claude review `/8` failed on capacity: **“You've hit your 5-hour limit · resets 10:10pm (UTC)”**, i.e. **22:10 UTC on November 7**. This is not a review approval.
 
-**One thing you might weigh.** Every `templates/*.actions` step without an id now warns in `doctor`, not only templates
-a Habit names. That is how I read linting.md ("missing ... template-step ids ... are reported"). It costs nothing
-today: none of your workspaces has a templates folder.
+## Verified recovery
 
-**The choice.**
+The steward tested the writable run checkout directly:
 
-- **Push back once** with the two bookkeeping edits. It costs one fix and one review (about $0.40 for the review), and
-  everything that lands has been reviewed. This is my recommendation.
-- **Override and land**, then I make the edits in a follow-up Core commit. No spend, but the doc goes into Core's
-  history and comes straight back out, and the follow-up is not reviewed.
-- **Stop.** I see no reason to.
+```sh
+cargo test --locked --workspace --test habit_template_ids
+sh scripts/gate.sh
+```
+
+All **six** named tests passed, none filtered; the **complete gate exited 0**, including all workspace tests and three-zone slot tests. Doctor remains **0 violations / 13 existing warnings**.
+
+Bookkeeping is now committed in the existing run, without changing production code:
+
+- Core `0667ab9`: removes `docs/habit-template-ids-red-evidence.md`.
+- Platform `8188835`: records the red/green evidence, implementation commits and gate result in `=chst-reader`. The steward explicitly reopened, updated and re-completed the action through the CLI; its note retains the original completion time and candidly records that the CLI reader tests were not originally run red.
+
+The worker branch is preserved, not landed or pushed. The host's `=chst-reader` stays open until landing. No duplicate run and no override have been created.
+
+## Next step
+
+When independent reviewer capacity returns, review the final candidate in **this existing run**, including `0667ab9` / `8188835`, and the full scope against the brief. Preserve the independent-vendor gate; do not infer approval from earlier reviews or the passing gate. Then decide/land the existing workflow, resolving any host action-file integration against the newer approval/task records rather than overwriting them. Push landed Core and platform history and review/verdict notes as required.
+
+In parallel, `=template-recurrence-land` owns the approved specification at `139f0c9`. Its independent review, release and adoption remain pending. `=template-lint-findings` must be addressed before the new lint errors rely on doctor reporting; `=lint-ancestor-dependency` remains a separate small cycle.
