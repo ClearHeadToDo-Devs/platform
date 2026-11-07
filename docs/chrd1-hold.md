@@ -2,7 +2,7 @@
 
 ## Current state (2026-11-07)
 
-Workflow `chrd1`, agent run `20261107-180153`, implements `=chst-reader`. Its landing decision is approved and the final reviewed candidate is ready for the platform landing gate. The steward owns this technical recovery under meta-analysis `workflows/README.md`, **Deciding**. No answer from Darrion is needed.
+Workflow `chrd1`, agent run `20261107-180153`, implements `=chst-reader`. It is **landed and pushed**: Core `05d4bec`, platform `771daeb`; workflow `chrd1` succeeded. Root review/verdict notes are pushed. The steward owns this technical recovery under meta-analysis `workflows/README.md`, **Deciding**. No answer from Darrion is needed.
 
 Read the actual sessions before continuing:
 
@@ -41,6 +41,8 @@ A second candidate was stopped after inspection found that harvest still selecte
 
 ## Next step
 
-Harvest writer `/10`, verify exported tips are `d954a52` / `b137a76`, rebuild the disposable failed candidate, and retry the existing workflow's `land` step with the unchanged full gate. Resolve integration against newer host approval/task records rather than overwriting them. Push landed Core and platform history and review/verdict notes as required. No duplicate run or override is needed.
+Completed: harvested writer `/10`, verified exact exported tips `d954a52` / `b137a76`, rebuilt the disposable failed candidate, and retried the existing workflow's `land` step. The unchanged **full platform gate passed**, including Core, grammar, parser-backed nvim (84 successes, zero pending), ontology, DSL/CLI/schema conformance and graph checks. Core's real host pre-push gate also passed. Newer approval/task records were retained. Core, platform and root review/verdict notes are pushed; no duplicate run or override was used.
+
+Continue with the separately reviewed v0.6.0 adoption and lint-reporting increments.
 
 In parallel, specification **v0.6.0** (`8461b8d`) is independently reviewed, tagged and pushed on main/release; all eight public schema URLs return their exact new IDs. The approved normative text and fixtures remain byte-identical to `139f0c9`. Platform remains on the declared v0.5.0 until separate reviewed adoption `=template-recurrence-pins`. `=template-lint-findings` precedes the new lint errors; `=lint-ancestor-dependency`, on-demand generation guards and native stamping remain separate small cycles.
