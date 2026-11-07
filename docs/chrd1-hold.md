@@ -1,8 +1,8 @@
-# chrd1: independent review wait, not a human decision
+# chrd1: technical recovery and landing record
 
 ## Current state (2026-11-07)
 
-Workflow `chrd1`, agent run `20261107-180153`, implements `=chst-reader`. It remains paused at `decide`; nothing has landed. The steward owns this technical recovery under meta-analysis `workflows/README.md`, **Deciding**. No answer from Darrion is needed.
+Workflow `chrd1`, agent run `20261107-180153`, implements `=chst-reader`. Its landing decision is approved and the final reviewed candidate is ready for the platform landing gate. The steward owns this technical recovery under meta-analysis `workflows/README.md`, **Deciding**. No answer from Darrion is needed.
 
 Read the actual sessions before continuing:
 
@@ -26,10 +26,21 @@ Bookkeeping is now committed in the existing run, without changing production co
 - Core `0667ab9`: removes `docs/habit-template-ids-red-evidence.md`.
 - Platform `8188835`: records the red/green evidence, implementation commits and gate result in `=chst-reader`. The steward explicitly reopened, updated and re-completed the action through the CLI; its note retains the original completion time and candidly records that the CLI reader tests were not originally run red.
 
-The worker branch is preserved, not landed or pushed. The host's `=chst-reader` stays open until landing. No duplicate run and no override have been created.
+## Independent review and export recovery
+
+Native Claude capacity was not the only route. The sandbox shared OAuth store supports `github-copilot/claude-sonnet-5.5`; explicit `AGENT_PI_PROVIDER=github-copilot` dispatch completed independent reviews `/9` and `/11`, both **land**. No Gemini setup or new authentication was needed. The 22:11 UTC capacity fallback is unnecessary.
+
+The first landing attempt correctly refused an untagged specification pin: task-only commit `ac3a369` followed the declared `v0.5.0`. Platform `4eb7992` restored the exact published tag on a named consumer integration branch, preserving specification main/draft history.
+
+A second candidate was stopped after inspection found that harvest still selected writer `/7`'s old bundles: manually committed recovery was visible to review `/9` but absent from the writer export. GPT writer `/10` repaired this in the same run:
+
+- Core **`d954a52`** replaces unpublished `0667ab9` with an appropriate `test(habits)` evidence-relocation commit; their trees are identical. Original test and implementation history is untouched.
+- Platform **`b137a76`** records the complete evidence and superseded hashes, moves the Core pin, and retains exact specification `v0.5.0`.
+- Full Core and platform gates passed. A stale shared-cache compile-time manifest path was cleared before the final Core run; no test or gate was weakened.
+- Independent Copilot Claude review **`/11`** verified the final tree/hash/pins, ran the workspace tests, and returned **land** with no findings. Only the two known read-only `lint_cli` fixture writes failed in its read-only checkout.
 
 ## Next step
 
-When independent reviewer capacity returns, review the final candidate in **this existing run**, including `0667ab9` / `8188835`, and the full scope against the brief. Preserve the independent-vendor gate; do not infer approval from earlier reviews or the passing gate. Then decide/land the existing workflow, resolving any host action-file integration against the newer approval/task records rather than overwriting them. Push landed Core and platform history and review/verdict notes as required.
+Harvest writer `/10`, verify exported tips are `d954a52` / `b137a76`, rebuild the disposable failed candidate, and retry the existing workflow's `land` step with the unchanged full gate. Resolve integration against newer host approval/task records rather than overwriting them. Push landed Core and platform history and review/verdict notes as required. No duplicate run or override is needed.
 
-In parallel, `=template-recurrence-land` owns the approved specification at `139f0c9`. Its independent review, release and adoption remain pending. `=template-lint-findings` must be addressed before the new lint errors rely on doctor reporting; `=lint-ancestor-dependency` remains a separate small cycle.
+In parallel, specification **v0.6.0** (`8461b8d`) is independently reviewed, tagged and pushed on main/release; all eight public schema URLs return their exact new IDs. The approved normative text and fixtures remain byte-identical to `139f0c9`. Platform remains on the declared v0.5.0 until separate reviewed adoption `=template-recurrence-pins`. `=template-lint-findings` precedes the new lint errors; `=lint-ancestor-dependency`, on-demand generation guards and native stamping remain separate small cycles.
