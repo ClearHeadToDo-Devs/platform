@@ -1,0 +1,2 @@
+# verdict: facilitator agrees with the review (2026-11-07T19:34:43+00:00)
+note: The named-template reader now preserves parser-owned written-ID records for deterministic Habit stamping. All six named tests, the complete Core gate and final platform validate-pinned pass; independent Copilot Anthropic Claude reviews /9 and /11 approve the final candidate. Historical reader red-test deviation is recorded honestly. Nothing needs Darrion. Follow-up source/severity reporting and released spec v0.6.0 adoption remain separate reviewed increments.
