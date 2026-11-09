@@ -12,6 +12,15 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 61: The CLI Prints the Specification's Shapes; Its Own Shapes Live With It
+
+Decided by Darrion on 2026-11-09, in a facilitator session, while `=notes-render` was adding `show --json`. Amends Decision 60's "with a schema in `specifications/schemas`".
+
+- **One shape per thing.** "thinking about if theres a unified structure". A CLI output that carries an entity prints it as the specification already defines it (`actions.schema.json`, `charters.schema.json`, the note in `charter_metadata.schema.json`), not a shape of its own; `show notes <id>` is a list of those notes. No new schema is made for a command that only prints existing data.
+- **The specification is for what every implementation agrees on.** "these specs for the cli commands go just there, in the cli repo, rather than the specification repo that is meant for more stuff that is implementation agnostic". `specifications` holds the files on disk, the ontology, and the shapes every host exchanges (entities, transactions, query results). A shape only the CLI has, such as a command's wrapper or exit codes, is the CLI's interface and its schema lives in the CLI's repository, checked by the CLI's tests.
+
+**Alternatives considered:** a schema per command in `specifications` (Decision 60 as written), which would bind other hosts to one tool's commands and give the same entity several shapes.
+
 ## Decision 60: Clients Reach Core Through the CLI's Schema'd JSON
 
 Decided by Darrion on 2026-11-06, in a facilitator session, after asking whether clearhead.nvim should bind to Core in process (mlua). The work is `=cli-json-contract`.
