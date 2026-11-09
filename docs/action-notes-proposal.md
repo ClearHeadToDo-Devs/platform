@@ -2,7 +2,7 @@
 type: Proposal
 title: Notes on Actions, Kept in the Charter's Sidecar
 description: Draft for =action-notes. Dated notes appended to an action as data in its charter's JSON sidecar, so the description stays one unified text; and whether the charter log moves there too. Checked against specification v0.5.0 and Core bd66ca5 (v0.4.0 and 9 commits).
-status: draft
+status: answered
 date: 2026-11-06
 sources:
   - DECISIONS.md
@@ -88,3 +88,17 @@ Read after answering, to compare.
    read as the Markdown. Moving it now hides the log before there is a way to see it.
 3. Extend `jot`: it is already the append verb, and one verb is easier to remember than two.
 4. Append-only through the tools; the JSON stays hand-editable for the rare real mistake.
+
+## Answers
+
+Darrion, 2026-11-09, in facilitator chat:
+
+1. **Shape:** the top-level `notes.<uuid>` map, for any entity. "Standard procedure is to have uniform logging
+   structure."
+2. **The charter log:** moves to the sidecar as notes on the charter, and this work goes first in priority
+   (`=logs-in-sidecar`). Sequencing, treated as how by the facilitator: `show` and the editor hover display sidecar
+   notes before any `## Log` is migrated.
+3. **The verb:** no new verb. `jot` appends to the sidecar log instead of the Markdown `## Log`, and takes any
+   entity's id: a charter, an action or a Habit.
+4. **Corrections:** our tools treat notes as an append-only log, and each note is fixed to the instant it was
+   written. The JSON can still be edited by hand, and readers must accept that rather than refuse it.
