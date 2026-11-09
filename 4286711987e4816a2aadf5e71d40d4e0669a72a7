@@ -1,0 +1,5 @@
+# review 20261109-023258/2: land after fixes by claude-opus-5-5
+clearhead-core/crates/clearhead-core/CHANGELOG.md:9: should-fix: 2#1 The Unreleased entry claims v0.7.0 adoption and lists Habits as partial, but does not say that v0.7.0's sidecar notes (notes.<uuid>) are not implemented, or that Core currently deletes a notes key whenever it rewrites a sidecar (CharterMetadata has no notes field or flatten catch-all; render_sidecar re-serializes the struct). The CLI CHANGELOG line 9 says the same. — Core now stamps sidecars with the v0.7.0 schema, which defines notes and says readers accept hand edits. A note written by hand or by another tool before =notes-core lands is lost on the next Core write, and the changelog gives no warning. Fix with one sentence in each changelog, or make =notes-core preserve the key before notes are written.
+# fix 20261109-023258/3 by gpt-6-luna, answering review 2
+fixed: 2#1
+# review 20261109-023258/4: land by claude-opus-5-5
