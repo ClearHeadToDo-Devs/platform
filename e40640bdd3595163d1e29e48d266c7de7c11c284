@@ -1,0 +1,12 @@
+# review 20261109-025734/2: land after fixes by claude-sonnet-5-5
+clearhead-core/crates/clearhead-core/src/workspace/sidecar.rs:70: should-fix: 2#1 Note.at deserializer rejects date-only timestamps such as 2026-11-07, so a sidecar containing one fails to parse as a whole. — The approved spec treats date-only migrated entries as midnight and requires tolerant reads of hand edits. One such entry makes the whole sidecar fail to parse, losing all of its notes and action metadata.
+clearhead-core/crates/clearhead-core/src/workspace/sidecar.rs:88: nit: 2#2 merge_notes re-sorts the cumulative log after each merged sidecar. — Sorting once after all sidecars are merged is simpler and avoids repeated O(n log n) work.
+clearhead-core/crates/clearhead-cli/src/filesystem/doctor.rs:251: nit: 2#3 Relocation extends the destination log without de-duplication. — A rerun after a partial failure (destination written, source removal failed) could duplicate notes, unless the revision check makes it a no-op. I did not verify that.
+# fix 20261109-025734/3 by gpt-6.1-sol, answering review 2
+declined: 2#1 — Blocked by conflicting requirements for separate tests-first commits versus committing each change together with its tests; runbook requires stopping.
+declined: 2#2 — Session stopped under the runbook's instruction-conflict rule before changes were made.
+declined: 2#3 — Blocked by conflicting requirements for separate tests-first commits versus committing each change together with its tests; runbook requires stopping.
+# fix 20261109-025734/4 by gpt-6.1-sol, answering review 2
+fixed: 2#1
+fixed: 2#2
+fixed: 2#3
