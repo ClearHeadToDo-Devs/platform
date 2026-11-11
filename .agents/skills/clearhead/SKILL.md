@@ -33,6 +33,10 @@ The verbs you'll use most, all of which escape, stamp ids and keep the sidecars 
 - `clearhead jot "<finding>"` for a timestamped note in a charter's log
 - `clearhead query named <query>` for saved queries, such as `for-human`
 
+### Keep actions readable
+
+An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in the charter's log: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. When an action's description grows past a few lines, it has become a log, so move that history into a jot and trim the description back to the next step. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
+
 ## LSP
 
 We also have an LSP server. It's primarily intended for humans, but where the neovim MCP server is available you can use it too, and it does the plumbing for you when you edit the various item types.
