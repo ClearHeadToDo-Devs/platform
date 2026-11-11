@@ -35,7 +35,7 @@ The verbs you'll use most, all of which escape, stamp ids and keep the sidecars 
 
 ### Keep actions readable
 
-An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in the charter's log: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. When an action's description grows past a few lines, it has become a log, so move that history into a jot and trim the description back to the next step. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
+An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in the charter's log: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. When an action's description grows past a few lines, it has become a log, so move that history into a jot and trim the description back to the next step. Per-action logs are planned: once `=notes-jot` lands, `jot` takes an action id, so one action's history lives with that action rather than in the charter's log. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
 
 ## LSP
 
