@@ -871,6 +871,8 @@ This does a few things:
 
 So we are going to take some work of simplifying the CLI and LSP to make that experience really tight, with plans for the sync server to be something that we do in JS later
 
+2026-11-14 (Darrion, in talk with the facilitator): the same holds for a database. A SQLite-centric core was considered as a way to drop the workspace, filesystem, doctor and archive machinery, and declined: the files would become projections with little reason to exist. SQLite as a query index beside the files (in place of oxigraph, Decision 18) is a separate question and still open.
+
 ## Decision 18: RDF Store
 
 In line with the work outlined below on the CRDT layer, we will also be decoupling the RDF store from the core hotpath.
