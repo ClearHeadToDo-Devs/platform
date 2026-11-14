@@ -3,9 +3,11 @@ id: 01a0faa1-ca17-72a9-8a6b-f05b6bd6dbd3
 alias: emit-the-ontology
 parent: platform
 objectives: [data-integration]
-state: Active
+state: Blocked
 ---
 # Emit the Grounded Ontology
+
+> **Paused 2026-11-14 (Darrion):** waits while semantic merge, the calendar and templates get over the line; together they make the system ClearHead has to be first. State is Blocked because charters have no paused state.
 
 Core projects every workspace to the ontology's standard terms (CCO v2.2 and IAO, `ontology/docs/domain.md`), and the v4 vocabulary goes. That projection is the core code change; the specification says what it must produce, and the CLI's queries follow it. Decided in platform Decision 43; follows [[ground-the-ontology]].
 
