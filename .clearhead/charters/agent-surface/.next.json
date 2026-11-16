@@ -1,0 +1,23 @@
+{
+  "$schema": "https://clearhead.dev/schemas/v0.5.0/charter_metadata.schema.json",
+  "actions": {
+    "01a0a25d-6197-79f0-a91c-113e3a4b3665": {
+      "created": "2026-09-15T00:00:23.959Z"
+    },
+    "01a0a25d-86be-7d20-bead-8c865af74d6f": {
+      "created": "2026-09-15T00:00:33.470Z"
+    },
+    "01a0a25d-86cc-7182-b6b9-5e8c656d5e38": {
+      "created": "2026-09-15T00:00:33.484Z"
+    },
+    "01a0a25d-86db-73b2-9b9a-02ee3b21c79d": {
+      "created": "2026-09-15T00:00:33.499Z"
+    },
+    "01a0b81e-b609-7552-a75e-66bdfbcb3637": {
+      "created": "2026-09-19T05:23:35.561Z"
+    },
+    "01a0dab3-4b0c-7b60-a98c-5dbb7ac0cf29": {
+      "created": "2026-09-25T22:32:58.380Z"
+    }
+  }
+}
