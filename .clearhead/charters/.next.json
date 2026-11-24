@@ -1,5 +1,5 @@
 {
-  "$schema": "https://clearhead.dev/schemas/v0.5.0/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.7.0/charter_metadata.schema.json",
   "charter": {
     "id": "019c4f48-6441-75dd-b285-33718b9be996"
   },
@@ -238,5 +238,14 @@
     "01a1e655-cee4-78a2-88a7-df2cc5d34892": {
       "created": "2026-11-16T21:49:05.636Z"
     }
+  },
+  "notes": {
+    "01a1be13-34b2-7891-9644-b8a80e44f6b2": [
+      {
+        "at": "2026-11-24T07:26:29Z",
+        "by": "agent-facilitator",
+        "text": "Landed: Core fc3cd95 (jot <ref>|charter <query>, by from --by/CLEARHEAD_NAME/config name/login, refuses ids minted at load, note_sidecars shared with doctor), nvim f01c5c1, spec 9dce9be (by is the writer's name). Skill updated."
+      }
+    ]
   }
 }

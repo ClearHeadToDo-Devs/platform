@@ -30,12 +30,12 @@ The verbs you'll use most, all of which escape, stamp ids and keep the sidecars 
   close one action in place and leave its children open (the command reports them). `--cascade` closes the target and every open descendant; members already closed keep their state and date.
 - `clearhead reopen action <alias>` reopens one closed action; `--cascade` reopens its closed members too.
 - Closing never moves a line. Archiving is storage, done in bulk at the end of a charter's work: `clearhead archive actions` moves every fully closed root tree to `.completed.actions`, and `archive action <alias>` moves one. `unarchive action <alias>` moves a whole root tree back with states and dates kept; add `--reopen` to reopen its root, and `--reopen --cascade` for the whole tree.
-- `clearhead jot "<finding>"` for a timestamped note in a charter's log
+- `clearhead jot <id|alias> "<finding>"` for a note on any charter, action or Habit; `clearhead jot charter <name> "…"` also matches a charter's title; `clearhead show notes <id>` reads them back
 - `clearhead query named <query>` for saved queries, such as `for-human`
 
 ### Keep actions readable
 
-An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in the charter's log: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. When an action's description grows past a few lines, it has become a log, so move that history into a jot and trim the description back to the next step. Per-action logs are planned: once `=notes-jot` lands, `jot` takes an action id, so one action's history lives with that action rather than in the charter's log. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
+An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in notes: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. An action's own history goes on that action (`clearhead jot <action id> "…"`); what concerns the whole charter goes on the charter. When an action's description grows past a few lines, it has become a log, so move that history into notes and trim the description back to the next step. Sign agent notes with `--by agent:<role>` or `CLEARHEAD_NAME`. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
 
 ## LSP
 
