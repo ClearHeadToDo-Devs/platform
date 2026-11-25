@@ -102,11 +102,23 @@
     }
   },
   "notes": {
+    "01a0ccb0-82ab-74a9-8b9c-c75730082150": [
+      {
+        "at": "2026-11-25T01:33:56Z",
+        "by": "agent:facilitator",
+        "text": "2026-11-25: cancelled, superseded by =notes-migrate-logs, which moves ## Log entries into notes instead of rewriting them as dated lines."
+      }
+    ],
     "01a0faa9-877b-709d-b3fd-b48e1b63e246": [
       {
         "at": "2026-11-25T01:18:25Z",
         "by": "agent:facilitator",
         "text": "Found 2026-10-01 folding implement-objectives into emit-the-ontology; the move was done by hand."
+      },
+      {
+        "at": "2026-11-25T01:33:56Z",
+        "by": "agent:facilitator",
+        "text": "2026-11-25: cancelled as a duplicate of Core's =move-action-between-charters, which carries its finding."
       }
     ],
     "01a0faa9-878a-76b9-80f7-9bd9bfcdf35c": [
