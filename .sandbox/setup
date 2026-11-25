@@ -7,6 +7,9 @@
 export CARGO_HOME=/srv/cache/cargo CARGO_TARGET_DIR=/srv/cache/target UV_CACHE_DIR=/srv/cache/uv
 cargo build -q --manifest-path clearhead-core/Cargo.toml -p clearhead
 export PATH="$CARGO_TARGET_DIR/debug:$PATH"
+# Notes a worker jots are signed by its harness (AGENTS.md, Notes are signed
+# by the harness): agent:claude or agent:pi, never the sandbox's login.
+export CLEARHEAD_NAME="${CLEARHEAD_NAME:-agent:$AGENT_HARNESS}"
 # A fresh clone has no node_modules; the grammar's gate needs them. Which
 # dependencies may run install scripts is tree-sitter-actions' allowScripts.
 # A read-only session (a review) cannot write them, and runs no gate.
