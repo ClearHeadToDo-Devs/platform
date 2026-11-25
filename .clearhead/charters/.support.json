@@ -1,104 +1,127 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a030a9-2c09-78a1-a9e1-7f2e99563193"
   },
   "actions": {
     "01a030aa-2e64-7af0-9832-7e9b7ea40507": {
-      "created": "2026-08-23T15:07:34.500-07:00"
+      "created": "2026-08-23T22:07:34.500Z"
     },
     "01a030aa-2e75-7a23-8c4a-3049ffa0f7d2": {
-      "created": "2026-08-23T15:07:34.517-07:00"
+      "created": "2026-08-23T22:07:34.517Z"
     },
     "01a030aa-2e84-7a91-8050-53fedd325831": {
-      "created": "2026-08-23T15:07:34.532-07:00"
+      "created": "2026-08-23T22:07:34.532Z"
     },
     "01a030aa-2e92-79c1-b4dc-a0ad2e058ff8": {
-      "created": "2026-08-23T15:07:34.546-07:00"
+      "created": "2026-08-23T22:07:34.546Z"
     },
     "01a030aa-2ea1-7023-a80a-ede7c95df12a": {
-      "created": "2026-08-23T15:07:34.561-07:00"
+      "created": "2026-08-23T22:07:34.561Z"
     },
     "01a030aa-2eae-7e12-9217-811ee365caea": {
-      "created": "2026-08-23T15:07:34.574-07:00"
+      "created": "2026-08-23T22:07:34.574Z"
     },
     "01a030aa-2ebb-7b92-8e8a-645c5db58f3c": {
-      "created": "2026-08-23T15:07:34.587-07:00"
+      "created": "2026-08-23T22:07:34.587Z"
     },
     "01a0a42b-3be7-7691-bcbf-366e1fd87a77": {
-      "created": "2026-09-15T01:24:51.943-07:00"
+      "created": "2026-09-15T08:24:51.943Z"
     },
     "01a0b585-68c4-775a-ab77-a9ae3c17d941": {
-      "created": "2026-09-18T10:16:54.340-07:00"
+      "created": "2026-09-18T17:16:54.340Z"
     },
     "01a0b585-68cb-7397-b200-02ffaa6201ef": {
-      "created": "2026-09-18T10:16:54.347-07:00"
+      "created": "2026-09-18T17:16:54.347Z"
     },
     "01a0b585-68d2-721c-a2da-c07fc0353c30": {
-      "created": "2026-09-18T10:16:54.354-07:00"
+      "created": "2026-09-18T17:16:54.354Z"
     },
     "01a0b585-68da-7037-a9d5-42f1ee1628ce": {
-      "created": "2026-09-18T10:16:54.362-07:00"
+      "created": "2026-09-18T17:16:54.362Z"
     },
     "01a0b586-aa5f-7796-aa3c-e9381eae7175": {
-      "created": "2026-09-18T10:18:16.671-07:00"
+      "created": "2026-09-18T17:18:16.671Z"
     },
     "01a0b5b0-17a8-73c8-878a-cdc69737e59d": {
-      "created": "2026-09-18T11:03:31.624-07:00"
+      "created": "2026-09-18T18:03:31.624Z"
     },
     "01a0b5b0-17b8-77e8-82e9-971c194e64f9": {
-      "created": "2026-09-18T11:03:31.640-07:00"
+      "created": "2026-09-18T18:03:31.640Z"
     },
     "01a0b5b0-17c4-73d7-8fa1-e9e4aebda796": {
-      "created": "2026-09-18T11:03:31.652-07:00"
+      "created": "2026-09-18T18:03:31.652Z"
     },
     "01a0b5b0-17d2-717c-938d-74ae3d848ce1": {
-      "created": "2026-09-18T11:03:31.666-07:00"
+      "created": "2026-09-18T18:03:31.666Z"
     },
     "01a0b5b0-17eb-7573-9921-dd40c4212d25": {
-      "created": "2026-09-18T11:03:31.691-07:00"
+      "created": "2026-09-18T18:03:31.691Z"
     },
     "01a0b5d0-da38-74c4-bd29-ab0ecda10946": {
-      "created": "2026-09-18T11:39:18.584-07:00"
+      "created": "2026-09-18T18:39:18.584Z"
     },
     "01a0b5d0-da47-714b-9a4e-113403989cea": {
-      "created": "2026-09-18T11:39:18.599-07:00"
+      "created": "2026-09-18T18:39:18.599Z"
     },
     "01a0b5d0-da56-771e-afe7-12a0d08720b7": {
-      "created": "2026-09-18T11:39:18.614-07:00"
+      "created": "2026-09-18T18:39:18.614Z"
     },
     "01a0b5fa-6ab7-7100-a71d-4e1388c2b30f": {
-      "created": "2026-09-18T12:24:42.551-07:00"
+      "created": "2026-09-18T19:24:42.551Z"
     },
     "01a0b5ff-3cd7-72b5-9e5c-9857bc0b19b3": {
-      "created": "2026-09-18T12:29:58.487-07:00"
+      "created": "2026-09-18T19:29:58.487Z"
     },
     "01a0b5ff-3ce5-737e-b63f-7d736455a8da": {
-      "created": "2026-09-18T12:29:58.501-07:00"
+      "created": "2026-09-18T19:29:58.501Z"
     },
     "01a0b5ff-3cf2-76e1-83b1-7f0aae63fc70": {
-      "created": "2026-09-18T12:29:58.514-07:00"
+      "created": "2026-09-18T19:29:58.514Z"
     },
     "01a0b80d-8c36-7498-8017-9680cbe05b95": {
-      "created": "2026-09-18T22:04:50.742-07:00"
+      "created": "2026-09-19T05:04:50.742Z"
     },
     "01a0c729-5de2-77cc-ad47-9ffc021e3ad3": {
-      "created": "2026-09-21T20:29:32.130-07:00"
+      "created": "2026-09-22T03:29:32.130Z"
     },
     "01a0c72b-c463-7709-8e34-1e31df7ef245": {
-      "created": "2026-09-21T20:32:09.443-07:00"
+      "created": "2026-09-22T03:32:09.443Z"
     },
     "01a0cab3-ea83-7980-9b89-80bf3f92b90e": {
-      "created": "2026-09-22T12:59:43.747-07:00"
+      "created": "2026-09-22T19:59:43.747Z"
     },
     "01a0cbb5-0604-7386-ba34-ded646e7f9d4": {
-      "created": "2026-09-22T17:40:33.540-07:00"
+      "created": "2026-09-23T00:40:33.540Z"
     },
     "01a0cc7e-dc10-77a6-babf-7f94c058a8cc": {
-      "created": "2026-09-22T21:21:01.072-07:00"
+      "created": "2026-09-23T04:21:01.072Z"
     },
     "01a0cc7e-dc1c-7797-9b59-5f718d9e165f": {
-      "created": "2026-09-22T21:21:01.084-07:00"
+      "created": "2026-09-23T04:21:01.084Z"
     }
+  },
+  "notes": {
+    "01a0faa9-877b-709d-b3fd-b48e1b63e246": [
+      {
+        "at": "2026-11-25T01:18:25Z",
+        "by": "agent:facilitator",
+        "text": "Found 2026-10-01 folding implement-objectives into emit-the-ontology; the move was done by hand."
+      }
+    ],
+    "01a0faa9-878a-76b9-80f7-9bd9bfcdf35c": [
+      {
+        "at": "2026-11-25T01:18:25Z",
+        "by": "agent:facilitator",
+        "text": "Found 2026-10-01: update action --predecessor 01a0f48f-4037 wrote that prefix into the file as typed."
+      }
+    ],
+    "01a0fb24-882d-76e5-932d-1a6547eab08c": [
+      {
+        "at": "2026-11-25T01:18:25Z",
+        "by": "agent:facilitator",
+        "text": "Found 2026-10-02: doctor now reports every live charter that names no objective; the CLI tests had to edit frontmatter by hand."
+      }
+    ]
   }
 }

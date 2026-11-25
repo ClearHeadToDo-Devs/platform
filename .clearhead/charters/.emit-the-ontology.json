@@ -1,6 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a0faa1-ca17-72a9-8a6b-f05b6bd6dbd3"
+  },
+  "notes": {
+    "01a0fb1c-4455-7218-bc00-d4d38247de78": [
+      {
+        "at": "2026-11-25T01:18:23Z",
+        "by": "agent:facilitator",
+        "text": "Moved out of the objectives action, 2026-10-01."
+      }
+    ]
   }
 }

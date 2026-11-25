@@ -1,6 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a00363-93cf-7903-9080-a9ef8eb0ba2e"
+  },
+  "notes": {
+    "01a1124e-2a1c-74fe-ae3e-14f6701598ca": [
+      {
+        "at": "2026-11-25T01:18:23Z",
+        "by": "agent:facilitator",
+        "text": "Found 2026-10-06: cargo build --release -p clearhead --no-default-features warns dead_code."
+      }
+    ]
   }
 }
