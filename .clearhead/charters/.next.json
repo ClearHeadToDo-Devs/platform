@@ -467,6 +467,11 @@
         "at": "2026-11-25T03:03:54Z",
         "by": "agent:facilitator",
         "text": "Platform, clearhead-core and clearhead.nvim migrated (254 notes found across 9 repos; this set is the platform family). Left: tree-sitter-actions (on release), agent-sandbox, assistant, personal-os, rwd, srr, yapdm, yapdm/grammar; personal-os/dotfiles mini-server.md is a stale copy of an archived charter, for Darrion."
+      },
+      {
+        "at": "2026-11-25T03:10:00Z",
+        "by": "agent:facilitator",
+        "text": "Migrated tree-sitter-actions (main), agent-sandbox, personal-os, rwd, srr and yapdm (with grammar). Left: assistant, whose root sidecar held another session's uncommitted note at 03:06Z; run scripts/migrate-charter-logs there once it is committed. personal-os/dotfiles skipped: its mini-server.md is already gone on dotfiles main."
       }
     ],
     "01a1be39-2a75-79f2-ba73-37a41e1f1084": [
