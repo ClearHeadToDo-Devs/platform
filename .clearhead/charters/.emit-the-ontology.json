@@ -4,6 +4,52 @@
     "id": "01a0faa1-ca17-72a9-8a6b-f05b6bd6dbd3"
   },
   "notes": {
+    "01a0faa1-ca17-72a9-8a6b-f05b6bd6dbd3": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "text": "Created New from ground-the-ontology, once the human confirmed Decision 43. Absorbs implement-objectives: V5 has no plan without an objective, so objectives in the model are a step of this work, not a separate stream."
+      },
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "text": "Re-planned by Decision 45 after the query-surface spike (same answers three ways; view queries about a third of v4's length). The application vocabulary becomes the queried, exported graph with file and line; the ontology becomes its mapping to CCO; a CCO export is optional. nvim-locate cancelled. Found a mapping bug: scheduled and due were indistinguishable."
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "text": "intent-range done (Decision 51, amended twice the same day): a time end of `@` is the instant written, then a time is an instant in `:` too, so the same text means the same interval in both fields; deadlines stay off the calendar. Spec, examples, grammar, Core and calendar landed; do-bound folded in. Found a pre-existing duplicate on calendar import (support)."
+      },
+      {
+        "at": "2026-10-03T00:00:00Z",
+        "text": "app-to-cco done: the mapping lives in the specification (Decision 50) as one CONSTRUCT per structure, reads the effective terms (waitsOn, notBefore, lateFrom), gives helper nodes no names (Decision 49), maps @ to a Prescriptive ICE (no act before the work starts), and says \"not before\" or \"late from\" on each time condition. Metric review_date removed. Decision 51 replaced the planned duration sigil with a range on @."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "v5-projection done: the app graph projects from Core and matches expected-app.ttl. Found on the way and fixed first: Bound lost written offsets and did not round-trip in the hour clocks go back, and a time with an offset but no seconds, or in the spring-forward gap, failed to parse and format dropped the field (Decision 52)."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "v5-queries done (Decision 53): queries read the app graph. A snapshot of every query on four workspaces matched except where Decision 53 changes rows; the human chose data_root rows, app:plannedFrom, as-written row dates, local day bounds, and retiring the plan queries until recurrence. Found: charters load in a random order (support)."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "retire-v4 done: the v4 projection, ws: layer and namespace constants left Core; the ontology repository dropped v4, the clearhead.us site and worker (the domain lapsed) and its Python tooling; the interop proof takes rdflib from uv."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "fold-ontology done: the ontology repository's V5 content and docs are in specifications/ontology/ with their history; the submodule and its CI are gone; validate-pinned runs the ROBOT gate there."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "created and closed times are kept as written (Decision 52 complete): format no longer rewrites ^ or %; host-stamped times are written as before."
+      },
+      {
+        "at": "2026-10-04T00:00:00Z",
+        "text": "migrate-iris done: app:, the shapes, the ontology's IRIs and the examples are at clearhead.dev; the context UUID stays; tree-sitter's v3 parser ontology is gone."
+      },
+      {
+        "at": "2026-10-05T00:00:00Z",
+        "text": "deployment's spec-site and spec-release-0-2 done: clearhead.dev serves the specification from its release branch (a Cloudflare Worker with static assets, the dashboard's default), and /vocab/app/v1 and the v0.2.0 schema $ids resolve."
+      }
+    ],
     "01a0fb1c-4455-7218-bc00-d4d38247de78": [
       {
         "at": "2026-11-25T01:18:23Z",

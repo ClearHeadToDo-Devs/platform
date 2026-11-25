@@ -1,32 +1,64 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a04a9a-b542-7033-9eee-d9ed347d8de0"
   },
   "actions": {
     "01a04a9b-73ba-7d60-b6e5-d5d2f2f6499b": {
-      "created": "2026-08-28T16:01:36.826-07:00"
+      "created": "2026-08-28T23:01:36.826Z"
     },
     "01a04a9b-73cd-78f0-86dd-621ac1ca98c6": {
-      "created": "2026-08-28T16:01:36.845-07:00"
+      "created": "2026-08-28T23:01:36.845Z"
     },
     "01a04a9b-73db-72f3-95de-d4f6b726c4dd": {
-      "created": "2026-08-28T16:01:36.859-07:00"
+      "created": "2026-08-28T23:01:36.859Z"
     },
     "01a04a9b-73e9-7b62-b6c0-1a76915ab1bf": {
-      "created": "2026-08-28T16:01:36.873-07:00"
+      "created": "2026-08-28T23:01:36.873Z"
     },
     "01a04a9b-73f8-77e2-ad1c-8fec6f704257": {
-      "created": "2026-08-28T16:01:36.888-07:00"
+      "created": "2026-08-28T23:01:36.888Z"
     },
     "01a04a9b-7407-75c2-947c-c36149d59051": {
-      "created": "2026-08-28T16:01:36.903-07:00"
+      "created": "2026-08-28T23:01:36.903Z"
     },
     "01a04a9b-7415-7dc2-a5a7-a95c5f82af07": {
-      "created": "2026-08-28T16:01:36.917-07:00"
+      "created": "2026-08-28T23:01:36.917Z"
     },
     "01a04a9b-7424-7e82-9a9f-4638360b64c0": {
-      "created": "2026-08-28T16:01:36.932-07:00"
+      "created": "2026-08-28T23:01:36.932Z"
     }
+  },
+  "notes": {
+    "01a04a9a-b542-7033-9eee-d9ed347d8de0": [
+      {
+        "at": "2026-08-28T00:00:00Z",
+        "text": "**Open priority constraint question.** Explore whether priority\nshould compose down Action ancestry similarly. The promising algebra is the\nminimum numeric priority over self and ancestors: a priority-1 parent makes\nevery executable descendant effectively priority 1, while a priority-1 child\nmay tighten a priority-3 parent's baseline without mutating the parent. A\nlocally weaker child priority remains visible and may warrant a warning.\nSettle the semantic reading and diagnostics before encoding it in queries."
+      },
+      {
+        "at": "2026-08-28T00:00:00Z",
+        "text": "**Context composition remains unresolved.** Structural context\ninheritance from parent Actions, and potentially explicit Charter defaults,\ncould eliminate repeated tags such as `computer`. Before adopting it, define\nwhether multiple contexts are conjunctive requirements or alternative\nclassifications and whether a local child set replaces or adds to ancestor\nconstraints. Do not conflate structural composition with the existing context\ntaxonomy, where a narrow tag such as `neovim` implies broader tags such as\n`terminal` and `computer`."
+      },
+      {
+        "at": "2026-08-28T00:00:00Z",
+        "text": "**Effective values are read-model derivations.** Keep source files\nand the canonical domain model faithful to locally asserted facts and\ncontainment. Define constraint composition normatively in the process/query\nspecifications, but derive effective ranges, priorities, contexts, readiness,\nand their provenance in portable queries. CLI and LSP should present those\nresults and offer explicit materializing fixes rather than independently\nimplementing or persisting inherited values."
+      },
+      {
+        "at": "2026-08-28T00:00:00Z",
+        "text": "**SPARQL is a provisional reasoning boundary.** The desired\ncapability is closer to Datalog with recursion, stratified negation,\naggregates, temporal comparison, and derivation provenance than to ordinary\nOWL classification. Until a FOSS, deterministic, embeddable, local-first and\npreferably WASM-capable engine is practical, centralize these policies as\ndeclarative SPARQL rather than scattering imperative inference across Core,\nCLI, and LSP. Any future derived or findings graph remains a replaceable\nprojection, never workspace authority."
+      },
+      {
+        "at": "2026-08-29T00:00:00Z",
+        "text": "**Migrated Charter states and dogfooded governed selection.**\nActivated the platform root Charter so its already-Active children\n(state-governance, caldav-integration, vevent-module, pure-core-split,\nrdf-publication) are admitted; every other root Charter remains `New` and its\nwork is correctly strand-hidden by the gated views. The ten pre-migration\ndoctor warnings were all root-ancestry contradictions and are now resolved —\ndoctor reports the platform workspace clean. `unscheduled` returns 13 admitted\nrows ranked InProgress-first; `agenda` is empty (nothing dated); `work-map` is\n8 roots / 63 acyclic nodes across the multi-workspace graph. Intentional empty\nActive Charters (platform, rdf-publication) produce no warning, per the\nsemantic contract."
+      },
+      {
+        "at": "2026-08-29T00:00:00Z",
+        "text": "**Adopted range semantics for Action dates.** `scheduled_at` /\n`@` is the lower bound and `due_at` / `:` is the upper bound of an Action's\nfeasible execution range. A descendant's effective range is the intersection\nof its local range with every ancestor range: latest start and earliest due\ndate. Missing child bounds therefore inherit naturally; explicit child bounds\nmay narrow the containing range. A local bound outside its ancestor range\nremains visible and receives a coherence warning, while an empty intersection\nis a semantic violation. Queries operate on the effective range, but tools\nnever write derived bounds back into source without an explicit materializing\nfix. The normative local and composition semantics now live in\n`specifications/action_file_format.md` and `specifications/process.md`, rather\nthan being hidden in agenda SPARQL."
+      },
+      {
+        "at": "2026-08-30T00:00:00Z",
+        "text": "**Close-out verification passed.** CLI and LSP guidance now\nlinks to the process specification and limits itself to presentation and\nremediation behavior. The exact pinned platform composition passed every\nrepository-owned gate, Core and CLI spec-conformance suites, independent\nrdflib execution of the governed `unscheduled` query, and schema validation.\nThe stale external proof of retired `next-actions` was replaced with the\nauthoritative `unscheduled` regression. Priority inheritance and context\ncomposition remain explicitly unresolved policy edges recorded below; they\nare deferred rather than being designed or encoded under this charter."
+      }
+    ]
   }
 }

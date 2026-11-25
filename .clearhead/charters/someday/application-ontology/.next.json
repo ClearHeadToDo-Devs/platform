@@ -1,0 +1,11 @@
+{
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
+  "notes": {
+    "01a0daa5-62b5-79a2-92bf-0337d8e39fbc": [
+      {
+        "at": "2026-10-02T00:00:00Z",
+        "text": "Largely realized by platform Decision 45: a fresh-named application vocabulary, owned by the specification, is now the graph people query and export, with file and line, and the ontology is its mapping to CCO. Work continues in [[emit-the-ontology]]; close this bet when that vocabulary ships, or narrow it to whatever remains."
+      }
+    ]
+  }
+}

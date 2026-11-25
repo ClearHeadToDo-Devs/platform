@@ -12,7 +12,3 @@ these objectives should be added to the graph like any other entity and have alr
 the new piece however is that charters MAY have the `objectives` array which shows the 1+ objectives they are related to.
 
 this will open the door to doing a query that says "give me all actions that are somehow related to this objective"
-
-## Log
-
-- 2026-10-01 — Cancelled: absorbed by emit-the-ontology (Decision 43). V5 has no plan without an objective, so objectives in the domain model are a step of that work; its action moved there unchanged. Also fixed a trailing space on the frontmatter fence that hid the title from the CLI.

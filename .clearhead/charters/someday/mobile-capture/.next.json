@@ -1,0 +1,11 @@
+{
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
+  "notes": {
+    "01a0daa5-62cd-7cc2-a8ea-4527b04367a0": [
+      {
+        "at": "2026-11-04T07:44:00Z",
+        "text": "2026-11-04, Darrion: the phone is the leverage platform and comes after the VS Code extension. The desktop is where actions get organised and the phone is where they get completed; the quintessential case is a shopping trip, a list that must be easy to look up and change on the fly while moving, likely offline in a store. This reframes the bet from inbound capture toward completing on the move. Sync is Syncthing with files as the only truth, not a CRDT server; conflict copies get merged by a watcher on the services machine (personal-os =syncthing-merge). Open for Darrion: whether to retire the CRDT sync plan in Decisions 15, 16 and 19."
+      }
+    ]
+  }
+}

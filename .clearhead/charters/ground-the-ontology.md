@@ -20,12 +20,3 @@ Started 2026-09-30 as "plans all the way down", from a conversation about record
 ## Sequence
 
 Competency questions, then the domain in plain words, then alignment with BFO and CCO, then the decision on representation. Nothing below the ontology is planned until the alignment holds.
-
-## Log
-
-- 2026-09-30 — Created New, on purpose: nothing is worked until the human has read the design note cold and answered its open questions.
-- 2026-09-30 — Renamed from plans-all-the-way-down. The first proposal was withdrawn as implementation-first; the note was rewritten from the human's competency questions; the ontology, spec, Core and naming actions were cancelled in favour of one representation decision.
-- 2026-10-01 — Domain grounded on standard terms only (CCO v2.2 + IAO action specification); all eight competency questions answer under the ROBOT gate. Ontology Decisions 1-6, platform Decision 42; ontology d141a85. Left: distill V5_DESIGN.md, then decide spec representation.
-- 2026-10-01 — Charter Active. V5_DESIGN.md distilled into ontology docs/domain.md and retired; README and agent guides describe V5 (ontology b7c438a). Representation decision queued for the human with a recommendation (V5 directly), plus two related choices: what plus-tags mean, and the root objective. Found: Core, the CLI and the for-human query still use v4; the ROBOT gate does not check competency answers; the move action would have carried v4 meaning into the spec, so it now waits on the decision.
-- 2026-10-01 — The human confirmed the representation (platform Decision 43): Core emits V5 directly; a plus-tag is a context, an open set; a plan's objective is an objective file, seeded by init. Implementation planned as [[emit-the-ontology]], which absorbed implement-objectives; the SHACL/context move is cancelled in its favour. Left here: finish the ROBOT gate, then close.
-- 2026-10-01 — Closed. ROBOT gate finished: competency answers checked against expected CSVs, header lint, CI job. Everything in Done when holds; implementation continues in [[emit-the-ontology]].

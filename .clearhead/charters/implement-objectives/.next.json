@@ -1,20 +1,28 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "actions": {
     "019f5895-6948-70b2-88e2-a7685b0dddda": {
-      "created": "2026-07-12T16:06:54.664-07:00"
+      "created": "2026-07-12T23:06:54.664Z"
     },
     "019f5895-6948-70b2-88e2-a7837e1703d1": {
-      "created": "2026-07-12T16:06:54.664-07:00"
+      "created": "2026-07-12T23:06:54.664Z"
     },
     "019f5895-6948-70b2-88e2-a7a24f91cd92": {
-      "created": "2026-07-12T16:06:54.664-07:00"
+      "created": "2026-07-12T23:06:54.664Z"
     },
     "019f5895-6948-70b2-88e2-a7c895dd8289": {
-      "created": "2026-07-12T16:06:54.664-07:00"
+      "created": "2026-07-12T23:06:54.664Z"
     },
     "019f5895-6948-70b2-88e2-a7ebf437abbf": {
-      "created": "2026-07-12T16:06:54.664-07:00"
+      "created": "2026-07-12T23:06:54.664Z"
     }
+  },
+  "notes": {
+    "019f5854-ba57-7027-b7e7-91f8c4790294": [
+      {
+        "at": "2026-10-01T00:00:00Z",
+        "text": "Cancelled: absorbed by emit-the-ontology (Decision 43). V5 has no plan without an objective, so objectives in the domain model are a step of that work; its action moved there unchanged. Also fixed a trailing space on the frontmatter fence that hid the title from the CLI."
+      }
+    ]
   }
 }

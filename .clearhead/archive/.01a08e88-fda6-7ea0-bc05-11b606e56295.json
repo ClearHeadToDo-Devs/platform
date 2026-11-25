@@ -1,32 +1,48 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a08e88-fda6-7ea0-bc05-11b606e56295"
   },
   "actions": {
     "01a08e89-4d7b-7a53-b716-e8ec3d924cb1": {
-      "created": "2026-09-10T20:35:58.075-07:00"
+      "created": "2026-09-11T03:35:58.075Z"
     },
     "01a08e89-94b4-7b30-b290-5f4393356a77": {
-      "created": "2026-09-10T20:36:16.308-07:00"
+      "created": "2026-09-11T03:36:16.308Z"
     },
     "01a08e89-94c6-76c0-8374-48371eb92594": {
-      "created": "2026-09-10T20:36:16.326-07:00"
+      "created": "2026-09-11T03:36:16.326Z"
     },
     "01a08e89-94d4-7be3-b770-fe069bf2f31f": {
-      "created": "2026-09-10T20:36:16.340-07:00"
+      "created": "2026-09-11T03:36:16.340Z"
     },
     "01a08e89-94e1-7fd3-9ad6-62a55090fb2b": {
-      "created": "2026-09-10T20:36:16.353-07:00"
+      "created": "2026-09-11T03:36:16.353Z"
     },
     "01a08e89-94ee-7080-ab26-c099fa3de54c": {
-      "created": "2026-09-10T20:36:16.366-07:00"
+      "created": "2026-09-11T03:36:16.366Z"
     },
     "01a08e89-94fc-7422-8a3d-3af047e68df8": {
-      "created": "2026-09-10T20:36:16.380-07:00"
+      "created": "2026-09-11T03:36:16.380Z"
     },
     "01a08e89-950a-75a0-80a7-7a6db65953e7": {
-      "created": "2026-09-10T20:36:16.394-07:00"
+      "created": "2026-09-11T03:36:16.394Z"
     }
+  },
+  "notes": {
+    "01a08e88-fda6-7ea0-bc05-11b606e56295": [
+      {
+        "at": "2026-09-10T00:00:00Z",
+        "text": "Landed the keystone read-side fix (commit `06dfe7f`):\n`NativeWorkspaceMounts::resolve` now derives the project root-charter name from\nthe persisted `workspace.json` `workspace_name`, falling back to the cwd basename\nonly when no manifest exists, then to `\"workspace\"`. This kills the \"runtime\nrecomputes the name from cwd\" defect that produced the original `unresolvable-parent`\ndoctor failure. (The recursion trap: `resolve()` must read `.clearhead/workspace.json`\ndirectly, never via `read_workspace_manifest`, which re-enters `resolve()`.)\n\nFull workspace suite green. NOT yet done, in rough order:\n\n- **A test that actually proves the fix.** Every current test runs where the\n  cwd basename already equals the persisted name, so none exercises divergence.\n  Add: init in dir `A`, then load from a renamed/copied dir, assert the root name\n  and child-parent resolution stay `A`. Until this exists the fix is unguarded.\n- init should also write `README.md` (root prose anchor); it currently only\n  writes `next.actions` + sidecar + `workspace.json`. (#3)\n- User-workspace root is still shapeless — no persisted name, no root charter —\n  so the project-vs-user branch in `resolve()` remains. (#3, #4)\n- Optional `clearhead init --name` so the initial name is a deliberate choice,\n  not hostage to the directory. (#2)\n- `doctor` should detect the `file_name()` fallback (a workspace with no persisted\n  name) and offer to mint + persist it, instead of limping silently. (#5)\n- The `next` root sentinel is still duplicated across charter/plans/reconcile;\n  consolidate to one constant. (#6)\n- Re-amend the specs for the `next.actions` decision (#1 was reopened)."
+      },
+      {
+        "at": "2026-09-15T00:00:00Z",
+        "text": "Specified and implemented most of the charter in one session (specifications\n43f409a, 33c4147, 0bf4979; clearhead-core 186dc29, 110d7e1 and the doctor\nslice).\n\n- Root charter identity is `charters/README.md` frontmatter (`id` + `alias`),\n  like every charter; the sidecar only mirrors it. Workspace identity stays in\n  `<data_root>/workspace.json` for both scopes; `workspace_name` only seeds the\n  root alias at init.\n- `clearhead init --user` and `--name`: Core plans the bootstrap from a\n  snapshot of the four root files and delivers one guarded EffectBatch. Root id\n  rule: README > sidecar > mint, never minting over an existing identity. The\n  old init minted sidecar ids without reading the README — the source of the\n  platform root's two ids.\n- Loading: `WorkspaceScope` removed. The root name is the README alias, then\n  `workspace_name`, then `\"workspace\"`, never the directory. Every workspace\n  assembles exactly one root (materialized when no root files exist); a\n  README-less root loads `Active` so it never gates engagement. Archival no\n  longer crystallizes a fileless parent's derived id.\n- Doctor: `root-identity-conflict` (auto-fix mirrors the README id only when\n  the replaced id is unreferenced, otherwise a violation), `root-readme-without-id`,\n  `legacy-root-document` (`next.md`), `unnamed-root-charter`.\n- The `next` sentinel now lives in `ROOT_ANCHOR_STEM` / `PRIMARY_ACTIONS_FILE` /\n  `PRIMARY_DOCUMENT_FILE`.\n- `plans/next/` stays the stable collection key; readable calendar names belong\n  in vdir `displayname` metadata (support action), not in renamed folders.\n- Platform migrated through the supported path: `doctor --fix` mirrored the\n  README id `019c4f48…` over the orphaned sidecar id `01a00884…`; doctor clean.\n\nStill open at the time:\n\n- The project root's completed history is named after the project directory\n  (`charter_stem` → `<project>.completed.actions`), a remaining directory-derived\n  name; moving it to `next.completed.actions` needs a history-file migration.\n  Resolved 2026-09-17, below."
+      },
+      {
+        "at": "2026-09-17T00:00:00Z",
+        "text": "Closed the bundled action that conflated migration with conformance coverage:\nmigration had already landed on 2026-09-15, but \"add conformance coverage\"\nhad not, and its own LSP clause was unaddressed. Split it into a completed\nmigration action and a reworded conformance-coverage action, then audited\nall nine done-gate areas against the actual test suite:\n\n- Fresh init, stable names across renames, hierarchy, collisions,\n  root-identity reconciliation, plans, and CLI already had coverage\n  (`clearhead-cli`'s `init.rs`/`charter.rs`/`plans.rs`,\n  `clearhead-workspace-fs`'s `doctor.rs`/`load.rs`).\n- LSP did not: `clearhead-lsp`'s only related test called\n  `workspace_diagnostics_for_uri` directly against a synthetic `root.md`\n  charter, never the real `README.md`/`next.actions` anchor, and never\n  through the actual stdio protocol or a multi-folder client.\n- Added `clearhead-core` a5450c6: the root anchor's `state` gates a child\n  charter through real `didOpen` diagnostics, and two workspace folders\n  sharing identical anchor filenames still route and stay isolated by path\n  — the invariant the unified-root model leans on now that every\n  workspace's root files are named alike.\n\nConformance-coverage action closed.\n\nClosed the remaining directory-named history-file gap. `charter_stem`\n(`clearhead-core/src/workspace/action_files.rs`) special-cased the root\nanchor's completed-history name to the project directory instead of the\nreserved `next` stem, so writes had silently forked on the platform's own\nrepo since 2026-07-11 between `next.completed.actions` and\n`platform.completed.actions`. Fixed the derivation, added a doctor warning\n(`legacy-root-completed-history`, reported for a human merge like\n`next.md`, never auto-fixed — it's real content) for any other install\ncarrying the same split, and manually folded the platform's own split\nhistory back together (clearhead-core 5350c1a; platform 8bb256b). `doctor`\nreports clean.\n\nEvery done-gate item is now satisfied. Closing this charter."
+      }
+    ]
   }
 }

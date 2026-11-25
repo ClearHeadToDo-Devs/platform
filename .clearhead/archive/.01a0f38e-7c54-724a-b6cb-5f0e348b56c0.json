@@ -1,6 +1,14 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a0f38e-7c54-724a-b6cb-5f0e348b56c0"
+  },
+  "notes": {
+    "01a0f38e-7c54-724a-b6cb-5f0e348b56c0": [
+      {
+        "at": "2026-09-30T00:00:00Z",
+        "text": "CLOSED the same day: v0.1.0 tagged and pushed, all eight ids resolve; Core stamps them and the gate holds it to the pinned ids; 47 $schema pointers swept; specifications, tree-sitter-actions and clearhead.nvim renamed to main, and one git push from platform now pushes every submodule."
+      }
+    ]
   }
 }

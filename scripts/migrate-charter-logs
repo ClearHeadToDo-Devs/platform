@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+"""Move charter ## Log entries into the charter's sidecar notes (one-off).
+
+Usage: migrate-charter-logs [--apply] [--bin CLEARHEAD] CHARTER.md...
+
+Dry run by default: prints each note it would write. --apply writes each one
+through 'clearhead jot <id> --at <date> --no-by' (charters.md: keep the text
+and the date, omit the unknown author), then removes the ## Log section. A
+note already present (same instant and text) is skipped, so a rerun after a
+failure does not duplicate. Needs a clearhead with jot --at.
+
+Entries start at a dated top-level bullet ('- 2026-09-17 — text', the date
+optionally bold) or at a '### 2026-09-17' heading; every other line belongs to
+the entry before it. A time without an offset is read as -07:00: every such
+entry predates jot's offset fix (2026-09-22) and every commit then was -0700.
+"""
+import argparse, json, re, subprocess, sys
+from datetime import datetime
+from pathlib import Path
+
+SECTION = re.compile(r"^##\s+logs?\s*$", re.I)
+DATE = r"\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?"
+BULLET = re.compile(rf"^- (\*\*)?({DATE})\s+(?:—|--|:)\s+(.*)$")
+HEADING = re.compile(r"^###\s+(\d{4}-\d{2}-\d{2})\s*$")
+NO_OFFSET = re.compile(r"T\d{2}:\d{2}$")
+
+
+def charter_id(text):
+    front = re.match(r"^---\n(.*?)\n---", text, re.S)
+    found = front and re.search(r"^id:\s*(\S+)", front.group(1), re.M)
+    return found and found.group(1)
+
+
+def split_section(lines):
+    """(start, end) of the ## Log section, or None."""
+    start = next((i for i, line in enumerate(lines) if SECTION.match(line)), None)
+    if start is None:
+        return None
+    end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+    return start, end
+
+
+def entries(body):
+    """[(at, text)] from the section's lines; raises on text before any entry."""
+    found, current, bullet = [], None, False
+    for line in body:
+        if m := BULLET.match(line):
+            at, rest = m.group(2), m.group(3)
+            current = [at, [("**" + rest) if m.group(1) else rest]]
+            found.append(current)
+            bullet = True
+        elif m := HEADING.match(line):
+            current = [m.group(1), []]
+            found.append(current)
+            bullet = False
+        elif current is None:
+            if line.strip():
+                raise ValueError(f"text before the first entry: {line!r}")
+        else:
+            current[1].append(line[2:] if bullet and line.startswith("  ") else line)
+    result = []
+    for at, text in found:
+        at = at + "-07:00" if NO_OFFSET.search(at) else at
+        result.append((at, "\n".join(text).strip("\n")))
+    return result
+
+
+def instant(at):
+    return datetime.fromisoformat(at if "T" in at else at + "T00:00:00+00:00")
+
+
+def existing(bin, cwd, id):
+    out = subprocess.run([bin, "show", "notes", id, "--json"], cwd=cwd, capture_output=True, text=True)
+    if out.returncode != 0:
+        sys.exit(f"show notes {id} failed: {out.stderr.strip()}")
+    return {(instant(n["at"]), n["text"]) for n in json.loads(out.stdout)}
+
+
+def migrate(path, apply, bin):
+    text = path.read_text()
+    lines = text.split("\n")
+    span = split_section(lines)
+    if span is None:
+        return print(f"{path}: no ## Log")
+    id = charter_id(text)
+    if not id:
+        return print(f"{path}: SKIPPED, no frontmatter id")
+    start, end = span
+    try:
+        notes = entries(lines[start + 1 : end])
+    except ValueError as error:
+        return print(f"{path}: SKIPPED, {error}")
+    print(f"{path}: {len(notes)} note(s) for {id}")
+    if not apply:
+        for at, note in notes:
+            first = note.split("\n")[0]
+            more = f" (+{note.count(chr(10))} lines)" if "\n" in note else ""
+            print(f"  {at:25} {first[:90]}{more}")
+        return
+    cwd = path.parent
+    have = existing(bin, cwd, id)
+    for at, note in notes:
+        if (instant(at), note) in have:
+            continue
+        subprocess.run([bin, "jot", "--at", at, "--no-by", id, "--", note], cwd=cwd, check=True, stdout=subprocess.DEVNULL)
+    kept = lines[:start] + lines[end:]
+    while kept and not kept[-1].strip():
+        kept.pop()
+    path.write_text("\n".join(kept) + "\n")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--bin", default="clearhead")
+    parser.add_argument("files", nargs="+", type=Path)
+    args = parser.parse_args()
+    for path in args.files:
+        migrate(path.resolve(), args.apply, args.bin)
+
+
+if __name__ == "__main__":
+    main()

@@ -240,6 +240,144 @@
     }
   },
   "notes": {
+    "019c4f48-6441-75dd-b285-33718b9be996": [
+      {
+        "at": "2026-09-17T23:24:00-07:00",
+        "text": "Task 6/7 of docs/overnight-worker-clearhead-core.md STOPPED by its own rule: 'generate the charter map from charter metadata' has no metadata to read. CharterFrontmatter has no description field (the model's description is parsed from the document body), so the frontmatter 'description:' lines that agent-surface and six someday/ bets carry are invisible to the tool — and any CLI charter write silently drops them (reproduced in a scratch workspace with update charter). Fixing that is a charter-data-model decision, so the action is marked blocked with the full analysis and the undecided calls recorded in its own description; no code was written and neither README was touched."
+      },
+      {
+        "at": "2026-10-16T05:58:00Z",
+        "text": "=x-prop-survival 2026-10-16, Google Calendar (Android) via DAVx5 4.5.20 to Radicale 3.8.3: an in-place edit kept X-CLEARHEAD-TEMPLATE (DAVx5 preserves unknown properties); 'this and following' rename split the series: original got RRULE UNTIL and kept the property, the continuation is a new UID with no property and no RELATED-TO, so merge-base restore has nothing to restore from. Template binding must survive splits. 'All events' not tested"
+      },
+      {
+        "at": "2026-10-16T05:58:00Z",
+        "text": "=unrecur-series-test 2026-10-16, same path: 'does not repeat' made DAVx5 DELETE the series and PUT a new single event with a new UID at the current occurrence (10-16), not the series start (09-21); identity and history are lost rather than DTSTART pulled back. A second client (OneCalendar) on the same account wrote first, so the DELETE got 412 and left a duplicate. khal untested"
+      },
+      {
+        "at": "2026-10-16T06:03:00Z",
+        "text": "=template-binding-home DECIDED 2026-10-16 by Darrion: the binding lives in the event DESCRIPTION as a 'template: <name>' line, not an X-CLEARHEAD-TEMPLATE property. Reason: X-properties can't be seen or edited on mobile; evidence: a 'this and following' split drops X-props on the continuation (=x-prop-survival). An event is a recurring action, or with a template line it is stamped from that template (action files need root actions). Decision 55's directive guard stays. Pending: confirm Google copies DESCRIPTION across a split"
+      },
+      {
+        "at": "2026-10-16T06:04:00Z",
+        "text": "=template-binding-home confirmed 2026-10-16: a 'this and following' split in Google Calendar via DAVx5 copied DESCRIPTION 'template: test' to the continuation (new UID) and kept it on the truncated original"
+      },
+      {
+        "at": "2026-10-16T06:21:00Z",
+        "text": "=spec-habits DECIDED 2026-10-16 by Darrion: a Habit's calendar entry is its occurrence's window only (e.g. weekly review 8-12, the child list may sit in the description); children never get recurrence rules or their own calendar entries ('it has to be enough, because i dont know how to make recurring subtasks not horrible'). To break a block into calendar pieces, make separate root Habits; the charter is the thread between them. PROPOSED framing (facilitator, not yet checked against Decision 56): the Habit recurs the window, children inherit it via the existing effective-window rule (E008/W015), and each occurrence is an independent stamp of the template, so per-day planning never edits the template"
+      },
+      {
+        "at": "2026-10-31T22:33:00Z",
+        "text": "Dispatch failure: run cancel-keeps-completed-20261031-223212 used my incorrect urn:clearhead:action: prefix rather than urn:uuid:. wf-brief failed but work still started with an empty brief. Stopped run and session 20261031-223227 immediately; filed workflow-brief-fail-closed for facilitator. Retrying with correct URN; this is unplanned repair against cancel-keeps-completed/unaided."
+      },
+      {
+        "at": "2026-10-31T22:48:00Z",
+        "text": "Run cancel-keeps-completed-20261031-2233: both fix rounds stopped without changes, because docs/overnight-runbook.md asked for finding what text and agent-fix's prompt asks for ids (changed 2026-10-25). Runbook fixed in c36bc09. wf-cycle still prints 'fixed round N' for a fix with no commits and reviews unchanged code again, spending two reviews here; that fix belongs to meta-analysis."
+      },
+      {
+        "at": "2026-11-01T19:09:00Z",
+        "text": "=complete-keeps-closed landed 2026-11-01 (run complete-keeps-closed-20261101-1841, platform 2da637a, Core 5e18864) after two fix rounds. The completed action's record stops at the first implementation because update refuses a closed action; later Core commits are 8bfa1fc, 598d747, ee9fcbf. Landing was first refused: platform pin commit 70aabbc was titled test:, which locked the clearhead-core path against the next pin move; session 20261101-184122/7 reworded it to 39712d8 with an identical tree, and the landing gate then passed. For agent-sandbox (message to the facilitator held, not delivered): run-kind contracts should say a pin commit is never test:, or the lock should ignore gitlinks."
+      },
+      {
+        "at": "2026-11-02T01:21:00Z",
+        "text": "=close-individually, Darrion on 2026-11-02, A (settled unless they say otherwise): 'archival is a bulk process usually done at the end of a charter, we CAN archive individual actions but the default is a state change.' B (still thinking aloud, not settled): 'for reopen... i think that again it defaults to just that actions and really im trying to think... i think we can only unarchive root actions and below? because otherwise we get into this sticky \"do you want the parents too?\" and then if so... do we make a it a new root? unarchive the parent tree?'"
+      },
+      {
+        "at": "2026-11-02T01:27:00Z",
+        "text": "=close-individually, Darrion on 2026-11-02. B confirmed: 'the root unarchive is a move then we need to reopen as a separate thing with an optional flag.' C: 'i think the default stays, it should be rare that you unarchive a parent only to reopen the root and i think that should still be a warning by default.' D: 'the cascade implies we arent just looking at one so i think same rules apply, the selected action, and all open actions should be marked completed no?'"
+      },
+      {
+        "at": "2026-11-02T01:31:00Z",
+        "text": "=close-individually, Darrion on 2026-11-02. Flags: 'i think one could aqrgue for both? reopen cascade is for reopening a task and its children, while unarchive --reopen would BOTH move and reopen the actions.' Archive on save: 'yes the archive on save stays on its how we keep the active charters tidy'. Single-action archive: 'yes i think having this archive granularity is important so that we are building from the ground up'."
+      },
+      {
+        "at": "2026-11-02T01:35:00Z",
+        "text": "=close-individually: sweep-back tested 2026-11-02 at Core 5e18864 through real archive_saved in headless nvim. A closed tree in the active file returns to the completed file on the next save, even for an edit elsewhere, with states, dates and links intact; reopening the root in the buffer before saving keeps it. Also settled: a successor is ready with its predecessor closed in the active file; open root over closed children draws W003, not W002; archive charter puts closed-in-place lines in archive/<id>.actions, not .completed.actions."
+      },
+      {
+        "at": "2026-11-02T01:39:00Z",
+        "text": "=close-individually, Darrion on 2026-11-02, unarchive flags: 'yea --reopen and --cascade need to be two separate flags, one cascades down to the whole tree, while the other reopens the single action. combined, they will open AND move the whole tree. composobility'."
+      },
+      {
+        "at": "2026-11-02T02:38:00Z",
+        "text": "=close-individually, Darrion on 2026-11-02, answering whether complete --cascade on a closed target changes it: 'no it becomes closed especially if its the target this is an intention we are trying to close the action and all children and you know what the cascade is easy it just forces it and everything below it closed, im tired of all this trying to be smart, if we say cascade the implication is \"this and all children should be closed GO\" the only piece that we skip is stuff that is already closed so it doesnt lose the closure date and cancelled is a different thing so if im closing it im CLOSING it do what i mean and stop trying to be smart'"
+      },
+      {
+        "at": "2026-11-02T02:52:00Z",
+        "text": "=close-individually run cis1 pushed back at decide: the review said land, but the branch kept children: 0 in the result schema while the proposal's Close section says results drop children and gain open_children. A review checks the action brief, not the plan it cites, so a brief citing a plan must spell out the plan's schema consequences."
+      },
+      {
+        "at": "2026-11-02T02:56:00Z",
+        "text": "=archive-child, Darrion on 2026-11-02: 'right refusal since we want to archive a root action'. archive action on a closed child refuses and names the root."
+      },
+      {
+        "at": "2026-11-02T03:02:00Z",
+        "text": "=ci-spec landed through run cis1 and specifications v0.4.0 is released (a16dcbb). The steward fixed the review's nit and W003's false example directly, and filed specifications =schema-gate. =ci-core starts as run cic1."
+      },
+      {
+        "at": "2026-11-02T03:20:00Z",
+        "text": "=close-individually run cic1 pushed back at decide (review 20261102-030308/2, do not land): the work session stopped partway with no blocker, leaving 12 contract tests committed and the implementation uncommitted, 5 of those tests failing. A fix round finishes the whole brief in the same workspace; nothing needs Darrion. A review-cycle wake can carry an unfinished worker, not only review findings."
+      },
+      {
+        "at": "2026-11-02T04:15:00Z",
+        "text": "=close-individually run cic1 pushed back at decide again (review 20261102-030308/6, land after fixes): the fix round left the Core pin staged because the platform gate fails on specification v0.4.0's habit formatting fixtures against grammar v0.10.0. Steward's call: validate-pinned gives the grammar gate a copy of the specification without formatting/habits until the grammar pin moves, since a commit on the grammar's release line would diverge from main, which already has R:. The should-fixes and the nit go to the same fix round. Nothing needs Darrion for this landing."
+      },
+      {
+        "at": "2026-11-02T04:26:00Z",
+        "text": "=close-individually run cic1 pushed back at decide a third time (review 20261102-030308/8, land after fixes): complete, cancel and reopen --dry-run print a result identical to a real commit, and a successful archive prints kind archived, the same top-level kind as the reopen refusal. Steward's call: dry runs use the dry-run envelope with files, and archive and unarchive successes use the committed envelope, so kind at the top level never collides; specifying that shape is specifications =spec-move-result. The nvim test migration in this branch is accepted because the platform gate runs it against the new Core; =ci-nvim still does its own work. =occurrence-model-owner stays with Darrion and does not hold the landing."
+      },
+      {
+        "at": "2026-11-02T04:38:00Z",
+        "text": "=ci-core, run cic1: pushed back at decide, timed for 95m from 04:40 UTC because Claude's session is at 100% and the next review needs it (timer cic1-pushback-5; if it is lost the run just stays paused, feedback in ~/.local/state/workflows/cic1/pushback-5.txt). The review's blocker is real and the steward found worse: an exact id can move a different same-named action, exit 0. Before landing: search other repositories for callers of the tightened verbs, and record the landing note. How-level call for Darrion's note: a close cascade on an archived target whose outcome already holds succeeds and writes nothing; one that would have to change archived state refuses and names unarchive."
+      },
+      {
+        "at": "2026-11-02T06:33:00Z",
+        "text": "=ci-core, run cic1: pushed back at decide a fifth time (review 20261102-030308/12, land after fixes) for one flaky test only, singles_then_archive_equal_cascade_then_archive, which compares minute-stamped dates across CLI runs. The nit is =ci-move-refusal. The review's three for_human items need nothing from Darrion: cancel --cascade refusing on an archived tree is the proposal's how-level call; the nvim pin lands on nvim main because agent-land merges submodule branches first, as accepted at 04:26; =occurrence-model-owner stays open and goes in the landing note. Caller search done: no scripts outside platform call the verbs, only prose; nvim's callers are in the platform gate. Landing hazard for the next wake, read in agent-land but not run: it stops unless each submodule's checkout equals the pin on the root's HEAD, and specifications is at e9b0f84 on main while platform main pins 3f7c7d5 and the branch pins v0.4.0 a16dcbb, and validate-pinned needs the exact tag. Expect to resolve this before decide=land; do not move the tag."
+      },
+      {
+        "at": "2026-11-02T06:42:00Z",
+        "text": "=ci-core, run cic1: pushed back at decide a sixth time (review 20261102-030308/14, land after fixes). The dry-run of a no-op cascade prints operations:[], which the v0.4.0 schema rejects, confirmed in the code and schema; it now reports the committed no-op's outcome. Same round: stale wording and the empty open-descendants prose. Steward's call: unarchive keeps appending at the end, pinned by a test, because the proposal's lossless means states, dates and sidecars. The review's for_human items need nothing for this landing: =occurrence-model-owner stays with Darrion and goes in the landing note, with the reviewer's cost that every single close loads the full workspace, calendar and sync store; the archive envelope is =spec-move-result. If the next review leaves only nits, file them and land. The submodule pin hazard from the 06:33 entry still stands."
+      },
+      {
+        "at": "2026-11-02T06:54:00Z",
+        "text": "=ci-core, run cic1: decided land on review 20261102-030308/16, which left two nits. Its for_human items were already settled: an archived cascade refusal is the proposal's how-level call, the nvim test migration was accepted at 04:26, =occurrence-model-owner stays with Darrion. Pin hazard resolved as a how-level call: the platform's specifications checkout now rests on its release branch (a16dcbb, v0.4.0) and platform main pins it, since agent-land needs a branch tip equal to the pin and validate-pinned needs the exact tag, while main (e9b0f84) has moved past the tag with a charter commit. Specification work switches the checkout to main first and back afterwards."
+      },
+      {
+        "at": "2026-11-02T06:59:00Z",
+        "text": "=ci-core, run cic1: landed as platform 1c0ea64, Core 9e2338a, nvim 8e23625, gate green. The first land step failed: sessions 11, 13 and 15 had written no export, because agent-verdict rewrites manifest.json mode 600 and a mid-run verdict left the sandbox unable to read it. Repaired by restoring mode 664 and running session 17 to export; retried with dagu retry --step=land; filed in agent-sandbox. Core is pushed. Platform and nvim are not: nvim's pre-push hook needs luarocks, which this host lacks, and the steward did not skip the hook on its own say: =ci-push-nvim asks Darrion. Next, in order: that push, =ci-core-release, =ci-nvim, =ci-skill. Nits are =ci-core-nits."
+      },
+      {
+        "at": "2026-11-03T06:12:00Z",
+        "text": "Habit release preparation complete and independently reviewed by Claude, all gates green. Joint candidates specification v0.5.0 (publish-habits-20261103) and grammar v0.11.0 b2b98f9 are pushed; no publication because cargo publish fails before upload with no token found. +human habit-publish-access owns secure credential/authorized publisher handoff. Registry index still latest 0.10.0. No tags, site update, Core pins or platform gitlinks moved; release-habits blocked and spec-habits remains open. Evidence lives in specifications docs/habit-release-verification.md on the candidate branch."
+      },
+      {
+        "at": "2026-11-04T04:39:00Z",
+        "text": "Joint Habit release finished 2026-11-04: specification annotated v0.5.0 at 69b6781 on main/release, grammar annotated v0.11.0 at 3139e81 on main and live on crates.io via Darrion-approved trusted publishing. Registry download checksum matches sparse index and parser/queries match source; public package builds/tests; published schema URL resolves with v0.5.0 identity. release-habits and spec-habits complete. Core/platform pins remain old until separately reviewed core-habit-pins cycle."
+      },
+      {
+        "at": "2026-11-04T04:54:00Z",
+        "text": "core-habit-pins stopped on a real release artifact defect: grammar 0.11.0 embeds metadata 0.10.0, misreporting CLI grammar version. GPT regression plus independent Claude review confirmed; no stale-version waiver. Artifact-only patch v0.11.1 a55ee1f is reviewed, fully grammar-gated, landed on main/tagged; Publish run 41775917300 needs Darrion environment approval (grammar-version-metadata). Pin tests 100c7fc preserved on pushed Core agent branch; adoption work remains in sandbox 20261104-044007. No Core/platform pins landed, no spec policy changed."
+      },
+      {
+        "at": "2026-11-04T07:25:00Z",
+        "text": "Habit pin adoption landed and pushed: Core 771603d, platform 6110dc8, specification exact v0.5.0 69b6781 and registry grammar exact v0.11.1 a55ee1f. Corrected package hash verified and unit/doctest pass; GPT worker and fresh Claude final review clean; full merged-candidate validate-pinned passes; host Core pre-push 8 checks pass. core-habit-pins/grammar-habits complete. Continue authorized Habit chain with graph/domain increment; brief corrected from stale Active to approved NotStarted, not a new spec decision. First landing candidate pin-reset bug caught by gate and repaired before any real branch movement; facilitator handoff filed."
+      },
+      {
+        "at": "2026-11-05T08:30:00Z",
+        "text": "=close-individually done (2026-11-05, steward). Darrion, what you can now do: complete or cancel one action in place with its children left open, close a whole tree with --cascade, reopen one or (--cascade) a tree, archive one closed root or all of them, and unarchive a root tree with --reopen and --cascade composing; nvim follows (Core v0.4.0, clearhead.nvim 0fd3850, pushed), and the agents' skill and runbook teach it. Still waiting on you, carried over unchanged: =occurrence-model-owner (Workspace or TransactionModel owns mutable actions)."
+      },
+      {
+        "at": "2026-11-05T13:32:00Z",
+        "text": "steward: when =core-habit-steps (run chst1) lands, append to =core-habit-catchup: NativeOccurrence.key is still a plain String; validate it as a SlotKey where catch-up first writes occurrences (review 20261105-101921/3). Held to avoid an adjacent-line conflict with chst1's completion edit."
+      },
+      {
+        "at": "2026-11-09T06:02:00Z",
+        "text": "Semantic merge power-armor session paused for sleep: no implementation written. Darrion distinguished whole-record patch from field-wise three-way merge and understood base/ours/theirs as inner ActionLists; Git supplies the base only at the outer driver boundary. Resume =semantic-merge-first-test; =semantic-merge-core and =semantic-merge-driver capture later work. Exact merge signature/result type not decided. Facilitator owns rust-analyzer. Stay paired; no autonomous implementation."
+      },
+      {
+        "at": "2026-11-11T06:27:00Z",
+        "text": "Semantic merge core landed (clearhead-core ab099b2, paired). Darrion decided: per-field merge over serde so fields can get own policies; conflicts alongside the merged list; edit vs delete conflicts, untouched delete wins; no ours/theirs precedence."
+      }
+    ],
     "01a12c17-0320-7781-acee-d760d918d609": [
       {
         "at": "2026-11-25T01:18:24Z",
@@ -324,6 +462,13 @@
         "text": "Landed: Core fc3cd95 (jot <ref>|charter <query>, by from --by/CLEARHEAD_NAME/config name/login, refuses ids minted at load, note_sidecars shared with doctor), nvim f01c5c1, spec 9dce9be (by is the writer's name). Skill updated."
       }
     ],
+    "01a1be13-34d0-7a22-b97f-f7c1e845bf14": [
+      {
+        "at": "2026-11-25T03:03:54Z",
+        "by": "agent:facilitator",
+        "text": "Platform, clearhead-core and clearhead.nvim migrated (254 notes found across 9 repos; this set is the platform family). Left: tree-sitter-actions (on release), agent-sandbox, assistant, personal-os, rwd, srr, yapdm, yapdm/grammar; personal-os/dotfiles mini-server.md is a stale copy of an archived charter, for Darrion."
+      }
+    ],
     "01a1be39-2a75-79f2-ba73-37a41e1f1084": [
       {
         "at": "2026-11-25T01:18:25Z",
@@ -357,6 +502,25 @@
         "at": "2026-11-25T02:26:41Z",
         "by": "agent:claude",
         "text": "Rescoped 2026-11-25 with Darrion from an LSP hover to an nvim keymap over the CLI: show notes takes ~11 ms, reuses action_id_under_cursor (works in quickfix too), and reads every sidecar, so moved and archived notes show. VS Code would build its own equivalent over the same CLI. Note count as an inlay hint stays a later, low-priority idea."
+      }
+    ],
+    "01a2109d-c46a-7e91-8062-647cc5089eb1": [
+      {
+        "at": "2026-11-25T02:51:44Z",
+        "by": "agent:facilitator",
+        "text": "Landed in clearhead.nvim 9e25c6e."
+      }
+    ],
+    "01a2109d-c4a2-7d53-9357-bb6e5330982b": [
+      {
+        "at": "2026-11-25T02:56:13Z",
+        "by": "agent:facilitator",
+        "text": "Landed in clearhead-core as the commit above; also added --no-by and time-ordered insert."
+      },
+      {
+        "at": "2026-11-25T02:56:36Z",
+        "by": "agent:facilitator",
+        "text": "Core e089848."
       }
     ]
   }

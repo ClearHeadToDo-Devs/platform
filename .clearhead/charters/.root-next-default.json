@@ -1,6 +1,14 @@
 {
-  "$schema": "https://raw.githubusercontent.com/ClearHeadToDo-Devs/specifications/v0.1.0/schemas/charter_metadata.schema.json",
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
   "charter": {
     "id": "01a0dcfd-f33a-731b-9fa7-94bdafc8bc4f"
+  },
+  "notes": {
+    "01a0dcfd-f33a-731b-9fa7-94bdafc8bc4f": [
+      {
+        "at": "2026-10-16T00:43:00Z",
+        "text": "2026-10-16, Darrion: the homelab CalDAV server no longer runs; Radicale's real home is the personal-os services box (mini-server services profile), so sync resumes there, not on the NUC. A throwaway devbox Radicale may serve client-behavior tests such as =x-prop-survival"
+      }
+    ]
   }
 }
