@@ -35,7 +35,17 @@ The verbs you'll use most, all of which escape, stamp ids and keep the sidecars 
 
 ### Keep actions readable
 
-An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in notes: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. An action's own history goes on that action (`clearhead jot <action id> "…"`); what concerns the whole charter goes on the charter. When an action's description grows past a few lines, it has become a log, so move that history into notes and trim the description back to the next step. Sign agent notes with `--by agent:<role>` or `CLEARHEAD_NAME`. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
+An action says what to do next: its name, plus a sentence or two of why and what done means. History goes in notes: decisions, what landed, handoff notes, one distilled line each with `clearhead jot`. An action's own history goes on that action (`clearhead jot <action id> "…"`); what concerns the whole charter goes on the charter. When an action's description grows past a few lines, look at what it has become: history (what happened) moves into notes, one distilled line each, and the description goes back to the next step; a brief or plan (what to do, in many steps) means the action is really a subcharter (see Right-size the work). Sign agent notes with `--by agent:<role>` or `CLEARHEAD_NAME`. (2026-11-11, Darrion: "these actions are unreadable ... you're basically using this as a full export".)
+
+### Right-size the work
+
+Whether something is an action or a charter depends, but long prose is the smell. The rule is in [Where knowledge lives](../../../docs/CONTRIBUTING.md#where-knowledge-lives); what it asks of an agent:
+
+- **Check the size before you start, and say so.** When you pick up an action that needs a brief, or you find yourself noting a lot of context and substeps on it, tell the human "this action is really a subcharter; promote it?" before doing the work. The other way round too: "this charter is really a few actions under its parent." The human decides.
+- **Promote by hand for now:** `clearhead add charter "<title>" --alias <alias> --parent <charter>`, put the brief in the new charter's document, `clearhead add action` each step into it, then cancel the original action with a note naming the new charter.
+- **A note is a snippet.** If a note runs past a paragraph, it is a brief or a decision in the wrong place: a brief goes to a subcharter's document, a decision to `DECISIONS.md`.
+
+(2026-11-25, Darrion: "if it requires some long prose like a brief, or you are finding yourself needing to note allot of context and substeps, thats a strong smell that we are in need of a new subcharter".)
 
 ## LSP
 

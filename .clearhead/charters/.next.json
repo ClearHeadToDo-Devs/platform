@@ -351,6 +351,13 @@
         "by": "agent:facilitator",
         "text": "Add --json to show action and show charter carrying the entity's notes, and a Notes section in their text output, via =notes-read. DONE (Core 6c5539f): show action and show charter resolve live entities, closed ones included; archived entities are read with show notes."
       }
+    ],
+    "01a1e655-cee4-78a2-88a7-df2cc5d34892": [
+      {
+        "at": "2026-11-25T02:26:41Z",
+        "by": "agent:claude",
+        "text": "Rescoped 2026-11-25 with Darrion from an LSP hover to an nvim keymap over the CLI: show notes takes ~11 ms, reuses action_id_under_cursor (works in quickfix too), and reads every sidecar, so moved and archived notes show. VS Code would build its own equivalent over the same CLI. Note count as an inlay hint stays a later, low-priority idea."
+      }
     ]
   }
 }

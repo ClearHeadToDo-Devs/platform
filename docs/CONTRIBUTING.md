@@ -45,7 +45,8 @@ already begun to disagree. The rule:
 | Platform decisions | `DECISIONS.md` | actions, logs, runbooks |
 | Project decisions | that repo's `docs/DECISIONS.md` | the platform's `DECISIONS.md` |
 | Task state | ClearHead actions | docs |
-| Dated run findings | the charter's `## Log` | `DECISIONS.md`, actions |
+| Dated findings and history | notes (`clearhead jot`), one distilled line each | `DECISIONS.md`, action descriptions |
+| A brief, or work that needs much context and many substeps | a subcharter: the brief in its document, the steps as its actions | an action's description or notes |
 | Durable repo facts | `docs/` | actions, logs |
 
 Consequences worth stating plainly:
