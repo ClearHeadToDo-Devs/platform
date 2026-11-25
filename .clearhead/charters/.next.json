@@ -391,6 +391,11 @@
       {
         "at": "2026-11-11T06:27:00Z",
         "text": "Semantic merge core landed (clearhead-core ab099b2, paired). Darrion decided: per-field merge over serde so fields can get own policies; conflicts alongside the merged list; edit vs delete conflicts, untouched delete wins; no ours/theirs precedence."
+      },
+      {
+        "at": "2026-11-25T06:50:42Z",
+        "by": "Darrion",
+        "text": "testing charter level notes"
       }
     ],
     "01a12e18-0bbb-71d1-a44a-b490a1aac3ee": [
@@ -405,6 +410,13 @@
         "at": "2026-11-25T01:18:24Z",
         "by": "agent:facilitator",
         "text": "From =close-individually; checked at Core 5e18864. Decision 58 called W002 'an optional lint'. A general capability, not part of =close-individually."
+      }
+    ],
+    "01a1ab37-1fa0-7c13-ac0c-aad724eaa129": [
+      {
+        "at": "2026-11-25T06:50:09Z",
+        "by": "Darrion",
+        "text": "im thinking no? because unless we need a specific template for that charter tree we want to structure"
       }
     ],
     "01a1abe9-2640-7d00-a878-621b82adcff3": [

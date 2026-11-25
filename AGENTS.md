@@ -20,4 +20,5 @@ In each repo is a `.clearhead/` directory per the [workspace spec](./specificati
 | What only one harness needs | that harness's memory | the repo |
 
 - **Memory holds only what is not derivable from the repo.** If `rg` can find it, memory should not duplicate it.
+- **Notes are signed by the harness.** `clearhead jot` signs a note with `CLEARHEAD_NAME`, else the configured `name`. Each agent harness sets `CLEARHEAD_NAME` in its own environment (Claude Code: `agent:claude`, in its `settings.json` `env`), and a human's `name` lives in their user config, so neither signs as the other and no one has to remember `--by`.
 - **Promotion is explicit.** Harness memory and ClearHead are separate stores and nothing syncs them. A finding becomes project knowledge only when promoted to a `clearhead jot` (a dated charter finding) or `clearhead add action` (task state).
