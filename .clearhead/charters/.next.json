@@ -509,6 +509,13 @@
         "text": "Rescoped 2026-11-25 with Darrion from an LSP hover to an nvim keymap over the CLI: show notes takes ~11 ms, reuses action_id_under_cursor (works in quickfix too), and reads every sidecar, so moved and archived notes show. VS Code would build its own equivalent over the same CLI. Note count as an inlay hint stays a later, low-priority idea."
       }
     ],
+    "01a21094-a625-7540-9485-3066898e0ee5": [
+      {
+        "at": "2026-11-25T03:50:01Z",
+        "by": "agent:claude",
+        "text": "Decided 2026-11-25 with Darrion: the charter keeps the action's UUID (ties the formats together, and a UUID that is both an action and a charter exposes a partial failure); any action can be promoted, nested ones included, the parent just loses a child; a flat parent converts to directory form as part of the verb; fields a charter lacks are kept as frontmatter even before they mean anything; a charter's own properties describe it and its defaults map carries what children inherit; with no alias, a generic subcharter-NN alias the user renames later. Prerequisites: charter-predecessor, charter-defaults."
+      }
+    ],
     "01a2109d-c46a-7e91-8062-647cc5089eb1": [
       {
         "at": "2026-11-25T02:51:44Z",
@@ -526,6 +533,18 @@
         "at": "2026-11-25T02:56:36Z",
         "by": "agent:facilitator",
         "text": "Core e089848."
+      }
+    ],
+    "01a210d3-1ce8-73b1-a0f3-9acfe3e19a9d": [
+      {
+        "at": "2026-11-25T04:27:56Z",
+        "by": "agent:claude",
+        "text": "Core 0715d14 (2026-11-25): predecessors resolve to actions or charters (UUID, short UUID, alias; c:/a: prefix), ambiguous ones are reported as ambiguous-predecessor and wait on nothing; agenda and unscheduled count a Closed charter as done; doctor accepts live and archived charter ids. Decided with Darrion: the prefix needs a letter after its colon so it never meets a due date (spec 4545f27, grammar 222d6c6, unreleased). Left: release tree-sitter-actions 0.12.0, then bump Core's pin and add the with_typed_predecessor snapshot (Core's spec-example snapshot test is red until then); E009/W008/W009 do not exist in Core at all; index chain and graph dependencies drop charter targets."
+      },
+      {
+        "at": "2026-11-25T05:18:44Z",
+        "by": "agent:claude",
+        "text": "Grammar 0.12.0 released and published 2026-11-25; Core 9f692ea moves its pin and adds the with_typed_predecessor snapshot, so Core's suite is green again. Still left: E009/W008/W009 (absent from Core), and index chain and graph dependencies drop charter targets."
       }
     ]
   }
