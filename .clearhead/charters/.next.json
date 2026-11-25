@@ -417,6 +417,11 @@
         "at": "2026-11-25T06:50:09Z",
         "by": "Darrion",
         "text": "im thinking no? because unless we need a specific template for that charter tree we want to structure"
+      },
+      {
+        "at": "2026-11-25T07:08:07Z",
+        "by": "agent:claude",
+        "text": "Darrion chose A: templates are defined once at the workspace level (root templates/) and used by every charter. Core's charter-local templates/ lookup goes; no workspace in platform has a charter-local templates/ folder, so nothing is lost. Follow-up: remove-charter-local-templates in Core."
       }
     ],
     "01a1abe9-2640-7d00-a878-621b82adcff3": [
@@ -478,6 +483,13 @@
         "at": "2026-11-25T01:14:36Z",
         "by": "agent:facilitator",
         "text": "Resume the paired power-armor trial here. Darrion writes crates/clearhead-core/tests/semantic_merge.rs and the merge signature. Arrange one Action named Buy milk with priority 3; clone the base ActionList into ours and theirs so the UUID stays the same. Ours changes the name to Buy oat milk; theirs changes priority to 1. Assert one merged action with the original UUID and both edits preserved, without a conflict. Inner function accepts three ActionLists (base, ours, theirs); exact borrowing, signature and result/conflict representation are still open. Navigator helps with code lookup, Rust explanations and the test loop; writes rote pieces only when asked. Reading pointers: src/domain/mod.rs Action, src/workspace/actions/parser.rs ActionList, src/workspace/actions/diff.rs diff_actions and compare_action. patch_action_list in convert.rs replaces whole records and is not a three-way merge."
+      }
+    ],
+    "01a1c947-f599-7b70-9244-76ecae9b5cb3": [
+      {
+        "at": "2026-11-25T07:29:37Z",
+        "by": "agent:claude",
+        "text": "Same-field conflict, both-added, child under a deleted parent (edit versus delete) and parent cycles (ParentCycle) are tested and pass; merge output is depth-first (Core feat(core): keep the merged action tree whole). Next: merge sibling order per parent with merge_field, OrderConflict when both sides reorder differently (Darrion: a conflict, like git); place one-side additions after their previous sibling."
       }
     ],
     "01a1e655-cea0-7f02-876c-19390fe96188": [
