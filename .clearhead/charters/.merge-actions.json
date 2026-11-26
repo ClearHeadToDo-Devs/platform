@@ -58,6 +58,13 @@
         "by": "agent:claude",
         "text": "Sibling order merges (OrderConflict on different reorders), plus neighbouring edits and add versus complete (clean; W002 reports it): semantic-merge-core's done criteria are met, so it is completed. Lines without UUIDs need source text and move to semantic-merge-driver. The trial note (amplified or carried, and how long) is still Darrion's."
       }
+    ],
+    "01a21521-541a-75b2-8ecf-4ab1ee196ee0": [
+      {
+        "at": "2026-11-26T00:44:32Z",
+        "by": "agent:claude",
+        "text": "Narrowed with Darrion (2026-11-26): workspace loads quarantine files with syntax errors and writes refuse them, so the recovered shape only reaches best-effort reads. test_unsupported_grammar_rules now asserts the syntax error and strict refusal for W001, E004 and E005, and passes on the current and the prototype grammar. E004/E005 codes and recovered parent links split off to Core's report-hierarchy-codes."
+      }
     ]
   }
 }
