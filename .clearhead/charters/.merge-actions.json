@@ -79,6 +79,13 @@
         "by": "agent:claude",
         "text": "Spec draft findings (2026-11-26): the prototype misses ||||||| after an action line, since a name runs onto the next line, so diff3 conflicts land in the name; and it matches markers mid-line, while the spec says start of line. Fix both and add corpus tests for them. Darrion accepted that a ======= line, seven empty aliases today, becomes a marker."
       }
+    ],
+    "01a21521-55bf-70a3-aea8-da7926b7e0e3": [
+      {
+        "at": "2026-11-26T03:50:52Z",
+        "by": "agent:claude",
+        "text": "Verified 2026-11-26 with the CLI built against grammar 0.13.0: unchanged Core loads a conflicted file with both sides (read lists both copies; doctor reports only duplicate-uuid). The pin move and the E010 quarantine must land together."
+      }
     ]
   }
 }
