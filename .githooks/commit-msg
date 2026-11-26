@@ -1,0 +1,39 @@
+#!/bin/sh
+# Warn, never refuse, when a commit names no ClearHead intention it serves.
+# A commit that changes .clearhead/ links itself by the UUIDs it changes. Any
+# other commit names each intention with a trailer, repeated for several:
+#   Intent: urn:uuid:<action or charter id>
+#   Intent: none
+# Needs only git; lists in-progress actions when clearhead and jq are present.
+# Enable once per clone: git config core.hooksPath .githooks
+set -u
+msg=$1
+
+# The message as it will be stored: no comments, nothing below a -v scissors line.
+body=$(sed '/^# -\{24\} >8 -\{24\}$/,$d' "$msg" | git stripspace --strip-comments)
+
+linked() {
+    case $(printf '%s\n' "$body" | head -n 1) in fixup!* | squash!* | amend!*) return 0 ;; esac
+    printf '%s\n' "$body" | git interpret-trailers --parse | grep -qi '^intent:' && return 0
+    git diff --cached --name-only | grep -q '^\.clearhead/'
+}
+
+in_progress() {
+    command -v clearhead >/dev/null && command -v jq >/dev/null || return 0
+    clearhead read actions --state in-progress --format json 2>/dev/null |
+        jq -r '.actions[]? | "    =\(.alias // "-")  urn:uuid:\(.id)  \(.name[0:60])"' 2>/dev/null |
+        head -n 8
+}
+
+if ! linked; then
+    {
+        echo 'commit-msg: warning: no Intent: trailer, so this commit names no ClearHead intention.'
+        echo '  Add one line per intention it serves:  Intent: urn:uuid:<id>   (or  Intent: none)'
+        list=$(in_progress)
+        [ -z "$list" ] || printf '  In progress here:\n%s\n' "$list"
+    } >&2
+fi
+
+local_hook="$(git rev-parse --git-common-dir)/hooks/commit-msg"
+[ ! -x "$local_hook" ] || exec "$local_hook" "$@"
+exit 0
