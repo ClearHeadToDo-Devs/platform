@@ -431,11 +431,25 @@
         "text": "Nit from review 20261105-101921/3: harmless, but looser than the published key."
       }
     ],
+    "01a1b72b-6f9a-7881-9388-6fd2dfef576d": [
+      {
+        "at": "2026-11-26T20:18:54Z",
+        "by": "agent:facilitator",
+        "text": "Named-template E002 is drafted on Core v0.5.0: lint and doctor report source lines; Core gate passes. E009 still needs workspace-wide resolution. The unlanded 20261107-201713 resolver matched display names and ignored workspace ambiguity, so it was not carried forward. Core already declares spec v0.8.0, which includes the approved reference correction."
+      }
+    ],
     "01a1b77b-4600-7761-9ce4-3e4e04b03141": [
       {
         "at": "2026-11-25T01:14:37Z",
         "by": "agent:facilitator",
         "text": "After chrd1 lands, one small reviewed adoption cycle for released specifications v0.6.0 at 8461b8d (annotated tag, main/release pushed and public actions schema verified). Tests first: update/add named release/schema identity assertions to v0.6.0, prove runtime red against current v0.5.0 (not zero tests or compile failure), then bump Core package.metadata.clearhead.specification and all current emitted schema URLs including sidecar.rs and manifest.rs; inventory other hard-coded release IDs without rewriting historical docs/changelogs. Move platform specifications gitlink to exact tag and Core gitlink to implementation commit in same cycle. No grammar change (0.11.1 unchanged). Changelog says these are adopted contracts with partial Habit implementation, not completed lint/stamping/generation. Do not add the E002/E009 behavior here; separate lint-ancestor-dependency and chst-stamp own those. Complete Core scripts/gate.sh, relevant Core/CLI spec-conformance and full platform scripts/validate-pinned against released composition. Use explicit CLEARHEAD_SPEC_DIR if needed for shared-cache compile-time fallback paths; no gate bypass or fixture copy. Independent Copilot Claude review of GPT implementation before landing; worker no push. Exact tag and all gates before moving host consumer checkout pin; preserve main/release and approved draft ancestry. COMPLETED WORK EVIDENCE (2026-11-07): Core test-only commit b2a9b43 updated habit_release to expect published v0.6.0 and added exact v0.6.0 workspace/charter-metadata schema URL assertions. Red proof: `cd clearhead-core && cargo test --locked -p clearhead_core --test habit_release -- --nocapture` executed 1 named test and failed at runtime (SPECIFICATION v0.5.0 vs expected v0.6.0), exit 101; no compile or zero-test failure. The complete Core gate was run before keeping the test-only commit and failed only at that expected assertion. Implementation commit c58aeeb updates package metadata and both emitted URLs, preserving grammar 0.11.1; Core and CLI Unreleased changelogs clarify contract-only adoption and that Habit stamping, recurrence linting and generation remain unimplemented. No schema structures or normative specification text changed and no dependencies added. Release pin verified: specifications v0.6.0 tag resolves exactly to 8461b8d53f5fb398c76c6501a6d74acf36a7f479; Core tip is c58aeeb3d8d9cd850c552f93b4848a65b0b07aed. Source inventory found no other current hard-coded v0.5.0 release/schema identifiers; clearhead-core/docs/habit-readers.md and prior changelog entries are historical and unchanged. Against the actual specifications checkout (CLEARHEAD_SPEC_DIR, no fixture copies), complete Core `sh scripts/gate.sh` passed. Full `sh scripts/validate-pinned` passed on exact staged released composition (Core DSL conformance 13/13, CLI conformance 3/3, pinned grammar/Core/nvim and ontology checks, all schemas identify v0.6.0, graph shapes/RDF proof); exit 0. Doctor before/after: 0 violations, unchanged 13 pre-existing warnings. Worker did not push; independent Copilot Claude review remains before landing. LANDED/PUSHED 2026-11-07: independent Copilot Claude review 20261107-193626/2 parsed land. Core merge 1dc2e63 / platform merge 4899f8d; exact specifications v0.6.0 pin 8461b8d retained by landing. Unchanged full platform candidate gate green at v0.6.0, including Core13/CLI3 conformance, schemas/ontology/graph and parser-backed nvim. Real host Core pre-push gate also passed. Core/platform/root review/verdict notes pushed; specification checkout restored to main at tag. No new behavior or dependencies; subsequent source/severity/lint/stamping cycles remain."
+      }
+    ],
+    "01a1b77c-4e6f-7b22-8fa9-da69c5e2f3e2": [
+      {
+        "at": "2026-11-26T21:00:27Z",
+        "by": "agent:facilitator",
+        "text": "E002 shares one diagnostic across lint and generation. Manual apply, charter scaffolding and legacy calendar sync refuse recurrence before writing; the regressions also exercise valid templates. E009 is still open and needs the workspace resolver."
       }
     ],
     "01a1be13-3437-7881-8168-83fe8999c81c": [
