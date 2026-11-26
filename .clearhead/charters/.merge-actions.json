@@ -45,6 +45,26 @@
         "at": "2026-11-25T23:53:56Z",
         "by": "agent:claude",
         "text": "Waits on core-conflict-error: the driver writes git's own markers around whole action lines (merge-actions charter, 2026-11-25), so markers never fall inside a description."
+      },
+      {
+        "at": "2026-11-26T04:28:13Z",
+        "by": "agent:pi",
+        "text": "Draft driver passes real Git clean-merge and local field-conflict tests. Both alternatives preserve clean edits; malformed input leaves ours intact. Next: render structural conflicts and decide what to do when an action lacks a UUID; not enabled in platform."
+      },
+      {
+        "at": "2026-11-26T04:35:06Z",
+        "by": "agent:pi",
+        "text": "UUID-less valid input now falls back to Git’s line merge without stamping IDs. Real Git tests cover clean and conflicted fallback plus refusal to write duplicate IDs or markers hidden in a description. Structural conflict rendering remains open."
+      },
+      {
+        "at": "2026-11-26T04:46:38Z",
+        "by": "agent:pi",
+        "text": "Structural conflicts now render as independently resolvable regions. Tests cover conflicting moves and sibling order, divergent adds, subtree edit/delete, a mixed resolution, and real Git cycle handling. Workspace and no-default-features suites plus Clippy passed. Implementation ready for review; no platform opt-in yet."
+      },
+      {
+        "at": "2026-11-26T04:51:45Z",
+        "by": "agent:pi",
+        "text": "Enabled the driver only in this platform repository’s local Git config. A real Git merge using the platform charter retained all nine UUIDs and both same-action edits; completed-action archives still use union."
       }
     ],
     "01a1c947-f599-7b70-9244-76ecae9b5cb3": [
@@ -57,6 +77,11 @@
         "at": "2026-11-25T23:17:43Z",
         "by": "agent:claude",
         "text": "Sibling order merges (OrderConflict on different reorders), plus neighbouring edits and add versus complete (clean; W002 reports it): semantic-merge-core's done criteria are met, so it is completed. Lines without UUIDs need source text and move to semantic-merge-driver. The trial note (amplified or carried, and how long) is still Darrion's."
+      },
+      {
+        "at": "2026-11-26T04:51:45Z",
+        "by": "agent:pi",
+        "text": "The named semantic merge, source-text, and real Git contract tests now pass. Only the pairing trial note remains."
       }
     ],
     "01a21520-fe44-7d81-a0f7-35f16fda8a7d": [
