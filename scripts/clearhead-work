@@ -16,7 +16,9 @@
 # action's real state in the clone afterwards — completed, blocked (NEEDS
 # DECISION) or unfinished — whatever the session's own ending was. The runner's
 # records never mention actions, so the pairing is kept in the workspace as
-# clearhead-work.json: [{session, action, outcome}].
+# clearhead-work.json: [{session, action, outcome}]. Each worked action is also
+# written to the workspace's landing-trailers as `Intent: urn:uuid:<id>`, so
+# every landing commit, submodule merges included, names what it was for.
 #
 # The queue stops when nothing untried is queued, or at a limit:
 #   AGENT_MAX_ACTIONS   sessions per queue         (default 10)
@@ -45,9 +47,14 @@ queue() {
     in_clone clearhead query index unscheduled --format ids 2>/dev/null
 }
 
+field() { # <action> <field>: the action's field in the clone, found by UUID or alias
+    in_clone clearhead read actions --format json 2>/dev/null |
+        jq -r --arg id "${1#urn:uuid:}" --arg f "$2" '.actions[] | select(.id == $id or .alias == $id) | .[$f] // empty' |
+        head -n 1
+}
+
 outcome() { # <action>
-    state=$(in_clone clearhead read actions --format json 2>/dev/null |
-        jq -r --arg id "${1#urn:uuid:}" '.actions[] | select(.id == $id or .alias == $id) | .state' | head -n 1) || true
+    state=$(field "$1" state) || true
     case "$state" in
         completed) echo completed ;;
         blocked) echo blocked ;;
@@ -63,6 +70,11 @@ work() { # <action>
         --prompt "$dir/clearhead-work.prompt" --wait) || true
     [ -n "$ref" ] || { echo "clearhead-work > the session did not start" >&2; exit 1; }
     result=$(outcome "$1")
+    # The landing names every worked action as an intention it serves (agent-land's landing-trailers).
+    id=$(field "$1" id) || true
+    if [ -n "$id" ] && ! grep -qxF "Intent: urn:uuid:$id" "$dir/landing-trailers" 2>/dev/null; then
+        echo "Intent: urn:uuid:$id" >>"$dir/landing-trailers"
+    fi
     jq --argjson n "${ref#*/}" --arg a "$1" --arg o "$result" '. + [{session: $n, action: $a, outcome: $o}]' \
         "$ledger" >"$ledger.tmp" && mv "$ledger.tmp" "$ledger"
     echo "clearhead-work > $result, \$$({ agent-result "$ref" || true; } | jq -r .cost_usd)"
