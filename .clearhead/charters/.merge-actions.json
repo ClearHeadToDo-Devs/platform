@@ -65,6 +65,20 @@
         "by": "agent:claude",
         "text": "Narrowed with Darrion (2026-11-26): workspace loads quarantine files with syntax errors and writes refuse them, so the recovered shape only reaches best-effort reads. test_unsupported_grammar_rules now asserts the syntax error and strict refusal for W001, E004 and E005, and passes on the current and the prototype grammar. E004/E005 codes and recovered parent links split off to Core's report-hierarchy-codes."
       }
+    ],
+    "01a21521-54b7-73b1-9f35-f8dc92507986": [
+      {
+        "at": "2026-11-26T03:11:24Z",
+        "by": "agent:claude",
+        "text": "Draft approved and on specifications main (2026-11-26); release still owed."
+      }
+    ],
+    "01a21521-5555-79f0-8bf9-c4ea4bf37ee2": [
+      {
+        "at": "2026-11-26T02:37:01Z",
+        "by": "agent:claude",
+        "text": "Spec draft findings (2026-11-26): the prototype misses ||||||| after an action line, since a name runs onto the next line, so diff3 conflicts land in the name; and it matches markers mid-line, while the spec says start of line. Fix both and add corpus tests for them. Darrion accepted that a ======= line, seven empty aliases today, becomes a marker."
+      }
     ]
   }
 }
