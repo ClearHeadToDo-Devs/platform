@@ -22,5 +22,14 @@
     "01a210d3-1d94-7f90-a835-8acb619eff5f": {
       "created": "2026-11-25T03:50:00.852Z"
     }
+  },
+  "notes": {
+    "01a210d3-1d94-7f90-a835-8acb619eff5f": [
+      {
+        "at": "2026-11-25T06:05:30Z",
+        "by": "agent:claude",
+        "text": "Spec 2dfa4b1 and Core 7b4835a (2026-11-25): base (dueDateTime, predecessors) composes into every held action's window and waits, sub-charters included; defaults fills only what is empty after inheritance, no keys yet. Decisions and costs in docs/charter-defaults-proposal.md. Follow-ups: W016 (=habit-outlives-base); E009 for a base wait on its own charter (Core has no E009 at all). An invalid base window makes the whole charter file unparseable, as any bad frontmatter does."
+      }
+    ]
   }
 }

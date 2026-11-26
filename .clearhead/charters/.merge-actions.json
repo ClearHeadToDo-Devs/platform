@@ -1,0 +1,63 @@
+{
+  "$schema": "https://clearhead.dev/schemas/v0.8.0/charter_metadata.schema.json",
+  "charter": {
+    "id": "01a21520-fe44-7d81-a0f7-35f16fda8a7d"
+  },
+  "actions": {
+    "01a1a594-7bdf-7aa2-b945-05e8e111207a": {
+      "created": "2026-11-04T08:02:14.111Z"
+    },
+    "01a1bee6-6f8d-7092-a407-d9d8f2faedb4": {
+      "created": "2026-11-09T06:02:15.309Z"
+    },
+    "01a1bee6-6faf-79f0-9d39-2eac0eefa969": {
+      "created": "2026-11-09T06:02:15.343Z"
+    },
+    "01a1bee6-6fd1-7a43-998f-b8a68d7690c9": {
+      "created": "2026-11-09T06:02:15.377Z"
+    },
+    "01a1c947-f599-7b70-9244-76ecae9b5cb3": {
+      "created": "2026-11-11T06:24:58.777Z"
+    },
+    "01a21521-541a-75b2-8ecf-4ab1ee196ee0": {
+      "created": "2026-11-25T23:53:55.482Z"
+    },
+    "01a21521-54b7-73b1-9f35-f8dc92507986": {
+      "created": "2026-11-25T23:53:55.639Z"
+    },
+    "01a21521-5555-79f0-8bf9-c4ea4bf37ee2": {
+      "created": "2026-11-25T23:53:55.797Z"
+    },
+    "01a21521-55bf-70a3-aea8-da7926b7e0e3": {
+      "created": "2026-11-25T23:53:55.903Z"
+    }
+  },
+  "notes": {
+    "01a1bee6-6f8d-7092-a407-d9d8f2faedb4": [
+      {
+        "at": "2026-11-25T01:14:36Z",
+        "by": "agent:facilitator",
+        "text": "Resume the paired power-armor trial here. Darrion writes crates/clearhead-core/tests/semantic_merge.rs and the merge signature. Arrange one Action named Buy milk with priority 3; clone the base ActionList into ours and theirs so the UUID stays the same. Ours changes the name to Buy oat milk; theirs changes priority to 1. Assert one merged action with the original UUID and both edits preserved, without a conflict. Inner function accepts three ActionLists (base, ours, theirs); exact borrowing, signature and result/conflict representation are still open. Navigator helps with code lookup, Rust explanations and the test loop; writes rote pieces only when asked. Reading pointers: src/domain/mod.rs Action, src/workspace/actions/parser.rs ActionList, src/workspace/actions/diff.rs diff_actions and compare_action. patch_action_list in convert.rs replaces whole records and is not a three-way merge."
+      }
+    ],
+    "01a1bee6-6fd1-7a43-998f-b8a68d7690c9": [
+      {
+        "at": "2026-11-25T23:53:56Z",
+        "by": "agent:claude",
+        "text": "Waits on core-conflict-error: the driver writes git's own markers around whole action lines (merge-actions charter, 2026-11-25), so markers never fall inside a description."
+      }
+    ],
+    "01a1c947-f599-7b70-9244-76ecae9b5cb3": [
+      {
+        "at": "2026-11-25T07:29:37Z",
+        "by": "agent:claude",
+        "text": "Same-field conflict, both-added, child under a deleted parent (edit versus delete) and parent cycles (ParentCycle) are tested and pass; merge output is depth-first (Core feat(core): keep the merged action tree whole). Next: merge sibling order per parent with merge_field, OrderConflict when both sides reorder differently (Darrion: a conflict, like git); place one-side additions after their previous sibling."
+      },
+      {
+        "at": "2026-11-25T23:17:43Z",
+        "by": "agent:claude",
+        "text": "Sibling order merges (OrderConflict on different reorders), plus neighbouring edits and add versus complete (clean; W002 reports it): semantic-merge-core's done criteria are met, so it is completed. Lines without UUIDs need source text and move to semantic-merge-driver. The trial note (amplified or carried, and how long) is still Darrion's."
+      }
+    ]
+  }
+}

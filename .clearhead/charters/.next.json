@@ -478,25 +478,6 @@
         "text": "Darrion, 2026-11-09: unlocked by the uniform notes map; a continuation, not part of the first cut."
       }
     ],
-    "01a1bee6-6f8d-7092-a407-d9d8f2faedb4": [
-      {
-        "at": "2026-11-25T01:14:36Z",
-        "by": "agent:facilitator",
-        "text": "Resume the paired power-armor trial here. Darrion writes crates/clearhead-core/tests/semantic_merge.rs and the merge signature. Arrange one Action named Buy milk with priority 3; clone the base ActionList into ours and theirs so the UUID stays the same. Ours changes the name to Buy oat milk; theirs changes priority to 1. Assert one merged action with the original UUID and both edits preserved, without a conflict. Inner function accepts three ActionLists (base, ours, theirs); exact borrowing, signature and result/conflict representation are still open. Navigator helps with code lookup, Rust explanations and the test loop; writes rote pieces only when asked. Reading pointers: src/domain/mod.rs Action, src/workspace/actions/parser.rs ActionList, src/workspace/actions/diff.rs diff_actions and compare_action. patch_action_list in convert.rs replaces whole records and is not a three-way merge."
-      }
-    ],
-    "01a1c947-f599-7b70-9244-76ecae9b5cb3": [
-      {
-        "at": "2026-11-25T07:29:37Z",
-        "by": "agent:claude",
-        "text": "Same-field conflict, both-added, child under a deleted parent (edit versus delete) and parent cycles (ParentCycle) are tested and pass; merge output is depth-first (Core feat(core): keep the merged action tree whole). Next: merge sibling order per parent with merge_field, OrderConflict when both sides reorder differently (Darrion: a conflict, like git); place one-side additions after their previous sibling."
-      },
-      {
-        "at": "2026-11-25T23:17:43Z",
-        "by": "agent:claude",
-        "text": "Sibling order merges (OrderConflict on different reorders), plus neighbouring edits and add versus complete (clean; W002 reports it): semantic-merge-core's done criteria are met, so it is completed. Lines without UUIDs need source text and move to semantic-merge-driver. The trial note (amplified or carried, and how long) is still Darrion's."
-      }
-    ],
     "01a1e655-cea0-7f02-876c-19390fe96188": [
       {
         "at": "2026-11-25T01:22:59Z",
@@ -554,13 +535,6 @@
         "at": "2026-11-25T05:18:44Z",
         "by": "agent:claude",
         "text": "Grammar 0.12.0 released and published 2026-11-25; Core 9f692ea moves its pin and adds the with_typed_predecessor snapshot, so Core's suite is green again. Still left: E009/W008/W009 (absent from Core), and index chain and graph dependencies drop charter targets."
-      }
-    ],
-    "01a210d3-1d94-7f90-a835-8acb619eff5f": [
-      {
-        "at": "2026-11-25T06:05:30Z",
-        "by": "agent:claude",
-        "text": "Spec 2dfa4b1 and Core 7b4835a (2026-11-25): base (dueDateTime, predecessors) composes into every held action's window and waits, sub-charters included; defaults fills only what is empty after inheritance, no keys yet. Decisions and costs in docs/charter-defaults-proposal.md. Follow-ups: W016 (=habit-outlives-base); E009 for a base wait on its own charter (Core has no E009 at all). An invalid base window makes the whole charter file unparseable, as any bad frontmatter does."
       }
     ]
   }
