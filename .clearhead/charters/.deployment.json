@@ -40,6 +40,11 @@
       {
         "at": "2026-11-05T01:53:00Z",
         "text": "ci-core-release PUBLISHED: Core v0.4.0 tag on 09c0990, release run 41951047952 green; clearhead-x86_64-unknown-linux-gnu.tar.xz sha256 8d173cd0499d7134d9b45b32396b1b72f01921327badf9bcbc838007a27694a6 verified; binary reports clearhead 0.4.0 (specification v0.5.0, grammar v0.11.1); host ~/.local/bin/clearhead updated, doctor unchanged (0 violations, 13 warnings). Includes e726274, which refuses R: instead of silently dropping it on write (0.3.2 parity). Platform gate green in sandbox 20261105-014603; independent GPT review 20261105-014056 found one changelog error, fixed in 09c0990. crates.io stays at 0.3.x (=core-0-4-crates, +human). dev-pod picks the tag up at its next runtime install."
+      },
+      {
+        "at": "2026-11-26T07:07:16Z",
+        "by": "agent:pi",
+        "text": "ClearHead v0.5.0 shipped from Core 516fc18: CI, the release workflow, and locked v0.8.0 conformance passed. Installed and verified both executables. Platform pin validation is held on the existing post-v0.9.0 specification gitlink versus Core’s declared v0.8.0."
       }
     ],
     "01a1124e-2a1c-74fe-ae3e-14f6701598ca": [

@@ -33,6 +33,10 @@ scripts/validate-pinned
 
 The command first rejects uninitialized, dirty, or gitlink-mismatched submodules, then runs each repository's own pre-push gate. It deliberately adds no second test framework; `specifications` currently has no executable repository gate.
 
+### Using ClearHead with Git
+
+For a Git-backed workspace, try the optional [`.actions` merge driver](./clearhead-core/docs/tutorials/merge-actions-with-git.md) and [staged-workspace check](./clearhead-core/docs/tutorials/check-clearhead-before-committing.md). Neither is required to use ClearHead.
+
 ### Working with Submodules
 
 Git submodules are notoriously tricky to work with, so we have laid out documentation in [Submodules](./docs/SUBMODULES.md) to help you get started. including:
