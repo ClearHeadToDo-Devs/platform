@@ -31,7 +31,7 @@ To validate the exact submodule revisions pinned by the platform, run:
 scripts/validate-pinned
 ```
 
-The command first rejects uninitialized, dirty, or gitlink-mismatched submodules, then runs each repository's own pre-push gate. It deliberately adds no second test framework; `specifications` currently has no executable repository gate.
+The command rejects uninitialized, dirty, or gitlink-mismatched submodules, then runs each repository's own gate. Core uses its locked grammar and the specification tag it declares; the platform pins supply grammar and editor fixtures independently ([Decision 62](./docs/DECISIONS.md#decision-62-core-conformance-follows-the-core-version)). If the declared tag is missing locally, fetch it in `specifications` and rerun the gate.
 
 ### Using ClearHead with Git
 

@@ -24,33 +24,23 @@ done
 
 echo "validate-pinned > submodules are clean and match the platform gitlinks"
 
-# Core takes the grammar from crates.io, as any consumer does, so the gates
-# below test the published crate. Prove it is the pinned submodule, file for
-# file: an unpublished grammar edit, or a version Core did not bump, fails here.
-published=$(cd "$root/clearhead-core" &&
-    cargo metadata --locked --format-version 1 |
-    jq -r '.packages[] | select(.name == "tree-sitter-actions") | .manifest_path')
-published=${published%/Cargo.toml}
-for path in grammar.js patterns.js src queries; do
-    if ! diff -r "$root/tree-sitter-actions/$path" "$published/$path" >/dev/null; then
-        echo "validate-pinned > Core's grammar ($published) differs from the submodule in $path" >&2
-        exit 1
-    fi
-done
-echo "validate-pinned > Core's grammar from crates.io is the pinned submodule"
-
-# Core declares the specification release it implements, and its CI tests
-# against that tag. The pinned specification must be exactly that release, so
-# the conformance checks below test what Core claims and nothing unreleased.
-declared=$(cd "$root/clearhead-core" &&
-    cargo metadata --no-deps --locked --format-version 1 |
-    jq -r '.packages[] | select(.name == "clearhead_core") | .metadata.clearhead.specification')
-pinned=$(git -C "$root/specifications" describe --exact-match --tags HEAD 2>/dev/null || echo "an untagged commit")
-if [ "$declared" != "$pinned" ]; then
-    echo "validate-pinned > clearhead_core implements specification $declared, but the pinned specification is $pinned" >&2
+# Core uses its own locked registry grammar and declares its conformance
+# release. The platform's grammar and fixture gitlinks may advance separately.
+platform_spec="$root/specifications"
+metadata=$(cd "$root/clearhead-core" && cargo metadata --no-deps --locked --format-version 1)
+declared=$(printf '%s\n' "$metadata" |
+    jq -er '.packages[] | select(.name == "clearhead_core") | .metadata.clearhead.specification')
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+core_spec="$work/core-spec"
+mkdir "$core_spec"
+if ! git -C "$platform_spec" archive --format=tar --output="$work/core-spec.tar" "refs/tags/$declared"; then
+    echo "validate-pinned > Core declares $declared; fetch that tag in specifications and retry" >&2
     exit 1
 fi
-echo "validate-pinned > the pinned specification is $declared, the release Core implements"
+tar -xf "$work/core-spec.tar" -C "$core_spec"
+rm "$work/core-spec.tar"
+echo "validate-pinned > Core conformance uses specification $declared; grammar fixtures use the platform pin"
 
 run_gate() {
     repo=$1
@@ -65,16 +55,12 @@ run_gate() {
 # native adapter, CLI, and LSP together. That repository-owned gate also proves
 # the pure boundary with its source-capability and wasm dependency checks; do
 # not duplicate weaker path greps here.
-(
-    export CLEARHEAD_SPEC_DIR="$root/specifications"
-    run_gate tree-sitter-actions
-)
-run_gate clearhead-core
+CLEARHEAD_SPEC_DIR="$platform_spec" run_gate tree-sitter-actions
+CLEARHEAD_SPEC_DIR="$core_spec" run_gate clearhead-core
 # clearhead.nvim's parser specs run against the pinned grammar, never a parser
 # installed on this machine: build it into a private XDG data directory.
 (
-    nvim_data=$(mktemp -d)
-    trap 'rm -rf "$nvim_data"' EXIT
+    nvim_data="$work/nvim-data"
     mkdir -p "$nvim_data/nvim/site/parser"
     (cd "$root/tree-sitter-actions" &&
         ./node_modules/.bin/tree-sitter build -o "$nvim_data/nvim/site/parser/actions.so")
@@ -85,18 +71,15 @@ run_gate clearhead-core
 # The ontology folded into the specification (Decision 50), which owns no
 # gate: its ROBOT check (merge, reason, verify, competency answers) runs here.
 echo "validate-pinned > ontology (ROBOT)"
-make -C "$root/specifications/ontology" test
+make -C "$platform_spec/ontology" test
 
-# Specifications owns no runnable gate of its own — it is inert oracle data.
-# Conformance is the implementations' responsibility, so it is checked here in
-# the pinned composition. Core consumes the semantic corpus through its opt-in
-# feature; the schema also validates both the spec's canonical JSON example and
-# the pinned CLI's projection of a real workspace.
+# The Core and CLI conformance tests use the release the implementation claims,
+# even when the platform has a newer specification checkout.
 echo "validate-pinned > Core DSL conformance"
 (
     cd "$root/clearhead-core"
-    CLEARHEAD_SPEC_DIR="$root/specifications" \
-        cargo test -p clearhead_core --features spec-conformance --test spec_conformance
+    CLEARHEAD_SPEC_DIR="$core_spec" \
+        cargo test --locked -p clearhead_core --features spec-conformance --test spec_conformance
 )
 
 # The index family moved into the CLI's in-process sparql layer when graphd was
@@ -105,13 +88,13 @@ echo "validate-pinned > Core DSL conformance"
 echo "validate-pinned > CLI index query-output conformance"
 (
     cd "$root/clearhead-core/crates/clearhead-cli"
-    CLEARHEAD_SPEC_DIR="$root/specifications" \
-        cargo test --features spec-conformance --test spec_conformance
+    CLEARHEAD_SPEC_DIR="$core_spec" \
+        cargo test --locked --features spec-conformance --test spec_conformance
 )
 
 # The pinned CLI, which the checks below run. Never one on PATH: that one was
 # built from some other revision.
-cargo build -q --manifest-path "$root/clearhead-core/crates/clearhead-cli/Cargo.toml"
+cargo build --locked -q --manifest-path "$root/clearhead-core/crates/clearhead-cli/Cargo.toml"
 clearhead="${CARGO_TARGET_DIR:-$root/clearhead-core/target}/debug/clearhead"
 
 # Engine-independence (rdf-publication external-rdf-proof): export the fixture
@@ -154,10 +137,9 @@ validate_schema() {
     fi
 }
 
-# 0. Every schema's $id names one release (README, Releases): a tag, never a
-#    branch. Core's stamped $schema URLs are held to these ids by its
-#    spec-conformance test.
-releases=$(for s in "$root"/specifications/schemas/*.json; do
+# The platform pin's schemas must all name one release, even when that pin
+# includes a newer fixture commit. Core's schema URLs are checked separately.
+releases=$(for s in "$platform_spec"/schemas/*.json; do
     jq -r '."$id" // ""' "$s" | sed -E \
         -e 's#^https://clearhead\.dev/schemas/(v[0-9]+\.[0-9]+\.[0-9]+)/[^/]+\.schema\.json$#\1#' \
         -e 't' -e "s#.*#not a release id in ${s##*/}#"
@@ -169,27 +151,18 @@ if [ "$(printf '%s\n' "$releases" | wc -l)" -ne 1 ] || ! printf '%s' "$releases"
 fi
 echo "validate-pinned > schema ids name release $releases"
 
-schema="$root/specifications/schemas/actions.schema.json"
+# Check each canonical example against its own schema. Check the real CLI
+# projection of this workspace against Core's declared release schema.
+projection="$work/projection.json"
+for entity in actions charters; do
+    validate_schema "$platform_spec/schemas/$entity.schema.json" \
+        "$platform_spec/examples/$entity/sample.json"
+    (cd "$root" && "$clearhead" read "$entity" --format json) \
+        >"$projection" 2>/dev/null
+    validate_schema "$core_spec/schemas/$entity.schema.json" "$projection"
+done
 
-# 1. Spec self-consistency: the canonical example conforms to the schema.
-validate_schema "$schema" "$root/specifications/examples/actions/sample.json"
-
-# 2. Implementation conformance: the pinned CLI's canonical projection
-#    (`read actions --format json`) of a real workspace — this repo — conforms.
-projection=$(mktemp)
-trap 'rm -f "$projection"' EXIT
-(cd "$root" && "$clearhead" read actions --format json) \
-    >"$projection" 2>/dev/null
-validate_schema "$schema" "$projection"
-
-# 3. Charter schema self-consistency and pinned implementation projection.
-charter_schema="$root/specifications/schemas/charters.schema.json"
-validate_schema "$charter_schema" "$root/specifications/examples/charters/sample.json"
-(cd "$root" && "$clearhead" read charters --format json) \
-    >"$projection" 2>/dev/null
-validate_schema "$charter_schema" "$projection"
-
-# 4. Graph shapes (platform Decisions 42-44): the spec's expected graph
+# Graph shapes (platform Decisions 42-44): the platform spec's expected graph
 #    conforms to its SHACL shapes and reasons consistent with the ontology;
 #    each invalid graph fails on exactly the shape it names.
 echo "validate-pinned > graph shapes and fixture"

@@ -12,6 +12,25 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 62: Core Conformance Follows the Core Version
+
+Decided by Darrion on 2026-11-26 while releasing ClearHead v0.5.0: a grammar
+update need not move Core forward. This replaces the cross-pin equality
+checks in [Decision 54](#decision-54-implementations-rely-only-on-published-pinned-releases),
+not the requirement to use published dependencies.
+
+- **Core owns its inputs.** Test the pinned Core with its locked registry
+  grammar and the exact specification tag it declares in Cargo metadata.
+  Use that tag's schemas for the CLI's emitted data.
+- **The platform pins independently.** The pinned tree-sitter parser and the
+  platform's specification checkout supply the grammar and editor gates.
+  Specification examples and graph shapes are checked against their own pin.
+  None of these gitlinks must equal Core's dependencies.
+
+**Trade-off:** the platform needs the declared specification tag available
+locally in addition to its fixture checkout. That is preferable to forcing a
+Core release every time a grammar or fixture pin moves.
+
 ## Decision 61: The CLI Prints the Specification's Shapes; Its Own Shapes Live With It
 
 Decided by Darrion on 2026-11-09, in a facilitator session, while `=notes-render` was adding `show --json`. Amends Decision 60's "with a schema in `specifications/schemas`".
@@ -134,7 +153,7 @@ Decided 2026-10-05 by the human, while making the CLI installable with `cargo bi
 
 - **Dependencies are releases.** Core takes the grammar from crates.io at the version its `Cargo.toml` names, in every checkout, as any consumer would. An unpublished grammar is tried with a one-invocation `--config` override, never committed.
 - **Conformance is declared.** `clearhead_core` names the specification release it implements in `[package.metadata.clearhead] specification`, which ships with the published crate. Its CI tests against that tag's published examples; the CLI's `--version` will report it.
-- **The platform proves the pins.** `validate-pinned` fails unless the grammar Core resolves matches the submodule file for file, and the specification submodule is exactly the release Core declares.
+- **The platform proves the pins.** Originally this required Core's grammar and specification to equal the platform pins. [Decision 62](#decision-62-core-conformance-follows-the-core-version) keeps the releases pinned but validates them independently.
 
 In the human's words: the spec is required for conformance, and pinning it makes conformance a specific consideration rather than something that just happens and can break the build.
 
