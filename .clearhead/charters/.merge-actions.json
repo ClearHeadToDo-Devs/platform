@@ -59,6 +59,13 @@
         "text": "Sibling order merges (OrderConflict on different reorders), plus neighbouring edits and add versus complete (clean; W002 reports it): semantic-merge-core's done criteria are met, so it is completed. Lines without UUIDs need source text and move to semantic-merge-driver. The trial note (amplified or carried, and how long) is still Darrion's."
       }
     ],
+    "01a21520-fe44-7d81-a0f7-35f16fda8a7d": [
+      {
+        "at": "2026-11-26T04:16:03Z",
+        "by": "agent:claude",
+        "text": "Handoff (2026-11-26): the inner merge, the spec, the grammar and Core's E010 are done. Spec v0.9.0 Merge Conflict Markers; grammar 0.13.0 (conflict_marker extra); Core 3aadebd quarantines a conflicted file as E010 and refuses writes. Next is semantic-merge-driver: a CLI command taking git's %O %A %B that calls semantic_merge (clearhead-core/crates/clearhead-core/src/workspace/actions/diff.rs; its contract is tests/semantic_merge.rs) and writes %A, exiting nonzero on any conflict. Open decision for Darrion before writing markers: their exact layout. Whole action lines between markers is the working assumption, and the grammar and E010 already support it at any depth. Design decisions stay Darrion's: open each with a Decision line and one question."
+      }
+    ],
     "01a21521-541a-75b2-8ecf-4ab1ee196ee0": [
       {
         "at": "2026-11-26T00:44:32Z",
