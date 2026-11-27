@@ -4,6 +4,8 @@
 # other commit names each intention with a trailer, repeated for several:
 #   Intent: urn:uuid:<action or charter id>
 #   Intent: none
+# Also warns when a pin move brings in source files the architecture model may not show (structurizr/unmodelled),
+# unless the same commit touches structurizr/.
 # Needs only git; lists in-progress actions when clearhead and jq are present.
 # Enable once per clone: git config core.hooksPath .githooks
 set -u
@@ -31,6 +33,21 @@ if ! linked; then
         echo '  Add one line per intention it serves:  Intent: urn:uuid:<id>   (or  Intent: none)'
         list=$(in_progress)
         [ -z "$list" ] || printf '  In progress here:\n%s\n' "$list"
+    } >&2
+fi
+
+unmodelled() { # source files each staged pin move adds, removes or renames
+    git diff --cached --name-only | grep -q '^structurizr/' && return 0
+    git diff --cached --raw --no-abbrev | awk '$1 == ":160000" && $2 == "160000" { print $6, $3, $4 }' |
+        while read -r sub from to; do structurizr/unmodelled "$sub" "$from" "$to" 2>/dev/null || true; done
+}
+
+list=$(unmodelled)
+if [ -n "$list" ]; then
+    {
+        echo 'commit-msg: warning: this pin move brings in source files the architecture model may not show:'
+        printf '%s\n' "$list" | sed 's/^/  /'
+        echo '  Update structurizr/workspace.dsl, or say in the body why they need no new box.'
     } >&2
 fi
 

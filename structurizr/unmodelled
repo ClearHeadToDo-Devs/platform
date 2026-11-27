@@ -3,21 +3,36 @@
 # may not show yet. The baseline is each submodule's pin at the platform commit that last touched the model, and
 # the end is its current pin, so the list is exact rather than date-based. Output is quickfix format, so
 # `nvim -q <(structurizr/unmodelled)` jumps to each file; the summary line goes to stderr.
+# With <submodule> <from> <to>, lists that range instead (the commit-msg hook uses it for a pin move).
 set -eu
 cd "$(dirname "$0")/.."
-base=$(git log -1 --format=%H -- structurizr/workspace.dsl structurizr/source-entries.dsl)
-echo "Model last changed in $(git log -1 --format='%h on %cs' "$base"); changes since:" >&2
 
-changes() { # submodule, then the source paths that hold its structure
-    sub=$1; shift
-    git -C "$sub" diff -M --diff-filter=ADR --name-status \
-        "$(git rev-parse "$base:$sub")" "$(git rev-parse "HEAD:$sub")" -- "$@" |
-        awk -F '\t' -v p="$sub/" '
+paths() { # the source paths that hold a submodule's structure; none for a submodule the model doesn't draw
+    case $1 in
+        clearhead-core) echo crates/clearhead-core/src crates/clearhead-cli/src ;;
+        clearhead.nvim) echo lua ;;
+        tree-sitter-actions) echo grammar.js src/scanner.c queries ;;
+    esac
+}
+
+changes() { # submodule, from, to
+    p=$(paths "$1")
+    [ -n "$p" ] || return 0
+    # shellcheck disable=SC2086 # split the paths on purpose
+    git -C "$1" diff -M --diff-filter=ADR --name-status "$2" "$3" -- $p |
+        awk -F '\t' -v p="$1/" '
             $1 == "A"  { print p $2 ":1: added" }
             $1 == "D"  { print p $2 ":1: removed" }
             $1 ~ /^R/  { print p $3 ":1: renamed from " $2 }'
 }
 
-changes clearhead-core crates/clearhead-core/src crates/clearhead-cli/src
-changes clearhead.nvim lua
-changes tree-sitter-actions grammar.js src/scanner.c queries
+if [ $# -eq 3 ]; then
+    changes "$1" "$2" "$3"
+    exit
+fi
+
+base=$(git log -1 --format=%H -- structurizr/workspace.dsl structurizr/source-entries.dsl)
+echo "Model last changed in $(git log -1 --format='%h on %cs' "$base"); changes since:" >&2
+for sub in clearhead-core clearhead.nvim tree-sitter-actions; do
+    changes "$sub" "$(git rev-parse "$base:$sub")" "$(git rev-parse "HEAD:$sub")"
+done
