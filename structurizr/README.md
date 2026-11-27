@@ -27,6 +27,11 @@ policy, dark green is the domain, and purple elements are host-neutral ports.
 Dashed borders indicate I/O or projected data, while a thick green store border
 marks authoritative data.
 
+A software or LLM agent is drawn as a person, with a robot shape. C4 defines a
+person as a human user, but an agent uses ClearHead the way a person does,
+through the same commands and plaintext, rather than being a system ClearHead
+integrates with. This is the model's one deliberate departure from C4.
+
 Core is a linked library, not a separately running container, so, as C4 draws
 a library, its components appear inside each executable that links it.
 [`core.dsl`](core.dsl) defines them once, and both containers include it: with
