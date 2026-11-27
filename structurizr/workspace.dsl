@@ -34,7 +34,7 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
             lsp = container "clearhead-lsp" "Separate stdio binary from clearhead-cli; shares the crate's filesystem adapter and Core dependency but does not call the CLI frontend or depend on an editor." "Rust, clearhead-cli crate, Tokio, Tower LSP" "Driver" {
                 lspProtocol = component "LSP protocol adapter" "Adapts standard JSON-RPC requests to editor analysis providers." "Rust, Tokio, Tower LSP" "Driver"
                 lspProviders = component "Editor use-case adapter" "Owns open-document state and composes diagnostics, formatting, navigation, completion, and semantic-token behavior." "Rust" "Interface Adapter"
-                lspFs = component "Shared filesystem adapter" "Loads native workspace context through the clearhead-cli crate's filesystem module, shared with the command binary." "Rust, clearhead-cli/filesystem" "Interface Adapter,IO"
+                lspFs = component "Shared filesystem adapter" "Loads native workspace context, and stamps sidecars on save, through the clearhead-cli crate's filesystem module, shared with the command binary." "Rust, clearhead-cli/filesystem" "Interface Adapter,IO"
 
                 !var CORE lspCore
                 !include core.dsl
@@ -100,7 +100,7 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         lspProviders -> lspCoreWorkspace "Checks workspace state coherence and habit-file rules through"
         lspProviders -> lspFs "Uses native workspace context"
         lspProviders -> lspCoreActionsGrammar "Keeps tolerant syntax trees of unsaved buffers with"
-        lspFs -> workspaceFiles "Reads native workspace resources"
+        lspFs -> workspaceFiles "Reads workspace resources and stamps created times into sidecars"
         lspFs -> lspCoreWorkspace "Uses pure workspace assembly"
 
         !include source-entries.dsl
