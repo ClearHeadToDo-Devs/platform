@@ -27,12 +27,13 @@ policy, dark green is the domain, and purple elements are host-neutral ports.
 Dashed borders indicate I/O or projected data, while a thick green store border
 marks authoritative data.
 
-The component model shows Core and the shared filesystem adapter inside both
-executables because Core is a linked library and `filesystem` is a module of
-the `clearhead-cli` crate that builds both binary targets, not an independently
-deployed service. The detailed Core view uses the CLI as the reference
-composition; the LSP view collapses that same library to keep the server
-boundary legible.
+Core is a linked library, not a separately running container, so, as C4 draws
+a library, its components appear inside each executable that links it.
+[`core.dsl`](core.dsl) defines them once, and both containers include it: with
+the identifier prefix `core` in the CLI and `lspCore` in the language server.
+The language server view shows the Core components that server calls. The
+shared filesystem adapter is still one box in the language server: it is a
+module of the `clearhead-cli` crate that builds both binary targets.
 
 First-party components in the detailed CLI, Core, and LSP views carry a
 clickable URL to one **primary source entry**. The links live together in

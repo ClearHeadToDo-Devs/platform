@@ -27,41 +27,17 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
                     cliCalendarDelivery = component "Calendar filesystem adapter" "Maps VTODO vdir resources to Core calendar observations and prepared effects." "Rust" "Interface Adapter,IO"
                 }
 
-                group "Application policy — clearhead_core" {
-                    coreMutation = component "Mutation use cases" "Decides action, charter, archive, and transaction changes without performing I/O." "Pure Rust" "Application"
-                    coreCalendarPolicy = component "Recurrence and reconciliation policy" "Decides occurrence projection, calendar reconciliation, and deviation changes." "Pure Rust, RFC 5545 semantics" "Application"
-                    coreReference = component "Reference resolution" "Resolves UUID, prefix, alias, path and predecessor references across the domain model and workspace." "Pure Rust" "Application"
-                }
-
-                group "Entities — clearhead_core" {
-                    coreDomain = component "Domain model" "Owns Objective, Charter, Habit, Action, lifecycle state, written time bounds, Habit slot identity, diff, filter, and update semantics. Plans are projections of Habits and Action blocks." "Pure Rust" "Domain"
-                }
-
-                group "Boundary contracts — clearhead_core" {
-                    coreEffects = component "Resource/effect port" "Defines logical locations, snapshots, revisions, prepared mutations, preconditions, and effect batches." "Pure Rust" "Port"
-                    coreContracts = component "Host-neutral contracts" "Defines shared configuration semantics, selectors, transaction requests, and typed verb outcomes." "Pure Rust" "Port"
-                }
-
-                group "Pure representation adapters — clearhead_core" {
-                    coreWorkspace = component "Workspace projection" "Assembles actions, habits files, charters, objectives, sidecars, manifests, templates, and archived facts into the domain model; projects charters to charters.schema.json." "Pure Rust" "Representation Adapter"
-                    coreActions = component "Actions language adapter" "Parses, lints, diffs, merges by UUID, and formats the .actions representation." "Rust" "Representation Adapter"
-                    coreIcalendar = component "iCalendar adapter" "Parses and renders VTODO resources around recurrence and reconciliation policy." "Pure Rust, RFC 5545" "Representation Adapter"
-                    coreRdf = component "RDF publication adapter" "Projects the domain model to the application graph (app: vocabulary) as deterministic database-free quads and serializations; publishes no undeclared charter id." "Pure Rust, RDF" "Representation Adapter"
-                }
-
-                group "Framework details" {
-                    actionsGrammar = component "tree-sitter-actions" "Pinned generated grammar used by the actions language adapter." "tree-sitter" "Framework"
-                    formattingEngine = component "Topiary formatting engine" "Optional concrete formatter used to produce canonical .actions source." "Topiary" "Framework,Optional"
-                    markdownParser = component "CommonMark parser" "The one Markdown parser for charter documents and action notes, so every reader agrees on headings, code and sections." "pulldown-cmark" "Framework"
-                }
+                !var CORE core
+                !include core.dsl
             }
 
             lsp = container "clearhead-lsp" "Separate stdio binary from clearhead-cli; shares the crate's filesystem adapter and Core dependency but does not call the CLI frontend or depend on an editor." "Rust, clearhead-cli crate, Tokio, Tower LSP" "Driver" {
                 lspProtocol = component "LSP protocol adapter" "Adapts standard JSON-RPC requests to editor analysis providers." "Rust, Tokio, Tower LSP" "Driver"
                 lspProviders = component "Editor use-case adapter" "Owns open-document state and composes diagnostics, formatting, navigation, completion, and semantic-token behavior." "Rust" "Interface Adapter"
                 lspFs = component "Shared filesystem adapter" "Loads native workspace context through the clearhead-cli crate's filesystem module, shared with the command binary." "Rust, clearhead-cli/filesystem" "Interface Adapter,IO"
-                lspCore = component "Domain and workspace policy" "The linked clearhead_core application and domain behavior." "clearhead_core" "Application"
-                lspParser = component "Open-document syntax parser" "Maintains tolerant syntax trees for unsaved editor buffers." "tree-sitter-actions" "Framework"
+
+                !var CORE lspCore
+                !include core.dsl
             }
 
             workspaceFiles = container "Workspace files" "Authoritative human-readable charters, objectives, actions, habits files, sidecars with notes, configuration, saved SPARQL, and UUID-addressed archived facts." "Markdown, .actions, JSON, SPARQL" "Data Store,Authority"
@@ -114,32 +90,18 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         cliCalendarDelivery -> coreCalendarPolicy "Invokes reconciliation policy"
         cliCalendarDelivery -> cliDurability "Uses durable effect delivery"
 
-        coreMutation -> coreDomain "Depends on domain semantics"
-        coreMutation -> coreEffects "Expresses decisions through the output port"
-        coreMutation -> coreContracts "Depends on host-neutral requests"
-        coreCalendarPolicy -> coreDomain "Depends on Plan and Action semantics"
-        coreCalendarPolicy -> coreEffects "Expresses synchronization decisions through the output port"
-        coreReference -> coreDomain "Depends on domain identities and relationships"
 
-        coreWorkspace -> coreDomain "Produces the canonical in-memory model"
-        coreWorkspace -> coreActions "Depends on the actions representation adapter"
-        coreWorkspace -> coreIcalendar "Depends on the calendar representation adapter"
-        coreWorkspace -> coreReference "Uses reference resolution"
-        coreWorkspace -> markdownParser "Reads charter structure through the shared parser"
-        coreActions -> markdownParser "Reads action-note structure through the shared parser"
-        coreActions -> coreDomain "Maps plaintext to and from domain entities"
-        coreActions -> actionsGrammar "Depends on the concrete grammar"
-        coreActions -> formattingEngine "Optionally depends on the concrete formatter"
-        coreIcalendar -> coreDomain "Maps VTODO resources to and from domain entities"
-        coreIcalendar -> coreCalendarPolicy "Uses recurrence and reconciliation policy"
-        coreRdf -> coreDomain "Depends only on the domain model"
 
         lspProtocol -> lspProviders "Invokes editor analysis operations"
-        lspProviders -> lspCore "Depends on domain and workspace policy"
+        lspProtocol -> lspCoreActions "Diffs saved documents and formats through"
+        lspProtocol -> lspCoreReference "Resolves definitions through"
+        lspProtocol -> lspFs "Lists action files, loads the domain model and stamps sidecars through"
+        lspProviders -> lspCoreActions "Parses and lints open documents through"
+        lspProviders -> lspCoreWorkspace "Checks workspace state coherence and habit-file rules through"
         lspProviders -> lspFs "Uses native workspace context"
-        lspProviders -> lspParser "Uses tolerant open-document syntax trees"
+        lspProviders -> lspCoreActionsGrammar "Keeps tolerant syntax trees of unsaved buffers with"
         lspFs -> workspaceFiles "Reads native workspace resources"
-        lspFs -> lspCore "Implements linked Core workspace contracts"
+        lspFs -> lspCoreWorkspace "Uses pure workspace assembly"
 
         !include source-entries.dsl
     }
@@ -161,7 +123,7 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         }
 
         component cli "04-CleanArchitecture" "Dependency awareness across framework details, representation adapters, application policy, ports, and domain entities." {
-            include coreDomain coreMutation coreCalendarPolicy coreReference coreEffects coreContracts coreWorkspace coreActions coreIcalendar coreRdf actionsGrammar formattingEngine markdownParser
+            include coreDomain coreMutation coreCalendarPolicy coreReference coreEffects coreContracts coreWorkspace coreActions coreIcalendar coreRdf coreActionsGrammar coreFormattingEngine coreMarkdownParser
             autoLayout lr
         }
 
@@ -170,8 +132,8 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
             autoLayout lr
         }
 
-        component lsp "06-LanguageServer" "The server depends on protocol, provider, filesystem, Core, and parser abstractions; clients depend on the server, never the reverse." {
-            include nvimPlugin lspClients lspProtocol lspProviders lspFs lspCore lspParser workspaceFiles
+        component lsp "06-LanguageServer" "The server and the parts of the linked Core it calls; clients depend on the server, never the reverse." {
+            include nvimPlugin lspClients lspProtocol lspProviders lspFs lspCoreActions lspCoreWorkspace lspCoreReference lspCoreDomain lspCoreActionsGrammar workspaceFiles
             autoLayout lr
         }
 

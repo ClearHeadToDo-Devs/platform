@@ -26,54 +26,11 @@
     url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/calendar.rs"
 }
 
-// Core internals
-!element coreMutation {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/workspace"
-}
-
-!element coreCalendarPolicy {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/workspace/calendar/reconcile.rs"
-}
-
-!element coreReference {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/reference.rs"
-}
-
-!element coreDomain {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/domain"
-}
-
-!element coreEffects {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/workspace/resource.rs"
-}
-
-!element coreContracts {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/lib.rs"
-}
-
-!element coreWorkspace {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/workspace/store"
-}
-
-!element coreActions {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/workspace/actions"
-}
-
-!element coreIcalendar {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/workspace/calendar/ics.rs"
-}
-
-!element coreRdf {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/rdf"
-}
-
-!element markdownParser {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/workspace/markdown.rs"
-}
-
-!element actionsGrammar {
-    url "https://github.com/ClearHeadToDo-Devs/tree-sitter-actions"
-}
+// Core internals, once for each container that links Core
+!var CORE core
+!include core-source-entries.dsl
+!var CORE lspCore
+!include core-source-entries.dsl
 
 // Language server composition
 !element lspProtocol {
@@ -86,12 +43,4 @@
 
 !element lspFs {
     url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-cli/src/filesystem/mounts.rs"
-}
-
-!element lspCore {
-    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/lib.rs"
-}
-
-!element lspParser {
-    url "https://github.com/ClearHeadToDo-Devs/tree-sitter-actions"
 }
