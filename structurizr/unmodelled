@@ -1,0 +1,23 @@
+#!/bin/sh
+# List the source files added, removed or renamed since the architecture model last changed: the code the model
+# may not show yet. The baseline is each submodule's pin at the platform commit that last touched the model, and
+# the end is its current pin, so the list is exact rather than date-based. Output is quickfix format, so
+# `nvim -q <(structurizr/unmodelled)` jumps to each file; the summary line goes to stderr.
+set -eu
+cd "$(dirname "$0")/.."
+base=$(git log -1 --format=%H -- structurizr/workspace.dsl structurizr/source-entries.dsl)
+echo "Model last changed in $(git log -1 --format='%h on %cs' "$base"); changes since:" >&2
+
+changes() { # submodule, then the source paths that hold its structure
+    sub=$1; shift
+    git -C "$sub" diff -M --diff-filter=ADR --name-status \
+        "$(git rev-parse "$base:$sub")" "$(git rev-parse "HEAD:$sub")" -- "$@" |
+        awk -F '\t' -v p="$sub/" '
+            $1 == "A"  { print p $2 ":1: added" }
+            $1 == "D"  { print p $2 ":1: removed" }
+            $1 ~ /^R/  { print p $3 ":1: renamed from " $2 }'
+}
+
+changes clearhead-core crates/clearhead-core/src crates/clearhead-cli/src
+changes clearhead.nvim lua
+changes tree-sitter-actions grammar.js src/scanner.c queries

@@ -44,6 +44,11 @@ and a representative file where the responsibility has no narrower source root.
 They use GitHub because the diagram is served remotely: a browser `file://` URL
 would address the viewing desktop's filesystem, not the server checkout.
 
+[`unmodelled`](unmodelled) lists the source files added, removed or renamed in
+the pinned submodules since the model last changed: code the model may not show
+yet. Read it before updating the model. From the platform root,
+`nvim -q <(structurizr/unmodelled)` opens the list as a quickfix list.
+
 ## Serve on a headless Tailscale node
 
 The Compose service binds only to loopback; it is not exposed to the LAN or the
