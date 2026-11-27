@@ -50,6 +50,11 @@
         "at": "2026-11-26T07:28:22Z",
         "by": "agent:pi",
         "text": "v0.5.0 platform pin is live. Decision 62 separates Core’s declared release from grammar fixtures; the full platform gate passed and platform main was pushed at 29efd49."
+      },
+      {
+        "at": "2026-11-27T21:56:29Z",
+        "by": "agent:pi",
+        "text": "ClearHead v0.6.0 published from Core 24fc2af (release run 46072997575). CI and validate-pinned passed; the Linux archive checksum matched, both binaries extracted, and the downloaded CLI skipped 101 test slots without flooding Actions. This is a GitHub binary release only."
       }
     ],
     "01a1124e-2a1c-74fe-ae3e-14f6701598ca": [
