@@ -90,6 +90,16 @@
         "at": "2026-11-27T10:43:53Z",
         "by": "agent:pi",
         "text": "Core now plans bounded batches from arrived text-rule slots, skips exclusions and known live/archive IDs, and reports backlog. Tests reparse stamped rows to verify interrupted retry and resume; Core gate passes in UTC, Los Angeles and Tokyo. Native sidecar delivery, archive discovery and CLI write activation are still open."
+      },
+      {
+        "at": "2026-11-27T19:05:55Z",
+        "by": "agent:pi",
+        "text": "Review draft: clearhead apply habits [--dry-run] delivers bounded text-Habit batches separately from calendar sync, with durable lineage and live/archive dedup. The full Core gate passes, including CLI backlog, sidecar-only interruption, and archive retry. Calendar-backed RDATE, named zones, and pending overrides are refused pending projection work."
+      },
+      {
+        "at": "2026-11-27T21:10:04Z",
+        "by": "agent:pi",
+        "text": "Added --fast-forward <habit>: preview or record explicit EXDATEs for due, unmaterialized slots of one Habit, leaving the next future slot for normal catch-up. CLI tests preserve history, reject ambiguous aliases, and show edited rules can still introduce unexcluded slots. Full Core gate passes."
       }
     ],
     "01a1b72b-6f4b-7e93-b3cc-b456bbae6cdb": [
