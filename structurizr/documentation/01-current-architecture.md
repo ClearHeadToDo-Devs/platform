@@ -30,8 +30,10 @@ from that one crate:
 
 - There is no graph daemon, persistent graph database, or ClearHead network
   service. RDF publication lives in Core, and SPARQL is optional and in-process.
-- Objective files exist in the specifications and workspaces, but Objective
-  integration into the loaded domain model is still pending.
+- Objectives load into the domain model when the host attaches them; the
+  filesystem adapter does.
+- Habits are native recurring work in habits files. Their slot identity is in
+  Core; generating every arrived occurrence is still in progress.
 - The native filesystem adapter is currently the only delivery adapter.
 - Calendar networking remains external; tools such as vdirsyncer synchronize
   the plans vdir with CalDAV servers and clients.

@@ -9,9 +9,10 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         calendarSync = softwareSystem "Calendar sync tooling" "A filesystem-vdir sync adapter such as vdirsyncer." "External"
         caldav = softwareSystem "CalDAV ecosystem" "CalDAV servers and calendar/task clients." "External"
         rdfConsumers = softwareSystem "RDF consumers" "Independent SPARQL engines, graph stores, and data pipelines that consume ClearHead exports." "External"
+        git = softwareSystem "Git" "Version control for a workspace; configured to merge .actions files through ClearHead's merge driver." "External"
 
         clearhead = softwareSystem "ClearHead" "Local-first intention management over an authoritative plaintext workspace." {
-            nvimPlugin = container "clearhead.nvim" "Editor adapter that provides commands, views, syntax support, and save/mutate/reload orchestration." "Lua, Neovim plugin" "Driver"
+            nvimPlugin = container "clearhead.nvim" "Editor adapter that provides the :Clearhead command tree, <Plug> mappings, query, notes and command-output views, syntax support, and save/mutate/reload orchestration." "Lua, Neovim plugin" "Driver"
 
             cli = container "clearhead" "Synchronous command binary from clearhead-cli; composes its cli and query frontends with the shared filesystem adapter and pure Core." "Rust, clearhead-cli crate" "Driver" {
                 group "Drivers" {
@@ -29,11 +30,11 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
                 group "Application policy — clearhead_core" {
                     coreMutation = component "Mutation use cases" "Decides action, charter, archive, and transaction changes without performing I/O." "Pure Rust" "Application"
                     coreCalendarPolicy = component "Recurrence and reconciliation policy" "Decides occurrence projection, calendar reconciliation, and deviation changes." "Pure Rust, RFC 5545 semantics" "Application"
-                    coreReference = component "Reference resolution" "Resolves UUID, prefix, alias, and path references across the domain model." "Pure Rust" "Application"
+                    coreReference = component "Reference resolution" "Resolves UUID, prefix, alias, path and predecessor references across the domain model and workspace." "Pure Rust" "Application"
                 }
 
                 group "Entities — clearhead_core" {
-                    coreDomain = component "Domain model" "Owns Objective, Charter, Plan, Action, lifecycle state, diff, filter, and update semantics." "Pure Rust" "Domain"
+                    coreDomain = component "Domain model" "Owns Objective, Charter, Habit, Action, lifecycle state, written time bounds, Habit slot identity, diff, filter, and update semantics. Plans are projections of Habits and Action blocks." "Pure Rust" "Domain"
                 }
 
                 group "Boundary contracts — clearhead_core" {
@@ -42,15 +43,16 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
                 }
 
                 group "Pure representation adapters — clearhead_core" {
-                    coreWorkspace = component "Workspace projection" "Assembles actions, charters, sidecars, manifests, templates, and archived facts into the domain model." "Pure Rust" "Representation Adapter"
-                    coreActions = component "Actions language adapter" "Parses, lints, diffs, and formats the .actions representation." "Rust" "Representation Adapter"
+                    coreWorkspace = component "Workspace projection" "Assembles actions, habits files, charters, objectives, sidecars, manifests, templates, and archived facts into the domain model; projects charters to charters.schema.json." "Pure Rust" "Representation Adapter"
+                    coreActions = component "Actions language adapter" "Parses, lints, diffs, merges by UUID, and formats the .actions representation." "Rust" "Representation Adapter"
                     coreIcalendar = component "iCalendar adapter" "Parses and renders VTODO resources around recurrence and reconciliation policy." "Pure Rust, RFC 5545" "Representation Adapter"
-                    coreRdf = component "RDF publication adapter" "Projects the domain model to deterministic database-free quads and serializations." "Pure Rust, RDF" "Representation Adapter"
+                    coreRdf = component "RDF publication adapter" "Projects the domain model to the application graph (app: vocabulary) as deterministic database-free quads and serializations; publishes no undeclared charter id." "Pure Rust, RDF" "Representation Adapter"
                 }
 
                 group "Framework details" {
                     actionsGrammar = component "tree-sitter-actions" "Pinned generated grammar used by the actions language adapter." "tree-sitter" "Framework"
                     formattingEngine = component "Topiary formatting engine" "Optional concrete formatter used to produce canonical .actions source." "Topiary" "Framework,Optional"
+                    markdownParser = component "CommonMark parser" "The one Markdown parser for charter documents and action notes, so every reader agrees on headings, code and sections." "pulldown-cmark" "Framework"
                 }
             }
 
@@ -62,8 +64,8 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
                 lspParser = component "Open-document syntax parser" "Maintains tolerant syntax trees for unsaved editor buffers." "tree-sitter-actions" "Framework"
             }
 
-            workspaceFiles = container "Workspace files" "Authoritative human-readable charters, actions, sidecars, configuration, saved SPARQL, and UUID-addressed archived facts." "Markdown, .actions, JSON, SPARQL" "Data Store,Authority"
-            plansVdir = container "Plans vdir" "Server-agnostic interoperability boundary for recurring Plan and standalone Action VTODO projections." "iCalendar VTODO files" "Data Store,Projection"
+            workspaceFiles = container "Workspace files" "Authoritative human-readable charters, objectives, actions, habits files, sidecars with notes, configuration, saved SPARQL, and UUID-addressed archived facts." "Markdown, .actions, JSON, SPARQL" "Data Store,Authority"
+            plansVdir = container "Plans vdir" "Server-agnostic interoperability boundary for VTODO projections: a recurring Plan projects a Habit, a one-off Plan an Action's @ block." "iCalendar VTODO files" "Data Store,Projection"
         }
 
         person -> nvimPlugin "Uses the editor experience"
@@ -80,11 +82,13 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         calendarSync -> plansVdir "Depends on the standard filesystem vdir" "iCalendar VTODO"
         calendarSync -> caldav "Depends on the CalDAV protocol"
         rdfConsumers -> cliQuery "Depend on the RDF publication interface" "TriG, N-Quads, JSON-LD"
+        git -> cliCommands "Invokes the .actions merge driver" "clearhead merge-actions %O %A %B"
 
         cliCommands -> cliGateway "Uses native workspace operations"
         cliCommands -> cliQuery "Uses query and publication capabilities"
         cliCommands -> coreMutation "Invokes application use cases"
         cliCommands -> coreContracts "Depends on typed requests and outcomes"
+        cliCommands -> coreActions "Invokes the semantic .actions merge"
 
         cliQuery -> cliLoader "Uses workspace snapshots"
         cliQuery -> coreRdf "Uses canonical RDF publication"
@@ -121,6 +125,8 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
         coreWorkspace -> coreActions "Depends on the actions representation adapter"
         coreWorkspace -> coreIcalendar "Depends on the calendar representation adapter"
         coreWorkspace -> coreReference "Uses reference resolution"
+        coreWorkspace -> markdownParser "Reads charter structure through the shared parser"
+        coreActions -> markdownParser "Reads action-note structure through the shared parser"
         coreActions -> coreDomain "Maps plaintext to and from domain entities"
         coreActions -> actionsGrammar "Depends on the concrete grammar"
         coreActions -> formattingEngine "Optionally depends on the concrete formatter"
@@ -140,22 +146,22 @@ workspace "ClearHead Platform" "Structural architecture and dependency awareness
 
     views {
         systemContext clearhead "01-SystemContext" "Who is aware of ClearHead, and which external capabilities ClearHead depends on." {
-            include person agent clearhead neovim lspClients calendarSync caldav rdfConsumers
+            include person agent clearhead neovim lspClients calendarSync caldav rdfConsumers git
             autoLayout lr
         }
 
         container clearhead "02-RuntimeDependencies" "Runtime containers and durable stores; every arrow means the source knows about or depends on the target." {
-            include person agent neovim lspClients nvimPlugin cli lsp workspaceFiles plansVdir calendarSync caldav rdfConsumers
+            include person agent neovim lspClients nvimPlugin cli lsp workspaceFiles plansVdir calendarSync caldav rdfConsumers git
             autoLayout lr
         }
 
         component cli "03-CliComposition" "How the CLI driver depends on native adapters, application policy, ports, and representations." {
-            include cliCommands cliQuery cliGateway cliLoader cliDurability cliCalendarDelivery coreMutation coreCalendarPolicy coreEffects coreContracts coreWorkspace coreRdf workspaceFiles plansVdir
+            include git cliCommands cliQuery cliGateway cliLoader cliDurability cliCalendarDelivery coreMutation coreCalendarPolicy coreEffects coreContracts coreWorkspace coreActions coreRdf workspaceFiles plansVdir
             autoLayout lr
         }
 
         component cli "04-CleanArchitecture" "Dependency awareness across framework details, representation adapters, application policy, ports, and domain entities." {
-            include coreDomain coreMutation coreCalendarPolicy coreReference coreEffects coreContracts coreWorkspace coreActions coreIcalendar coreRdf actionsGrammar formattingEngine
+            include coreDomain coreMutation coreCalendarPolicy coreReference coreEffects coreContracts coreWorkspace coreActions coreIcalendar coreRdf actionsGrammar formattingEngine markdownParser
             autoLayout lr
         }
 

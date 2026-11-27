@@ -67,6 +67,10 @@
     url "https://github.com/ClearHeadToDo-Devs/clearhead-core/tree/main/crates/clearhead-core/src/rdf"
 }
 
+!element markdownParser {
+    url "https://github.com/ClearHeadToDo-Devs/clearhead-core/blob/main/crates/clearhead-core/src/workspace/markdown.rs"
+}
+
 !element actionsGrammar {
     url "https://github.com/ClearHeadToDo-Devs/tree-sitter-actions"
 }

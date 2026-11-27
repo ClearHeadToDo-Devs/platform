@@ -12,6 +12,23 @@ This document records decisions that bind more than one repository: the specific
 
 ---
 
+## Decision 63: The Structurizr Model Is Part of How We Work
+
+Decided by Darrion on 2026-11-27, after the model was found two months behind
+the code (habits and the merge driver missing while every source link still
+resolved): "this also means structurizr becomes a part of how we work".
+
+- **The model is kept current, not drawn once.** `structurizr/unmodelled`
+  lists the source files added, removed or renamed since the model last
+  changed, and the platform `commit-msg` hook warns when a pin move brings
+  any in without touching `structurizr/`.
+- **Agents draft model changes; Darrion reviews them.** Which code is a new box
+  is a judgment about how Darrion sees the structure, so a model change says
+  in its commit body which boxes it added and which it chose not to.
+
+**Trade-off:** pin moves that bring in new files cost a look at the model.
+That is the price of a map that can be trusted when it is read.
+
 ## Decision 62: Core Conformance Follows the Core Version
 
 Decided by Darrion on 2026-11-26 while releasing ClearHead v0.5.0: a grammar
