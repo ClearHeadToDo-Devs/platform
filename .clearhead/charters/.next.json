@@ -555,6 +555,18 @@
         "by": "agent:claude",
         "text": "Grammar 0.12.0 released and published 2026-11-25; Core 9f692ea moves its pin and adds the with_typed_predecessor snapshot, so Core's suite is green again. Still left: E009/W008/W009 (absent from Core), and index chain and graph dependencies drop charter targets."
       }
+    ],
+    "01a219c7-3adf-70d2-8fc1-978d978d3add": [
+      {
+        "at": "2026-11-27T01:05:44Z",
+        "by": "agent:facilitator",
+        "text": "E002 pilot ran the same published weekly Habit bytes as a named template against Core 516fc18 and e3fd131. Insta showed scope warning/exit 0 become E002/exit 1, ID notices unchanged and zero workspace writes on both sides. The spec example documents the role change without duplicating source. Review the pilot before expanding commands."
+      },
+      {
+        "at": "2026-11-27T01:09:17Z",
+        "by": "agent:facilitator",
+        "text": "Pilot accepted for lint file. Format, complete and merge-actions are later snapshot cases; no expansion was included in this cycle."
+      }
     ]
   }
 }
