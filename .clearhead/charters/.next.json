@@ -436,6 +436,11 @@
         "at": "2026-11-26T20:18:54Z",
         "by": "agent:facilitator",
         "text": "Named-template E002 is drafted on Core v0.5.0: lint and doctor report source lines; Core gate passes. E009 still needs workspace-wide resolution. The unlanded 20261107-201713 resolver matched display names and ignored workspace ambiguity, so it was not carried forward. Core already declares spec v0.8.0, which includes the approved reference correction."
+      },
+      {
+        "at": "2026-11-26T23:38:50Z",
+        "by": "agent:facilitator",
+        "text": "E009 and the corresponding template guards are drafted for review. The shared workspace resolver checks Action and Habit-step ancestry; lint/doctor and saved LSP report the source line. Core gate, v0.8.0 fixture pair and CLI conformance passed. Holding completion until review."
       }
     ],
     "01a1b77b-4600-7761-9ce4-3e4e04b03141": [
